@@ -198,6 +198,8 @@ def run(cli):
                 task = build_task(
                     cli, per_object_config, official_args, base_cfg, cfg_train,
                     trajectory_data)
+                evaluation_support.set_inference_tasks(
+                    bc_model, [object_id])
                 env = ResidualDexGraspEnv(
                     task, bc_model,
                     horizon=per_object_config["horizon"],
@@ -229,8 +231,12 @@ def run(cli):
                     task.num_envs, dtype=torch.bool, device=task.device)
                 ever_failure = torch.zeros(
                     task.num_envs, dtype=torch.bool, device=task.device)
+                success_steps = torch.zeros(
+                    task.num_envs, dtype=torch.long, device=task.device)
                 max_height = torch.full(
                     (task.num_envs,), -float("inf"), device=task.device)
+                final_height = torch.zeros(
+                    task.num_envs, device=task.device)
                 for step in range(int(per_object_config["horizon"])):
                     if cli.zero_residual:
                         action = torch.zeros(
@@ -245,12 +251,14 @@ def run(cli):
                         task.capture_frame(step)
                     success = task.successes > 0
                     ever_success |= success
+                    success_steps += success.long()
                     ever_failure |= terms["failure_penalty"] < 0
                     current_count = int(success.sum().item())
                     if current_count > peak_count:
                         peak_count = current_count
                         peak_mask = success.clone()
                     max_height = torch.maximum(max_height, terms["height_delta"])
+                    final_height = terms["height_delta"].clone()
                 object_result = {
                     "object_id": object_id,
                     "trajectory_count": task.num_envs,
@@ -272,6 +280,15 @@ def run(cli):
                     "diagnostic_mean_maximum_lift_m": float(max_height.mean().item()),
                     "diagnostic_maximum_lift_m_by_trajectory": [
                         float(value) for value in max_height.cpu().tolist()],
+                    "diagnostic_final_lift_m_by_trajectory": [
+                        float(value) for value in final_height.cpu().tolist()],
+                    "diagnostic_success_step_fraction_by_trajectory": [
+                        float(value)
+                        for value in (
+                            success_steps.float()
+                            / float(per_object_config["horizon"])
+                        ).cpu().tolist()
+                    ],
                 }
                 results["objects"].append(object_result)
                 total_successes += peak_count

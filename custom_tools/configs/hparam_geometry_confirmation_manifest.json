@@ -1,0 +1,34 @@
+{
+  "status": "frozen_before_control_evaluation",
+  "final_unseen_v2_used": false,
+  "categories": {
+    "bottle": {
+      "train": [
+        "core-bottle-495dea92a04b43e6be9fabb33de62010",
+        "core-bottle-41ab1142420916e374bb1e92fd01dc00"
+      ],
+      "test": []
+    },
+    "mug": {
+      "train": [
+        "core-mug-162201dfe14b73f0281365259d1cf342",
+        "core-mug-bf2b5e941b43d030138af902bc222a59"
+      ],
+      "test": []
+    },
+    "bowl": {
+      "train": [
+        "core-bowl-bb7586ebee0dc2be4e346ee2650d150",
+        "core-bowl-a9ba34614bfd8ca9938afc5c0b5b182"
+      ],
+      "test": []
+    },
+    "camera": {
+      "train": [
+        "core-camera-2693df58698a2ca29c723bc28575d785",
+        "core-camera-290abe056b205c08240c46d333a693f"
+      ],
+      "test": []
+    }
+  }
+}

@@ -177,6 +177,10 @@ class ResidualDexGraspEnv:
         self.task.step(zero_actions, id=-1)
         self.task.progress_buf[:] = 0
         processed = self._processed_observation()
+        reset_history = getattr(
+            self.bc_model.model, "reset_inference_history", None)
+        if reset_history is not None:
+            reset_history()
         bc_action = self._predict_bc_action(processed)
         prop = processed[:, :self.prop_dim]
         self._prop_history = prop[:, None, :].repeat(1, self.history_frames, 1)
@@ -221,7 +225,14 @@ class ResidualDexGraspEnv:
         self.task.actions[env_ids] = 0.0
         self.task.compute_observations()
         processed = self._processed_observation()
-        bc_action = self._predict_bc_action(processed)
+        partial_reset = getattr(
+            self.bc_model.model, "act_inference_for_reset", None)
+        if partial_reset is None:
+            bc_action = self._predict_bc_action(processed)
+        else:
+            reset_action = partial_reset(processed, env_ids)
+            bc_action = self._bc_action.clone()
+            bc_action[env_ids] = reset_action
         prop = processed[:, :self.prop_dim]
         self._prop_history[env_ids] = prop[env_ids, None, :].repeat(
             1, self.history_frames, 1)

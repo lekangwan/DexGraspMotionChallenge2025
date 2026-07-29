@@ -73,8 +73,15 @@ def parse_cli():
     parser.add_argument("--output-root", required=True)
     parser.add_argument("--selection", choices=SELECTIONS, default="official_final")
     parser.add_argument("--batch-size", type=int, default=1)
+    parser.add_argument(
+        "--trajectories-per-chunk", type=int, default=0,
+        help=("Split one complex object into smaller trajectory groups before "
+              "simulation; 0 keeps the original all-trajectories behavior."))
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument(
+        "--skip-existing", action="store_true",
+        help="Resume a partial run by keeping already saved object files.")
     parser.add_argument(
         "--min-free-vram-mb", type=int, default=4500,
         help="Abort before preprocessing if less VRAM is free (default: 4500 MiB).")
@@ -243,6 +250,96 @@ def process_batch(
         torch.cuda.empty_cache()
 
 
+INDEX_KEYS = (
+    "success_idx",
+    "official_final_success_idx",
+    "ever_task_success_idx",
+    "lift_30cm_idx",
+)
+
+
+def subset_raw_trajectories(item, start, end):
+    """Slice every raw per-trajectory ndarray while preserving object metadata."""
+    trajectory_count = int(len(item["grasp_seqs"]))
+    chunk = {}
+    for key, value in item.items():
+        if (isinstance(value, np.ndarray) and value.ndim > 0
+                and len(value) == trajectory_count):
+            chunk[key] = value[start:end]
+        else:
+            chunk[key] = value
+    return chunk
+
+
+def merge_processed_chunks(chunk_outputs, raw_trajectory_count):
+    """Merge chunked replay outputs back into the normal object-file schema."""
+    if not chunk_outputs:
+        raise ValueError("cannot merge an empty chunk list")
+    merged = {}
+    all_keys = set().union(*(output.keys() for output in chunk_outputs))
+    for key in sorted(all_keys):
+        values = [output[key] for output in chunk_outputs if key in output]
+        first = values[0]
+        if isinstance(first, np.ndarray) and first.ndim > 0:
+            merged[key] = np.concatenate(values, axis=0)
+        else:
+            if any(
+                    isinstance(value, np.ndarray) != isinstance(first, np.ndarray)
+                    or (isinstance(first, np.ndarray)
+                        and not np.array_equal(value, first))
+                    or (not isinstance(first, np.ndarray) and value != first)
+                    for value in values[1:]):
+                raise ValueError("inconsistent chunk metadata: {}".format(key))
+            merged[key] = first
+
+    if len(merged["maximum_lift"]) != raw_trajectory_count:
+        raise ValueError("chunked maximum_lift does not cover all raw trajectories")
+    retained_count = int(len(merged["grasp_seqs"]))
+    for key in (
+            "obs", "vis_unscale_actions", "obj_rotmat", "obj_scale",
+            "grasp_seqs", "hand_pcds", "obj_pcds"):
+        if key in merged and len(merged[key]) != retained_count:
+            raise ValueError("chunked field is misaligned: {}".format(key))
+    selected_indices = np.asarray(merged["success_idx"], dtype=np.int64)
+    if (len(selected_indices) != retained_count
+            or len(np.unique(selected_indices)) != retained_count
+            or np.any(selected_indices < 0)
+            or np.any(selected_indices >= raw_trajectory_count)):
+        raise ValueError("chunked selected trajectory indices are invalid")
+    official_indices = np.asarray(
+        merged["official_final_success_idx"], dtype=np.int64)
+    if (len(np.unique(official_indices)) != len(official_indices)
+            or np.any(official_indices < 0)
+            or np.any(official_indices >= raw_trajectory_count)):
+        raise ValueError("chunked official success indices are invalid")
+    if (merged["selection_metric"] == "official_final"
+            and not np.array_equal(selected_indices, official_indices)):
+        raise ValueError("official selection and success indices diverged")
+    return merged
+
+
+def process_item_in_trajectory_chunks(
+        runtime, item, trajectories_per_chunk, selection):
+    """Replay one raw object in bounded-size environments and merge the result."""
+    trajectory_count = int(len(item["grasp_seqs"]))
+    object_code = item["obj_code"]
+    outputs = []
+    for start in range(0, trajectory_count, trajectories_per_chunk):
+        end = min(start + trajectories_per_chunk, trajectory_count)
+        print("{}: replay chunk [{}, {}) of {}".format(
+            object_code, start, end, trajectory_count))
+        chunk_item = subset_raw_trajectories(item, start, end)
+        batch_outputs = process_batch(
+            *runtime, npy_list=[chunk_item], selection=selection)
+        if len(batch_outputs) != 1 or batch_outputs[0][0] != object_code:
+            raise RuntimeError("unexpected chunk output for {}".format(object_code))
+        output = batch_outputs[0][1]
+        for key in INDEX_KEYS:
+            output[key] = np.asarray(output[key], dtype=np.int64) + start
+        outputs.append(output)
+    return object_code, merge_processed_chunks(outputs, trajectory_count)
+
+
 def prepare_runtime(seed):
     official_args = build_official_args(seed)
     cfg, cfg_train, _ = load_cfg(official_args)
@@ -280,6 +377,13 @@ def run(cli):
         raise ValueError("unknown selection: {}".format(cli.selection))
     if cli.batch_size < 1:
         raise ValueError("--batch-size must be positive")
+    if cli.trajectories_per_chunk < 0:
+        raise ValueError("--trajectories-per-chunk cannot be negative")
+    if cli.trajectories_per_chunk and cli.batch_size != 1:
+        raise ValueError(
+            "trajectory chunking currently requires --batch-size 1")
+    if cli.overwrite and cli.skip_existing:
+        raise ValueError("--overwrite and --skip-existing cannot be used together")
     require_free_vram(cli.min_free_vram_mb)
     initialize_runtime()
 
@@ -291,13 +395,22 @@ def run(cli):
         if not input_path.is_file():
             raise FileNotFoundError(input_path)
         output_path = output_root / (object_id + ".npy")
+        if output_path.exists() and cli.skip_existing:
+            print("[SKIP] already preprocessed: {}".format(object_id))
+            continue
         if output_path.exists() and not cli.overwrite:
             raise FileExistsError(
-                "Output already exists: {}. Choose another directory or pass --overwrite."
+                "Output already exists: {}. Choose another directory, pass "
+                "--overwrite, or use --skip-existing to resume."
                 .format(output_path))
         item = np.load(str(input_path), allow_pickle=True).item()
         item["obj_code"] = object_id
         raw_items.append(item)
+
+    if not raw_items:
+        print("All requested objects are already preprocessed.")
+        print("PREPROCESS_RESULT=ALREADY_COMPLETE")
+        return
 
     set_np_formatting()
     original_cwd = Path.cwd()
@@ -305,16 +418,26 @@ def run(cli):
     try:
         runtime = prepare_runtime(cli.seed)
         output_root.mkdir(parents=True, exist_ok=True)
-        for start in range(0, len(raw_items), cli.batch_size):
-            batch_outputs = process_batch(
-                *runtime,
-                npy_list=raw_items[start:start + cli.batch_size],
-                selection=cli.selection,
-            )
-            for object_code, output in batch_outputs:
+        if cli.trajectories_per_chunk:
+            for item in raw_items:
+                object_code, output = process_item_in_trajectory_chunks(
+                    runtime, item, cli.trajectories_per_chunk, cli.selection)
                 output_path = output_root / (object_code + ".npy")
                 np.save(str(output_path), output, allow_pickle=True)
                 print("Saved {}".format(output_path))
+                del output
+                gc.collect()
+        else:
+            for start in range(0, len(raw_items), cli.batch_size):
+                batch_outputs = process_batch(
+                    *runtime,
+                    npy_list=raw_items[start:start + cli.batch_size],
+                    selection=cli.selection,
+                )
+                for object_code, output in batch_outputs:
+                    output_path = output_root / (object_code + ".npy")
+                    np.save(str(output_path), output, allow_pickle=True)
+                    print("Saved {}".format(output_path))
     finally:
         os.chdir(str(original_cwd))
 

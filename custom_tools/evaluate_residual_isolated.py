@@ -22,6 +22,9 @@ def parse_cli():
     parser.add_argument(
         "--bc-checkpoint", default="",
         help="Optional BC checkpoint override for zero-residual comparisons.")
+    parser.add_argument(
+        "--bc-config", default="",
+        help="BC architecture config; required for non-default BC variants.")
     parser.add_argument("--trajectory-root", required=True)
     parser.add_argument("--trajectory-selection", required=True)
     parser.add_argument(
@@ -48,6 +51,7 @@ def run(cli):
     checkpoint = (
         resolved(cli.residual_checkpoint) if cli.residual_checkpoint else None)
     bc_checkpoint = resolved(cli.bc_checkpoint) if cli.bc_checkpoint else None
+    bc_config = resolved(cli.bc_config) if cli.bc_config else None
     config = resolved(cli.residual_config)
     trajectory_root = resolved(cli.trajectory_root)
     selection_path = resolved(cli.trajectory_selection)
@@ -90,6 +94,8 @@ def run(cli):
         ]
         if bc_checkpoint is not None:
             command.extend(["--bc-checkpoint", str(bc_checkpoint)])
+        if bc_config is not None:
+            command.extend(["--bc-config", str(bc_config)])
         if cli.use_selection_indices:
             selected = selection["trajectory_indices_by_object"][object_id]
             command.extend([
@@ -133,6 +139,7 @@ def run(cli):
             else "deterministic_residual_policy"),
         "residual_checkpoint": str(checkpoint) if checkpoint else None,
         "bc_checkpoint": str(bc_checkpoint) if bc_checkpoint else None,
+        "bc_config": str(bc_config) if bc_config else None,
         "residual_config": str(config),
         "trajectory_root": str(trajectory_root),
         "trajectory_selection": str(selection_path),

@@ -41,6 +41,14 @@ def parse_cli():
         REPO_ROOT / "custom_tools/configs/object_split_final.json"))
     parser.add_argument("--trajectory-root", default=str(
         DEXGRASP_ROOT / "dataset/bc_multicategory_train"))
+    parser.add_argument(
+        "--trajectory-split-root", default="",
+        help=(
+            "Optional staged split files whose custom_split_info selects "
+            "training indices from trajectory-root."))
+    parser.add_argument(
+        "--object-id", action="append", default=[],
+        help="Restrict collection to explicit manifest training objects.")
     parser.add_argument("--bc-config", default=str(
         REPO_ROOT / "custom_tools/configs/unified_student_distill.yaml"))
     parser.add_argument("--env-config", default=str(
@@ -51,6 +59,15 @@ def parse_cli():
     parser.add_argument("--horizon", type=int, default=69)
     parser.add_argument("--max-objects", type=int, default=0)
     parser.add_argument("--max-trajectories-per-object", type=int, default=0)
+    parser.add_argument(
+        "--trajectory-start-offset",
+        type=int,
+        default=0,
+        help=(
+            "Zero-based offset within each object's staged training split. "
+            "This allows later DAgger rounds to use fresh initial trajectories."
+        ),
+    )
     parser.add_argument("--seed", type=int, default=2025)
     parser.add_argument("--min-free-vram-mb", type=int, default=4500)
     parser.add_argument("--sim-device", default="cuda:0")
@@ -81,15 +98,42 @@ def parse_teachers(values):
     return result
 
 
-def trajectory_data(path, object_id, limit):
+def trajectory_data(
+        path, object_id, limit, split_root=None, start_offset=0):
     source = np.load(path / (object_id + ".npy"), allow_pickle=True).item()
-    count = len(source["grasp_seqs"])
+    indices = np.arange(len(source["grasp_seqs"]), dtype=np.int64)
+    if split_root is not None:
+        split = np.load(
+            split_root / (object_id + ".npy"), allow_pickle=True).item()
+        info = split.get("custom_split_info")
+        if not isinstance(info, dict) or info.get("split") != "train":
+            raise ValueError(
+                "Missing train custom_split_info for {}".format(object_id))
+        indices = np.asarray(
+            info["selected_local_indices"], dtype=np.int64)
+        if len(indices) != len(split["grasp_seqs"]):
+            raise ValueError(
+                "Split index count does not match staged trajectories for {}"
+                .format(object_id))
+        if np.any(indices < 0) or np.any(indices >= len(source["grasp_seqs"])):
+            raise ValueError(
+                "Split contains out-of-range local indices for {}".format(
+                    object_id))
+    if start_offset < 0 or start_offset >= len(indices):
+        raise ValueError(
+            "Trajectory offset {} is invalid for {} with {} staged "
+            "training trajectories".format(
+                start_offset, object_id, len(indices)))
+    count = len(indices) - start_offset
     if limit > 0:
         count = min(count, limit)
+    split_positions = np.arange(
+        start_offset, start_offset + count, dtype=np.int64)
+    indices = indices[start_offset:start_offset + count]
     data = {"obj_code": object_id}
     for key in ("obj_scale", "obj_rotmat", "grasp_seqs"):
-        data[key] = source[key][:count].copy()
-    return data, count
+        data[key] = source[key][indices].copy()
+    return data, count, split_positions
 
 
 def load_bc(cli, checkpoint):
@@ -104,12 +148,17 @@ def main():
     cli = parse_cli()
     if cli.horizon < 1 or cli.horizon > 122:
         raise ValueError("--horizon must be in [1, 122]")
+    if cli.trajectory_start_offset < 0:
+        raise ValueError("--trajectory-start-offset must be non-negative")
     output = absolute(cli.output)
     if output.exists():
         raise FileExistsError(output)
     cli.student_checkpoint = str(absolute(cli.student_checkpoint))
     cli.manifest = str(absolute(cli.manifest))
     cli.trajectory_root = str(absolute(cli.trajectory_root))
+    cli.trajectory_split_root = (
+        str(absolute(cli.trajectory_split_root))
+        if cli.trajectory_split_root else "")
     cli.bc_config = str(absolute(cli.bc_config))
     cli.env_config = str(absolute(cli.env_config))
     cli.train_config = str(absolute(cli.train_config))
@@ -119,6 +168,15 @@ def main():
         manifest = json.load(handle)
     selected = [(category, object_id) for category in CATEGORIES
                 for object_id in manifest["categories"][category]["train"]]
+    if cli.object_id:
+        allowed = {object_id: category for category, object_id in selected}
+        unknown = [item for item in cli.object_id if item not in allowed]
+        if unknown:
+            raise ValueError(
+                "Requested objects are absent from manifest train split: {}"
+                .format(unknown))
+        selected = [(allowed[object_id], object_id)
+                    for object_id in cli.object_id]
     if cli.max_objects > 0:
         selected = selected[:cli.max_objects]
     if not selected:
@@ -128,6 +186,8 @@ def main():
     evaluation_support.require_free_vram(cli.min_free_vram_mb)
     evaluation_support.initialize_runtime()
     import torch
+    # Keep torch-dependent custom modules behind Isaac Gym initialization.
+    from custom_tools.task_conditioning import set_inference_tasks
 
     original_cwd = Path.cwd()
     task = None
@@ -151,6 +211,7 @@ def main():
         pro_dim = 100
         current_category = None
         for object_index, (category, object_id) in enumerate(selected):
+            set_inference_tasks(student, [object_id])
             if category != current_category:
                 if teacher is not None:
                     del teacher
@@ -158,9 +219,12 @@ def main():
                     torch.cuda.empty_cache()
                 teacher, _ = load_bc(cli, teachers[category])
                 current_category = category
-            data, count = trajectory_data(
+            data, count, split_positions = trajectory_data(
                 Path(cli.trajectory_root), object_id,
-                cli.max_trajectories_per_object)
+                cli.max_trajectories_per_object,
+                Path(cli.trajectory_split_root)
+                if cli.trajectory_split_root else None,
+                cli.trajectory_start_offset)
             cli.num_envs = count
             task = build_task(
                 cli, {"seed": cli.seed}, official_args, base_cfg, cfg_train, [data])
@@ -183,7 +247,8 @@ def main():
                     n_live = int(live.numel())
                     category_indices.extend([CATEGORIES.index(category)] * n_live)
                     object_indices.extend([object_index] * n_live)
-                    trajectory_indices.extend(live.cpu().tolist())
+                    trajectory_indices.extend(
+                        split_positions[live.cpu().numpy()].tolist())
                     frame_indices.extend([frame] * n_live)
                     disagreement_sum += float(
                         (student_action[live] - teacher_action[live]).abs().sum().item())
@@ -197,6 +262,7 @@ def main():
                 "object_id": object_id,
                 "category": category,
                 "trajectory_count": count,
+                "trajectory_indices": split_positions.tolist(),
                 "collected_samples": len(category_indices) - collected_before,
                 "student_peak_success_count_within_collection_horizon": peak_success,
                 "mean_student_teacher_action_mae": (
@@ -227,10 +293,12 @@ def main():
             "created_at": datetime.now().isoformat(timespec="seconds"),
             "method": "one-round pure-student DAgger collection",
             "training_split_only": True,
+            "trajectory_split_root": cli.trajectory_split_root or None,
             "official_code_modified": False,
             "student_checkpoint": str(student_path),
             "teacher_checkpoints": {key: str(value) for key, value in teachers.items()},
             "horizon": cli.horizon,
+            "trajectory_start_offset": cli.trajectory_start_offset,
             "success_count_note": (
                 "Diagnostic within the collection horizon; not comparable to "
                 "the formal 122-step official evaluation"),

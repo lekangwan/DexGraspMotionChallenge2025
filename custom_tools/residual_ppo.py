@@ -221,6 +221,7 @@ def ppo_update(model, optimizer, batch, config):
         "anchor_sample_fraction")}
     updates = 0
     early_stopped = False
+    early_stop_kl = 0.0
 
     for _ in range(config.update_epochs):
         permutation = torch.randperm(batch_size, device=batch["actions"].device)
@@ -234,6 +235,8 @@ def ppo_update(model, optimizer, batch, config):
             approx_kl = ((ratio - 1.0) - log_ratio).mean()
             if updates > 0 and approx_kl.item() > config.target_kl:
                 early_stopped = True
+                early_stop_kl = max(
+                    early_stop_kl, float(approx_kl.item()))
                 break
             advantage = batch["advantages"][indices]
             unclipped = ratio * advantage
@@ -292,4 +295,5 @@ def ppo_update(model, optimizer, batch, config):
     metrics = {name: value / updates for name, value in totals.items()}
     metrics["ppo_updates"] = updates
     metrics["kl_early_stop"] = int(early_stopped)
+    metrics["early_stop_kl"] = early_stop_kl
     return metrics

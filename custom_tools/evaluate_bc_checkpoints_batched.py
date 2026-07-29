@@ -60,6 +60,7 @@ def evaluate_one(cli, config, task, object_ids, checkpoint_path, torch,
         cli.bc_checkpoint = checkpoint_path
         loaded_model = evaluation_support.load_model(cli)
     bc_model, _, resolved_checkpoint, checkpoint = loaded_model
+    set_inference_tasks(bc_model, object_ids, task.object_idxs)
     env, actor_obs, critic_obs = create_residual_env(
         task, bc_model, config, residual_env_class)
     del actor_obs, critic_obs
@@ -120,6 +121,7 @@ def evaluate_one(cli, config, task, object_ids, checkpoint_path, torch,
 
 
 def main():
+    global set_inference_tasks
     cli = parse_cli()
     resolve(cli)
     output = Path(cli.output)
@@ -151,6 +153,9 @@ def main():
     evaluation_support.require_free_vram(cli.min_free_vram_mb)
     evaluation_support.initialize_runtime()
     import torch
+    # Isaac Gym requires its modules to be imported before anything that
+    # imports torch.  Task conditioning therefore has to remain a lazy import.
+    from custom_tools.task_conditioning import set_inference_tasks
     from custom_tools.residual_env import ResidualDexGraspEnv
     original_cwd = Path.cwd()
     task = None

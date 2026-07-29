@@ -1,0 +1,13 @@
+status: frozen_scaled_final_holdout
+purpose: one_time_locked_model_evaluation
+object_ids:
+  - core-bottle-c3767df815e0e43e4c3a35cee92bb95b
+  - core-bottle-70172e6afe6aff7847f90c1ac631b97f
+  - core-mug-15bd6225c209a8e3654b0ce7754570c8
+  - core-mug-d32cd77c6630b77de47c0353c18d58e
+  - core-bowl-fa23aa60ec51c8e4c40fe5637f0a27e1
+  - core-bowl-ce48ffb418b99996912a38ce5826ebb8
+  - core-camera-6c14c6f6cca53a6710d0920f7087353b
+  - core-camera-147183af1ba4e97b8a94168388287ad5
+must_not_be_used_for_model_selection: true
+source_protocol: custom_tools/configs/scaled_evaluation_protocol_v1.json

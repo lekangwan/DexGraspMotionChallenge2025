@@ -19,6 +19,9 @@ def main():
     mode.add_argument("--zero-residual", action="store_true")
     parser.add_argument("--residual-config", required=True)
     parser.add_argument("--bc-checkpoint", required=True)
+    parser.add_argument(
+        "--bc-config", default="",
+        help="BC architecture config for Task-ID or temporal policies.")
     parser.add_argument("--trajectory-root", required=True)
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--capture-stride", type=int, default=2)
@@ -33,6 +36,10 @@ def main():
             number, case["category"], case["outcome"],
             case["trajectory_index"])
         case_dir = output / tag
+        result_path = output / (tag + ".yaml")
+        if result_path.exists():
+            print("reuse render case: {}".format(tag), flush=True)
+            continue
         command = [sys.executable, str(REPO_ROOT / "custom_tools/evaluate_residual_ppo.py"),
                    "--object-id", case["object_id"],
                    "--trajectory-root", str(Path(cli.trajectory_root).resolve()),
@@ -42,7 +49,10 @@ def main():
                    "--capture-dir", str(case_dir),
                    "--capture-stride", str(cli.capture_stride),
                    "--min-free-vram-mb", str(cli.min_free_vram_mb),
-                   "--output", str(output / (tag + ".yaml"))]
+                   "--output", str(result_path)]
+        if cli.bc_config:
+            command.extend([
+                "--bc-config", str(Path(cli.bc_config).resolve())])
         if cli.zero_residual:
             command.append("--zero-residual")
         else:

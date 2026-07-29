@@ -1,51 +1,49 @@
-# 基于鲁棒行为克隆与门控残差强化学习的灵巧手抓取
+# 基于在线模仿与短时历史的多物体灵巧手抓取
 
 ## 1. 任务与实验设置
 
-本实验基于 DexGraspMotionChallenge2025，在 Ubuntu 20.04、RTX 4060 Laptop 8 GB 和 Isaac Gym 上训练 Shadow Hand 抓取策略。数据包含 bottle、bowl、camera、mug 四类物体；选取 16 个物体训练，另冻结 4 个未见物体作为最终测试。训练物体划分为 395 条 BC 训练轨迹和 100 条同物体留出轨迹，未见测试集共 95 条。所有正式结果均使用未修改的官方 `successes` 成功标志，自定义 reward 仅用于 PPO 训练。
+本实验基于 DexGraspMotionChallenge2025，在 Ubuntu 20.04、RTX 4060 Laptop 8 GB 和 Isaac Gym 上训练 Shadow Hand 抓取策略。研究对象为 Bottle、Mug、Bowl、Camera 四类：每类20个训练物体，共80个物体、1726条训练轨迹；每个训练物体另留出部分轨迹，共434条，用于同实例闭环验证。另冻结每类5个未见实例，其中12个开发物体用于选模，8个最终物体只在模型锁定后评测一次。所有结果均使用未修改的官方峰值成功标志，主要指标为物体宏平均成功率；最终结果重复3个仿真seed。
 
 ## 2. 方法
 
-首先从官方权重 warm-start 一个共享多物体 BC。诊断发现，BC 在专家状态上的动作 MAE 仅为 0.0072，但在自身闭环状态上增至 0.2648（36.8 倍），且误差在预抓取、闭合和抬升阶段继续放大。这说明主要问题不是离线拟合不足，而是策略偏离示范后缺少恢复能力。受 DAgger 所讨论的序列决策误差累积启发，我在 100 维本体观测上加入均匀噪声 ±0.02，使 BC 学习示范邻域内的纠正动作。
+核心问题是行为克隆（BC）的闭环分布偏移：网络虽然能拟合示范状态上的动作，但一次小误差会改变手物接触，之后访问训练数据未覆盖的状态并继续累积误差。为此采用一条串行主线：
 
-随后参考 Residual Reinforcement Learning，在冻结 BC 上训练共享 PPO 残差。为避免残差破坏 BC 已有成功动作，本文加入两个状态相关门：腕部门和手指门。最终动作写为
+1. **BC Soup与类别教师**：以官方BC为起点，用±0.05观测噪声训练多个模型并平均权重；随后训练四个类别教师。
+2. **统一Task-ID学生**：将类别one-hot编码与当前DexRep及本体状态拼接，蒸馏四个教师。Task-ID只是条件输入，策略仍是一个共享网络，并非推理时硬切换专家。
+3. **Online-R1**：让统一学生在仿真中执行，在学生实际访问的状态上查询对应类别教师；训练批次中25%来自在线状态、75%来自原离线数据，缓解分布偏移。
+4. **Temporal3**：从Online-R1初始化，当前时刻使用DexRep，并拼接最近3帧的100维本体状态和28维动作历史。历史直接进入共享MLP（隐藏层1024–1024–512–512），输出28维动作；没有额外GRU或Transformer。
 
-\[
-a=\operatorname{clip}\left(a_{BC}+s\odot(g\odot\delta a)\right),
-\]
+早期曾在每类4个、共16个见过的物体上进行低成本串行诊断，用于定位流水线内部可能的能力损失。由于该子集只覆盖完整80个训练物体的20%，且不是未见物体测试集，其数值不作为总体性能或泛化结论，原诊断图不放入正式结果。下图只展示Temporal3的训练损失。
 
-其中残差 \(\delta a\) 为 28 维，腕部与手指最大尺度分别为 0.05 和 0.10，门值 \(g_w,g_f\in[0,1]\)。门作为 PPO 随机动作的一部分参与策略梯度，初始值设为 0.1，并加入权重 0.01 的开启代价。Actor 使用当前 DexRep、BC 动作及 3 帧本体/动作历史；critic 额外使用物体状态、接触力等特权信息。64 个训练环境覆盖 16 个物体，每个物体包含 2 条 BC 成功锚点、1 条高抬升失败和 1 条普通失败。无门和门控方法使用相同 seed、轨迹和 PPO 主参数。
+<img src="custom_tools/results/taskid_final_report_assets_v1/temporal3_training_loss.png" width="55%" alt="Temporal3训练损失">
 
 ## 3. 结果
 
-同物体留出集结果如下。普通多物体 BC 只有 2/100；观测噪声将其提高到 16/100。门控 PPO 第 50 轮达到 16/100，明显优于相同设置的无门 PPO（11/100），但按预先固定的“宏平均成功率→抬升→失败率”规则，噪声 BC 的抬升更高、失败率更低，因此最终基础模型仍选噪声 BC。
+全80个训练实例的独立验证结果为119/434，总体成功率27.42%、物体宏成功率26.05%、平均最大抬升12.92 cm。分类别宏成功率为Bottle 35.27%、Mug 33.49%、Bowl 14.55%、Camera 20.88%；80个物体中19个零成功，其中Bowl占10个。这说明16物体审计略偏乐观，且主要困难在Bowl和Camera。
 
-| 方法 | 成功数 | 宏平均成功率 | 平均最大抬升 | 失败率 |
-| --- | ---: | ---: | ---: | ---: |
-| 普通多物体 BC | 2/100 | 3.65% | 2.81 cm | 10.94% |
-| 原共享残差 PPO | 8/100 | 8.82% | 5.27 cm | 11.72% |
-| 噪声 BC | **16/100** | **18.71%** | **10.76 cm** | **7.81%** |
-| 噪声 BC + 无门 PPO（50轮） | 11/100 | 13.13% | 8.44 cm | 9.49% |
-| 噪声 BC + 门控 PPO（50轮） | **16/100** | **18.71%** | 9.41 cm | 8.59% |
+最终8个未见实例上，Temporal3在三个seed都超过Online-R1：
 
-门控 PPO 相对噪声 BC 保留 12 个原成功、新增 4 个、丢失 4 个；无门 PPO 仅保留 3 个、新增 8 个、丢失 13 个，说明门控显著缓解了负迁移。腕部和手指门从约 0.1 缓慢增至约 0.19，没有无条件完全打开。训练 reward 后期门控保持稳定，而无门策略继续下降；失败惩罚约占绝对 reward 的 50%，接近与抬升分别约占 34% 和 12%。
+| 模型 | 成功数（3次） | 总体成功率 | 物体宏成功率 | 平均最大抬升 |
+| --- | --- | ---: | ---: | ---: |
+| Online-R1 | 45 / 42 / 42 | 19.91±0.65% | 17.46±0.72% | 9.37 cm |
+| Temporal3 | **59 / 61 / 58** | **27.47±0.58%** | **26.15±0.33%** | **11.83 cm** |
 
-<img src="custom_tools/results/noisebc_gated_comparison/training_reward_comparison.png" width="49%" alt="训练 reward 对比"><img src="custom_tools/results/noisebc_gated_comparison/heldout_success_curve.png" width="49%" alt="留出集成功率曲线">
+Temporal3宏成功率绝对提高8.69个百分点，Mug、Bowl、Camera分别提高16.03、14.17、4.88个百分点，Bottle基本持平（-0.32点）。不过26.15%的绝对值仍低；它与80个见过实例的26.05%几乎相同，说明主要瓶颈不是新几何泛化，而是示范动作的闭环复现与偏离后的恢复。
 
-最终未见物体只评测一次，不再用于调参。噪声 BC、无门 PPO、门控 PPO 分别为 28/95、26/95、27/95，门控仍优于无门但没有超过 BC。噪声 BC 的分类别成功为 bottle 4/37、bowl 19/24、camera 3/17、mug 2/17，性能主要由 bowl 拉高，说明跨几何泛化仍不均衡。
+<img src="custom_tools/results/taskid_final_report_assets_v1/final_model_comparison.png" width="49%" alt="最终模型总体比较"><img src="custom_tools/results/taskid_final_report_assets_v1/final_category_success.png" width="49%" alt="最终分类别成功率">
 
-| 未见物体方法 | 总成功率 | bottle | bowl | camera | mug |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| 噪声 BC | **29.47%** | 10.81% | 79.17% | 17.65% | 11.76% |
-| 无门 PPO | 27.37% | 13.51% | 75.00% | 5.88% | 11.76% |
-| 门控 PPO | 28.42% | 13.51% | **83.33%** | 11.76% | 0% |
+本文也尝试了门控残差PPO、7帧历史、多尺度历史、未来动作辅助、全观测GRU、注意力残差、显式阶段编码和类别Temporal3专家，均未稳定超过Temporal3。以Temporal3为基础的50轮门控残差PPO在开发集上的宏成功率从零残差36.24%降至35.64%；训练reward也没有形成与官方成功率一致的改善，因此不进入最终评测。主模型属于模仿学习，其直接优化目标是动作损失；下图reward曲线来自该强化学习负结果。
 
-成功案例中物体被手指稳定包络并离开桌面；典型失败则表现为接近误差导致未形成有效接触，随后手与物体分离。完整四类成功/失败视频位于 `custom_tools/results/report_renders/`。
+<img src="custom_tools/results/taskid_final_report_assets_v1/temporal3_residual_reward_success.png" width="72%" alt="残差PPO reward与成功率">
 
-<img src="custom_tools/results/report_renders/bottle_success_candidate_ba4_idx6/env000_success.png" width="24%" alt="bottle成功"><img src="custom_tools/results/report_renders/noisebc_final/02_bottle_failure_6/env000_final.png" width="24%" alt="bottle失败"><img src="custom_tools/results/report_renders/noisebc_final/07_mug_success_5/env000_success.png" width="24%" alt="mug成功"><img src="custom_tools/results/report_renders/noisebc_final/08_mug_failure_2/env000_final.png" width="24%" alt="mug失败">
+单环境渲染中，Bottle和Mug成功抬升，最大高度变化分别为19.8 cm和48.8 cm；Bowl接近后未形成稳定包络，Camera则发生明显手物分离。预先在并行评测中稳定成功的Bowl/Camera轨迹，在单环境重放时失败，说明接触仿真还对并行环境布局和数值扰动敏感。图中标签严格采用本次渲染YAML的实际结果。
+
+<img src="custom_tools/results/taskid_final_report_assets_v1/representative_render_cases.png" width="75%" alt="成功与失败渲染案例">
 
 ## 4. 理解与思考
 
-实验表明，灵巧手抓取的低成功率不能只用离线 loss 判断：很小的一步动作误差会通过接触动力学迅速累积。简单观测噪声直接提高了闭环鲁棒性，是本实验收益最大的改动。残差 PPO 能探索 BC 之外的动作，但无门残差容易“以新换旧”；状态门使策略只进行有限修正，显著保留已有技能。不过门控仍会在类别间重新分配成功，尤其在未见 mug 上发生遗忘，说明两个全局门还不足以描述不同抓取阶段和物体几何。后续可尝试按接近/闭合/抬升阶段设置门，加入成功锚点上的行为约束，或训练类别专家后蒸馏为统一学生策略。
+实验最明确的结论是：离线loss不能代表灵巧手闭环能力。在线模仿让学生学习自己造成的偏离状态，是整条主线中收益最大的步骤；短历史帮助网络判断“接近—闭合—抬升”阶段，因此在未见实例上稳定提高成功率。但简单三帧拼接仍缺乏接触后的长期记忆和主动恢复能力，共享网络也在Bowl等类别上出现明显能力损失。
 
-参考：[挑战 Wiki](https://github.com/DexGraspMotionChallenge/DexGraspMotionChallenge2025/wiki)、[Residual Reinforcement Learning](https://arxiv.org/abs/1812.03201)、[DAgger](https://proceedings.mlr.press/v15/ross11a.html)。
+后续更值得研究的是：使用能够在学生偏离状态上给出可靠动作的闭环专家，迭代执行DAgger式数据聚合；引入接触感知的时序状态或分阶段恢复策略；在保持统一推理网络的前提下加入类别适配器，并重新冻结未见测试集验证。当前最终8物体已经访问，不能再用于后续选模。
+
+参考：[挑战Wiki](https://github.com/DexGraspMotionChallenge/DexGraspMotionChallenge2025/wiki)、[DAgger](https://proceedings.mlr.press/v15/ross11a.html)、[Residual Reinforcement Learning](https://arxiv.org/abs/1812.03201)。

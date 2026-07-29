@@ -1,0 +1,16 @@
+status: frozen_stage1_selection
+stage: temporal3_gated_residual_compatibility_smoke
+trajectory_root: /home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_final_v1_preprocessed
+uses_unseen_test_objects: false
+selection_rule: First frozen training object per category and training indices 4-7;
+  compatibility test only, not a model-selection result.
+object_ids:
+  - core-bottle-714320da4aafcb4a47be2353d2b2403b
+  - core-mug-1a97f3c83016abca21d0de04f408950f
+  - core-bowl-4227b58665eadcefc0dc3ed657ab97f0
+  - core-camera-82819e1201d2dc583a3e53900c6cbba
+trajectory_indices_by_object:
+  core-bottle-714320da4aafcb4a47be2353d2b2403b: [4, 5, 6, 7]
+  core-mug-1a97f3c83016abca21d0de04f408950f: [4, 5, 6, 7]
+  core-bowl-4227b58665eadcefc0dc3ed657ab97f0: [4, 5, 6, 7]
+  core-camera-82819e1201d2dc583a3e53900c6cbba: [4, 5, 6, 7]

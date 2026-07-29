@@ -1,0 +1,221 @@
+status: complete
+formal_final_holdout_result: false
+final_holdout_accessed: false
+purpose: Controlled full-pipeline ablation of the four-way category one-hot; no post-hoc
+  final-holdout selection.
+no_taskid_offline_checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_notask_scaled20_t100_seed2025_e20_v1/epoch=004-step=4715.ckpt
+r1_screening:
+- epoch: 2
+  macro_success_rate: 0.2569949090556676
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_notask_online_r1_frac025_seed2025_e10_v1/epoch=001-step=2232.ckpt
+- epoch: 4
+  macro_success_rate: 0.23465515669946782
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_notask_online_r1_frac025_seed2025_e10_v1/epoch=003-step=4464.ckpt
+- epoch: 6
+  macro_success_rate: 0.20198459590390702
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_notask_online_r1_frac025_seed2025_e10_v1/epoch=005-step=6696.ckpt
+- epoch: 8
+  macro_success_rate: 0.22076200847485675
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_notask_online_r1_frac025_seed2025_e10_v1/epoch=007-step=8928.ckpt
+- epoch: 10
+  macro_success_rate: 0.2602028426912328
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_notask_online_r1_frac025_seed2025_e10_v1/epoch=009-step=11160.ckpt
+temporal3_screening:
+- epoch: 1
+  macro_success_rate: 0.22228680177596585
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_notask_temporal3_seed2025_e4_v1/epoch=000-step=1288.ckpt
+- epoch: 2
+  macro_success_rate: 0.2567703037759152
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_notask_temporal3_seed2025_e4_v1/epoch=001-step=2576.ckpt
+- epoch: 3
+  macro_success_rate: 0.21489216362958627
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_notask_temporal3_seed2025_e4_v1/epoch=002-step=3864.ckpt
+- epoch: 4
+  macro_success_rate: 0.19411974437129234
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_notask_temporal3_seed2025_e4_v1/epoch=003-step=5152.ckpt
+without_taskid:
+  no_taskid_online_r1:
+    label: no_taskid_online_r1
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_notask_online_r1_frac025_seed2025_e10_v1/epoch=009-step=11160.ckpt
+    success_counts:
+    - 77
+    - 75
+    - 78
+    trajectory_count_per_seed: 313
+    overall_success_mean: 0.24494142705005326
+    overall_success_std: 0.0039847256515164395
+    macro_success_mean: 0.25866234180862663
+    macro_success_std: 0.003839810069047289
+    lift_mean_m: 0.11307200603187084
+    failure_mean: 0.18079289400743112
+    category_success:
+      bottle:
+        mean: 0.4163970532391585
+        std: 0.004489566864676476
+        values:
+        - 0.41957165641376165
+        - 0.41004784688995216
+        - 0.41957165641376165
+      mug:
+        mean: 0.37475633528265107
+        std: 0.0
+        values:
+        - 0.37475633528265107
+        - 0.37475633528265107
+        - 0.37475633528265107
+      bowl:
+        mean: 0.10310457516339869
+        std: 0.003928371006591936
+        values:
+        - 0.09754901960784312
+        - 0.10588235294117647
+        - 0.10588235294117647
+      camera:
+        mean: 0.1403914035492983
+        std: 0.012409681174303595
+        values:
+        - 0.14893435946067524
+        - 0.1228434912645439
+        - 0.14939635992267572
+  no_taskid_temporal3:
+    label: no_taskid_temporal3
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_notask_temporal3_seed2025_e4_v1/epoch=001-step=2576.ckpt
+    success_counts:
+    - 79
+    - 79
+    - 84
+    trajectory_count_per_seed: 313
+    overall_success_mean: 0.2577209797657082
+    overall_success_std: 0.007530423654808806
+    macro_success_mean: 0.25885026564206126
+    macro_success_std: 0.002903819374580723
+    lift_mean_m: 0.12317029635111491
+    failure_mean: 0.16081317762533823
+    category_success:
+      bottle:
+        mean: 0.33597630439735704
+        std: 0.01346870059402948
+        values:
+        - 0.3264524948735475
+        - 0.3264524948735475
+        - 0.3550239234449761
+      mug:
+        mean: 0.2646198830409357
+        std: 0.010079372977439821
+        values:
+        - 0.2717470760233918
+        - 0.2717470760233918
+        - 0.2503654970760234
+      bowl:
+        mean: 0.20604575163398692
+        std: 0.003928371006591943
+        values:
+        - 0.2088235294117647
+        - 0.20049019607843135
+        - 0.2088235294117647
+      camera:
+        mean: 0.2287591234959656
+        std: 0.007168041347647375
+        values:
+        - 0.22005811479495688
+        - 0.22860512334196545
+        - 0.23761413235097448
+with_taskid_existing_controls:
+  online_r1:
+    label: online_r1
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_online_r1_frac025_seed2025_e10_v1/epoch=001-step=2232.ckpt
+    success_counts:
+    - 95
+    - 95
+    - 91
+    trajectory_count_per_seed: 313
+    macro_success_mean: 0.3279649589295487
+    macro_success_std: 0.00864142312457451
+    macro_success_values:
+    - 0.332887789510274
+    - 0.33519042108922137
+    - 0.31581666618915066
+    lift_mean_m: 0.15928318579163817
+    failure_mean: 0.15704676508903503
+    category_success:
+      bottle:
+        mean: 0.5159869370395685
+        std: 0.004489566864676476
+        values:
+        - 0.5191615402141717
+        - 0.5191615402141717
+        - 0.5096377306903622
+      mug:
+        mean: 0.416483918128655
+        std: 0.009144733920465511
+        values:
+        - 0.40369152046783624
+        - 0.42123538011695905
+        - 0.4245248538011696
+      bowl:
+        mean: 0.1834967320261438
+        std: 0.027708246310083333
+        values:
+        - 0.20710784313725492
+        - 0.19877450980392156
+        - 0.14460784313725492
+      camera:
+        mean: 0.19589224852382747
+        std: 0.00805819693659883
+        values:
+        - 0.20159025422183316
+        - 0.20159025422183316
+        - 0.18449623712781607
+    outputs:
+    - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_online_r1_development_v1/online_25pct_epoch02.yaml
+    - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_online_r1_repeats_v1/seed2026/online_25pct_epoch02.yaml
+    - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_online_r1_repeats_v1/seed2027/online_25pct_epoch02.yaml
+  temporal3:
+    label: temporal3
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_temporal3_seed2025_e4_v1/epoch=003-step=5152.ckpt
+    success_counts:
+    - 107
+    - 112
+    - 102
+    trajectory_count_per_seed: 313
+    macro_success_mean: 0.37632568801299454
+    macro_success_std: 0.010191535361108405
+    macro_success_values:
+    - 0.3742185508729626
+    - 0.389727174194086
+    - 0.365031338971935
+    lift_mean_m: 0.17800303134653303
+    failure_mean: 0.14386707999640042
+    category_success:
+      bottle:
+        mean: 0.42441710336447175
+        std: 0.011878277418329995
+        values:
+        - 0.4275917065390749
+        - 0.4371155160628845
+        - 0.4085440874914559
+      mug:
+        mean: 0.38974171539961017
+        std: 0.02018027158402872
+        values:
+        - 0.41642300194931775
+        - 0.38517300194931775
+        - 0.36762914230019494
+      bowl:
+        mean: 0.4520424836601308
+        std: 0.03142696805273544
+        values:
+        - 0.4075980392156863
+        - 0.474264705882353
+        - 0.474264705882353
+      camera:
+        mean: 0.23910144962776542
+        std: 0.021938401641561134
+        values:
+        - 0.24526145578777156
+        - 0.2623554728817887
+        - 0.209687420213736
+    outputs:
+    - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_temporal3_development_v1/temporal3_epoch04.yaml
+    - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_temporal3_repeats_v1/seed2026/temporal3_epoch04.yaml
+    - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_temporal3_repeats_v1/seed2027/temporal3_epoch04.yaml

@@ -1,0 +1,55 @@
+{
+  "status": "frozen_before_scaled_training",
+  "source_manifest": "/home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/configs/scaled_category_split_final_v1.json",
+  "selection_rule": "Within each policy-blind five-object test list, reserve the first geometry-center/farthest pair as final holdout and use the remaining three for development. No scaled policy existed at freeze time.",
+  "categories": {
+    "bottle": {
+      "final_holdout": [
+        "core-bottle-c3767df815e0e43e4c3a35cee92bb95b",
+        "core-bottle-70172e6afe6aff7847f90c1ac631b97f"
+      ],
+      "development": [
+        "core-bottle-25b8ed5b02f07b6cbcfad79fc308fa6d",
+        "core-bottle-6444875e3217bf891f5f48a891d827bd",
+        "core-bottle-dd280525cf000bc3a608634464309a70"
+      ]
+    },
+    "bowl": {
+      "final_holdout": [
+        "core-bowl-fa23aa60ec51c8e4c40fe5637f0a27e1",
+        "core-bowl-ce48ffb418b99996912a38ce5826ebb8"
+      ],
+      "development": [
+        "core-bowl-3f56833e91054d2518e800f0d88f9019",
+        "core-bowl-45603bffc6a2866b5d1ac0d5489f7d84",
+        "core-bowl-e16e27d3670853b12d4e6b2984840098"
+      ]
+    },
+    "camera": {
+      "final_holdout": [
+        "core-camera-6c14c6f6cca53a6710d0920f7087353b",
+        "core-camera-147183af1ba4e97b8a94168388287ad5"
+      ],
+      "development": [
+        "core-camera-7077395b60bf4aeb3cb44973ec1ffcf8",
+        "core-camera-73b02fe7b4b2e45f74cd541b34c6124",
+        "core-camera-1cc93f96ad5e16a85d3f270c1c35f1c7"
+      ]
+    },
+    "mug": {
+      "final_holdout": [
+        "core-mug-15bd6225c209a8e3654b0ce7754570c8",
+        "core-mug-d32cd77c6630b77de47c0353c18d58e"
+      ],
+      "development": [
+        "core-mug-f626192a5930d6c712f0124e8fa3930b",
+        "core-mug-9ff8400080c77feac2ad6fd1941624c3",
+        "core-mug-4b8b10d03552e0891898dfa8eb8eefff"
+      ]
+    }
+  },
+  "counts": {
+    "development": 12,
+    "final_holdout": 8
+  }
+}

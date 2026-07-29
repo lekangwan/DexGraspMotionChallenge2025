@@ -17,9 +17,15 @@ SELECTION = ROOT / "custom_tools/configs/unseen_v2_final_selection.yaml"
 TRAJECTORIES = ROOT / "dexgrasp/dataset/unseen_v2_final"
 BC_CONFIG = ROOT / "custom_tools/configs/unified_student_online_round1.yaml"
 RESIDUAL_CONFIG = ROOT / "custom_tools/configs/residual_ppo_soup_anchored_gated.yaml"
+LOCK = ROOT / "custom_tools/configs/final_evaluation_lock_v2.yaml"
 SOUP = ROOT / "custom_tools/runs/bc/model_soups/noise005_s2025_s2026_weighted2to1.ckpt"
-UNIFIED = (ROOT / "custom_tools/runs/bc/unified_hparam_teacher85_seed2025_e20_v1/"
-           "epoch=004-step=2140.ckpt")
+UNIFIED_T70 = (
+    ROOT / "custom_tools/runs/bc/"
+    "unified_student_online_r1_noisefix_seed2025_e20_v1/"
+    "epoch=004-step=2140.ckpt")
+UNIFIED_T85 = (
+    ROOT / "custom_tools/runs/bc/"
+    "unified_hparam_teacher85_seed2025_e20_v1/epoch=004-step=2140.ckpt")
 TEACHERS = {
     "bottle": ROOT / "custom_tools/runs/bc/category_expert_bottle_noise005_soup_seed2025_e40_v1/epoch=039-step=2560.ckpt",
     "mug": SOUP,
@@ -46,13 +52,18 @@ def main():
         manifest = json.load(handle)
     if manifest.get("status") != "frozen_before_any_learned_policy_evaluation":
         raise ValueError("Unseen-v2 manifest is not in the frozen state")
+    with LOCK.open(encoding="utf-8") as handle:
+        lock = yaml.safe_load(handle)
+    if lock.get("status") != "locked_before_final_unseen_v2_evaluation":
+        raise ValueError("Final candidate list is not locked")
     OUTPUT.mkdir(parents=True, exist_ok=True)
     single_dir = OUTPUT / "single_networks"
     routed_dir = OUTPUT / "routed_teacher_pool"
     run([
         sys.executable, str(ROOT / "custom_tools/repeat_strict_bc_finalists.py"),
         "--candidate", "soup_baseline={}".format(SOUP),
-        "--candidate", "unified_online_teacher85={}".format(UNIFIED),
+        "--candidate", "unified_online_t70={}".format(UNIFIED_T70),
+        "--candidate", "unified_online_t85={}".format(UNIFIED_T85),
         "--repeat-start", "1", "--repeat-end", "3",
         "--bc-config", str(BC_CONFIG), "--residual-config", str(RESIDUAL_CONFIG),
         "--trajectory-root", str(TRAJECTORIES),
@@ -81,6 +92,7 @@ def main():
         "created_at": datetime.now().isoformat(timespec="seconds"),
         "status": "locked_final_unseen_v2_report_only",
         "post_evaluation_training_allowed": False,
+        "candidate_lock": str(LOCK),
         "manifest": str(MANIFEST),
         "objects": manifest["categories"],
         "single_network_results": single["candidates"],

@@ -1,0 +1,26 @@
+status: locked_before_final_unseen_v2
+selection_source: custom_tools/results/evaluations/robust_oa_search/robust_search_summary.yaml
+final_unseen_v2_used: false
+selected_row: 2
+selected_training_seed: 2025
+selected_epoch: 20
+checkpoint: custom_tools/runs/bc/robust_oa_r02_seed2025_e20_v1/epoch=019-step=8560.ckpt
+parameters:
+  teacher_weight: 0.70
+  learning_rate: 0.00001
+  online_sample_fraction: 0.40
+  noise_value: 0.04
+selection_rule: >-
+  Rank rows by worst-seed then mean-seed success on the frozen geometry
+  confirmation set; within the selected row, use the checkpoint with the
+  highest official success count, followed by the predeclared macro metrics.
+evidence:
+  reused_validation_success_counts_by_seed:
+    2025: 29
+    2026: 29
+    2027: 29
+  geometry_confirmation_success_counts_by_seed:
+    2025: 45
+    2026: 44
+    2027: 44
+  geometry_confirmation_trajectory_count: 293

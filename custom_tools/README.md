@@ -11,12 +11,25 @@
 
 - `preflight_check.py`：只读检查环境、数据、mesh、模型和已有结果。
 - `select_object_split.py`：CPU 只读检查轨迹和 mesh，生成几何多样的训练/测试候选清单。
+- `select_scaled_category_split.py`：保留原4物体基线，生成每类4/10/20物体的嵌套训练集和全新测试集。
 - `stage_object_meshes.py`：用非破坏性符号链接把选定 mesh 接到仿真任务所需路径。
 - `preprocess_graspm3.py`：预处理到指定新目录；默认复现官方末帧筛选。
+  复杂网格可用 `--trajectories-per-chunk 10` 降低并行仿真显存，`--skip-existing` 支持中断续跑。
+- `preprocess_graspm3_isolated.py`：每个轨迹分块使用独立CUDA子进程，避免PhysX反复重建仿真时积累原生显存；失败分块自动二分到单条，最后按原始索引合并。
 - `summarize_preprocessed_split.py`：汇总候选物体的官方轨迹保留率并标出需替换对象。
+- `summarize_scaled_preprocessing.py`：检查扩展划分是否完整，并统计各数据规模实际保留的训练轨迹数。
+- `select_scaled_replacement_candidates.py`：为低保留物体选择未使用的同类别几何近邻候选，不读取策略结果。
+- `summarize_replacement_preprocessing.py`：汇总替换候选的官方末帧轨迹保留数。
+- `finalize_scaled_category_split.py`：按“通过12条门槛后几何最近”替换失败物体并冻结4/10/20划分。
+- `stage_final_preprocessed_split.py`：以符号链接统一旧基线和新增物体的预处理数据源。
+- `freeze_scaled_evaluation_protocol.py`：在训练前把20个测试物体冻结为12个开发物体和8个最终留出物体。
 - `finalize_object_split.py`：按同几何组备选规则替换低数据量训练物体并冻结最终清单。
 - `prepare_bc_dataset.py`：按整条轨迹切分 BC 训练/验证集，并隔离未见测试物体。
+  扩展实验可用 `--train-size 10/20` 读取嵌套清单，`--bc-only` 不复制DexRep训练未使用的大型点云字段。
 - `train_bc.py`：独立 BC 训练，保存配置、元数据和 checkpoint。
+- `run_scaled_category_expert_training.py`：从冻结摘要读取每类轨迹数，顺序训练10/20物体规模的8个类别专家；已完成的`last.ckpt`会跳过，半成品不会被自动覆盖。
+- `run_scaled_category_development_matrix.py`：在12个冻结开发物体上比较Soup锚点及4/10/20规模专家的10/20/30/40轮权重；默认3个闭环仿真种子、逐物体独立进程、可断点续跑，并保持8个最终留出物体封存。
+- `run_object_balanced_scale20_stage.py`：顺序训练4个20物体均衡采样专家，每5轮保存权重；默认先用1个仿真种子筛全部epoch，再对每类前2名做另外2个种子复验。`--full-matrix`才运行完整矩阵。
 - `evaluate_bc.py`：独立评测；默认使用官方峰值成功率。
 - `diagnose_graspm3_replay.py`：只读诊断轨迹抬升、越界和成功时刻。
 - `export_experiment_curves.py`：从 TensorBoard/YAML 导出 CSV 和 PNG。
@@ -76,6 +89,8 @@ python custom_tools/evaluate_residual_ppo.py \
 ```
 
 `--init-checkpoint` 只加载网络参数并开始新实验；`--resume-checkpoint` 同时恢复 epoch 和优化器。两者不能同时使用。
+
+类别专家可用`object_balanced_sampling: true`或`--object-balanced-sampling`让每个训练物体拥有相同的期望采样概率；它与类别均衡采样互斥，不修改原始数据或BC损失。
 
 残差 PPO 的 reward 只用于训练，结果文件明确标为 `custom_residual_ppo_training_reward`；正式成功率仍来自任务原有的 `successes`。零残差严格配对时，必须同时固定 BC checkpoint、seed、轨迹根目录和轨迹索引。
 

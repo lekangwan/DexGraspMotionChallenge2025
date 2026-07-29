@@ -11,6 +11,9 @@ import random
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 
+from custom_tools.task_conditioning import (
+    TASK_CATEGORIES, category_from_object_id, task_conditioning_enabled)
+
 def obs_process_numpy(observation, pro_dim=128):
     """
     observation: numpy array of shape (B, 2582)
@@ -218,7 +221,11 @@ class GraspM3DexRepDataset(Dataset):
         # Keep online conversion in our own namespace; the official
         # ``dexgrasp/data_preprocess.py`` remains untouched.
         from custom_tools.preprocess_graspm3 import data_preprocess_online
-        use_keys = {'obs', 'vis_unscale_actions', 'hand_pcds', 'obj_pcds', 'unscale_actions', 'grasp_seqs', 'h2o_vec', 'obj_scale', 'obj_rotmat'}
+        use_keys = {'obs', 'vis_unscale_actions', 'unscale_actions', 'grasp_seqs'}
+        if self.args.obs_type == 'pcds':
+            use_keys.update({'hand_pcds', 'obj_pcds'})
+        elif self.args.obs_type == 'h2o':
+            use_keys.add('h2o_vec')
         target_seq_num = self.seq_num
         all_results = []
 
@@ -263,8 +270,10 @@ class GraspM3DexRepDataset(Dataset):
         # precomputed teacher labels aligned with future dataset instances.
         all_results.sort(key=lambda item: item['obj_code'])
 
-        data_store = {key: [] for key in ['obs', 'vis_unscale_actions', 'obj_code_idx',
-                                          'grasp_seqs', 'hand_pcds', 'obj_pcds']}
+        data_store = {key: [] for key in [
+            'obs', 'vis_unscale_actions', 'obj_code_idx', 'grasp_seqs']}
+        if self.args.obs_type == 'pcds':
+            data_store.update({'hand_pcds': [], 'obj_pcds': []})
 
         if all_results and 'obs' not in all_results[0]:
             all_results = data_preprocess_online(all_results)
@@ -392,6 +401,13 @@ class GraspM3DexRepDataset(Dataset):
         data_out['actions'] = self.data['vis_unscale_actions'][idx]  # (28) if is_flat else (T, 28)
         data_out['obj_code_idx'] = obj_code_idx
         data_out['sample_index'] = sample_index
+        if task_conditioning_enabled(self.args):
+            object_id = self.obj_code_name_list[int(obj_code_idx)]
+            category = category_from_object_id(object_id)
+            task_index = TASK_CATEGORIES.index(category)
+            data_out['task_index'] = np.int64(task_index)
+            data_out['task_onehot'] = np.eye(
+                len(TASK_CATEGORIES), dtype=np.float32)[task_index]
         if self.teacher_actions is not None:
             data_out['teacher_actions'] = self.teacher_actions[sample_index]
 
@@ -451,4 +467,3 @@ if __name__ == '__main__':
     i=0
     for data in iter(ds_train):
             a=1
-        

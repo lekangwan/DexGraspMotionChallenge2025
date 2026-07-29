@@ -285,6 +285,8 @@ def evaluate_validation_policy(cli, config, validation_config, model, bc_model,
             task = build_task(
                 cli, config, official_args, base_cfg, cfg_train,
                 trajectory_data)
+            evaluation_support.set_inference_tasks(
+                bc_model, [object_id])
             env, actor_obs, critic_obs = create_residual_env(
                 task, bc_model, config, residual_env_class)
             peak_count = 0
@@ -418,6 +420,8 @@ def run(cli):
         bc_model, _, checkpoint_path, checkpoint = evaluation_support.load_model(cli)
         task = build_task(
             cli, config, official_args, base_cfg, cfg_train, trajectory_data)
+        evaluation_support.set_inference_tasks(
+            bc_model, object_ids, task.object_idxs)
         env, actor_obs, critic_obs = create_residual_env(
             task, bc_model, config, ResidualDexGraspEnv)
         category_names, category_masks, advantage_groups = category_context(

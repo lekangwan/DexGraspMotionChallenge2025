@@ -1,0 +1,5 @@
+status: development_validation
+purpose: Same-object held-out trajectories; previously inspected, not a final test set.
+trajectory_root: dexgrasp/dataset/bc_multicategory_valid
+object_ids:
+  - core-bottle-dc005c019fbfb32c90071898148dca0e

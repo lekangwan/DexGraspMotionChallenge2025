@@ -35,6 +35,73 @@ from ActionDiffusion.bc.model.policy.lhm_policy import LitBCModel
 from pytorch_lightning.callbacks import ModelCheckpoint, Callback, LearningRateMonitor
 from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
 from custom_tools.graspm3_dexrep_dataset import GraspM3DexRepDataset
+from custom_tools.task_conditioning import (
+    TASK_CATEGORIES,
+    action_chunk_aux_enabled,
+    action_chunk_aux_parameters,
+    enable_task_conditioning,
+    expand_standard_state_dict_for_task_model,
+    full_observation_gru_enabled,
+    phase_conditioning_enabled,
+    phase_conditioning_parameters,
+    task_conditioning_enabled,
+    temporal_attention_freeze_base,
+    temporal_history_dimensions,
+    temporal_history_enabled,
+    temporal_history_lags,
+)
+
+
+FEATURE_ENCODER_MODULES = (
+    'state_enc',
+    'dexrep_sensor_enc',
+    'dexrep_pointL_enc',
+    'bn_pnl',
+)
+
+
+def freeze_feature_encoder(bc_model):
+    """Freeze only the loaded DexRep feature encoder, leaving the actor trainable."""
+    policy = bc_model.model
+    frozen_modules = []
+    for name in FEATURE_ENCODER_MODULES:
+        module = getattr(policy, name, None)
+        if module is None:
+            continue
+        module.requires_grad_(False)
+        frozen_modules.append(module)
+    if len(frozen_modules) < 3:
+        raise RuntimeError(
+            'Could not identify the DexRep feature encoder; found {}/{} modules'
+            .format(len(frozen_modules), len(FEATURE_ENCODER_MODULES)))
+    trainable = sum(p.numel() for p in bc_model.parameters() if p.requires_grad)
+    frozen = sum(p.numel() for p in bc_model.parameters() if not p.requires_grad)
+    if trainable == 0 or frozen == 0:
+        raise RuntimeError(
+            'Invalid feature freeze: trainable={} frozen={}'.format(trainable, frozen))
+    print(
+        'Feature encoder frozen: modules={} trainable_parameters={} '
+        'frozen_parameters={}'.format(
+            ','.join(FEATURE_ENCODER_MODULES), trainable, frozen))
+    return frozen_modules
+
+
+class FrozenEncoderModeCallback(Callback):
+    """Keep frozen BatchNorm statistics fixed when Lightning enters train mode."""
+
+    def __init__(self, modules):
+        super().__init__()
+        self.modules = list(modules)
+
+    def _set_eval(self):
+        for module in self.modules:
+            module.eval()
+
+    def on_train_start(self, trainer, pl_module):
+        self._set_eval()
+
+    def on_train_epoch_start(self, trainer, pl_module):
+        self._set_eval()
 
 
 def require_free_vram(min_free_vram_mb):
@@ -107,6 +174,38 @@ def build_category_balanced_sampler(dataset, seed, online_sample_fraction=None):
         weights, num_samples=len(weights), replacement=True, generator=generator)
 
 
+def build_object_balanced_sampler(dataset, seed):
+    """Give every training object equal expected probability per epoch."""
+    sequence_object_indices = np.asarray(dataset.data['obj_code_idx'])
+    if dataset.is_flat:
+        sample_object_indices = np.repeat(
+            sequence_object_indices, dataset.num_frame)
+    else:
+        sample_object_indices = sequence_object_indices
+    if len(sample_object_indices) != len(dataset):
+        raise ValueError(
+            'Object/sample lengths differ: {} versus {}'.format(
+                len(sample_object_indices), len(dataset)))
+    counts = collections.Counter(sample_object_indices.tolist())
+    weights = torch.as_tensor([
+        1.0 / counts[int(object_index)]
+        for object_index in sample_object_indices
+    ], dtype=torch.double)
+    generator = torch.Generator()
+    generator.manual_seed(seed)
+    readable_counts = {
+        dataset.obj_code_name_list[int(object_index)]: count
+        for object_index, count in sorted(counts.items())
+    }
+    print('Object-balanced sampler frame counts before weighting: {}'.format(
+        readable_counts))
+    print('Object-balanced sampler target probability: {:.6f} each'.format(
+        1.0 / len(counts)))
+    return WeightedRandomSampler(
+        weights, num_samples=len(weights), replacement=True,
+        generator=generator)
+
+
 class OnlineAugmentedDataset(Dataset):
     """Append student-visited states labeled by the routed teacher.
 
@@ -122,6 +221,14 @@ class OnlineAugmentedDataset(Dataset):
         self.online_observations = online['observations'].astype(np.float32, copy=False)
         self.online_actions = online['teacher_actions'].astype(np.float32, copy=False)
         self.online_category_indices = online['category_indices'].astype(np.int64, copy=False)
+        self.online_student_actions = online['student_actions'].astype(
+            np.float32, copy=False)
+        self.online_object_indices = online['object_indices'].astype(
+            np.int64, copy=False)
+        self.online_trajectory_indices = online['trajectory_indices'].astype(
+            np.int64, copy=False)
+        self.online_frame_indices = online['frame_indices'].astype(
+            np.int64, copy=False)
         if len(self.online_observations) != len(self.online_actions):
             raise ValueError('Online observations/actions are not aligned')
         if self.online_observations.shape[1:] != self.offline.data['obs'].shape[1:]:
@@ -173,7 +280,238 @@ class OnlineAugmentedDataset(Dataset):
             'teacher_actions': action,
             'obj_code_idx': np.int64(-1),
             'sample_index': np.int64(online_index),
+            'task_index': np.int64(self.online_category_indices[online_index]),
+            'task_onehot': np.eye(
+                len(TASK_CATEGORIES), dtype=np.float32)[
+                    self.online_category_indices[online_index]],
         }
+
+
+class TemporalHistoryDataset(Dataset):
+    """Add previous proprioception and executed actions to each BC sample."""
+
+    def __init__(self, dataset, args):
+        self.dataset = dataset
+        self.history_frames, self.prop_dim, self.action_dim = (
+            temporal_history_dimensions(args))
+        self.history_steps = self.history_frames - 1
+        self.history_lags = temporal_history_lags(args)
+        self.action_chunk_horizon = (
+            action_chunk_aux_parameters(args)[0]
+            if action_chunk_aux_enabled(args) else 1)
+        self.include_full_observation_history = (
+            full_observation_gru_enabled(args))
+        self.include_phase_feature = phase_conditioning_enabled(args)
+        self.phase_max_frame_index = (
+            phase_conditioning_parameters(args)["phase_max_frame_index"]
+            if self.include_phase_feature else None)
+        self.offline = (
+            dataset.offline
+            if isinstance(dataset, OnlineAugmentedDataset)
+            else dataset)
+        if not self.offline.is_flat:
+            raise ValueError("Temporal history expects a frame-flat dataset")
+        if self.prop_dim != self.offline.pro_dim:
+            raise ValueError(
+                "History prop dimension {} does not match dataset {}".format(
+                    self.prop_dim, self.offline.pro_dim))
+        self.offline_length = len(self.offline)
+        self.sample_categories = getattr(
+            dataset, "sample_categories", None)
+        self.sample_sources = getattr(dataset, "sample_sources", None)
+        self.online_lookup = {}
+        if isinstance(dataset, OnlineAugmentedDataset):
+            keys = zip(
+                dataset.online_object_indices.tolist(),
+                dataset.online_trajectory_indices.tolist(),
+                dataset.online_frame_indices.tolist())
+            for index, key in enumerate(keys):
+                if key in self.online_lookup:
+                    raise ValueError(
+                        "Duplicate online temporal key: {}".format(key))
+                self.online_lookup[key] = index
+
+    def __len__(self):
+        return len(self.dataset)
+
+    def _maybe_noise_prop(self, prop):
+        prop = prop.astype(np.float32, copy=True)
+        if (self.offline.args.add_noise
+                and self.offline.ds_name != "test"):
+            prop += np.random.uniform(
+                -self.offline.args.noise_val,
+                self.offline.args.noise_val,
+                size=self.prop_dim).astype(np.float32)
+        return prop
+
+    def _offline_history(self, index):
+        frame = index % self.offline.num_frame
+        sequence_start = index - frame
+        props = []
+        actions = []
+        for lag in self.history_lags:
+            previous_frame = frame - lag
+            prop_frame = max(0, previous_frame)
+            previous_index = sequence_start + prop_frame
+            props.append(self._maybe_noise_prop(
+                self.offline.data["obs"][
+                    previous_index, :self.prop_dim]))
+            if previous_frame < 0:
+                actions.append(np.zeros(
+                    self.action_dim, dtype=np.float32))
+            else:
+                actions.append(
+                    self.offline.data["vis_unscale_actions"][
+                        previous_index].astype(np.float32, copy=True))
+        return np.concatenate(props + actions, axis=0)
+
+    def _offline_full_observation_history(self, index):
+        frame = index % self.offline.num_frame
+        sequence_start = index - frame
+        observations = []
+        for lag in self.history_lags:
+            previous_index = sequence_start + max(0, frame - lag)
+            observation = self.offline.data["obs"][
+                previous_index].astype(np.float32, copy=True)
+            observation[:self.prop_dim] = self._maybe_noise_prop(
+                observation[:self.prop_dim])
+            observations.append(observation)
+        return np.stack(observations)
+
+    def _online_history(self, online_index):
+        object_index = int(
+            self.dataset.online_object_indices[online_index])
+        trajectory_index = int(
+            self.dataset.online_trajectory_indices[online_index])
+        frame = int(self.dataset.online_frame_indices[online_index])
+        current_prop = self.dataset.online_observations[
+            online_index, :self.prop_dim]
+        props = []
+        actions = []
+        for lag in self.history_lags:
+            previous_frame = frame - lag
+            key = (object_index, trajectory_index, previous_frame)
+            previous_index = self.online_lookup.get(key)
+            if previous_index is None:
+                props.append(self._maybe_noise_prop(current_prop))
+                actions.append(np.zeros(
+                    self.action_dim, dtype=np.float32))
+            else:
+                props.append(self._maybe_noise_prop(
+                    self.dataset.online_observations[
+                        previous_index, :self.prop_dim]))
+                actions.append(
+                    self.dataset.online_student_actions[
+                        previous_index].astype(np.float32, copy=True))
+        return np.concatenate(props + actions, axis=0)
+
+    def _online_full_observation_history(self, online_index):
+        object_index = int(
+            self.dataset.online_object_indices[online_index])
+        trajectory_index = int(
+            self.dataset.online_trajectory_indices[online_index])
+        frame = int(self.dataset.online_frame_indices[online_index])
+        current = self.dataset.online_observations[online_index]
+        observations = []
+        for lag in self.history_lags:
+            # Inference initializes every history slot with the first frame.
+            # Mirror that convention instead of crossing trajectories.
+            key = (
+                object_index, trajectory_index, max(0, frame - lag))
+            previous_index = self.online_lookup.get(key)
+            source = (
+                current if previous_index is None
+                else self.dataset.online_observations[previous_index])
+            observation = source.astype(np.float32, copy=True)
+            observation[:self.prop_dim] = self._maybe_noise_prop(
+                observation[:self.prop_dim])
+            observations.append(observation)
+        return np.stack(observations)
+
+    def __getitem__(self, index):
+        item = self.dataset[index]
+        if index < self.offline_length:
+            history = self._offline_history(index)
+            phase_frame = index % self.offline.num_frame
+            if self.include_full_observation_history:
+                full_history = (
+                    self._offline_full_observation_history(index))
+        else:
+            online_index = index - self.offline_length
+            history = self._online_history(online_index)
+            phase_frame = int(
+                self.dataset.online_frame_indices[online_index])
+            if self.include_full_observation_history:
+                full_history = (
+                    self._online_full_observation_history(online_index))
+        item["history_features"] = history
+        if self.include_phase_feature:
+            normalized_phase = (
+                2.0 * min(phase_frame, self.phase_max_frame_index)
+                / float(self.phase_max_frame_index)
+                - 1.0)
+            item["phase_feature"] = np.asarray(
+                [normalized_phase], dtype=np.float32)
+        if self.include_full_observation_history:
+            item["full_history_observations"] = full_history
+        if (
+            self.action_chunk_horizon > 1
+            and self.offline.teacher_actions is not None
+        ):
+            if index < self.offline_length:
+                teacher_chunk, demo_chunk, chunk_mask = (
+                    self._offline_action_chunk(index))
+            else:
+                teacher_chunk, demo_chunk, chunk_mask = (
+                    self._online_action_chunk(index - self.offline_length))
+            item["teacher_action_chunk"] = teacher_chunk
+            item["demo_action_chunk"] = demo_chunk
+            item["action_chunk_mask"] = chunk_mask
+        return item
+
+    def _offline_action_chunk(self, index):
+        frame = index % self.offline.num_frame
+        sequence_start = index - frame
+        teacher = []
+        demo = []
+        mask = []
+        for offset in range(self.action_chunk_horizon):
+            valid = frame + offset < self.offline.num_frame
+            target_frame = min(
+                frame + offset, self.offline.num_frame - 1)
+            target_index = sequence_start + target_frame
+            teacher.append(
+                self.offline.teacher_actions[target_index].astype(
+                    np.float32, copy=True))
+            demo.append(
+                self.offline.data["vis_unscale_actions"][target_index].astype(
+                    np.float32, copy=True))
+            mask.append(valid)
+        return (
+            np.stack(teacher),
+            np.stack(demo),
+            np.asarray(mask, dtype=np.bool_),
+        )
+
+    def _online_action_chunk(self, online_index):
+        object_index = int(
+            self.dataset.online_object_indices[online_index])
+        trajectory_index = int(
+            self.dataset.online_trajectory_indices[online_index])
+        frame = int(self.dataset.online_frame_indices[online_index])
+        teacher = []
+        mask = []
+        last_action = self.dataset.online_actions[online_index]
+        for offset in range(self.action_chunk_horizon):
+            key = (object_index, trajectory_index, frame + offset)
+            target_index = self.online_lookup.get(key)
+            valid = target_index is not None
+            if valid:
+                last_action = self.dataset.online_actions[target_index]
+            teacher.append(last_action.astype(np.float32, copy=True))
+            mask.append(valid)
+        teacher = np.stack(teacher)
+        return teacher, teacher.copy(), np.asarray(mask, dtype=np.bool_)
 
 
 class DistillationBCModel(LitBCModel):
@@ -181,15 +519,40 @@ class DistillationBCModel(LitBCModel):
 
     def __init__(self, args, env_args):
         super().__init__(args, env_args)
+        if task_conditioning_enabled(args):
+            enable_task_conditioning(self, args, env_args)
         config = args.distillation
         self.teacher_weight = float(config.teacher_weight)
         self.demo_weight = float(config.demo_weight)
+        self.action_chunk_auxiliary_weight = (
+            action_chunk_aux_parameters(args)[1]
+            if action_chunk_aux_enabled(args) else 0.0)
         if self.teacher_weight < 0 or self.demo_weight < 0:
             raise ValueError('Distillation weights must be non-negative')
         if abs(self.teacher_weight + self.demo_weight - 1.0) > 1e-6:
             raise ValueError('Distillation weights must sum to one')
 
+    def forward(self, batch):
+        if phase_conditioning_enabled(self.args):
+            return self.model(
+                batch['obs'], batch['task_onehot'],
+                batch['history_features'], batch['phase_feature'])
+        if full_observation_gru_enabled(self.args):
+            return self.model(
+                batch['obs'], batch['task_onehot'],
+                batch['history_features'],
+                batch['full_history_observations'])
+        if temporal_history_enabled(self.args):
+            return self.model(
+                batch['obs'], batch['task_onehot'],
+                batch['history_features'])
+        if task_conditioning_enabled(self.args):
+            return self.model(batch['obs'], batch['task_onehot'])
+        return super().forward(batch)
+
     def training_step(self, batch, batch_idx):
+        if action_chunk_aux_enabled(self.args):
+            return self._action_chunk_training_step(batch)
         prediction = self.forward(batch)
         teacher = self.cal_loss(prediction, batch['teacher_actions'])
         demo = self.cal_loss(prediction, batch['actions'])
@@ -202,6 +565,53 @@ class DistillationBCModel(LitBCModel):
             'teacher_wrist_loss': teacher['wrist_loss'],
             'teacher_ori_loss': teacher['ori_loss'],
             'teacher_finger_loss': teacher['finger_loss'],
+        }, prog_bar=True, on_epoch=True)
+        return loss
+
+    def _masked_future_loss(self, prediction, target, mask):
+        losses = []
+        for step in range(1, prediction.shape[1]):
+            valid = mask[:, step].to(dtype=torch.bool)
+            if torch.any(valid):
+                losses.append(self.cal_loss(
+                    prediction[valid, step],
+                    target[valid, step])["loss"])
+        if not losses:
+            return prediction.sum() * 0.0
+        return torch.stack(losses).mean()
+
+    def _action_chunk_training_step(self, batch):
+        prediction = self.model.forward_action_chunk(
+            batch["obs"], batch["task_onehot"],
+            batch["history_features"])
+        teacher_main = self.cal_loss(
+            prediction[:, 0], batch["teacher_action_chunk"][:, 0])
+        demo_main = self.cal_loss(
+            prediction[:, 0], batch["demo_action_chunk"][:, 0])
+        teacher_future = self._masked_future_loss(
+            prediction, batch["teacher_action_chunk"],
+            batch["action_chunk_mask"])
+        demo_future = self._masked_future_loss(
+            prediction, batch["demo_action_chunk"],
+            batch["action_chunk_mask"])
+        teacher_loss = (
+            teacher_main["loss"]
+            + self.action_chunk_auxiliary_weight * teacher_future)
+        demo_loss = (
+            demo_main["loss"]
+            + self.action_chunk_auxiliary_weight * demo_future)
+        loss = (
+            self.teacher_weight * teacher_loss
+            + self.demo_weight * demo_loss)
+        self.log_dict({
+            "train_loss": loss,
+            "teacher_loss": teacher_main["loss"],
+            "demo_loss": demo_main["loss"],
+            "teacher_future_loss": teacher_future,
+            "demo_future_loss": demo_future,
+            "teacher_wrist_loss": teacher_main["wrist_loss"],
+            "teacher_ori_loss": teacher_main["ori_loss"],
+            "teacher_finger_loss": teacher_main["finger_loss"],
         }, prog_bar=True, on_epoch=True)
         return loss
 
@@ -221,10 +631,52 @@ class BCTrainer:
         if init_checkpoint is not None:
             checkpoint = torch.load(init_checkpoint, map_location='cpu')
             state_dict = checkpoint.get('state_dict', checkpoint)
+            expanded = False
+            if task_conditioning_enabled(args):
+                state_dict, expanded = expand_standard_state_dict_for_task_model(
+                    self.bc_model, state_dict)
             self.bc_model.load_state_dict(state_dict, strict=True)
             print(
-                'Initialized model weights from {} (epoch={}, optimizer state not loaded)'
-                .format(init_checkpoint, checkpoint.get('epoch', 'unknown')))
+                'Initialized model weights from {} (epoch={}, optimizer state '
+                'not loaded, task_input_expanded={})'
+                .format(
+                    init_checkpoint, checkpoint.get('epoch', 'unknown'),
+                    expanded))
+        self.frozen_mode_modules = []
+        if temporal_attention_freeze_base(args):
+            if init_checkpoint is None:
+                raise ValueError(
+                    'Freezing the Temporal3 base requires --init-checkpoint')
+            freeze_method = getattr(
+                self.bc_model.model, 'freeze_temporal_base', None)
+            if freeze_method is None:
+                raise TypeError(
+                    'Configured temporal attention model cannot freeze its base')
+            self.frozen_mode_modules.extend(freeze_method())
+            trainable = sum(
+                p.numel() for p in self.bc_model.parameters()
+                if p.requires_grad)
+            frozen = sum(
+                p.numel() for p in self.bc_model.parameters()
+                if not p.requires_grad)
+            if trainable == 0 or frozen == 0:
+                raise RuntimeError(
+                    'Invalid attention residual freeze: trainable={} '
+                    'frozen={}'.format(trainable, frozen))
+            print(
+                'Temporal3 base frozen: trainable_attention_parameters={} '
+                'frozen_base_parameters={}'.format(trainable, frozen))
+        if args.get('freeze_feature_encoder', False):
+            if temporal_attention_freeze_base(args):
+                raise ValueError(
+                    'freeze_feature_encoder is redundant when the entire '
+                    'Temporal3 base is frozen')
+            if init_checkpoint is None:
+                raise ValueError(
+                    'freeze_feature_encoder requires --init-checkpoint; freezing a '
+                    'randomly initialized encoder is not meaningful')
+            self.frozen_mode_modules.extend(
+                freeze_feature_encoder(self.bc_model))
 
     def train(self, ckpt_path=None):
 
@@ -237,6 +689,9 @@ class BCTrainer:
         )
         lr_monitor = LearningRateMonitor(logging_interval='step')
         callbacks = [callback, lr_monitor]
+        if self.frozen_mode_modules:
+            callbacks.append(FrozenEncoderModeCallback(
+                self.frozen_mode_modules))
         trainer_kwargs = dict(
             accelerator='gpu', devices=1, precision=32, max_epochs=self.args.num_epochs,
             callbacks=callbacks, log_every_n_steps=5,
@@ -341,11 +796,22 @@ def main(args, env_args, resume_checkpoint=None, init_checkpoint=None,
         if not online_path.is_file():
             raise FileNotFoundError('Online aggregation file: {}'.format(online_path))
         ds_train = OnlineAugmentedDataset(ds_train, str(online_path))
+    if temporal_history_enabled(args):
+        ds_train = TemporalHistoryDataset(ds_train, args)
+        ds_test = TemporalHistoryDataset(ds_test, args)
 
     sampler = None
-    if args.get('category_balanced_sampling', False):
+    category_balanced = args.get('category_balanced_sampling', False)
+    object_balanced = args.get('object_balanced_sampling', False)
+    if category_balanced and object_balanced:
+        raise ValueError(
+            'category_balanced_sampling and object_balanced_sampling are '
+            'mutually exclusive')
+    if category_balanced:
         sampler = build_category_balanced_sampler(
             ds_train, seed, args.get('online_sample_fraction'))
+    elif object_balanced:
+        sampler = build_object_balanced_sampler(ds_train, seed)
     train_loader = DataLoader(
         ds_train, batch_size=args.batch_size, shuffle=sampler is None,
         sampler=sampler, drop_last=True, num_workers=4, pin_memory=True)
@@ -367,6 +833,9 @@ def parse_cli():
     parser.add_argument('--batch-size', type=int, default=None)
     parser.add_argument('--learning-rate', type=float, default=None)
     parser.add_argument('--teacher-weight', type=float, default=None)
+    parser.add_argument(
+        '--teacher-action-file', default=None,
+        help='Override the distillation label file for a custom run.')
     parser.add_argument('--online-sample-fraction', type=float, default=None)
     parser.add_argument('--noise-value', type=float, default=None)
     parser.add_argument('--seq-num', type=int, default=None)
@@ -375,12 +844,21 @@ def parse_cli():
         '--train-category', choices=('bottle', 'mug', 'bowl', 'camera'),
         default=None,
         help='Train and validate only on one category from the frozen manifest.')
+    parser.add_argument(
+        '--category-train-size', type=int, choices=(4, 10, 20), default=None,
+        help='Use a nested per-category object count from the category manifest.')
     parser.add_argument('--category-manifest', default=str(
         REPO_ROOT / 'custom_tools/configs/object_split_final.json'))
     parser.add_argument('--resume-checkpoint', default=None)
     parser.add_argument(
         '--init-checkpoint', default=None,
         help='Load model weights only and start a new run at epoch 0.')
+    parser.add_argument(
+        '--freeze-feature-encoder', action='store_true',
+        help='Keep the loaded DexRep encoder and BatchNorm statistics fixed; train the actor head.')
+    parser.add_argument(
+        '--object-balanced-sampling', action='store_true',
+        help='Sample each selected training object with equal expected probability.')
     parser.add_argument(
         '--min-free-vram-mb', type=int, default=5000,
         help='Abort before training if less VRAM is free (default: 5000 MiB).')
@@ -421,19 +899,36 @@ if __name__ == "__main__":
             raise ValueError('--teacher-weight must be in [0, 1]')
         OmegaConf.update(args, 'distillation.teacher_weight', cli.teacher_weight)
         OmegaConf.update(args, 'distillation.demo_weight', 1.0 - cli.teacher_weight)
+    if cli.teacher_action_file is not None:
+        teacher_action_file = str(
+            Path(cli.teacher_action_file).expanduser().resolve())
+        OmegaConf.update(
+            args, 'distillation.teacher_action_file',
+            teacher_action_file)
+
+    if cli.freeze_feature_encoder:
+        OmegaConf.update(args, 'freeze_feature_encoder', True)
+    if cli.object_balanced_sampling:
+        OmegaConf.update(args, 'object_balanced_sampling', True)
 
     if cli.train_category is not None:
         manifest_path = Path(cli.category_manifest).expanduser().resolve()
         with manifest_path.open('r', encoding='utf-8') as handle:
             manifest = json.load(handle)
-        object_ids = manifest['categories'][cli.train_category]['train']
-        if len(object_ids) != 4:
-            raise ValueError(
-                'Expected four frozen training objects for {}, got {}'.format(
-                    cli.train_category, len(object_ids)))
+        category_split = manifest['categories'][cli.train_category]
+        if cli.category_train_size is not None:
+            nested = category_split.get('train_nested', {})
+            if str(cli.category_train_size) not in nested:
+                raise ValueError(
+                    'Manifest has no nested category size {}'.format(
+                        cli.category_train_size))
+            object_ids = nested[str(cli.category_train_size)]
+        else:
+            object_ids = category_split['train']
         OmegaConf.update(args, 'train_obj_code_list', object_ids)
         OmegaConf.update(args, 'val_obj_code_list', object_ids)
         OmegaConf.update(args, 'expert_category', cli.train_category)
+        OmegaConf.update(args, 'expert_category_train_size', len(object_ids))
         OmegaConf.update(args, 'category_manifest', str(manifest_path))
 
     if cli.print_config:
@@ -451,5 +946,3 @@ if __name__ == "__main__":
             )
         finally:
             os.chdir(str(original_cwd))
-
-

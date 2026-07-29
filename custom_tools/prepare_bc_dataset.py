@@ -22,6 +22,12 @@ SEQUENCE_KEYS = {
     "obj_pcds",
     "h2o_vec",
 }
+BC_REQUIRED_SEQUENCE_KEYS = {
+    "obs",
+    "vis_unscale_actions",
+    "unscale_actions",
+    "grasp_seqs",
+}
 
 
 def parse_args():
@@ -50,6 +56,12 @@ def parse_args():
         default=str(REPO_ROOT / "dexgrasp" / "dataset" /
                     "object_split_final_unseen"))
     parser.add_argument("--validation-fraction", type=float, default=0.2)
+    parser.add_argument(
+        "--train-size", type=int, default=0,
+        help="Use a nested per-category training size from the manifest; 0 uses train.")
+    parser.add_argument(
+        "--bc-only", action="store_true",
+        help="Omit point clouds and other unused large sequence fields.")
     parser.add_argument("--seed", type=int, default=2025)
     parser.add_argument(
         "--output-summary",
@@ -77,7 +89,7 @@ def check_empty_output(root):
             "split cannot be mixed into this experiment.".format(root))
 
 
-def subset_data(data, local_indices, split_name, seed):
+def subset_data(data, local_indices, split_name, seed, bc_only=False):
     local_indices = np.asarray(local_indices, dtype=np.int64)
     sequence_count = int(len(data["grasp_seqs"]))
     raw_indices = np.asarray(
@@ -90,6 +102,8 @@ def subset_data(data, local_indices, split_name, seed):
     output = {}
     for key, value in data.items():
         if key in SEQUENCE_KEYS:
+            if bc_only and key not in BC_REQUIRED_SEQUENCE_KEYS:
+                continue
             if not isinstance(value, np.ndarray) or len(value) != sequence_count:
                 raise ValueError("Sequence field has invalid length: {}".format(key))
             output[key] = value[local_indices]
@@ -136,7 +150,15 @@ def main():
 
     rows = []
     for category, category_split in manifest["categories"].items():
-        for object_id in category_split["train"]:
+        if args.train_size:
+            nested = category_split.get("train_nested", {})
+            if str(args.train_size) not in nested:
+                raise ValueError(
+                    "manifest has no nested train size {}".format(args.train_size))
+            training_object_ids = nested[str(args.train_size)]
+        else:
+            training_object_ids = category_split["train"]
+        for object_id in training_object_ids:
             source = source_root / (object_id + ".npy")
             if not source.is_file():
                 raise FileNotFoundError(source)
@@ -149,8 +171,10 @@ def main():
             permutation = stable_rng(args.seed, object_id).permutation(count)
             valid_indices = np.sort(permutation[:valid_count])
             train_indices = np.sort(permutation[valid_count:])
-            train_data = subset_data(data, train_indices, "train", args.seed)
-            valid_data = subset_data(data, valid_indices, "valid", args.seed)
+            train_data = subset_data(
+                data, train_indices, "train", args.seed, bc_only=args.bc_only)
+            valid_data = subset_data(
+                data, valid_indices, "valid", args.seed, bc_only=args.bc_only)
             np.save(str(train_root / (object_id + ".npy")), train_data)
             np.save(str(valid_root / (object_id + ".npy")), valid_data)
             rows.append({
@@ -185,6 +209,10 @@ def main():
         "unseen_root": str(unseen_root),
         "seed": int(args.seed),
         "validation_fraction": float(args.validation_fraction),
+        "bc_only": bool(args.bc_only),
+        "train_size_per_category": (
+            int(args.train_size) if args.train_size else
+            len(next(iter(manifest["categories"].values()))["train"])),
         "train_object_count": len(train_ids),
         "unseen_object_count": len(unseen_ids),
         "train_trajectory_count": sum(row["train_count"] for row in rows),

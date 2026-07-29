@@ -1,0 +1,138 @@
+status: complete
+stage: one-time locked final holdout evaluation
+formal_final_holdout_result: true
+final_holdout_accessed: true
+result_may_be_used_for_further_model_selection: false
+primary_model_was_locked_before_evaluation: temporal3
+primary_metric: object_macro_official_peak_success_rate
+seeds:
+- 2025
+- 2026
+- 2027
+object_count: 8
+nodes:
+- label: online_r1
+  role: baseline
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_online_r1_frac025_seed2025_e10_v1/epoch=001-step=2232.ckpt
+  checkpoint_sha256: 81bbf8bc70cb24960200bf574d26da9526b976f9944a13619323f64e57b4a7ef
+  success_counts:
+  - 45
+  - 42
+  - 42
+  trajectory_count_per_seed: 216
+  overall_success_mean: 0.19907407407407407
+  overall_success_std: 0.006547285010986554
+  overall_success_values:
+  - 0.20833333333333334
+  - 0.19444444444444445
+  - 0.19444444444444445
+  macro_success_mean: 0.1745879851143009
+  macro_success_std: 0.00716928378078829
+  macro_success_values:
+  - 0.1834353877117035
+  - 0.17445270372901953
+  - 0.1658758639021797
+  lift_mean_m: 0.0936552813121428
+  failure_mean: 0.1010311432958891
+  category_success:
+    bottle:
+      mean: 0.25828460038986356
+      std: 0.006547285010986554
+      values:
+      - 0.2536549707602339
+      - 0.2536549707602339
+      - 0.2675438596491228
+    mug:
+      mean: 0.15555555555555556
+      std: 0.016187363535215188
+      values:
+      - 0.16190476190476188
+      - 0.17142857142857143
+      - 0.13333333333333333
+    bowl:
+      mean: 0.08333333333333334
+      std: 0.0
+      values:
+      - 0.08333333333333334
+      - 0.08333333333333334
+      - 0.08333333333333334
+    camera:
+      mean: 0.20117845117845118
+      std: 0.024162794771729508
+      values:
+      - 0.23484848484848486
+      - 0.1893939393939394
+      - 0.17929292929292928
+  outputs:
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_locked_final_holdout_v1/seed2025/online_r1.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_locked_final_holdout_v1/seed2026/online_r1.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_locked_final_holdout_v1/seed2027/online_r1.yaml
+- label: temporal3
+  role: primary
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_temporal3_seed2025_e4_v1/epoch=003-step=5152.ckpt
+  checkpoint_sha256: aecf421b76f8e2a8e669cdd01117ae64b8c275b658ea4766fdf9c6bb705d8b04
+  success_counts:
+  - 59
+  - 61
+  - 58
+  trajectory_count_per_seed: 216
+  overall_success_mean: 0.27469135802469136
+  overall_success_std: 0.0057741626339103845
+  overall_success_values:
+  - 0.27314814814814814
+  - 0.2824074074074074
+  - 0.26851851851851855
+  macro_success_mean: 0.2614974937343358
+  macro_success_std: 0.003332900261612872
+  macro_success_values:
+  - 0.2611006683375104
+  - 0.26576336675020884
+  - 0.2576284461152882
+  lift_mean_m: 0.11834516484911244
+  failure_mean: 0.10662941937334836
+  category_success:
+    bottle:
+      mean: 0.25511695906432746
+      std: 0.011340230290662867
+      values:
+      - 0.25511695906432746
+      - 0.26900584795321636
+      - 0.24122807017543857
+    mug:
+      mean: 0.31587301587301586
+      std: 0.002244783432338238
+      values:
+      - 0.3142857142857143
+      - 0.319047619047619
+      - 0.3142857142857143
+    bowl:
+      mean: 0.225
+      std: 0.0
+      values:
+      - 0.225
+      - 0.225
+      - 0.225
+    camera:
+      mean: 0.25
+      std: 0.0
+      values:
+      - 0.25
+      - 0.25
+      - 0.25
+  outputs:
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_locked_final_holdout_v1/seed2025/temporal3.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_locked_final_holdout_v1/seed2026/temporal3.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_locked_final_holdout_v1/seed2027/temporal3.yaml
+temporal_minus_r1_macro: 0.08690950862003488
+temporal_minus_r1_overall: 0.07561728395061729
+temporal_minus_r1_lift_m: 0.02468988353696963
+temporal_minus_r1_failure: 0.0055982760774592605
+temporal_minus_r1_macro_by_seed:
+- 0.07766528062580688
+- 0.09131066302118931
+- 0.09175258221310847
+temporal_minus_r1_category:
+  bottle: -0.003167641325536097
+  mug: 0.1603174603174603
+  bowl: 0.14166666666666666
+  camera: 0.04882154882154882

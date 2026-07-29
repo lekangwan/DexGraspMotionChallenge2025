@@ -40,10 +40,17 @@ def initialize_runtime():
     global OmegaConf, LitBCModel, test_env
     global CustomShadowHandGraspDexRepIjrr, VecTaskPython
     global get_args, load_cfg, parse_sim_params, set_seed
+    global checkpoint_uses_task_conditioning, enable_task_conditioning
+    global set_inference_tasks
 
     from omegaconf import OmegaConf as omega_conf
     from ActionDiffusion.bc.model.policy.lhm_policy import LitBCModel as bc_model
     from custom_tools.evaluation_loop import test_env as evaluation_loop
+    from custom_tools.task_conditioning import (
+        checkpoint_uses_task_conditioning as checkpoint_has_task_id,
+        enable_task_conditioning as enable_task_id,
+        set_inference_tasks as set_task_ids,
+    )
     from custom_tools.shadow_hand_grasp_dexrep_custom import (
         CustomShadowHandGraspDexRepIjrr as custom_task,
     )
@@ -64,6 +71,9 @@ def initialize_runtime():
     load_cfg = official_load_cfg
     parse_sim_params = official_parse_sim_params
     set_seed = official_set_seed
+    checkpoint_uses_task_conditioning = checkpoint_has_task_id
+    enable_task_conditioning = enable_task_id
+    set_inference_tasks = set_task_ids
 
 
 def parse_cli():
@@ -183,9 +193,14 @@ def load_model(cli):
     if not checkpoint_path.is_file():
         raise FileNotFoundError(checkpoint_path)
 
-    model = LitBCModel(bc_args, env_args.env).to(cli.rl_device)
     checkpoint = torch.load(str(checkpoint_path), map_location=torch.device(cli.rl_device))
-    model.load_state_dict(checkpoint["state_dict"])
+    state_dict = checkpoint.get("state_dict", checkpoint)
+    model = LitBCModel(bc_args, env_args.env)
+    if checkpoint_uses_task_conditioning(
+            bc_args, env_args.env, state_dict):
+        enable_task_conditioning(model, bc_args, env_args.env)
+    model = model.to(cli.rl_device)
+    model.load_state_dict(state_dict, strict=True)
     return model, model_name, checkpoint_path, checkpoint
 
 
@@ -302,6 +317,7 @@ def run(cli):
             task = None
             env = None
             try:
+                set_inference_tasks(model, [object_id])
                 capture_dir = None
                 if cli.capture_dir:
                     capture_root = Path(cli.capture_dir).expanduser().resolve()

@@ -1,0 +1,64 @@
+status: locked_reporting_protocol
+purpose: >
+  Compare the five serial policy nodes on seen-object held-out trajectories,
+  development objects, and final unseen objects without further model selection.
+primary_metric: object_macro_official_peak_success_rate
+simulation_seeds: [2025, 2026, 2027]
+
+splits:
+  seen80:
+    role: seen-object generalization
+    object_count: 80
+    trajectory_count_per_seed: 434
+    description: >
+      All 80 optimizer-training object instances, evaluated on trajectories
+      excluded from optimizer updates.
+    model_selection_allowed: false
+  development12:
+    role: checkpoint selection history
+    object_count: 12
+    trajectory_count_per_seed: 313
+    description: >
+      Unseen object instances used during checkpoint and hyperparameter
+      selection. Results are selection-biased and are not final test evidence.
+    model_selection_allowed: false
+  final8:
+    role: final unseen-object generalization
+    object_count: 8
+    trajectory_count_per_seed: 216
+    description: >
+      Unseen object instances reserved for final reporting. They have now been
+      accessed, so these results may not be used for new model selection.
+    model_selection_allowed: false
+
+models:
+  - label: official_bc
+    display_name: Official BC
+    checkpoint: custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=079-step=75440.ckpt
+    checkpoint_sha256: b84b8817c927a722a7a6647fd5882b1ecabc214b4c60dcd3f8ebfced261bfe01
+    config: custom_tools/configs/official_bc_scaled20_matched_v1.yaml
+    meaning: Data-matched provided single-frame BC architecture and action loss.
+  - label: bc_soup
+    display_name: BC Soup
+    checkpoint: custom_tools/runs/bc/model_soups/noise005_s2025_s2026_weighted2to1.ckpt
+    checkpoint_sha256: 3a27f07a3829632046ad9cd472944fb589473a186862fb3fc847f4629d79d61a
+    config: custom_tools/configs/multicategory_bc_noise005.yaml
+    meaning: Two noise-augmented single-frame BC checkpoints averaged 2-to-1.
+  - label: offline_student
+    display_name: Offline Task-ID
+    checkpoint: custom_tools/runs/bc/unified_student_taskid_scaled20_t100_seed2025_e20_v1/epoch=014-step=14145.ckpt
+    checkpoint_sha256: 5bc79c8fbba39eebca8f868da6aa3029767e7f23621daa80c4ad7eb1c6788e5c
+    config: custom_tools/configs/unified_student_taskid_scaled20_v1.yaml
+    meaning: Shared single-frame student distilled from fixed category teachers.
+  - label: online_r1
+    display_name: Online-R1
+    checkpoint: custom_tools/runs/bc/unified_student_taskid_online_r1_frac025_seed2025_e10_v1/epoch=001-step=2232.ckpt
+    checkpoint_sha256: 81bbf8bc70cb24960200bf574d26da9526b976f9944a13619323f64e57b4a7ef
+    config: custom_tools/configs/unified_student_taskid_online_r1_scaled20_v1.yaml
+    meaning: Offline student after one round of student-state data aggregation.
+  - label: temporal3
+    display_name: Temporal3
+    checkpoint: custom_tools/runs/bc/unified_student_taskid_temporal3_seed2025_e4_v1/epoch=003-step=5152.ckpt
+    checkpoint_sha256: aecf421b76f8e2a8e669cdd01117ae64b8c275b658ea4766fdf9c6bb705d8b04
+    config: custom_tools/configs/unified_student_taskid_temporal3_v1.yaml
+    meaning: Online-R1 initialized policy with current plus two-step proprioceptive/action history.
