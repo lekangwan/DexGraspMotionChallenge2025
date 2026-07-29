@@ -1,0 +1,16 @@
+status: frozen_scaled_development_only
+object_ids:
+  - core-bottle-25b8ed5b02f07b6cbcfad79fc308fa6d
+  - core-bottle-6444875e3217bf891f5f48a891d827bd
+  - core-bottle-dd280525cf000bc3a608634464309a70
+  - core-mug-f626192a5930d6c712f0124e8fa3930b
+  - core-mug-9ff8400080c77feac2ad6fd1941624c3
+  - core-mug-4b8b10d03552e0891898dfa8eb8eefff
+  - core-bowl-3f56833e91054d2518e800f0d88f9019
+  - core-bowl-45603bffc6a2866b5d1ac0d5489f7d84
+  - core-bowl-e16e27d3670853b12d4e6b2984840098
+  - core-camera-7077395b60bf4aeb3cb44973ec1ffcf8
+  - core-camera-73b02fe7b4b2e45f74cd541b34c6124
+  - core-camera-1cc93f96ad5e16a85d3f270c1c35f1c7
+final_holdout_accessed: false
+source_protocol: custom_tools/configs/scaled_evaluation_protocol_v1.json
