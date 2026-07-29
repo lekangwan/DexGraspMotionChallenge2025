@@ -1,0 +1,192 @@
+updated_at: '2026-07-23T03:46:15'
+status: complete
+formal_final_holdout_result: false
+final_holdout_accessed: false
+completed_evaluations: 156
+expected_evaluations: 156
+seeds:
+- 2025
+- 2026
+- 2027
+selection_metric: category/object macro official_peak success; lift and failure are
+  tie-break diagnostics only
+global_ranking:
+- label: scale20_epoch10
+  scale: 20
+  epoch: 10
+  completed_seed_count: 3
+  total_success_count: 192
+  total_trajectory_count: 939
+  mean_macro_success_rate: 0.20763973836245508
+  seed_std_macro_success_rate: 0.006114238701204907
+  mean_maximum_lift_m: 0.09862993905941646
+  mean_failure_rate: 0.17248708842736152
+- label: scale20_epoch20
+  scale: 20
+  epoch: 20
+  completed_seed_count: 3
+  total_success_count: 172
+  total_trajectory_count: 939
+  mean_macro_success_rate: 0.18476740849999365
+  seed_std_macro_success_rate: 0.002710937313976107
+  mean_maximum_lift_m: 0.09765815962519912
+  mean_failure_rate: 0.16753285316129526
+- label: scale20_epoch40
+  scale: 20
+  epoch: 40
+  completed_seed_count: 3
+  total_success_count: 167
+  total_trajectory_count: 939
+  mean_macro_success_rate: 0.1825131644258966
+  seed_std_macro_success_rate: 0.003428121133035887
+  mean_maximum_lift_m: 0.09533821967326933
+  mean_failure_rate: 0.13982822207940948
+- label: scale10_epoch40
+  scale: 10
+  epoch: 40
+  completed_seed_count: 3
+  total_success_count: 170
+  total_trajectory_count: 939
+  mean_macro_success_rate: 0.17383638980001206
+  seed_std_macro_success_rate: 0.0037263776280931403
+  mean_maximum_lift_m: 0.09641569984766345
+  mean_failure_rate: 0.1773428631325563
+- label: scale4_epoch40
+  scale: 4
+  epoch: 40
+  completed_seed_count: 3
+  total_success_count: 158
+  total_trajectory_count: 939
+  mean_macro_success_rate: 0.1723055545472341
+  seed_std_macro_success_rate: 0.0025064189961509008
+  mean_maximum_lift_m: 0.09340968042508596
+  mean_failure_rate: 0.11109465997045238
+- label: soup_init
+  scale: 0
+  epoch: 0
+  completed_seed_count: 3
+  total_success_count: 146
+  total_trajectory_count: 939
+  mean_macro_success_rate: 0.17047791822366123
+  seed_std_macro_success_rate: 0.004005677856124539
+  mean_maximum_lift_m: 0.12064404589020543
+  mean_failure_rate: 0.1448910932780968
+- label: scale20_epoch30
+  scale: 20
+  epoch: 30
+  completed_seed_count: 3
+  total_success_count: 154
+  total_trajectory_count: 939
+  mean_macro_success_rate: 0.15968831618502669
+  seed_std_macro_success_rate: 0.008771688943150783
+  mean_maximum_lift_m: 0.07966837204164928
+  mean_failure_rate: 0.14643149372811118
+- label: scale4_epoch10
+  scale: 4
+  epoch: 10
+  completed_seed_count: 3
+  total_success_count: 154
+  total_trajectory_count: 939
+  mean_macro_success_rate: 0.1559629465153846
+  seed_std_macro_success_rate: 0.0025163752884826175
+  mean_maximum_lift_m: 0.0855067826083137
+  mean_failure_rate: 0.12958098254683945
+- label: scale4_epoch20
+  scale: 4
+  epoch: 20
+  completed_seed_count: 3
+  total_success_count: 136
+  total_trajectory_count: 939
+  mean_macro_success_rate: 0.1503768381719233
+  seed_std_macro_success_rate: 0.00132461205669259
+  mean_maximum_lift_m: 0.07832733262330294
+  mean_failure_rate: 0.10303043046345313
+- label: scale10_epoch20
+  scale: 10
+  epoch: 20
+  completed_seed_count: 3
+  total_success_count: 141
+  total_trajectory_count: 939
+  mean_macro_success_rate: 0.1308281397048812
+  seed_std_macro_success_rate: 0.00303037388155603
+  mean_maximum_lift_m: 0.07641284742082159
+  mean_failure_rate: 0.1913697707673742
+- label: scale4_epoch30
+  scale: 4
+  epoch: 30
+  completed_seed_count: 3
+  total_success_count: 123
+  total_trajectory_count: 939
+  mean_macro_success_rate: 0.130109073912286
+  seed_std_macro_success_rate: 0.003687099051169537
+  mean_maximum_lift_m: 0.08950080598394076
+  mean_failure_rate: 0.13979725001586807
+- label: scale10_epoch30
+  scale: 10
+  epoch: 30
+  completed_seed_count: 3
+  total_success_count: 128
+  total_trajectory_count: 939
+  mean_macro_success_rate: 0.11880773053373672
+  seed_std_macro_success_rate: 0.0027552703557182814
+  mean_maximum_lift_m: 0.054902579033902534
+  mean_failure_rate: 0.16120725590735674
+- label: scale10_epoch10
+  scale: 10
+  epoch: 10
+  completed_seed_count: 3
+  total_success_count: 115
+  total_trajectory_count: 939
+  mean_macro_success_rate: 0.10668089277319154
+  seed_std_macro_success_rate: 0.007122807272240114
+  mean_maximum_lift_m: 0.07489810687386327
+  mean_failure_rate: 0.18155047059473065
+best_available_per_category:
+  bottle:
+    category: bottle
+    label: scale4_epoch40
+    scale: 4
+    epoch: 40
+    completed_seed_count: 3
+    total_success_count: 75
+    total_trajectory_count: 228
+    mean_macro_success_rate: 0.3235437077542341
+    seed_std_macro_success_rate: 0.012652415709542852
+    mean_maximum_lift_m: 0.16152586125665241
+    mean_failure_rate: 0.10843775690429741
+  mug:
+    category: mug
+    label: scale20_epoch10
+    scale: 20
+    epoch: 10
+    completed_seed_count: 3
+    total_success_count: 60
+    total_trajectory_count: 207
+    mean_macro_success_rate: 0.30683479532163743
+    seed_std_macro_success_rate: 0.0
+    mean_maximum_lift_m: 0.1593869427839915
+    mean_failure_rate: 0.017543859779834747
+  bowl:
+    category: bowl
+    label: scale20_epoch40
+    scale: 20
+    epoch: 40
+    completed_seed_count: 3
+    total_success_count: 48
+    total_trajectory_count: 219
+    mean_macro_success_rate: 0.2558823529411765
+    seed_std_macro_success_rate: 0.0
+    mean_maximum_lift_m: 0.11693305025498073
+    mean_failure_rate: 0.23627452179789543
+  camera:
+    category: camera
+    label: scale20_epoch40
+    scale: 20
+    epoch: 40
+    completed_seed_count: 3
+    total_success_count: 43
+    total_trajectory_count: 285
+    mean_macro_success_rate: 0.1432728274833538
+    seed_std_macro_success_rate: 0.01116209009031847
+    mean_maximum_lift_m: 0.07419872366719776
+    mean_failure_rate: 0.20557805316315758

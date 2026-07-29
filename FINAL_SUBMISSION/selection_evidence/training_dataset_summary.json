@@ -1,0 +1,579 @@
+{
+  "status": "ready",
+  "manifest": "/home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/configs/scaled_category_split_final_v1.json",
+  "source_root": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_final_v1_preprocessed",
+  "train_root": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_bc20_train_v1",
+  "valid_root": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_bc20_valid_v1",
+  "unseen_root": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_bc20_unseen_v1",
+  "seed": 2025,
+  "validation_fraction": 0.2,
+  "bc_only": true,
+  "train_size_per_category": 20,
+  "train_object_count": 80,
+  "unseen_object_count": 20,
+  "train_trajectory_count": 1726,
+  "valid_trajectory_count": 434,
+  "objects": [
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-714320da4aafcb4a47be2353d2b2403b",
+      "source_count": 31,
+      "train_count": 25,
+      "valid_count": 6
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-dc005c019fbfb32c90071898148dca0e",
+      "source_count": 40,
+      "train_count": 32,
+      "valid_count": 8
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-d3eea69d9d58401c76c2a9de5c96f76",
+      "source_count": 39,
+      "train_count": 31,
+      "valid_count": 8
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-ba4b48d76eb79f7cf54e1b6f41fdd78a",
+      "source_count": 38,
+      "train_count": 30,
+      "valid_count": 8
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-c5032e4be091aabb36fe7a88df793982",
+      "source_count": 14,
+      "train_count": 11,
+      "valid_count": 3
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-24feb92770933b1663995fb119e59971",
+      "source_count": 20,
+      "train_count": 16,
+      "valid_count": 4
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-c82bbd1b1a929c7ce8ed8cf0a077ddf7",
+      "source_count": 33,
+      "train_count": 26,
+      "valid_count": 7
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-77699e08e3824eab47765668cf4023ed",
+      "source_count": 39,
+      "train_count": 31,
+      "valid_count": 8
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-1ae823260851f7d9ea600d1a6d9f6e07",
+      "source_count": 21,
+      "train_count": 17,
+      "valid_count": 4
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-bd28b6cd2fdb691b8d8eca78e5e16d9d",
+      "source_count": 40,
+      "train_count": 32,
+      "valid_count": 8
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-d30623112e58b893eee7d6dab02eb061",
+      "source_count": 14,
+      "train_count": 11,
+      "valid_count": 3
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-b198ccb35182e73ffd2866d52d2e8042",
+      "source_count": 38,
+      "train_count": 30,
+      "valid_count": 8
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-41a2005b595ae783be1868124d5ddbcb",
+      "source_count": 38,
+      "train_count": 30,
+      "valid_count": 8
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-3ae3a9b74f96fef28fe15648f042f0d9",
+      "source_count": 34,
+      "train_count": 27,
+      "valid_count": 7
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-e4ada697d05ac7acf9907e8bdd53291e",
+      "source_count": 40,
+      "train_count": 32,
+      "valid_count": 8
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-3de5abb596766c5380dd154b5d9c087",
+      "source_count": 38,
+      "train_count": 30,
+      "valid_count": 8
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-e119bf2041459392601bea3dca268229",
+      "source_count": 40,
+      "train_count": 32,
+      "valid_count": 8
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-74690ddde9c0182696c2e7960a15c619",
+      "source_count": 40,
+      "train_count": 32,
+      "valid_count": 8
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-42f85b0eb5e9fd508f9c4ecc067067e9",
+      "source_count": 36,
+      "train_count": 29,
+      "valid_count": 7
+    },
+    {
+      "category": "bottle",
+      "object_id": "core-bottle-29cad22b0fc6c9985f16c469ffeb982e",
+      "source_count": 40,
+      "train_count": 32,
+      "valid_count": 8
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-4227b58665eadcefc0dc3ed657ab97f0",
+      "source_count": 33,
+      "train_count": 26,
+      "valid_count": 7
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-e3095ecacc36080cb398a1cfd1079875",
+      "source_count": 32,
+      "train_count": 26,
+      "valid_count": 6
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-b65cbede8f483d51f7de4d28691515e1",
+      "source_count": 19,
+      "train_count": 15,
+      "valid_count": 4
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-817221e45b63cef62f74bdafe5239fba",
+      "source_count": 14,
+      "train_count": 11,
+      "valid_count": 3
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-754634abeb7bffc32977b68653eb2e1e",
+      "source_count": 14,
+      "train_count": 11,
+      "valid_count": 3
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-dd15ee7374954827c5be64abd4416cc9",
+      "source_count": 20,
+      "train_count": 16,
+      "valid_count": 4
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-80608e58db79d4d83b722c86abee0751",
+      "source_count": 18,
+      "train_count": 14,
+      "valid_count": 4
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-faa200741fa93abb47ec7417da5d353d",
+      "source_count": 16,
+      "train_count": 13,
+      "valid_count": 3
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-1b4d7803a3298f8477bdcb8816a3fac9",
+      "source_count": 14,
+      "train_count": 11,
+      "valid_count": 3
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-709778e5ebb67e32b396efafc0d0d8ac",
+      "source_count": 40,
+      "train_count": 32,
+      "valid_count": 8
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-b195dbe537993945e4e346ee2650d150",
+      "source_count": 40,
+      "train_count": 32,
+      "valid_count": 8
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-1f910faf81555f8e664b3b9b23ddfcbc",
+      "source_count": 15,
+      "train_count": 12,
+      "valid_count": 3
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-56803af65db53307467ca2ad6571afff",
+      "source_count": 17,
+      "train_count": 14,
+      "valid_count": 3
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-db180e4f9a75ae717ba6f8f10959534c",
+      "source_count": 20,
+      "train_count": 16,
+      "valid_count": 4
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-24907349b2323824664b3b9b23ddfcbc",
+      "source_count": 17,
+      "train_count": 14,
+      "valid_count": 3
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-879a5c740b25ef5c7a88a2ad67bfd073",
+      "source_count": 18,
+      "train_count": 14,
+      "valid_count": 4
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-519f07b4ecb0b82ed82a7d8f544ae151",
+      "source_count": 17,
+      "train_count": 14,
+      "valid_count": 3
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-9ea66797afeb86196ea1c514a0de6d2d",
+      "source_count": 19,
+      "train_count": 15,
+      "valid_count": 4
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-9a6cec1cfca7e8b5ebc583f22bd58b85",
+      "source_count": 27,
+      "train_count": 22,
+      "valid_count": 5
+    },
+    {
+      "category": "bowl",
+      "object_id": "core-bowl-a73d531b90965199e5f6d587dbc348b5",
+      "source_count": 16,
+      "train_count": 13,
+      "valid_count": 3
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-82819e1201d2dc583a3e53900c6cbba",
+      "source_count": 38,
+      "train_count": 30,
+      "valid_count": 8
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-a3c9dcaada9e04d09061da204e7c463c",
+      "source_count": 26,
+      "train_count": 21,
+      "valid_count": 5
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-9d79c246317bbbe87f72d6c7f2024896",
+      "source_count": 36,
+      "train_count": 29,
+      "valid_count": 7
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-a59cbd50ecf38a1be2dc67b821479cc4",
+      "source_count": 16,
+      "train_count": 13,
+      "valid_count": 3
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-b27815a2bde54ad3ab3dfa44f5fab01",
+      "source_count": 17,
+      "train_count": 14,
+      "valid_count": 3
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-74ebdf5a3cdf33ebc6966f67e1bb9e90",
+      "source_count": 12,
+      "train_count": 10,
+      "valid_count": 2
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-63c10cfd6f0ce09a241d076ab53023c1",
+      "source_count": 19,
+      "train_count": 15,
+      "valid_count": 4
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-a9408583f2c4d6acad8a06dbee1d115",
+      "source_count": 40,
+      "train_count": 32,
+      "valid_count": 8
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-2c0b4e318766e01723cd81bf29b64a1",
+      "source_count": 35,
+      "train_count": 28,
+      "valid_count": 7
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-e85debbd554525d198494085d68ad6a0",
+      "source_count": 17,
+      "train_count": 14,
+      "valid_count": 3
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-fb3b5fae94f7b02a3b269928487f8a4c",
+      "source_count": 20,
+      "train_count": 16,
+      "valid_count": 4
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-ee58b922bd93d01be4f112f1b3124b84",
+      "source_count": 15,
+      "train_count": 12,
+      "valid_count": 3
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-4852ee95e7bd8556c60396a717ba6c7e",
+      "source_count": 39,
+      "train_count": 31,
+      "valid_count": 8
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-cda4fc24b2a602b5b5328fde615e4a0c",
+      "source_count": 18,
+      "train_count": 14,
+      "valid_count": 4
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-2fc6168fba3ef6953ada8db96f6d95a3",
+      "source_count": 29,
+      "train_count": 23,
+      "valid_count": 6
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-b22e56fdf18e2eb8968b65a7871de463",
+      "source_count": 19,
+      "train_count": 15,
+      "valid_count": 4
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-46c09085e451de8fc3c192db90697d8c",
+      "source_count": 39,
+      "train_count": 31,
+      "valid_count": 8
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-4cd861035c740db5a33f3afcb8763f26",
+      "source_count": 39,
+      "train_count": 31,
+      "valid_count": 8
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-58e9faa223142b7fd5af42f3e1f05e3f",
+      "source_count": 32,
+      "train_count": 26,
+      "valid_count": 6
+    },
+    {
+      "category": "camera",
+      "object_id": "core-camera-ec28a64bdf9501161bfbba8a5defb02",
+      "source_count": 40,
+      "train_count": 32,
+      "valid_count": 8
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-1a97f3c83016abca21d0de04f408950f",
+      "source_count": 36,
+      "train_count": 29,
+      "valid_count": 7
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-b4ae56d6638d5338de671f28c83d2dcb",
+      "source_count": 39,
+      "train_count": 31,
+      "valid_count": 8
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-35ce7ede92198be2b759f7fb0032e59",
+      "source_count": 38,
+      "train_count": 30,
+      "valid_count": 8
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-c51b79493419eccdc1584fff35347dc6",
+      "source_count": 20,
+      "train_count": 16,
+      "valid_count": 4
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-85d5e7be548357baee0fa456543b8166",
+      "source_count": 20,
+      "train_count": 16,
+      "valid_count": 4
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-a637500654ca8d16c97cfc3e8a6b1d16",
+      "source_count": 14,
+      "train_count": 11,
+      "valid_count": 3
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-fd1f9e8add1fcbd123c841f9d5051936",
+      "source_count": 16,
+      "train_count": 13,
+      "valid_count": 3
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-345d3e7252156db8d44ee24d6b5498e1",
+      "source_count": 22,
+      "train_count": 18,
+      "valid_count": 4
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-5c7c4cb503a757147dbda56eabff0c47",
+      "source_count": 18,
+      "train_count": 14,
+      "valid_count": 4
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-127944b6dabee1c9e20e92c5b8147e4a",
+      "source_count": 35,
+      "train_count": 28,
+      "valid_count": 7
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-9737c77d3263062b8ca7a0a01bcd55b6",
+      "source_count": 38,
+      "train_count": 30,
+      "valid_count": 8
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-f1e439307b834015770a0ff1161fa15a",
+      "source_count": 30,
+      "train_count": 24,
+      "valid_count": 6
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-c7ddd93b15e30faae180a52fd2be32",
+      "source_count": 20,
+      "train_count": 16,
+      "valid_count": 4
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-1ea9ea99ac8ed233bf355ac8109b9988",
+      "source_count": 32,
+      "train_count": 26,
+      "valid_count": 6
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-6e884701bfddd1f71e1138649f4c219",
+      "source_count": 27,
+      "train_count": 22,
+      "valid_count": 5
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-d75af64aa166c24eacbe2257d0988c9c",
+      "source_count": 17,
+      "train_count": 14,
+      "valid_count": 3
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-c60f62684618cb52a4136492f17b9a59",
+      "source_count": 34,
+      "train_count": 27,
+      "valid_count": 7
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-83827973c79ca7631c9ec1e03e401f54",
+      "source_count": 21,
+      "train_count": 17,
+      "valid_count": 4
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-187859d3c3a2fd23f54e1b6f41fdd78a",
+      "source_count": 18,
+      "train_count": 14,
+      "valid_count": 4
+    },
+    {
+      "category": "mug",
+      "object_id": "core-mug-bcb6be8f0ff4a51872e526c4f21dfca4",
+      "source_count": 20,
+      "train_count": 16,
+      "valid_count": 4
+    }
+  ],
+  "leakage_check": "PASS"
+}

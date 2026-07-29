@@ -146,6 +146,37 @@ def main():
     if missing:
         raise FileNotFoundError("Missing temporal inputs: {}".format(missing))
 
+    if cli.dry_run:
+        run([
+            sys.executable,
+            "-u",
+            str(ROOT / "custom_tools/train_bc.py"),
+            "--config",
+            str(CONFIG),
+            "--run-name",
+            RUN_NAME,
+            "--seed",
+            "2025",
+            "--num-epochs",
+            "4",
+            "--learning-rate",
+            "2e-5",
+            "--teacher-weight",
+            "1.0",
+            "--online-sample-fraction",
+            "0.25",
+            "--init-checkpoint",
+            str(INIT),
+            "--min-free-vram-mb",
+            str(cli.min_free_vram_mb),
+        ], dry_run=True)
+        print(
+            "DRY_RUN: four temporal checkpoints will be evaluated on the "
+            "frozen 12-object development split.",
+            flush=True,
+        )
+        return
+
     last = RUN_DIR / "last.ckpt"
     resource = RUN_DIR / "resource_summary.yaml"
     if last.is_file() and resource.is_file():
@@ -179,14 +210,7 @@ def main():
             str(INIT),
             "--min-free-vram-mb",
             str(cli.min_free_vram_mb),
-        ], dry_run=cli.dry_run)
-    if cli.dry_run:
-        print(
-            "DRY_RUN: four temporal checkpoints will be evaluated on the "
-            "frozen 12-object development split.",
-            flush=True,
-        )
-        return
+        ])
 
     OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
     outputs = {epoch: evaluate(cli, epoch) for epoch in EPOCHS}

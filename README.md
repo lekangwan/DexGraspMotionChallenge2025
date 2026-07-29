@@ -1,5 +1,15 @@
 # DexGraspMotionChallenge2025
 
+> 本分支 `final_release` 是课程任务的干净可复现版本。
+> 最终报告、结果图和抓取视频见 [`FINAL_SUBMISSION/`](FINAL_SUBMISSION/README.md)；
+> 自定义方法的代码阅读入口见
+> [`custom_tools/PIPELINE.md`](custom_tools/PIPELINE.md)。
+>
+> 完整开发历史、失败探索和参数搜索脚本保留在
+> [`lekang_baseline`](https://github.com/lekangwan/DexGraspMotionChallenge2025/tree/lekang_baseline)
+> 分支，本分支只保留官方工程、
+> 最终串行主线及其必要支持代码。
+
 ## Overview
 
 This repository provides example code for training and testing on grasping trajectories of a single object. It demonstrates how to set up the training pipeline and evaluate the performance of learned policies within a simulated environment. The network used in the example code of this repo is based on [**DexRepNet**](https://github.com/LQTS/DexRep_Isaac).
@@ -145,4 +155,3 @@ If you want to evaluate **human-likeness**, please run the example code with the
   organization={IEEE}
 }
 ```
-

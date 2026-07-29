@@ -1,0 +1,153 @@
+status: complete
+formal_final_holdout_result: false
+final_holdout_accessed: false
+selection: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/configs/scaled_development_all12.yaml
+seeds:
+- 2025
+- 2026
+- 2027
+ranking:
+- label: t100_epoch15
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_scaled20_t100_seed2025_e20_v1/epoch=014-step=14145.ckpt
+  seeds:
+  - 2025
+  - 2026
+  - 2027
+  success_counts:
+  - 66
+  - 69
+  - 67
+  trajectory_count_per_seed: 313
+  macro_success_mean: 0.22055200020563795
+  macro_success_std: 0.0021981426196426737
+  macro_success_values:
+  - 0.21923519757304585
+  - 0.22364910396063645
+  - 0.21877169908323157
+  lift_mean_m: 0.1015574796539214
+  failure_mean: 0.17429064022791055
+  category_success:
+    bottle:
+      mean: 0.35613275613275613
+      std: 0.011351904929966948
+      values:
+      - 0.36782866256550467
+      - 0.3598086124401914
+      - 0.3407609933925723
+    mug:
+      mean: 0.1915204678362573
+      std: 0.0
+      values:
+      - 0.1915204678362573
+      - 0.1915204678362573
+      - 0.1915204678362573
+    bowl:
+      mean: 0.21576797385620916
+      std: 0.007856742013183846
+      values:
+      - 0.20465686274509806
+      - 0.2213235294117647
+      - 0.2213235294117647
+    camera:
+      mean: 0.11878680299732931
+      std: 0.004142289260433589
+      values:
+      - 0.11293479714532347
+      - 0.12194380615433247
+      - 0.12148180569233201
+- label: t70_demo30_epoch15
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_scaled20_t70_demo30_seed2025_e20_v1/epoch=014-step=14145.ckpt
+  seeds:
+  - 2025
+  - 2026
+  - 2027
+  success_counts:
+  - 68
+  - 72
+  - 69
+  trajectory_count_per_seed: 313
+  macro_success_mean: 0.21803329577129887
+  macro_success_std: 0.004188865900719269
+  macro_success_values:
+  - 0.21212962019850565
+  - 0.22140922947811492
+  - 0.22056103763727605
+  lift_mean_m: 0.09456700262510115
+  failure_mean: 0.2102827610861924
+  category_success:
+    bottle:
+      mean: 0.36861092124250017
+      std: 0.01187827741832997
+      values:
+      - 0.35591250854408746
+      - 0.38448393711551604
+      - 0.36543631806789706
+    mug:
+      mean: 0.21564327485380116
+      std: 0.0
+      values:
+      - 0.21564327485380116
+      - 0.21564327485380116
+      - 0.21564327485380116
+    bowl:
+      mean: 0.1474673202614379
+      std: 0.0033506693879754713
+      values:
+      - 0.1450980392156863
+      - 0.1450980392156863
+      - 0.1522058823529412
+    camera:
+      mean: 0.1404116667274562
+      std: 0.006978603255792528
+      values:
+      - 0.13186465818044765
+      - 0.1404116667274562
+      - 0.14895867527446474
+- label: t70_demo30_epoch20
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_scaled20_t70_demo30_seed2025_e20_v1/epoch=019-step=18860.ckpt
+  seeds:
+  - 2025
+  - 2026
+  - 2027
+  success_counts:
+  - 62
+  - 60
+  - 64
+  trajectory_count_per_seed: 313
+  macro_success_mean: 0.20657605353812786
+  macro_success_std: 0.005430295085389664
+  macro_success_values:
+  - 0.20507657835444215
+  - 0.20080307408093787
+  - 0.21384850817900355
+  lift_mean_m: 0.09554785593516296
+  failure_mean: 0.16381236165761948
+  category_success:
+    bottle:
+      mean: 0.32237411711095926
+      std: 0.0
+      values:
+      - 0.32237411711095926
+      - 0.32237411711095926
+      - 0.32237411711095926
+    mug:
+      mean: 0.3010477582846004
+      std: 0.016540509501439708
+      values:
+      - 0.28935185185185186
+      - 0.28935185185185186
+      - 0.32443957115009747
+    bowl:
+      mean: 0.07671568627450981
+      std: 0.0
+      values:
+      - 0.07671568627450981
+      - 0.07671568627450981
+      - 0.07671568627450981
+    camera:
+      mean: 0.12616665248244197
+      std: 0.008058196936598837
+      values:
+      - 0.13186465818044765
+      - 0.11477064108643055
+      - 0.13186465818044765

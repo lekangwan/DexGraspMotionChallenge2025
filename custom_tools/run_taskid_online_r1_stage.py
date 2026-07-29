@@ -183,6 +183,9 @@ def main():
         run_dir = (
             REPO_ROOT / "custom_tools/runs/bc" / settings["run_name"])
         run_dirs[method] = run_dir
+        if cli.dry_run:
+            run(train_command(cli, settings), dry_run=True)
+            continue
         last = run_dir / "last.ckpt"
         resource = run_dir / "resource_summary.yaml"
         if last.is_file() and resource.is_file():
@@ -193,7 +196,7 @@ def main():
             raise RuntimeError(
                 "Partial online training needs inspection: {}".format(
                     run_dir))
-        run(train_command(cli, settings), dry_run=cli.dry_run)
+        run(train_command(cli, settings))
 
     if cli.dry_run:
         print(

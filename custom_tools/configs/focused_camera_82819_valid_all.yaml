@@ -1,5 +1,0 @@
-status: development_validation
-purpose: Same-object held-out trajectories; previously inspected, not a final test set.
-trajectory_root: dexgrasp/dataset/bc_multicategory_valid
-object_ids:
-  - core-camera-82819e1201d2dc583a3e53900c6cbba

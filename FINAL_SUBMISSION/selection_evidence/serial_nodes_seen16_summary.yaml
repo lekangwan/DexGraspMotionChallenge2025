@@ -1,0 +1,152 @@
+status: complete
+stage: three_seed_serial_mainline_training_set_audit
+selection: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/configs/temporal3_residual_audit16_objects.yaml
+training_objects: 16
+trajectories_per_seed: 495
+seeds:
+- 2025
+- 2026
+- 2027
+final_holdout_accessed: false
+model_selection_allowed_from_this_result: false
+nodes:
+- label: bc_soup
+  success_counts:
+  - 124
+  - 127
+  - 135
+  trajectory_count_per_seed: 495
+  macro_success_mean: 0.2610359897532276
+  macro_success_std: 0.008907793351844148
+  macro_success_values:
+  - 0.2530212838295924
+  - 0.2566263040245691
+  - 0.2734603814055214
+  lift_mean_m: 0.15314987059294558
+  failure_mean: 0.09277580352500081
+  category_success:
+    bottle:
+      mean: 0.23968971746985326
+      std: 0.003801649361218007
+    mug:
+      mean: 0.277046783625731
+      std: 0.02190733291474267
+    bowl:
+      mean: 0.21010445146958306
+      std: 0.012897363775041823
+    camera:
+      mean: 0.3173030064477433
+      std: 0.004052637705392113
+- label: category_teacher_pool
+  success_counts:
+  - 114
+  - 121
+  - 125
+  trajectory_count_per_seed: 495
+  macro_success_mean: 0.24942331558882386
+  macro_success_std: 0.011013435120837743
+  macro_success_values:
+  - 0.2341355556729867
+  - 0.25448709335726527
+  - 0.25964729773621964
+  lift_mean_m: 0.12079713361648221
+  failure_mean: 0.10020626821399976
+  category_success:
+    bottle:
+      mean: 0.28022307111865685
+      std: 0.0034779365347512668
+    mug:
+      mean: 0.16968061178587496
+      std: 0.010467904883688792
+    bowl:
+      mean: 0.32531197786131993
+      std: 0.031112335740747513
+    camera:
+      mean: 0.2224776015894437
+      std: 0.001127024815032367
+- label: offline_taskid_student
+  success_counts:
+  - 113
+  - 115
+  - 117
+  trajectory_count_per_seed: 495
+  macro_success_mean: 0.22806662288636503
+  macro_success_std: 0.004322827874296214
+  macro_success_values:
+  - 0.22376112586479732
+  - 0.22646074361641
+  - 0.23397799917788778
+  lift_mean_m: 0.12896482072149715
+  failure_mean: 0.1005726281243066
+  category_success:
+    bottle:
+      mean: 0.29193430484814187
+      std: 0.010587551918269239
+    mug:
+      mean: 0.24878355075723493
+      std: 0.0002518186542687126
+    bowl:
+      mean: 0.11013388110427583
+      std: 0.01963183839766441
+    camera:
+      mean: 0.2614147548358075
+      std: 0.003101345531519929
+- label: online_r1_student
+  success_counts:
+  - 150
+  - 144
+  - 151
+  trajectory_count_per_seed: 495
+  macro_success_mean: 0.29555725559810875
+  macro_success_std: 0.004760530661933757
+  macro_success_values:
+  - 0.29891950464292355
+  - 0.2888248501198151
+  - 0.2989274120315875
+  lift_mean_m: 0.1496762343837569
+  failure_mean: 0.0864864542381838
+  category_success:
+    bottle:
+      mean: 0.362697713058494
+      std: 0.014003946269487023
+    mug:
+      mean: 0.26547833258359577
+      std: 0.0005477447591918855
+    bowl:
+      mean: 0.26547429179008125
+      std: 0.010628612335593588
+    camera:
+      mean: 0.2885786849602639
+      std: 0.00651165280585247
+- label: temporal3_student
+  success_counts:
+  - 157
+  - 155
+  - 159
+  trajectory_count_per_seed: 495
+  macro_success_mean: 0.311191997455792
+  macro_success_std: 0.0020711058487068307
+  macro_success_values:
+  - 0.310708399286763
+  - 0.30893203340943154
+  - 0.3139355596711815
+  lift_mean_m: 0.1497545646658788
+  failure_mean: 0.08332811408520986
+  category_success:
+    bottle:
+      mean: 0.44951424259573663
+      std: 0.015259377417072053
+    mug:
+      mean: 0.21323099415204677
+      std: 0.008145442628084485
+    bowl:
+      mean: 0.21374696210222527
+      std: 0.005264105365214073
+    camera:
+      mean: 0.3682757909731594
+      std: 0.010627786554685657
+serial_macro_deltas:
+  category_teacher_pool_minus_bc_soup: -0.011612674164403758
+  offline_taskid_student_minus_category_teacher_pool: -0.021356692702458824
+  online_r1_student_minus_offline_taskid_student: 0.06749063271174371
+  temporal3_student_minus_online_r1_student: 0.015634741857683265

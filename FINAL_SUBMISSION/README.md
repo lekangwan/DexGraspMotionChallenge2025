@@ -1,6 +1,6 @@
 # DexGrasp 最终整理版
 
-本目录是项目最终主线的精简索引，集中保存报告、核心代码、锁定配置、选模证据和统一评测结果。它不会替代仓库根目录，也没有复制数据集和 checkpoint；实际运行仍应回到仓库根目录执行。
+本目录集中保存报告、选模证据、统一评测结果和案例视频。主线代码只有一份，位于仓库根目录的 `custom_tools/`；数据集和 checkpoint 不上传，实际运行也应回到仓库根目录执行。
 
 ## 1. 最终方法
 
@@ -64,11 +64,10 @@ Task ID 在离线蒸馏阶段几乎无影响，但在在线状态和时序历史
 - `EXPERIMENT_REPORT.md`：报告可编辑源文件。
 - `OFFICIAL_BC_COMPARISON.md`：官方方法与本文方法的公平对比。
 - `PIPELINE_LEARNING_NOTES.md`：完整结构、数据、实验探索和结论。
-- `custom_tools/configs/`：最终主线、无Task-ID对照、数据划分和评测锁定配置。
-- `custom_tools/*.py`：主线训练、在线数据聚合和统一评测的核心代码快照。
 - `custom_tools/results/comprehensive_five_model_evaluation_v1/`：五模型80/12/8统一评测。
 - `custom_tools/results/taskid_ablation_report_v1/`：Task ID消融。
 - `custom_tools/results/taskid_final_report_assets_v1/`：报告图表与汇总表。
+- `selection_evidence/`：类别教师、离线学生、Online-R1和Temporal3的轻量选模摘要。
 - `renders/`：四个类别各一段成功和失败视频，以及自动筛选记录。
 - `manifests/checkpoints.sha256`：最终保留权重的路径和哈希。
 - `REPRODUCE.md`：检查和复现实验的命令。
@@ -77,4 +76,4 @@ Task ID 在离线蒸馏阶段几乎无影响，但在在线状态和时序历史
 
 ## 6. 使用边界
 
-本目录中的代码是便于审阅的快照，不是一份脱离原仓库即可独立运行的副本。Isaac Gym、官方 `dexgrasp` 环境、mesh、预处理数据、在线模仿数据和 checkpoint 仍位于原仓库对应路径。这样避免复制数十GB数据，也避免两份代码继续分叉。
+主线代码见仓库根目录的 `custom_tools/PIPELINE.md`。Isaac Gym、官方 `dexgrasp` 环境、mesh、预处理数据、在线模仿数据和 checkpoint 仍位于原仓库对应路径或由使用者下载生成；GitHub不保存这些大文件。

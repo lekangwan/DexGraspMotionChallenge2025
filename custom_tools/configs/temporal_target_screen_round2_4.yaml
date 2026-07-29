@@ -1,9 +1,0 @@
-status: frozen_before_target_mix_training
-purpose: successive_halving_round_2
-selection_rule: second frozen development object from each category
-formal_final_holdout: false
-object_ids:
-  - core-bottle-6444875e3217bf891f5f48a891d827bd
-  - core-mug-9ff8400080c77feac2ad6fd1941624c3
-  - core-bowl-45603bffc6a2866b5d1ac0d5489f7d84
-  - core-camera-73b02fe7b4b2e45f74cd541b34c6124
