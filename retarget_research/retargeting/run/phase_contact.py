@@ -75,10 +75,11 @@ def infer_motion_phases(
     contact_threshold,
     min_contact_tips,
     lift_delta,
+    contact_fallback="error",
 ):
     """从专家指尖接近物体和手腕上升自动推断三段时序。
 
-    输入：`(T,28)`源帧、五指世界点、物体顶点及三个阶段阈值。
+    输入：`(T,28)`源帧、五指世界点、物体顶点、三个阶段阈值及回退模式。
     输出：close/lift/grasp帧、逐指距离与接触掩码。
     内部逻辑：首次至少若干指尖入阈值为闭合开始；之后腕Z离低点上升指定距离为抬升。
     作用：替代对所有轨迹硬编码同一个第35帧，同时保持阶段定义可解释。
@@ -96,10 +97,28 @@ def infer_motion_phases(
     distance_matrix = np.stack([distances[name] for name in TIP_SEMANTICS], axis=1)
     contact_mask = distance_matrix <= float(contact_threshold)
     counts = contact_mask.sum(axis=1)
+    if contact_fallback not in {"error", "nearest"}:
+        raise ValueError(f"未知contact_fallback: {contact_fallback}")
+    if not 1 <= int(min_contact_tips) <= distance_matrix.shape[1]:
+        raise ValueError(
+            f"min_contact_tips必须在1..{distance_matrix.shape[1]}，"
+            f"实际为{min_contact_tips}"
+        )
+    contact_order_distance = np.partition(
+        distance_matrix, int(min_contact_tips) - 1, axis=1
+    )[:, int(min_contact_tips) - 1]
     close_candidates = np.flatnonzero(counts >= int(min_contact_tips))
-    if not len(close_candidates):
-        raise ValueError("专家轨迹中没有足够指尖接近物体，无法建立闭合阶段")
-    close_start = int(close_candidates[0])
+    fallback_used = not len(close_candidates)
+    if fallback_used:
+        if contact_fallback == "error":
+            raise ValueError("专家轨迹中没有足够指尖接近物体，无法建立闭合阶段")
+        # 第k近指尖的距离代表“同时让k根指尖接近”的最坏距离。
+        # 取该距离最小的帧，比放宽成单指阈值更贴近原“多指闭合”定义。
+        close_start = int(np.argmin(contact_order_distance))
+        close_detection = "nearest_min_contact_tips"
+    else:
+        close_start = int(close_candidates[0])
+        close_detection = "threshold"
     wrist_z = frames[:, 2]
     base_z = float(wrist_z[close_start:].min())
     lift_candidates = np.flatnonzero(
@@ -117,6 +136,11 @@ def infer_motion_phases(
         "close_start_frame": close_start,
         "lift_start_frame": lift_start,
         "grasp_frame": grasp_frame,
+        "close_detection": close_detection,
+        "contact_fallback_used": bool(fallback_used),
+        "close_contact_order_distance_m": float(
+            contact_order_distance[close_start]
+        ),
         "source_tip_distances_m": distance_matrix,
         "source_contact_mask": contact_mask,
         "source_contact_tip_count": counts,

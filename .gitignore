@@ -21,6 +21,7 @@ __pycache__/
 /custom_tools/runs/
 /custom_tools/data/
 /custom_tools/logs/
+
 /ActionDiffusion/bc/saved_models/
 
 # Downloaded datasets, meshes, and external source trees
@@ -67,3 +68,7 @@ Thumbs.db
 *.html
 events.out.tfevents.*
 wandb/
+
+# Learning materials
+/custom_tools/minimal_impl/
+INTERVIEW_QA.md

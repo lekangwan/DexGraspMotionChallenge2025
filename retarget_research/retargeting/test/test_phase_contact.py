@@ -41,6 +41,48 @@ class PhaseContactTest(unittest.TestCase):
         self.assertEqual(result["close_start_frame"], 2)
         self.assertEqual(result["lift_start_frame"], 4)
         self.assertEqual(result["grasp_frame"], 4)
+        self.assertEqual(result["close_detection"], "threshold")
+        self.assertFalse(result["contact_fallback_used"])
+
+    def test_nearest_fallback_uses_best_multi_tip_frame(self):
+        """双指均未入阈值时，选择第二近指尖距离最小的帧并显式标记。"""
+        frames = np.zeros((6, 28), dtype=np.float64)
+        frames[:, 2] = [0.10, 0.08, 0.07, 0.07, 0.10, 0.12]
+        object_vertices = np.asarray([[0.0, 0.0, 0.0]])
+        far = np.tile([0.10, 0.0, 0.0], (6, 1))
+        source_tips = {name: far.copy() for name in TIP_SEMANTICS}
+        source_tips["index"][2] = [0.015, 0.0, 0.0]
+        source_tips["thumb"][2] = [0.030, 0.0, 0.0]
+        source_tips["index"][3] = [0.016, 0.0, 0.0]
+        source_tips["thumb"][3] = [0.025, 0.0, 0.0]
+
+        result = infer_motion_phases(
+            frames,
+            source_tips,
+            object_vertices,
+            0.01,
+            2,
+            0.03,
+            contact_fallback="nearest",
+        )
+
+        self.assertEqual(result["close_start_frame"], 3)
+        self.assertEqual(result["lift_start_frame"], 4)
+        self.assertEqual(result["close_detection"], "nearest_min_contact_tips")
+        self.assertTrue(result["contact_fallback_used"])
+        self.assertAlmostEqual(result["close_contact_order_distance_m"], 0.025)
+
+    def test_missing_multi_tip_contact_still_errors_without_opt_in(self):
+        """默认行为保持严格，避免其他方法在不知情时改变。"""
+        frames = np.zeros((4, 28), dtype=np.float64)
+        object_vertices = np.asarray([[0.0, 0.0, 0.0]])
+        source_tips = {
+            name: np.tile([0.1, 0.0, 0.0], (4, 1)) for name in TIP_SEMANTICS
+        }
+        with self.assertRaisesRegex(ValueError, "没有足够指尖"):
+            infer_motion_phases(
+                frames, source_tips, object_vertices, 0.01, 2, 0.03
+            )
 
     def test_moves_points_with_wrist_translation(self):
         """A 5cm wrist translation moves points equally and leaves normals fixed."""

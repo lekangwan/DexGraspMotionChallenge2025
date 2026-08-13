@@ -122,8 +122,14 @@ MPLCONFIGDIR=/tmp/matplotlib-retarget OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 \
   --finger-delta 0.425 \
   --contact-threshold 0.02 \
   --min-contact-tips 2 \
-  --lift-delta 0.03
+  --lift-delta 0.03 \
+  --contact-fallback nearest
 ```
+
+`nearest`只在专家轨迹从未达到“至少2指同时进入20 mm”时启用：
+选择第2近指尖距离全局最小的帧，不改变其他轨迹的阶段。每次回退会写入
+`squeeze_phase_metadata`，批处理摘要会统计`contact_fallback_trajectory_count`，
+避免因一条边界轨迹中断整个1000条任务。
 
 早期旧参数下的受力再分配残差和自适应PD均未通过20条泛化检查，而且与当前v2输入轨迹不兼容，因此不进入正式1000条手册；复现信息仍保留在`WORK_LOG.md`。
 

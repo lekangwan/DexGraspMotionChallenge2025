@@ -199,11 +199,12 @@ def infer_trajectory_phases(
     contact_threshold,
     min_contact_tips,
     lift_delta,
+    contact_fallback="error",
 ):
     """从单条Shadow轨迹和物体表面推断夹紧开始/抬升帧。
 
     输入：加过Z偏移的28维源轨迹、Shadow模型、物体顶点和阶段阈值。
-    输出：`infer_motion_phases`阶段字典。
+    输出：`infer_motion_phases`阶段字典，包含是否使用回退的审计字段。
     内部逻辑：正向运动学取五指指尖，再以至少若干指进入表面阈值判闭合。
     作用：让统一夹紧方法适用于不同轨迹，而不固定写死第28/37帧。
     """
@@ -219,6 +220,7 @@ def infer_trajectory_phases(
         contact_threshold,
         min_contact_tips,
         lift_delta,
+        contact_fallback,
     )
 
 
@@ -266,6 +268,7 @@ def refine_entry(entry, args, shadow_model):
             args.contact_threshold,
             args.min_contact_tips,
             args.lift_delta,
+            args.contact_fallback,
         )
         refined, clipped = apply_squeeze(
             frames[local_index],
@@ -291,6 +294,11 @@ def refine_entry(entry, args, shadow_model):
                 "close_start_frame": int(phases["close_start_frame"]),
                 "lift_start_frame": int(phases["lift_start_frame"]),
                 "grasp_frame": int(phases["grasp_frame"]),
+                "close_detection": phases["close_detection"],
+                "contact_fallback_used": bool(phases["contact_fallback_used"]),
+                "close_contact_order_distance_m": float(
+                    phases["close_contact_order_distance_m"]
+                ),
                 "joint_clipped_frame_counts": clipped.tolist(),
             }
         )
@@ -314,6 +322,7 @@ def refine_entry(entry, args, shadow_model):
             "contact_threshold": float(args.contact_threshold),
             "min_contact_tips": int(args.min_contact_tips),
             "lift_delta": float(args.lift_delta),
+            "contact_fallback": args.contact_fallback,
             "squeeze_phase_metadata": phase_metadata,
         }
     )
@@ -381,6 +390,15 @@ def main():
     parser.add_argument("--contact-threshold", type=float, default=0.02)
     parser.add_argument("--min-contact-tips", type=int, default=2)
     parser.add_argument("--lift-delta", type=float, default=0.03)
+    parser.add_argument(
+        "--contact-fallback",
+        choices=("error", "nearest"),
+        default="error",
+        help=(
+            "源轨迹未达到多指接触阈值时的处理：error报错；nearest选择"
+            "第min-contact-tips近指尖距离最小的帧并记录回退"
+        ),
+    )
     args = parser.parse_args()
     deltas = [
         args.thumb_yaw_delta,
@@ -432,6 +450,12 @@ def main():
         "contact_threshold": args.contact_threshold,
         "min_contact_tips": args.min_contact_tips,
         "lift_delta": args.lift_delta,
+        "contact_fallback": args.contact_fallback,
+        "contact_fallback_trajectory_count": sum(
+            int(phase["contact_fallback_used"])
+            for item in results
+            for phase in item["phase_metadata"]
+        ),
         "wall_time_seconds": time.perf_counter() - started,
         "results": results,
     }
