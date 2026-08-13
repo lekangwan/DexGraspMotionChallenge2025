@@ -1,0 +1,39 @@
+{
+  "study_name": "xhand_penetration_weight_search_v1",
+  "hand": "xhand",
+  "manifest": "retarget_research/retargeting/configs/linker_independent_validation_v1.json",
+  "fixed_parameters": {
+    "baseline": "xhand_independent_validation_v1",
+    "maxeval": 20,
+    "contact_weight": 5.0,
+    "normal_weight": 0.05,
+    "joint_prior_weight": 2.0,
+    "contact_threshold_m": 0.02,
+    "min_contact_tips": 2,
+    "lift_delta_m": 0.03,
+    "region_neighbors": 32,
+    "contact_offset_m": -0.003,
+    "min_signed_distance_m": -0.006
+  },
+  "selection_rule": "比较穿透项关闭、当前值和倍增值0/1/2。该项只惩罚近似有符号距离小于-6 mm的指腹点，不反对-3 mm接触目标本身；优先严格成功和配对回退，再看接触与抬升。",
+  "candidates": [
+    {
+      "name": "penetration_weight_0",
+      "parameters": {"penetration_weight": 0.0},
+      "target_dir": "retarget_research/outputs/xhand_penetration_weight_search_v1/penetration_weight_0",
+      "evaluation_dir": "retarget_research/outputs/xhand_penetration_weight_search_v1_evaluation/penetration_weight_0"
+    },
+    {
+      "name": "penetration_weight_1_current",
+      "parameters": {"penetration_weight": 1.0},
+      "target_dir": "retarget_research/outputs/xhand_independent_validation_contact_v1",
+      "evaluation_dir": "retarget_research/outputs/xhand_independent_validation_contact_v1_evaluation"
+    },
+    {
+      "name": "penetration_weight_2",
+      "parameters": {"penetration_weight": 2.0},
+      "target_dir": "retarget_research/outputs/xhand_penetration_weight_search_v1/penetration_weight_2",
+      "evaluation_dir": "retarget_research/outputs/xhand_penetration_weight_search_v1_evaluation/penetration_weight_2"
+    }
+  ]
+}

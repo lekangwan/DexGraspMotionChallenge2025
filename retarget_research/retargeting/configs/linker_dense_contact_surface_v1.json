@@ -1,0 +1,4210 @@
+{
+  "status": "geometry_dense_surface_development_v1",
+  "hand": "linker",
+  "calibration_rule": "复用物理校准的远端body/mesh对应；裁掉局部Z最低的近关节区域；对剩余STL顶点做确定性最远点采样",
+  "points_per_finger": 64,
+  "proximal_trim_fraction": 0.1,
+  "base_config_status": "physics_contact_calibrated_development_v1",
+  "fingers": {
+    "index": {
+      "body_name": "rh_index_distal",
+      "mesh_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/assets/linkerhand/o6/right/meshes/index_distal.STL",
+      "mesh_vertex_count": 34821,
+      "candidate_vertex_count": 31358,
+      "surface_points": [
+        {
+          "local_xyz_m": [
+            0.014563078992068768,
+            3.586566421631687e-08,
+            0.024202587082982063
+          ],
+          "local_outward_normal": [
+            -0.9192230555511752,
+            0.005346924809829707,
+            0.3937008820643396
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.004433636087924242,
+            -0.0031600012443959713,
+            0.002141601638868451
+          ],
+          "local_outward_normal": [
+            -0.9795685140591441,
+            -0.1472550131859721,
+            0.1369725788454011
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.00025482670753262937,
+            0.005236069206148386,
+            0.016581770032644272
+          ],
+          "local_outward_normal": [
+            -0.6723592790067597,
+            0.7069826118136926,
+            0.21933669671671469
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009686377830803394,
+            -0.002804563846439123,
+            0.008316542021930218
+          ],
+          "local_outward_normal": [
+            0.9238374339611557,
+            -0.31701334483838034,
+            -0.21453888879746136
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.01466039102524519,
+            6.8307958827062976e-06,
+            0.037572119385004044
+          ],
+          "local_outward_normal": [
+            0.21776494296289636,
+            0.07990077330954977,
+            0.9727251904011238
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0032770438119769096,
+            -0.005804227199405432,
+            0.021335508674383163
+          ],
+          "local_outward_normal": [
+            -0.37282857274705955,
+            -0.8908964194821981,
+            0.2594271094106974
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.004897501319646835,
+            0.0032362923957407475,
+            0.027732746675610542
+          ],
+          "local_outward_normal": [
+            -0.7501035892523448,
+            0.280102493037995,
+            0.5990719479199889
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            3.945922071579844e-05,
+            0.005923880729824305,
+            0.005578137002885342
+          ],
+          "local_outward_normal": [
+            0.07340307218389233,
+            0.8314643187486518,
+            -0.5507077951525715
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0013407636433839798,
+            -0.005236068274825811,
+            0.012042646296322346
+          ],
+          "local_outward_normal": [
+            -0.6949407443147718,
+            -0.7070900043937287,
+            0.13069463484668264
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.010061385110020638,
+            0.0045784213580191135,
+            0.015543709509074688
+          ],
+          "local_outward_normal": [
+            0.6924919012690434,
+            0.6642716598802453,
+            -0.28142162062771486
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009481391869485378,
+            -0.005528045352548361,
+            0.03103058598935604
+          ],
+          "local_outward_normal": [
+            -0.24760582487988267,
+            -0.936666991948252,
+            0.24768185577503712
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.011021096259355545,
+            -0.0041621229611337185,
+            0.017017774283885956
+          ],
+          "local_outward_normal": [
+            0.7635976731551173,
+            -0.5757264159275198,
+            -0.2923314686367911
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.012824991717934608,
+            0.00585561478510499,
+            0.030587919056415558
+          ],
+          "local_outward_normal": [
+            -0.10206427814990757,
+            0.9815563437960662,
+            0.16164784897868933
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005730004049837589,
+            -0.003369999583810568,
+            0.0010039606131613255
+          ],
+          "local_outward_normal": [
+            0.8515557911835749,
+            -0.19500961943260042,
+            -0.48664564400646604
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.007850059308111668,
+            0.005047003272920847,
+            0.007065927144140005
+          ],
+          "local_outward_normal": [
+            0.5507385113172143,
+            0.8337230313884803,
+            -0.039912392618105676
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.016903305426239967,
+            -0.003357329871505499,
+            0.030681496486067772
+          ],
+          "local_outward_normal": [
+            0.9224716097764023,
+            -0.3859577956788836,
+            -0.009094454971581721
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.010069187730550766,
+            0.00607754522934556,
+            0.022905126214027405
+          ],
+          "local_outward_normal": [
+            0.14738431456827844,
+            0.9865629034111368,
+            -0.07050887484726158
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.010422206483781338,
+            -0.00608366122469306,
+            0.02376229502260685
+          ],
+          "local_outward_normal": [
+            0.11467368008451698,
+            -0.9920900391918684,
+            -0.051061739415640496
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.003356201108545065,
+            0.0019999989308416843,
+            0.010246729478240013
+          ],
+          "local_outward_normal": [
+            -0.97299956816942,
+            0.1564319457988087,
+            0.1697082398580601
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005638735368847847,
+            -0.005999998655170202,
+            0.012750930152833462
+          ],
+          "local_outward_normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.001556376344524324,
+            -0.002000001724809408,
+            0.017939070239663124
+          ],
+          "local_outward_normal": [
+            -0.9334022923890537,
+            -0.15642428739613873,
+            0.32294210452567157
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005730004049837589,
+            0.0033700005151331425,
+            0.0010039606131613255
+          ],
+          "local_outward_normal": [
+            0.8515557911835749,
+            0.19500961943260042,
+            -0.48664564400646604
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009427043609321117,
+            0.0010630027391016483,
+            0.03387990966439247
+          ],
+          "local_outward_normal": [
+            -0.7954587451119195,
+            0.029972570733818142,
+            0.6052660818421736
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            3.945922071579844e-05,
+            -0.00592387979850173,
+            0.005578137002885342
+          ],
+          "local_outward_normal": [
+            0.025774472686715646,
+            -0.9807866209357593,
+            -0.19337342307343297
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.001051526516675949,
+            0.0019999989308416843,
+            0.022974543273448944
+          ],
+          "local_outward_normal": [
+            -0.7888701661523179,
+            0.15642659509082552,
+            0.594318585695505
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0048453533090651035,
+            -0.0030430047772824764,
+            0.027758825570344925
+          ],
+          "local_outward_normal": [
+            -0.7745293968694749,
+            -0.26467282982254225,
+            0.5745019639119915
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.004230490420013666,
+            0.003529197070747614,
+            0.0021136647555977106
+          ],
+          "local_outward_normal": [
+            -0.6867917214543217,
+            0.7208814644972523,
+            0.09298949126705805
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.017159968614578247,
+            0.0025310725905001163,
+            0.0325235091149807
+          ],
+          "local_outward_normal": [
+            0.1941861211698381,
+            -1.329686919747376e-05,
+            -0.9809647038340403
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0042723254300653934,
+            0.005999999586492777,
+            0.02060251496732235
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.012121107429265976,
+            0.0010000006295740604,
+            0.019255047664046288
+          ],
+          "local_outward_normal": [
+            -0.8750286151852297,
+            -0.13052702807662453,
+            0.466141199153758
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005594414193183184,
+            -0.005867605563253164,
+            0.006296657957136631
+          ],
+          "local_outward_normal": [
+            0.23055501137970516,
+            -0.9537925120015885,
+            -0.19267649253970653
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013098927214741707,
+            -0.004523684736341238,
+            0.03500305488705635
+          ],
+          "local_outward_normal": [
+            0.05075212811031925,
+            -0.8602468807141124,
+            0.5073455683396806
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005638735368847847,
+            0.005999999586492777,
+            0.012750930152833462
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.01088191568851471,
+            -0.0009999996982514858,
+            0.012976591475307941
+          ],
+          "local_outward_normal": [
+            0.5630551035718578,
+            0.0,
+            0.8264193550139568
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.014747497625648975,
+            -0.0050520761869847775,
+            0.02635706402361393
+          ],
+          "local_outward_normal": [
+            0.6097711036579407,
+            -0.7472560840698639,
+            -0.2641733256109509
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.01612650230526924,
+            0.0037677609361708164,
+            0.027322767302393913
+          ],
+          "local_outward_normal": [
+            0.850425833535944,
+            0.47034636266166846,
+            -0.23569090093941525
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0035438279155641794,
+            -0.003236067947000265,
+            0.007971912622451782
+          ],
+          "local_outward_normal": [
+            -0.9758999884226869,
+            -0.15643293971959854,
+            0.15214449699967564
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.001998894615098834,
+            -0.005999998655170202,
+            0.01591198705136776
+          ],
+          "local_outward_normal": [
+            -0.14878142933595553,
+            -0.9876803283770389,
+            0.048493867878061016
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0009650196880102158,
+            0.005999999586492777,
+            0.01158304326236248
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013351589441299438,
+            0.004160596523433924,
+            0.03554737567901611
+          ],
+          "local_outward_normal": [
+            0.0695132700887385,
+            0.757961300217533,
+            0.6485850542944362
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013694824650883675,
+            -0.003135093953460455,
+            0.02087390422821045
+          ],
+          "local_outward_normal": [
+            0.8120718756593868,
+            -0.4131248802341346,
+            -0.41214936866939106
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0011359663913026452,
+            -0.003870000597089529,
+            0.0016460809856653214
+          ],
+          "local_outward_normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0011359663913026452,
+            0.0038700015284121037,
+            0.0016460809856653214
+          ],
+          "local_outward_normal": [
+            0.3545098039282945,
+            0.0,
+            0.9350522974244394
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.008445389568805695,
+            0.005752878729254007,
+            0.028756028041243553
+          ],
+          "local_outward_normal": [
+            -0.3344940493358003,
+            0.9191933295165499,
+            0.2078397313586092
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.008013930171728134,
+            -0.005999998655170202,
+            0.020021717995405197
+          ],
+          "local_outward_normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013961710035800934,
+            0.0040889219380915165,
+            0.022698936983942986
+          ],
+          "local_outward_normal": [
+            0.6863673899662833,
+            0.6474935431101824,
+            -0.3311373093166856
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0024578699376434088,
+            0.0019999989308416843,
+            0.014683357439935207
+          ],
+          "local_outward_normal": [
+            -0.9577479798689817,
+            0.1564081238569828,
+            0.24136135947666376
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.010118881240487099,
+            0.0024999999441206455,
+            0.010587269440293312
+          ],
+          "local_outward_normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.00022542610531672835,
+            -0.002000001724809408,
+            0.021779965609312057
+          ],
+          "local_outward_normal": [
+            -0.831277516377409,
+            -0.15643437643254193,
+            0.5333910166431078
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.016979550942778587,
+            -0.0018172352574765682,
+            0.03463004529476166
+          ],
+          "local_outward_normal": [
+            0.26211561451716875,
+            -2.4106393165740063e-05,
+            -0.9650364780904237
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.008134179748594761,
+            0.005726756993681192,
+            0.01904153823852539
+          ],
+          "local_outward_normal": [
+            -0.9324400052691802,
+            0.0,
+            0.3613248352571564
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.012202230282127857,
+            0.005729360971599817,
+            0.026392797008156776
+          ],
+          "local_outward_normal": [
+            0.9322876974454005,
+            0.0,
+            -0.36171763738025464
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013488235883414745,
+            -0.005824690219014883,
+            0.030361223965883255
+          ],
+          "local_outward_normal": [
+            0.18836582818677083,
+            -0.9777792649153093,
+            0.09201099865336398
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0074208625592291355,
+            -0.005867259111255407,
+            0.026470648124814034
+          ],
+          "local_outward_normal": [
+            -0.22708536975377355,
+            -0.9591705465862974,
+            0.16859447619994958
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0056074815802276134,
+            0.005804224405437708,
+            0.024386748671531677
+          ],
+          "local_outward_normal": [
+            -0.3191633538661644,
+            0.9175955297441568,
+            0.23696665871476918
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.015962647274136543,
+            -1.108785090764286e-05,
+            0.028678596019744873
+          ],
+          "local_outward_normal": [
+            -0.970560411852346,
+            0.01440605194330549,
+            0.24042660545873715
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.00629444932565093,
+            -1.3870367077117862e-09,
+            0.02984415367245674
+          ],
+          "local_outward_normal": [
+            -0.7843924976747567,
+            -0.01879400410177261,
+            0.6199799956461334
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.001370181329548359,
+            0.0019999989308416843,
+            0.01847723126411438
+          ],
+          "local_outward_normal": [
+            -0.9334023612215787,
+            0.1564238274970185,
+            0.3229421283406125
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009253060445189476,
+            -0.004789592232555151,
+            0.013423680327832699
+          ],
+          "local_outward_normal": [
+            0.6167132272068067,
+            -0.7705156703215614,
+            -0.16115333436538168
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009957785718142986,
+            0.004764037672430277,
+            0.03290301561355591
+          ],
+          "local_outward_normal": [
+            -0.5857897731061811,
+            0.6165605882185546,
+            0.5260260286143632
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.004106612876057625,
+            0.0019999989308416843,
+            0.005632949527353048
+          ],
+          "local_outward_normal": [
+            -0.9758998639688232,
+            0.15643247869278634,
+            0.15214576929925883
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005953856743872166,
+            -0.002499999012798071,
+            0.008273813873529434
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.002532385988160968,
+            -0.002000001724809408,
+            0.014361811801791191
+          ],
+          "local_outward_normal": [
+            -0.9621892290242572,
+            -0.15643336689287426,
+            0.22298091683429982
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.002620235551148653,
+            -0.002000001724809408,
+            0.025027843192219734
+          ],
+          "local_outward_normal": [
+            -0.7852828631471138,
+            -0.1564342574860816,
+            0.599048535539692
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        }
+      ]
+    },
+    "middle": {
+      "body_name": "rh_middle_distal",
+      "mesh_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/assets/linkerhand/o6/right/meshes/middle_distal.STL",
+      "mesh_vertex_count": 34821,
+      "candidate_vertex_count": 31358,
+      "surface_points": [
+        {
+          "local_xyz_m": [
+            0.014563078992068768,
+            3.586565000546216e-08,
+            0.024202587082982063
+          ],
+          "local_outward_normal": [
+            -0.919223055551173,
+            0.0053469248098999295,
+            0.393700882064344
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.004433636087924242,
+            -0.0031600012443959713,
+            0.002141601638868451
+          ],
+          "local_outward_normal": [
+            -0.9795685140591441,
+            -0.1472550131859721,
+            0.1369725788454011
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.00025482670753262937,
+            0.005236069206148386,
+            0.016581770032644272
+          ],
+          "local_outward_normal": [
+            -0.6723592790067597,
+            0.7069826118136926,
+            0.21933669671671469
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009686377830803394,
+            -0.002804563846439123,
+            0.008316542021930218
+          ],
+          "local_outward_normal": [
+            0.9238374339611557,
+            -0.31701334483838034,
+            -0.21453888879746136
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.01466039102524519,
+            6.8307958827062976e-06,
+            0.037572119385004044
+          ],
+          "local_outward_normal": [
+            0.21776494296289636,
+            0.07990077330954977,
+            0.9727251904011238
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0032770438119769096,
+            -0.005804227199405432,
+            0.021335508674383163
+          ],
+          "local_outward_normal": [
+            -0.37282857274705955,
+            -0.8908964194821981,
+            0.2594271094106974
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.004897501319646835,
+            0.0032362923957407475,
+            0.027732746675610542
+          ],
+          "local_outward_normal": [
+            -0.7501035892523448,
+            0.280102493037995,
+            0.5990719479199889
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            3.945922071579844e-05,
+            0.005923880729824305,
+            0.005578137002885342
+          ],
+          "local_outward_normal": [
+            0.07340307218389233,
+            0.8314643187486518,
+            -0.5507077951525715
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0013407636433839798,
+            -0.005236068274825811,
+            0.012042646296322346
+          ],
+          "local_outward_normal": [
+            -0.6949407443147718,
+            -0.7070900043937287,
+            0.13069463484668264
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.010061385110020638,
+            0.0045784213580191135,
+            0.015543709509074688
+          ],
+          "local_outward_normal": [
+            0.6924919012690434,
+            0.6642716598802453,
+            -0.28142162062771486
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009481391869485378,
+            -0.005528045352548361,
+            0.03103058598935604
+          ],
+          "local_outward_normal": [
+            -0.24760582487988267,
+            -0.936666991948252,
+            0.24768185577503712
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.011021096259355545,
+            -0.0041621229611337185,
+            0.017017774283885956
+          ],
+          "local_outward_normal": [
+            0.7635976731551173,
+            -0.5757264159275198,
+            -0.2923314686367911
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.012824991717934608,
+            0.00585561478510499,
+            0.030587919056415558
+          ],
+          "local_outward_normal": [
+            -0.10206427814990757,
+            0.9815563437960662,
+            0.16164784897868933
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005730004049837589,
+            -0.003369999583810568,
+            0.0010039606131613255
+          ],
+          "local_outward_normal": [
+            0.8515557911835749,
+            -0.19500961943260042,
+            -0.48664564400646604
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.007850059308111668,
+            0.005047003272920847,
+            0.007065927144140005
+          ],
+          "local_outward_normal": [
+            0.5507385113172143,
+            0.8337230313884803,
+            -0.039912392618105676
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.016903305426239967,
+            -0.003357329871505499,
+            0.030681496486067772
+          ],
+          "local_outward_normal": [
+            0.9224716097764023,
+            -0.3859577956788836,
+            -0.009094454971581721
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.010069187730550766,
+            0.00607754522934556,
+            0.022905126214027405
+          ],
+          "local_outward_normal": [
+            0.14738431456827844,
+            0.9865629034111368,
+            -0.07050887484726158
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.010422206483781338,
+            -0.00608366122469306,
+            0.02376229502260685
+          ],
+          "local_outward_normal": [
+            0.11467368008451698,
+            -0.9920900391918684,
+            -0.051061739415640496
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.003356201108545065,
+            0.0019999989308416843,
+            0.010246729478240013
+          ],
+          "local_outward_normal": [
+            -0.97299956816942,
+            0.1564319457988087,
+            0.1697082398580601
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005638735368847847,
+            -0.005999998655170202,
+            0.012750930152833462
+          ],
+          "local_outward_normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.001556376344524324,
+            -0.002000001724809408,
+            0.017939070239663124
+          ],
+          "local_outward_normal": [
+            -0.9334022923890537,
+            -0.15642428739613873,
+            0.32294210452567157
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005730004049837589,
+            0.0033700005151331425,
+            0.0010039606131613255
+          ],
+          "local_outward_normal": [
+            0.8515557911835749,
+            0.19500961943260042,
+            -0.48664564400646604
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009427043609321117,
+            0.0010630027391016483,
+            0.03387990966439247
+          ],
+          "local_outward_normal": [
+            -0.7954587451119157,
+            0.02997257073360322,
+            0.6052660818421891
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            3.945922071579844e-05,
+            -0.00592387979850173,
+            0.005578137002885342
+          ],
+          "local_outward_normal": [
+            0.025774472686715646,
+            -0.9807866209357593,
+            -0.19337342307343297
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.001051526516675949,
+            0.0019999989308416843,
+            0.022974543273448944
+          ],
+          "local_outward_normal": [
+            -0.7888701661523179,
+            0.15642659509082552,
+            0.594318585695505
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0048453533090651035,
+            -0.0030430047772824764,
+            0.027758825570344925
+          ],
+          "local_outward_normal": [
+            -0.7745293968694749,
+            -0.26467282982254225,
+            0.5745019639119915
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.004230490420013666,
+            0.003529197070747614,
+            0.0021136647555977106
+          ],
+          "local_outward_normal": [
+            -0.6867917214543217,
+            0.7208814644972523,
+            0.09298949126705805
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.017159968614578247,
+            0.0025310725905001163,
+            0.0325235091149807
+          ],
+          "local_outward_normal": [
+            0.1941861211698381,
+            -1.329686919747376e-05,
+            -0.9809647038340403
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0042723254300653934,
+            0.005999999586492777,
+            0.02060251496732235
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.012121107429265976,
+            0.0010000006295740604,
+            0.019255047664046288
+          ],
+          "local_outward_normal": [
+            -0.8750286151852297,
+            -0.13052702807662453,
+            0.466141199153758
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005594414193183184,
+            -0.005867605563253164,
+            0.006296657957136631
+          ],
+          "local_outward_normal": [
+            0.23055501137970516,
+            -0.9537925120015885,
+            -0.19267649253970653
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013098927214741707,
+            -0.004523684736341238,
+            0.03500305488705635
+          ],
+          "local_outward_normal": [
+            0.05075212811031925,
+            -0.8602468807141124,
+            0.5073455683396806
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005638735368847847,
+            0.005999999586492777,
+            0.012750930152833462
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.01088191568851471,
+            -0.0009999996982514858,
+            0.012976591475307941
+          ],
+          "local_outward_normal": [
+            0.5630551035718578,
+            0.0,
+            0.8264193550139568
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.014747497625648975,
+            -0.0050520761869847775,
+            0.02635706402361393
+          ],
+          "local_outward_normal": [
+            0.6097711036579407,
+            -0.7472560840698639,
+            -0.2641733256109509
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.01612650230526924,
+            0.0037677609361708164,
+            0.027322767302393913
+          ],
+          "local_outward_normal": [
+            0.850425833535944,
+            0.47034636266166846,
+            -0.23569090093941525
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0035438279155641794,
+            -0.003236067947000265,
+            0.007971912622451782
+          ],
+          "local_outward_normal": [
+            -0.9758999884226869,
+            -0.15643293971959854,
+            0.15214449699967564
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.001998894615098834,
+            -0.005999998655170202,
+            0.01591198705136776
+          ],
+          "local_outward_normal": [
+            -0.14878142933595553,
+            -0.9876803283770389,
+            0.048493867878061016
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0009650196880102158,
+            0.005999999586492777,
+            0.01158304326236248
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013351589441299438,
+            0.004160596523433924,
+            0.03554737567901611
+          ],
+          "local_outward_normal": [
+            0.0695132700887385,
+            0.757961300217533,
+            0.6485850542944362
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013694824650883675,
+            -0.003135093953460455,
+            0.02087390422821045
+          ],
+          "local_outward_normal": [
+            0.8120718756593868,
+            -0.4131248802341346,
+            -0.41214936866939106
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0011359663913026452,
+            -0.003870000597089529,
+            0.0016460809856653214
+          ],
+          "local_outward_normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0011359663913026452,
+            0.0038700015284121037,
+            0.0016460809856653214
+          ],
+          "local_outward_normal": [
+            0.3545098039282945,
+            0.0,
+            0.9350522974244394
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.008445389568805695,
+            0.005752878729254007,
+            0.028756028041243553
+          ],
+          "local_outward_normal": [
+            -0.3344940493358003,
+            0.9191933295165499,
+            0.2078397313586092
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.008013930171728134,
+            -0.005999998655170202,
+            0.020021717995405197
+          ],
+          "local_outward_normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013961710035800934,
+            0.0040889219380915165,
+            0.022698936983942986
+          ],
+          "local_outward_normal": [
+            0.6863673899662833,
+            0.6474935431101824,
+            -0.3311373093166856
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0024578699376434088,
+            0.0019999989308416843,
+            0.014683357439935207
+          ],
+          "local_outward_normal": [
+            -0.9577479798689817,
+            0.1564081238569828,
+            0.24136135947666376
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.010118881240487099,
+            0.0024999999441206455,
+            0.010587269440293312
+          ],
+          "local_outward_normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.00022542610531672835,
+            -0.002000001724809408,
+            0.021779965609312057
+          ],
+          "local_outward_normal": [
+            -0.831277516377409,
+            -0.15643437643254193,
+            0.5333910166431078
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.016979550942778587,
+            -0.0018172352574765682,
+            0.03463004529476166
+          ],
+          "local_outward_normal": [
+            0.26211561451716875,
+            -2.4106393165740063e-05,
+            -0.9650364780904237
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.008134179748594761,
+            0.005726756993681192,
+            0.01904153823852539
+          ],
+          "local_outward_normal": [
+            -0.9324400052691802,
+            0.0,
+            0.3613248352571564
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.012202230282127857,
+            0.005729360971599817,
+            0.026392797008156776
+          ],
+          "local_outward_normal": [
+            0.9322876974454005,
+            0.0,
+            -0.36171763738025464
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013488235883414745,
+            -0.005824690219014883,
+            0.030361223965883255
+          ],
+          "local_outward_normal": [
+            0.18836582818677083,
+            -0.9777792649153093,
+            0.09201099865336398
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0074208625592291355,
+            -0.005867259111255407,
+            0.026470648124814034
+          ],
+          "local_outward_normal": [
+            -0.22708536975377355,
+            -0.9591705465862974,
+            0.16859447619994958
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0056074815802276134,
+            0.005804224405437708,
+            0.024386748671531677
+          ],
+          "local_outward_normal": [
+            -0.3191633538661644,
+            0.9175955297441568,
+            0.23696665871476918
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.015962647274136543,
+            -1.108785090764286e-05,
+            0.028678596019744873
+          ],
+          "local_outward_normal": [
+            -0.970560411852346,
+            0.01440605194330549,
+            0.24042660545873715
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.00629444932565093,
+            -1.3870418147376995e-09,
+            0.02984415367245674
+          ],
+          "local_outward_normal": [
+            -0.7843924976747677,
+            -0.018794004101819736,
+            0.6199799956461178
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.001370181329548359,
+            0.0019999989308416843,
+            0.01847723126411438
+          ],
+          "local_outward_normal": [
+            -0.9334023612215787,
+            0.1564238274970185,
+            0.3229421283406125
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009253060445189476,
+            -0.004789592232555151,
+            0.013423680327832699
+          ],
+          "local_outward_normal": [
+            0.6167132272068067,
+            -0.7705156703215614,
+            -0.16115333436538168
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009957785718142986,
+            0.004764037672430277,
+            0.03290301561355591
+          ],
+          "local_outward_normal": [
+            -0.5857897731061811,
+            0.6165605882185546,
+            0.5260260286143632
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.004106612876057625,
+            0.0019999989308416843,
+            0.005632949527353048
+          ],
+          "local_outward_normal": [
+            -0.9758998639688232,
+            0.15643247869278634,
+            0.15214576929925883
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005953856743872166,
+            -0.002499999012798071,
+            0.008273813873529434
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.002532385988160968,
+            -0.002000001724809408,
+            0.014361811801791191
+          ],
+          "local_outward_normal": [
+            -0.9621892290242572,
+            -0.15643336689287426,
+            0.22298091683429982
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.002620235551148653,
+            -0.002000001724809408,
+            0.025027843192219734
+          ],
+          "local_outward_normal": [
+            -0.7852828631471138,
+            -0.1564342574860816,
+            0.599048535539692
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        }
+      ]
+    },
+    "ring": {
+      "body_name": "rh_ring_distal",
+      "mesh_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/assets/linkerhand/o6/right/meshes/ring_distal.STL",
+      "mesh_vertex_count": 34821,
+      "candidate_vertex_count": 31358,
+      "surface_points": [
+        {
+          "local_xyz_m": [
+            0.014563078992068768,
+            3.5866868586253986e-08,
+            0.024202587082982063
+          ],
+          "local_outward_normal": [
+            -0.9192230555513677,
+            0.005346924803878308,
+            0.393700882063971
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.004433636087924242,
+            -0.0031600012443959713,
+            0.002141601638868451
+          ],
+          "local_outward_normal": [
+            -0.9795685140591441,
+            -0.1472550131859721,
+            0.1369725788454011
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.00025482670753262937,
+            0.005236069206148386,
+            0.016581770032644272
+          ],
+          "local_outward_normal": [
+            -0.6723592790067597,
+            0.7069826118136926,
+            0.21933669671671469
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009686377830803394,
+            -0.002804563846439123,
+            0.008316542021930218
+          ],
+          "local_outward_normal": [
+            0.9238374339611557,
+            -0.31701334483838034,
+            -0.21453888879746136
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.01466039102524519,
+            6.830796792200999e-06,
+            0.037572119385004044
+          ],
+          "local_outward_normal": [
+            0.21776494296274407,
+            0.07990077339459702,
+            0.9727251903941719
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0032770438119769096,
+            -0.005804227199405432,
+            0.021335508674383163
+          ],
+          "local_outward_normal": [
+            -0.37282857274705955,
+            -0.8908964194821981,
+            0.2594271094106974
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.004897501319646835,
+            0.0032362923957407475,
+            0.027732746675610542
+          ],
+          "local_outward_normal": [
+            -0.7501035892523448,
+            0.280102493037995,
+            0.5990719479199889
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            3.945921707781963e-05,
+            0.005923880729824305,
+            0.005578137002885342
+          ],
+          "local_outward_normal": [
+            0.07340307210870861,
+            0.8314643191288904,
+            -0.5507077945885044
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0013407636433839798,
+            -0.005236068274825811,
+            0.012042646296322346
+          ],
+          "local_outward_normal": [
+            -0.6949407443147718,
+            -0.7070900043937287,
+            0.13069463484668264
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.010061385110020638,
+            0.0045784213580191135,
+            0.015543709509074688
+          ],
+          "local_outward_normal": [
+            0.6924919012690434,
+            0.6642716598802453,
+            -0.28142162062771486
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009481391869485378,
+            -0.005528045352548361,
+            0.03103058598935604
+          ],
+          "local_outward_normal": [
+            -0.24760582487988267,
+            -0.936666991948252,
+            0.24768185577503712
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.011021096259355545,
+            -0.0041621229611337185,
+            0.017017774283885956
+          ],
+          "local_outward_normal": [
+            0.7635976731551173,
+            -0.5757264159275198,
+            -0.2923314686367911
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.012824991717934608,
+            0.00585561478510499,
+            0.030587919056415558
+          ],
+          "local_outward_normal": [
+            -0.10206427814990757,
+            0.9815563437960662,
+            0.16164784897868933
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005730004049837589,
+            -0.003369999583810568,
+            0.0010039606131613255
+          ],
+          "local_outward_normal": [
+            0.8515557911835749,
+            -0.19500961943260042,
+            -0.48664564400646604
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.007850059308111668,
+            0.005047003272920847,
+            0.007065927144140005
+          ],
+          "local_outward_normal": [
+            0.5507385113172143,
+            0.8337230313884803,
+            -0.039912392618105676
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.016903305426239967,
+            -0.003357329871505499,
+            0.030681496486067772
+          ],
+          "local_outward_normal": [
+            0.9224716097764023,
+            -0.3859577956788836,
+            -0.009094454971581721
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.010069187730550766,
+            0.00607754522934556,
+            0.022905126214027405
+          ],
+          "local_outward_normal": [
+            0.14738431456827844,
+            0.9865629034111368,
+            -0.07050887484726158
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.010422206483781338,
+            -0.00608366122469306,
+            0.02376229502260685
+          ],
+          "local_outward_normal": [
+            0.11467368008451698,
+            -0.9920900391918684,
+            -0.051061739415640496
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.003356201108545065,
+            0.0019999989308416843,
+            0.010246729478240013
+          ],
+          "local_outward_normal": [
+            -0.97299956816942,
+            0.1564319457988087,
+            0.1697082398580601
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005638735368847847,
+            -0.005999998655170202,
+            0.012750930152833462
+          ],
+          "local_outward_normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.001556376344524324,
+            -0.002000001724809408,
+            0.017939070239663124
+          ],
+          "local_outward_normal": [
+            -0.9334022923890537,
+            -0.15642428739613873,
+            0.32294210452567157
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005730004049837589,
+            0.0033700005151331425,
+            0.0010039606131613255
+          ],
+          "local_outward_normal": [
+            0.8515557911835749,
+            0.19500961943260042,
+            -0.48664564400646604
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009427043609321117,
+            0.0010630027391016483,
+            0.03387990966439247
+          ],
+          "local_outward_normal": [
+            -0.7954587451123063,
+            0.029972570755773274,
+            0.605266081840578
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            3.945922071579844e-05,
+            -0.00592387979850173,
+            0.005578137002885342
+          ],
+          "local_outward_normal": [
+            0.025774472686715646,
+            -0.9807866209357593,
+            -0.19337342307343297
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.001051526516675949,
+            0.0019999989308416843,
+            0.022974543273448944
+          ],
+          "local_outward_normal": [
+            -0.7888701661523179,
+            0.15642659509082552,
+            0.594318585695505
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0048453533090651035,
+            -0.0030430047772824764,
+            0.027758825570344925
+          ],
+          "local_outward_normal": [
+            -0.7745293968694749,
+            -0.26467282982254225,
+            0.5745019639119915
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.004230490420013666,
+            0.003529197070747614,
+            0.0021136647555977106
+          ],
+          "local_outward_normal": [
+            -0.6867917214543217,
+            0.7208814644972523,
+            0.09298949126705805
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.017159968614578247,
+            0.0025310725905001163,
+            0.0325235091149807
+          ],
+          "local_outward_normal": [
+            0.1941861211698381,
+            -1.329686919747376e-05,
+            -0.9809647038340403
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0042723254300653934,
+            0.005999999586492777,
+            0.02060251496732235
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.012121107429265976,
+            0.0010000006295740604,
+            0.019255047664046288
+          ],
+          "local_outward_normal": [
+            -0.8750286151852297,
+            -0.13052702807662453,
+            0.466141199153758
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005594414193183184,
+            -0.005867605563253164,
+            0.006296657957136631
+          ],
+          "local_outward_normal": [
+            0.23055501137970516,
+            -0.9537925120015885,
+            -0.19267649253970653
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013098927214741707,
+            -0.004523684736341238,
+            0.03500305488705635
+          ],
+          "local_outward_normal": [
+            0.05075212811031925,
+            -0.8602468807141124,
+            0.5073455683396806
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005638735368847847,
+            0.005999999586492777,
+            0.012750930152833462
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.01088191568851471,
+            -0.0009999996982514858,
+            0.012976591475307941
+          ],
+          "local_outward_normal": [
+            0.5630551035718578,
+            0.0,
+            0.8264193550139568
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.014747497625648975,
+            -0.0050520761869847775,
+            0.02635706402361393
+          ],
+          "local_outward_normal": [
+            0.6097711036579407,
+            -0.7472560840698639,
+            -0.2641733256109509
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.01612650230526924,
+            0.0037677609361708164,
+            0.027322767302393913
+          ],
+          "local_outward_normal": [
+            0.850425833535944,
+            0.47034636266166846,
+            -0.23569090093941525
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0035438279155641794,
+            -0.003236067947000265,
+            0.007971912622451782
+          ],
+          "local_outward_normal": [
+            -0.9758999884226869,
+            -0.15643293971959854,
+            0.15214449699967564
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.001998894615098834,
+            -0.005999998655170202,
+            0.01591198705136776
+          ],
+          "local_outward_normal": [
+            -0.14878142933595553,
+            -0.9876803283770389,
+            0.048493867878061016
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0009650196880102158,
+            0.005999999586492777,
+            0.01158304326236248
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013351589441299438,
+            0.004160596523433924,
+            0.03554737567901611
+          ],
+          "local_outward_normal": [
+            0.0695132700887385,
+            0.757961300217533,
+            0.6485850542944362
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013694824650883675,
+            -0.003135093953460455,
+            0.02087390422821045
+          ],
+          "local_outward_normal": [
+            0.8120718756593868,
+            -0.4131248802341346,
+            -0.41214936866939106
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0011359663913026452,
+            0.0038700015284121037,
+            0.0016460809856653214
+          ],
+          "local_outward_normal": [
+            0.3545098039282945,
+            0.0,
+            0.9350522974244394
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0011359663913026452,
+            -0.003870000597089529,
+            0.0016460809856653214
+          ],
+          "local_outward_normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.008445389568805695,
+            0.005752878729254007,
+            0.028756028041243553
+          ],
+          "local_outward_normal": [
+            -0.3344940493358003,
+            0.9191933295165499,
+            0.2078397313586092
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.008013930171728134,
+            -0.005999998655170202,
+            0.020021717995405197
+          ],
+          "local_outward_normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013961710035800934,
+            0.0040889219380915165,
+            0.022698936983942986
+          ],
+          "local_outward_normal": [
+            0.6863673899662833,
+            0.6474935431101824,
+            -0.3311373093166856
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0024578699376434088,
+            0.0019999989308416843,
+            0.014683357439935207
+          ],
+          "local_outward_normal": [
+            -0.9577479798689817,
+            0.1564081238569828,
+            0.24136135947666376
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.010118881240487099,
+            0.0024999999441206455,
+            0.010587269440293312
+          ],
+          "local_outward_normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.00022542610531672835,
+            -0.002000001724809408,
+            0.021779965609312057
+          ],
+          "local_outward_normal": [
+            -0.831277516377409,
+            -0.15643437643254193,
+            0.5333910166431078
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.016979550942778587,
+            -0.0018172352574765682,
+            0.03463004529476166
+          ],
+          "local_outward_normal": [
+            0.26211561451716875,
+            -2.4106393165740063e-05,
+            -0.9650364780904237
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.008134179748594761,
+            0.005726756993681192,
+            0.01904153823852539
+          ],
+          "local_outward_normal": [
+            -0.9324400052691802,
+            0.0,
+            0.3613248352571564
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.012202230282127857,
+            0.005729360971599817,
+            0.026392797008156776
+          ],
+          "local_outward_normal": [
+            0.9322876974454005,
+            0.0,
+            -0.36171763738025464
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013488235883414745,
+            -0.005824690219014883,
+            0.030361223965883255
+          ],
+          "local_outward_normal": [
+            0.18836582818677083,
+            -0.9777792649153093,
+            0.09201099865336398
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0074208625592291355,
+            -0.005867259111255407,
+            0.026470648124814034
+          ],
+          "local_outward_normal": [
+            -0.22708536975377355,
+            -0.9591705465862974,
+            0.16859447619994958
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0056074815802276134,
+            0.005804224405437708,
+            0.024386748671531677
+          ],
+          "local_outward_normal": [
+            -0.3191633538661644,
+            0.9175955297441568,
+            0.23696665871476918
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.015962647274136543,
+            -1.1087849998148158e-05,
+            0.028678596019744873
+          ],
+          "local_outward_normal": [
+            -0.9705604118531436,
+            0.014406051913753529,
+            0.24042660545728814
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.00629444932565093,
+            -1.3865149028902124e-09,
+            0.02984415367245674
+          ],
+          "local_outward_normal": [
+            -0.7843924976736205,
+            -0.018794004096957157,
+            0.6199799956477168
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.001370181329548359,
+            0.0019999989308416843,
+            0.01847723126411438
+          ],
+          "local_outward_normal": [
+            -0.9334023612215787,
+            0.1564238274970185,
+            0.3229421283406125
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009253060445189476,
+            -0.004789592232555151,
+            0.013423680327832699
+          ],
+          "local_outward_normal": [
+            0.6167132272068067,
+            -0.7705156703215614,
+            -0.16115333436538168
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009957785718142986,
+            0.004764037672430277,
+            0.03290301561355591
+          ],
+          "local_outward_normal": [
+            -0.5857897731061811,
+            0.6165605882185546,
+            0.5260260286143632
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.004106612876057625,
+            0.0019999989308416843,
+            0.005632949527353048
+          ],
+          "local_outward_normal": [
+            -0.9758998639688232,
+            0.15643247869278634,
+            0.15214576929925883
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005953856743872166,
+            -0.002499999012798071,
+            0.008273813873529434
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.002532385988160968,
+            -0.002000001724809408,
+            0.014361811801791191
+          ],
+          "local_outward_normal": [
+            -0.9621892290242572,
+            -0.15643336689287426,
+            0.22298091683429982
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.002620235551148653,
+            -0.002000001724809408,
+            0.025027843192219734
+          ],
+          "local_outward_normal": [
+            -0.7852828631471138,
+            -0.1564342574860816,
+            0.599048535539692
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        }
+      ]
+    },
+    "little": {
+      "body_name": "rh_pinky_distal",
+      "mesh_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/assets/linkerhand/o6/right/meshes/pinky_distal.STL",
+      "mesh_vertex_count": 34821,
+      "candidate_vertex_count": 31358,
+      "surface_points": [
+        {
+          "local_xyz_m": [
+            0.014563078992068768,
+            3.5866868586253986e-08,
+            0.024202587082982063
+          ],
+          "local_outward_normal": [
+            -0.9192230555513677,
+            0.005346924803878308,
+            0.393700882063971
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.004433636087924242,
+            -0.0031600012443959713,
+            0.002141601638868451
+          ],
+          "local_outward_normal": [
+            -0.9795685140591441,
+            -0.1472550131859721,
+            0.1369725788454011
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.00025482670753262937,
+            0.005236069206148386,
+            0.016581770032644272
+          ],
+          "local_outward_normal": [
+            -0.6723592790067597,
+            0.7069826118136926,
+            0.21933669671671469
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009686377830803394,
+            -0.002804563846439123,
+            0.008316542021930218
+          ],
+          "local_outward_normal": [
+            0.9238374339611557,
+            -0.31701334483838034,
+            -0.21453888879746136
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.01466039102524519,
+            6.830796792200999e-06,
+            0.037572119385004044
+          ],
+          "local_outward_normal": [
+            0.21776494296274407,
+            0.07990077339459702,
+            0.9727251903941719
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0032770438119769096,
+            -0.005804227199405432,
+            0.021335508674383163
+          ],
+          "local_outward_normal": [
+            -0.37282857274705955,
+            -0.8908964194821981,
+            0.2594271094106974
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.004897501319646835,
+            0.0032362923957407475,
+            0.027732746675610542
+          ],
+          "local_outward_normal": [
+            -0.7501035892523448,
+            0.280102493037995,
+            0.5990719479199889
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            3.945921707781963e-05,
+            0.005923880729824305,
+            0.005578137002885342
+          ],
+          "local_outward_normal": [
+            0.07340307210870861,
+            0.8314643191288904,
+            -0.5507077945885044
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0013407636433839798,
+            -0.005236068274825811,
+            0.012042646296322346
+          ],
+          "local_outward_normal": [
+            -0.6949407443147718,
+            -0.7070900043937287,
+            0.13069463484668264
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.010061385110020638,
+            0.0045784213580191135,
+            0.015543709509074688
+          ],
+          "local_outward_normal": [
+            0.6924919012690434,
+            0.6642716598802453,
+            -0.28142162062771486
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009481391869485378,
+            -0.005528045352548361,
+            0.03103058598935604
+          ],
+          "local_outward_normal": [
+            -0.24760582487988267,
+            -0.936666991948252,
+            0.24768185577503712
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.011021096259355545,
+            -0.0041621229611337185,
+            0.017017774283885956
+          ],
+          "local_outward_normal": [
+            0.7635976731551173,
+            -0.5757264159275198,
+            -0.2923314686367911
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.012824991717934608,
+            0.00585561478510499,
+            0.030587919056415558
+          ],
+          "local_outward_normal": [
+            -0.10206427814990757,
+            0.9815563437960662,
+            0.16164784897868933
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005730004049837589,
+            -0.003369999583810568,
+            0.0010039606131613255
+          ],
+          "local_outward_normal": [
+            0.8515557911835749,
+            -0.19500961943260042,
+            -0.48664564400646604
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.007850059308111668,
+            0.005047003272920847,
+            0.007065927144140005
+          ],
+          "local_outward_normal": [
+            0.5507385113172143,
+            0.8337230313884803,
+            -0.039912392618105676
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.016903305426239967,
+            -0.003357329871505499,
+            0.030681496486067772
+          ],
+          "local_outward_normal": [
+            0.9224716097764023,
+            -0.3859577956788836,
+            -0.009094454971581721
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.010069187730550766,
+            0.00607754522934556,
+            0.022905126214027405
+          ],
+          "local_outward_normal": [
+            0.14738431456827844,
+            0.9865629034111368,
+            -0.07050887484726158
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.010422206483781338,
+            -0.00608366122469306,
+            0.02376229502260685
+          ],
+          "local_outward_normal": [
+            0.11467368008451698,
+            -0.9920900391918684,
+            -0.051061739415640496
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.003356201108545065,
+            0.0019999989308416843,
+            0.010246729478240013
+          ],
+          "local_outward_normal": [
+            -0.97299956816942,
+            0.1564319457988087,
+            0.1697082398580601
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005638735368847847,
+            -0.005999998655170202,
+            0.012750930152833462
+          ],
+          "local_outward_normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.001556376344524324,
+            -0.002000001724809408,
+            0.017939070239663124
+          ],
+          "local_outward_normal": [
+            -0.9334022923890537,
+            -0.15642428739613873,
+            0.32294210452567157
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005730004049837589,
+            0.0033700005151331425,
+            0.0010039606131613255
+          ],
+          "local_outward_normal": [
+            0.8515557911835749,
+            0.19500961943260042,
+            -0.48664564400646604
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009427043609321117,
+            0.0010630027391016483,
+            0.03387990966439247
+          ],
+          "local_outward_normal": [
+            -0.7954587451123071,
+            0.029972570755776654,
+            0.6052660818405766
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            3.945922071579844e-05,
+            -0.00592387979850173,
+            0.005578137002885342
+          ],
+          "local_outward_normal": [
+            0.025774472686715646,
+            -0.9807866209357593,
+            -0.19337342307343297
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.001051526516675949,
+            0.0019999989308416843,
+            0.022974543273448944
+          ],
+          "local_outward_normal": [
+            -0.7888701661523179,
+            0.15642659509082552,
+            0.594318585695505
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0048453533090651035,
+            -0.0030430047772824764,
+            0.027758825570344925
+          ],
+          "local_outward_normal": [
+            -0.7745293968694749,
+            -0.26467282982254225,
+            0.5745019639119915
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.004230490420013666,
+            0.003529197070747614,
+            0.0021136647555977106
+          ],
+          "local_outward_normal": [
+            -0.6867917214543217,
+            0.7208814644972523,
+            0.09298949126705805
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.017159968614578247,
+            0.0025310725905001163,
+            0.0325235091149807
+          ],
+          "local_outward_normal": [
+            0.1941861211698381,
+            -1.329686919747376e-05,
+            -0.9809647038340403
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0042723254300653934,
+            0.005999999586492777,
+            0.02060251496732235
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.012121107429265976,
+            0.0010000006295740604,
+            0.019255047664046288
+          ],
+          "local_outward_normal": [
+            -0.8750286151852297,
+            -0.13052702807662453,
+            0.466141199153758
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005594414193183184,
+            -0.005867605563253164,
+            0.006296657957136631
+          ],
+          "local_outward_normal": [
+            0.23055501137970516,
+            -0.9537925120015885,
+            -0.19267649253970653
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013098927214741707,
+            -0.004523684736341238,
+            0.03500305488705635
+          ],
+          "local_outward_normal": [
+            0.05075212811031925,
+            -0.8602468807141124,
+            0.5073455683396806
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005638735368847847,
+            0.005999999586492777,
+            0.012750930152833462
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.01088191568851471,
+            -0.0009999996982514858,
+            0.012976591475307941
+          ],
+          "local_outward_normal": [
+            0.5630551035718578,
+            0.0,
+            0.8264193550139568
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.014747497625648975,
+            -0.0050520761869847775,
+            0.02635706402361393
+          ],
+          "local_outward_normal": [
+            0.6097711036579407,
+            -0.7472560840698639,
+            -0.2641733256109509
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.01612650230526924,
+            0.0037677609361708164,
+            0.027322767302393913
+          ],
+          "local_outward_normal": [
+            0.850425833535944,
+            0.47034636266166846,
+            -0.23569090093941525
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0035438279155641794,
+            -0.003236067947000265,
+            0.007971912622451782
+          ],
+          "local_outward_normal": [
+            -0.9758999884226869,
+            -0.15643293971959854,
+            0.15214449699967564
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.001998894615098834,
+            -0.005999998655170202,
+            0.01591198705136776
+          ],
+          "local_outward_normal": [
+            -0.14878142933595553,
+            -0.9876803283770389,
+            0.048493867878061016
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0009650196880102158,
+            0.005999999586492777,
+            0.01158304326236248
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013351589441299438,
+            0.004160596523433924,
+            0.03554737567901611
+          ],
+          "local_outward_normal": [
+            0.0695132700887385,
+            0.757961300217533,
+            0.6485850542944362
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013694824650883675,
+            -0.003135093953460455,
+            0.02087390422821045
+          ],
+          "local_outward_normal": [
+            0.8120718756593868,
+            -0.4131248802341346,
+            -0.41214936866939106
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0011359663913026452,
+            0.0038700015284121037,
+            0.0016460809856653214
+          ],
+          "local_outward_normal": [
+            0.3545098039282945,
+            0.0,
+            0.9350522974244394
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0011359663913026452,
+            -0.003870000597089529,
+            0.0016460809856653214
+          ],
+          "local_outward_normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.008445389568805695,
+            0.005752878729254007,
+            0.028756028041243553
+          ],
+          "local_outward_normal": [
+            -0.3344940493358003,
+            0.9191933295165499,
+            0.2078397313586092
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.008013930171728134,
+            -0.005999998655170202,
+            0.020021717995405197
+          ],
+          "local_outward_normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013961710035800934,
+            0.0040889219380915165,
+            0.022698936983942986
+          ],
+          "local_outward_normal": [
+            0.6863673899662833,
+            0.6474935431101824,
+            -0.3311373093166856
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0024578699376434088,
+            0.0019999989308416843,
+            0.014683357439935207
+          ],
+          "local_outward_normal": [
+            -0.9577479798689817,
+            0.1564081238569828,
+            0.24136135947666376
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.010118881240487099,
+            0.0024999999441206455,
+            0.010587269440293312
+          ],
+          "local_outward_normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.00022542610531672835,
+            -0.002000001724809408,
+            0.021779965609312057
+          ],
+          "local_outward_normal": [
+            -0.831277516377409,
+            -0.15643437643254193,
+            0.5333910166431078
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.016979550942778587,
+            -0.0018172352574765682,
+            0.03463004529476166
+          ],
+          "local_outward_normal": [
+            0.26211561451716875,
+            -2.4106393165740063e-05,
+            -0.9650364780904237
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.008134179748594761,
+            0.005726756993681192,
+            0.01904153823852539
+          ],
+          "local_outward_normal": [
+            -0.9324400052691802,
+            0.0,
+            0.3613248352571564
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.012202230282127857,
+            0.005729360971599817,
+            0.026392797008156776
+          ],
+          "local_outward_normal": [
+            0.9322876974454005,
+            0.0,
+            -0.36171763738025464
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.013488235883414745,
+            -0.005824690219014883,
+            0.030361223965883255
+          ],
+          "local_outward_normal": [
+            0.18836582818677083,
+            -0.9777792649153093,
+            0.09201099865336398
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0074208625592291355,
+            -0.005867259111255407,
+            0.026470648124814034
+          ],
+          "local_outward_normal": [
+            -0.22708536975377355,
+            -0.9591705465862974,
+            0.16859447619994958
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0056074815802276134,
+            0.005804224405437708,
+            0.024386748671531677
+          ],
+          "local_outward_normal": [
+            -0.3191633538661644,
+            0.9175955297441568,
+            0.23696665871476918
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.015962647274136543,
+            -1.1087849998148158e-05,
+            0.028678596019744873
+          ],
+          "local_outward_normal": [
+            -0.9705604118531436,
+            0.014406051913753529,
+            0.24042660545728814
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.00629444932565093,
+            -1.3865149028902124e-09,
+            0.02984415367245674
+          ],
+          "local_outward_normal": [
+            -0.7843924976736205,
+            -0.018794004096957157,
+            0.6199799956477168
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.001370181329548359,
+            0.0019999989308416843,
+            0.01847723126411438
+          ],
+          "local_outward_normal": [
+            -0.9334023612215787,
+            0.1564238274970185,
+            0.3229421283406125
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009253060445189476,
+            -0.004789592232555151,
+            0.013423680327832699
+          ],
+          "local_outward_normal": [
+            0.6167132272068067,
+            -0.7705156703215614,
+            -0.16115333436538168
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.009957785718142986,
+            0.004764037672430277,
+            0.03290301561355591
+          ],
+          "local_outward_normal": [
+            -0.5857897731061811,
+            0.6165605882185546,
+            0.5260260286143632
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.004106612876057625,
+            0.0019999989308416843,
+            0.005632949527353048
+          ],
+          "local_outward_normal": [
+            -0.9758998639688232,
+            0.15643247869278634,
+            0.15214576929925883
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.005953856743872166,
+            -0.002499999012798071,
+            0.008273813873529434
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.002532385988160968,
+            -0.002000001724809408,
+            0.014361811801791191
+          ],
+          "local_outward_normal": [
+            -0.9621892290242572,
+            -0.15643336689287426,
+            0.22298091683429982
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.002620235551148653,
+            -0.002000001724809408,
+            0.025027843192219734
+          ],
+          "local_outward_normal": [
+            -0.7852828631471138,
+            -0.1564342574860816,
+            0.599048535539692
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        }
+      ]
+    },
+    "thumb": {
+      "body_name": "rh_thumb_distal",
+      "mesh_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/assets/linkerhand/o6/right/meshes/thumb_distal.STL",
+      "mesh_vertex_count": 49242,
+      "candidate_vertex_count": 44317,
+      "surface_points": [
+        {
+          "local_xyz_m": [
+            0.0016508898697793484,
+            -1.5676671409892151e-06,
+            0.029276054352521896
+          ],
+          "local_outward_normal": [
+            -0.999907287883728,
+            0.013615962519438436,
+            -0.0001456079565127674
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.007105906959623098,
+            0.01100000087171793,
+            -0.00374956545419991
+          ],
+          "local_outward_normal": [
+            0.9816283142516015,
+            0.0,
+            -0.19080317780257056
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.00017180525173898786,
+            -0.008733433671295643,
+            0.006866670213639736
+          ],
+          "local_outward_normal": [
+            0.8187364045791445,
+            -0.0019614458823200135,
+            -0.5741662237948747
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.007490403950214386,
+            -0.0003509030502755195,
+            0.048390910029411316
+          ],
+          "local_outward_normal": [
+            -0.3746484463735847,
+            -0.08263618254626523,
+            0.9234770181028004
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.012381674721837044,
+            0.0033877536188811064,
+            0.016039667651057243
+          ],
+          "local_outward_normal": [
+            -0.9863401090613586,
+            0.16326132571005061,
+            0.02188444160183128
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0021479621063917875,
+            0.006977193523198366,
+            0.009075319394469261
+          ],
+          "local_outward_normal": [
+            0.7370744434256533,
+            5.461043234385696e-07,
+            -0.6758115601619029
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.010379540733993053,
+            0.005489822942763567,
+            0.03499942272901535
+          ],
+          "local_outward_normal": [
+            -0.9271864763009328,
+            0.356807430770673,
+            0.11407758549115303
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.005328139290213585,
+            -0.008562779985368252,
+            0.020220262929797173
+          ],
+          "local_outward_normal": [
+            -0.003533066901125635,
+            -0.9992541643690039,
+            0.038452989863935125
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0074028754606842995,
+            -0.008011250756680965,
+            0.03632492944598198
+          ],
+          "local_outward_normal": [
+            -0.09727636724813077,
+            -0.987491423207534,
+            0.12408866776045971
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.008410402573645115,
+            -0.00922755803912878,
+            -0.00365433213301003
+          ],
+          "local_outward_normal": [
+            -0.9953833815531695,
+            -0.02829925727267303,
+            -0.09171191724957302
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0019541187211871147,
+            0.002250001532956958,
+            -0.0029036870691925287
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0018073286628350616,
+            0.008132216520607471,
+            0.020527206361293793
+          ],
+          "local_outward_normal": [
+            0.25948037242288857,
+            0.9635121152454128,
+            0.06568363649029729
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.000439835072029382,
+            0.004275974351912737,
+            0.040620941668748856
+          ],
+          "local_outward_normal": [
+            0.8828139597537987,
+            0.37890764443750363,
+            0.27761215652532334
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.011301390826702118,
+            -0.006300000008195639,
+            0.008933606557548046
+          ],
+          "local_outward_normal": [
+            -6.017049911377132e-07,
+            2.041781590091507e-05,
+            -0.9999999997913754
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.011856774799525738,
+            -0.00164186698384583,
+            0.026537515223026276
+          ],
+          "local_outward_normal": [
+            -0.9937589310432229,
+            0.006862652781129148,
+            0.11133773380411885
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0024975091218948364,
+            -0.001700378255918622,
+            0.01701745018362999
+          ],
+          "local_outward_normal": [
+            0.9916742233867565,
+            -0.004371940037015452,
+            0.12869778867791853
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.01007850095629692,
+            0.007783201057463884,
+            0.0054741306230425835
+          ],
+          "local_outward_normal": [
+            -0.6124829565190228,
+            0.7879420300917522,
+            0.06334023356923331
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.005194211844354868,
+            -0.0014876045752316713,
+            0.0027178367599844933
+          ],
+          "local_outward_normal": [
+            -0.8799702900801146,
+            -0.0033405252559041356,
+            0.4750169780832405
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.002517485525459051,
+            0.008436930365860462,
+            0.03054843284189701
+          ],
+          "local_outward_normal": [
+            0.2639061491701666,
+            0.9585877705220172,
+            0.10706554364408001
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0012913389364257455,
+            -0.005163285415619612,
+            0.043200377374887466
+          ],
+          "local_outward_normal": [
+            0.6758842453341923,
+            -0.5932710360071988,
+            0.4372756164525692
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.002292773686349392,
+            -0.00841474998742342,
+            0.028767427429556847
+          ],
+          "local_outward_normal": [
+            0.859083071541511,
+            0.0,
+            0.5118361810099039
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.005624215118587017,
+            0.008935504592955112,
+            0.012563444674015045
+          ],
+          "local_outward_normal": [
+            -0.053150248721036034,
+            0.9975673739013201,
+            0.04510416376029893
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.008700309321284294,
+            0.006208535749465227,
+            0.04324261471629143
+          ],
+          "local_outward_normal": [
+            -0.5719537779985402,
+            0.779319808310509,
+            0.25598732821776243
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.010180310346186161,
+            0.006940357852727175,
+            0.026706809177994728
+          ],
+          "local_outward_normal": [
+            -0.7898325658680079,
+            0.6126917362212475,
+            0.027809247752361124
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.009882528334856033,
+            -0.001485602231696248,
+            0.04076419770717621
+          ],
+          "local_outward_normal": [
+            -0.9890875683739274,
+            0.005207379906580646,
+            0.14723676606968789
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0013210808392614126,
+            -0.005272222217172384,
+            0.03529160097241402
+          ],
+          "local_outward_normal": [
+            0.8504869869405784,
+            -0.48299957836334495,
+            0.20828656304612483
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0037693677004426718,
+            -0.002549999626353383,
+            0.0042128004133701324
+          ],
+          "local_outward_normal": [
+            -3.938205308208923e-07,
+            2.209268775685875e-05,
+            -0.999999999755879
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.001739070750772953,
+            0.006299999076873064,
+            0.002602808177471161
+          ],
+          "local_outward_normal": [
+            0.9614419390777906,
+            0.01360881470756559,
+            -0.27467107227480847
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.004007998388260603,
+            0.0025499991606920958,
+            0.00893360935151577
+          ],
+          "local_outward_normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.004592904821038246,
+            -0.008935726247727871,
+            0.012631564401090145
+          ],
+          "local_outward_normal": [
+            -0.003661821598011694,
+            -0.9986304945296871,
+            0.052189332798733466
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.012158693745732307,
+            -0.004203313495963812,
+            0.016053369268774986
+          ],
+          "local_outward_normal": [
+            -0.9644280695092675,
+            -0.26328568750933523,
+            0.02364625753399675
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.011868972331285477,
+            0.0011826239060610533,
+            0.00893361121416092
+          ],
+          "local_outward_normal": [
+            9.566285797305434e-07,
+            -2.186941960467812e-06,
+            -0.9999999999971511
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0019227582961320877,
+            -0.004770423751324415,
+            0.023734264075756073
+          ],
+          "local_outward_normal": [
+            0.8871073497913143,
+            -0.43425991254571583,
+            -0.15639334481370346
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0019106572726741433,
+            -0.007249999325722456,
+            -0.0011447541182860732
+          ],
+          "local_outward_normal": [
+            -1.6653926690313791e-07,
+            0.0,
+            -0.9999999999999861
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.010931246913969517,
+            -0.0022891212720423937,
+            0.03370189294219017
+          ],
+          "local_outward_normal": [
+            -0.9905355982561805,
+            -0.011895315251023638,
+            0.136739643345846
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.004342582076787949,
+            0.008172151632606983,
+            0.03761128708720207
+          ],
+          "local_outward_normal": [
+            0.9946611487820364,
+            0.0,
+            0.10319495677405874
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0020828680135309696,
+            0.0031229897867888212,
+            0.023235883563756943
+          ],
+          "local_outward_normal": [
+            0.48994875515248815,
+            0.00042647924910927374,
+            0.8717511315966142
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.004265636205673218,
+            -0.0012962289620190859,
+            -0.004021297674626112
+          ],
+          "local_outward_normal": [
+            -0.7539480958106421,
+            -0.008959784178453053,
+            -0.6568728880772766
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.009104111231863499,
+            -0.007760980632156134,
+            0.027549976482987404
+          ],
+          "local_outward_normal": [
+            -0.4244865945198196,
+            -0.9054310247138131,
+            0.002406357966001297
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.00337770557962358,
+            6.803613783468165e-10,
+            0.010416533797979355
+          ],
+          "local_outward_normal": [
+            0.9905422561054631,
+            0.0,
+            0.1372080131388075
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.007822759449481964,
+            -0.005964001175016165,
+            0.04502709209918976
+          ],
+          "local_outward_normal": [
+            -0.24763230033683203,
+            -0.8081463219153183,
+            0.5343947662586451
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0082809217274189,
+            0.00816331896930933,
+            0.019962897524237633
+          ],
+          "local_outward_normal": [
+            -0.45507212218180165,
+            0.8902222444068518,
+            0.020340087909809502
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0032224594615399837,
+            0.004309386480599642,
+            0.04611550271511078
+          ],
+          "local_outward_normal": [
+            0.538993975709887,
+            0.5052919356381267,
+            0.6739180617311906
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0018811182817444205,
+            0.003973097074776888,
+            0.034430667757987976
+          ],
+          "local_outward_normal": [
+            0.9807732145726361,
+            0.1584223508909526,
+            0.1139572740769184
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -5.811406299471855e-05,
+            -0.007588020991533995,
+            0.016851523891091347
+          ],
+          "local_outward_normal": [
+            0.62618112122275,
+            -0.7676431825262275,
+            0.13645932634021313
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.001910655526444316,
+            0.007250000257045031,
+            -0.0036135325208306313
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.00952815916389227,
+            -0.008353077806532383,
+            0.002380798337981105
+          ],
+          "local_outward_normal": [
+            -0.9845396142361272,
+            -8.704320409354225e-07,
+            -0.17516206209970317
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0020046248100697994,
+            0.005005993414670229,
+            0.016989951953291893
+          ],
+          "local_outward_normal": [
+            0.9320105848118972,
+            0.3313720540804511,
+            0.14679520282723105
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0030209042597562075,
+            -0.004000000189989805,
+            -0.0017675224225968122
+          ],
+          "local_outward_normal": [
+            0.7433631070357527,
+            0.0,
+            -0.6688881005804724
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.000544832437299192,
+            0.0010311200749129057,
+            0.004604415036737919
+          ],
+          "local_outward_normal": [
+            -0.9943025777530028,
+            0.025034463648851465,
+            0.10361302767291433
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0028144505340605974,
+            -0.005553897004574537,
+            0.010533606633543968
+          ],
+          "local_outward_normal": [
+            -4.3583081338372926e-07,
+            2.405391159991517e-07,
+            -0.9999999999998761
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.001066005788743496,
+            -0.0011418641079217196,
+            0.03886645659804344
+          ],
+          "local_outward_normal": [
+            0.06589885873312455,
+            1.3897324728854193e-05,
+            -0.9978263076430367
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.001997541170567274,
+            -0.0025347762275487185,
+            0.00893360935151577
+          ],
+          "local_outward_normal": [
+            7.144130038110669e-05,
+            -4.287231298925091e-05,
+            -0.9999999965290527
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0016827796353027225,
+            0.005427550990134478,
+            0.02813209593296051
+          ],
+          "local_outward_normal": [
+            0.8908396461505412,
+            0.4540029047254494,
+            0.016914116803225968
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.010568521916866302,
+            0.006894365418702364,
+            0.01223685871809721
+          ],
+          "local_outward_normal": [
+            -0.6094486395499675,
+            0.7910878860742848,
+            0.05246248428365763
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0006425942992791533,
+            6.798822616005396e-10,
+            0.04414115473628044
+          ],
+          "local_outward_normal": [
+            0.8439021720156265,
+            -0.025527221149761633,
+            0.5358894336033125
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0023151577915996313,
+            -0.00762741407379508,
+            0.03864312171936035
+          ],
+          "local_outward_normal": [
+            0.24986568667870587,
+            -0.9080385451833092,
+            0.3362040140777
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            0.0017533386126160622,
+            -0.005235911812633276,
+            0.029932605102658272
+          ],
+          "local_outward_normal": [
+            0.9382088677608199,
+            -0.3453474112692586,
+            0.0223447082008684
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.0034481610637158155,
+            0.0025499991606920958,
+            -0.0006001613801345229
+          ],
+          "local_outward_normal": [
+            -0.9298207213188147,
+            0.0,
+            -0.3680128071224686
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.011068828403949738,
+            6.803062557736439e-10,
+            0.019719894975423813
+          ],
+          "local_outward_normal": [
+            0.08683332850062161,
+            -1.6706397959891923e-07,
+            -0.9962228531114288
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.011334472335875034,
+            0.00305096129886806,
+            0.03059166856110096
+          ],
+          "local_outward_normal": [
+            -0.9921185324544638,
+            0.028721085758464413,
+            0.12196686760451053
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.012059764936566353,
+            0.0031138404738157988,
+            0.024016469717025757
+          ],
+          "local_outward_normal": [
+            -0.98463065233268,
+            0.16236392268500469,
+            0.06434621276546872
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.009508811868727207,
+            -0.0058513726107776165,
+            0.019855869933962822
+          ],
+          "local_outward_normal": [
+            0.08683156992963391,
+            4.4939453830708536e-07,
+            -0.9962230063913166
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        },
+        {
+          "local_xyz_m": [
+            -0.008900919929146767,
+            0.007250000257045031,
+            -0.001144752954132855
+          ],
+          "local_outward_normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "source": "distal_mesh_farthest_point_sampling"
+        }
+      ]
+    }
+  }
+}

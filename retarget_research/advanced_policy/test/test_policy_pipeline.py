@@ -1,0 +1,182 @@
+"""对进阶策略的数据边界、模型维度和时序窗口做快速单元测试。"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+import sys
+import tempfile
+import unittest
+
+import numpy as np
+import torch
+
+
+POLICY_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(POLICY_ROOT))
+
+from dataset import TargetHandPolicyDataset
+from models import ConditionalDiffusionPolicy, MLPBCPolicy, Temporal3BCPolicy, linear_beta_schedule, sample_diffusion
+from observations import build_object_shape_descriptor, build_observation_batch
+from runtime import PolicyRunner
+from train import compute_loss
+
+
+class PolicyPipelineTest(unittest.TestCase):
+    """验证无需Isaac Gym的策略核心纯逻辑。"""
+
+    def test_observation_schema_dimension_and_relative_state(self):
+        """17轴Linker加入14维形状后应为66维，初始相对位移必须为零。"""
+        count, dofs = 3, 17
+        position = np.asarray([[0, 0, 0.1], [0, 0, 0.15], [0, 0, 0.22]], dtype=np.float32)
+        result = build_observation_batch(
+            np.zeros((count, dofs)), np.zeros((count, dofs)), position,
+            np.tile([0, 0, 0, 1], (count, 1)), np.zeros((count, 3)),
+            np.zeros((count, 3)), position[0], np.asarray([0, 1, 3]),
+            np.zeros(14, dtype=np.float32), 0.10,
+        )
+        self.assertEqual(result.shape, (3, 66))
+        np.testing.assert_allclose(result[0, -5:-2], 0.0)
+        self.assertAlmostEqual(float(result[1, -2]), 0.05, places=6)
+        self.assertAlmostEqual(float(result[2, -2]), 0.0, places=6)
+
+    def test_shape_descriptor_is_finite_and_scales_geometrically(self):
+        """同一四面体放大2倍时尺寸应2倍、表面积4倍、体积8倍。"""
+        with tempfile.TemporaryDirectory() as directory:
+            mesh = Path(directory) / "tetra.obj"
+            mesh.write_text(
+                "v 0 0 0\nv 1 0 0\nv 0 1 0\nv 0 0 1\n"
+                "f 1 3 2\nf 1 2 4\nf 1 4 3\nf 2 3 4\n",
+                encoding="utf-8",
+            )
+            first = build_object_shape_descriptor(mesh, 1.0)
+            second = build_object_shape_descriptor(mesh, 2.0)
+            self.assertEqual(first.shape, (14,))
+            self.assertTrue(np.isfinite(first).all())
+            np.testing.assert_allclose(second[:3], first[:3] * 2, rtol=1e-5)
+            self.assertAlmostEqual(float(second[9] / first[9]), 4.0, places=5)
+            self.assertAlmostEqual(float(second[10] / first[10]), 8.0, places=5)
+
+    def test_temporal_history_never_crosses_trajectory(self):
+        """第二条轨迹首步历史不能读到第一条轨迹动作或观测。"""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            observations = np.asarray([[1, 1], [2, 2], [9, 9], [10, 10]], dtype=np.float32)
+            actions = np.asarray([[1], [2], [9], [10]], dtype=np.float32)
+            np.savez_compressed(
+                root / "data.npz", observations=observations, actions=actions,
+                trajectory_id=np.asarray([0, 0, 1, 1]), category_id=np.zeros(4, dtype=np.int64),
+            )
+            np.savez_compressed(
+                root / "normalization.npz", observation_mean=np.zeros(2),
+                observation_std=np.ones(2), action_mean=np.zeros(1), action_std=np.ones(1),
+            )
+            dataset = TargetHandPolicyDataset(root / "data.npz", root / "normalization.npz", "temporal3", 3)
+            sample = dataset[2]
+            np.testing.assert_allclose(sample["observation_history"].numpy(), [[9, 9], [9, 9], [9, 9]])
+            np.testing.assert_allclose(sample["previous_actions"].numpy(), [[0], [0]])
+
+    def test_all_models_preserve_expected_batch_shapes(self):
+        """三类策略分别输出一帧动作或固定长度动作片段。"""
+        batch, observation_dim, action_dim, categories = 4, 20, 6, 5
+        category = torch.arange(batch) % categories
+        bc = MLPBCPolicy(observation_dim, action_dim, categories)
+        self.assertEqual(tuple(bc(torch.randn(batch, observation_dim), category).shape), (batch, action_dim))
+        temporal = Temporal3BCPolicy(observation_dim, action_dim, categories)
+        self.assertEqual(
+            tuple(temporal(torch.randn(batch, 3, observation_dim), torch.randn(batch, 2, action_dim), category).shape),
+            (batch, action_dim),
+        )
+        diffusion = ConditionalDiffusionPolicy(
+            observation_dim, action_dim, categories, action_horizon=4, observation_history=3
+        )
+        noisy = torch.randn(batch, 4, action_dim)
+        predicted = diffusion(noisy, torch.randn(batch, 3, observation_dim), category, torch.arange(batch))
+        self.assertEqual(tuple(predicted.shape), (batch, 4, action_dim))
+        sampled = sample_diffusion(
+            diffusion, torch.randn(batch, 3, observation_dim), category, linear_beta_schedule(3)
+        )
+        self.assertEqual(tuple(sampled.shape), (batch, 4, action_dim))
+        self.assertTrue(torch.isfinite(sampled).all())
+
+    def test_policy_runner_loads_checkpoint_and_denormalizes(self):
+        """统一推理器应按checkpoint构模并把零标准化输出恢复到动作均值。"""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            config = {
+                "model_type": "bc",
+                "category_embedding_dim": 2,
+                "hidden_dims": [4],
+                "dropout": 0.0,
+            }
+            dimensions = {"observation_dim": 3, "action_dim": 2, "category_count": 1}
+            model = MLPBCPolicy(3, 2, 1, 2, (4,), 0.0)
+            for parameter in model.parameters():
+                parameter.data.zero_()
+            torch.save(
+                {"config": config, "dimensions": dimensions, "model_state": model.state_dict()},
+                root / "model.pt",
+            )
+            np.savez_compressed(
+                root / "normalization.npz",
+                observation_mean=np.asarray([1, 2, 3], dtype=np.float32),
+                observation_std=np.ones(3, dtype=np.float32),
+                action_mean=np.asarray([0.25, -0.5], dtype=np.float32),
+                action_std=np.asarray([2, 3], dtype=np.float32),
+            )
+            (root / "mappings.json").write_text(
+                json.dumps({"category_to_id": {"cup": 0}, "object_to_id": {}, "policy_action_order": ["a", "b"]}), encoding="utf-8"
+            )
+            runner = PolicyRunner(root / "model.pt", root, "cpu")
+            runner.reset("cup", np.asarray([1, 2, 3], dtype=np.float32))
+            np.testing.assert_allclose(
+                runner.act(np.asarray([1, 2, 3], dtype=np.float32)),
+                [0.25, -0.5],
+                atol=1e-6,
+            )
+
+    def test_three_training_losses_are_finite_and_backwardable(self):
+        """BC、Temporal3和Diffusion的监督目标都应产生可反传有限loss。"""
+        device = torch.device("cpu")
+        category = torch.tensor([0, 1], dtype=torch.long)
+        bc = MLPBCPolicy(5, 3, 2, hidden_dims=(8,))
+        loss, _ = compute_loss(
+            bc,
+            {"observations": torch.randn(2, 5), "actions": torch.randn(2, 3), "category_id": category},
+            "bc",
+            device,
+        )
+        loss.backward()
+        self.assertTrue(torch.isfinite(loss))
+        temporal = Temporal3BCPolicy(5, 3, 2, hidden_dims=(8,))
+        loss, _ = compute_loss(
+            temporal,
+            {
+                "observation_history": torch.randn(2, 3, 5),
+                "previous_actions": torch.randn(2, 2, 3),
+                "actions": torch.randn(2, 3),
+                "category_id": category,
+            },
+            "temporal3",
+            device,
+        )
+        loss.backward()
+        self.assertTrue(torch.isfinite(loss))
+        diffusion = ConditionalDiffusionPolicy(5, 3, 2, action_horizon=4, observation_history=3, hidden_dims=(8,))
+        loss, _ = compute_loss(
+            diffusion,
+            {
+                "observation_history": torch.randn(2, 3, 5),
+                "action_sequence": torch.randn(2, 4, 3),
+                "category_id": category,
+            },
+            "diffusion",
+            device,
+            linear_beta_schedule(3),
+        )
+        loss.backward()
+        self.assertTrue(torch.isfinite(loss))
+
+
+if __name__ == "__main__":
+    unittest.main()

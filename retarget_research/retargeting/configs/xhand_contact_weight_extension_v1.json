@@ -1,0 +1,33 @@
+{
+  "study_name": "xhand_contact_weight_boundary_extension_v1",
+  "hand": "xhand",
+  "manifest": "retarget_research/retargeting/configs/linker_independent_validation_v1.json",
+  "fixed_parameters": {
+    "baseline": "xhand_independent_validation_v1",
+    "maxeval": 20,
+    "normal_weight": 0.05,
+    "penetration_weight": 1.0,
+    "joint_prior_weight": 2.0,
+    "contact_threshold_m": 0.02,
+    "min_contact_tips": 2,
+    "lift_delta_m": 0.03,
+    "region_neighbors": 32,
+    "contact_offset_m": -0.003,
+    "min_signed_distance_m": -0.006
+  },
+  "selection_rule": "粗搜索中5.0位于边界且以16/20严格包含1.25和2.5的15条成功，因此只向上补一个7.5；比较成功、配对回退、抬升和接触，不再继续扩大范围。",
+  "candidates": [
+    {
+      "name": "contact_weight_5_current",
+      "parameters": {"contact_weight": 5.0},
+      "target_dir": "retarget_research/outputs/xhand_independent_validation_contact_v1",
+      "evaluation_dir": "retarget_research/outputs/xhand_independent_validation_contact_v1_evaluation"
+    },
+    {
+      "name": "contact_weight_7p5",
+      "parameters": {"contact_weight": 7.5},
+      "target_dir": "retarget_research/outputs/xhand_contact_weight_search_v1/contact_weight_7p5",
+      "evaluation_dir": "retarget_research/outputs/xhand_contact_weight_search_v1_evaluation/contact_weight_7p5"
+    }
+  ]
+}

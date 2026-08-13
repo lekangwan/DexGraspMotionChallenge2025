@@ -1,0 +1,41 @@
+project: zju_summer_camp_hand_retargeting
+preparation_date: '2026-08-08'
+formal_start: '2026-08-09'
+formal_end: '2026-08-25'
+reference_commit: 76fc48d80c02ae17cf5f8667fd286ed9c6c5cf46
+
+selection:
+  seed: 20260808
+  category_count: 50
+  objects_per_category: 2
+  trajectories_per_object: 10
+  expected_objects: 100
+  expected_trajectories: 1000
+
+hands:
+  - name: linkerhand_o6
+    active_dofs: 6
+    fingers: 5
+    urdf: reference/HandRetargetTask2026/scripts/assets/linkerhand/o6/right/linkerhand_o6_right.urdf
+  - name: xhand
+    active_dofs: 12
+    fingers: 5
+    urdf: reference/HandRetargetTask2026/scripts/assets/xhand_right/urdf/xhand_right.urdf
+  - name: wujihand
+    active_dofs: 20
+    fingers: 5
+    urdf: reference/HandRetargetTask2026/scripts/assets/wujihand_urdf/urdf/right.urdf
+
+evaluation:
+  primary_metric: trajectory_replay_success_rate
+  success_definition: object_lift_at_least_0.10m_with_xy_drift_at_most_0.25m_for_0.5s
+  physics_dt_s: 0.016666666666666666
+  physics_substeps: 2
+  replay_steps_per_source_frame: 3
+  required_sustain_physics_steps: 30
+  object_friction: 1.0
+  report_micro_average: true
+  report_object_macro_average: true
+  report_category_macro_average: true
+  report_three_seeds_if_time_allows: true
+  seeds: [20260808, 20260809, 20260810]

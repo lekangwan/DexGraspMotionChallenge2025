@@ -1,0 +1,39 @@
+{
+  "study_name": "xhand_joint_prior_weight_search_v1",
+  "hand": "xhand",
+  "manifest": "retarget_research/retargeting/configs/linker_independent_validation_v1.json",
+  "fixed_parameters": {
+    "baseline": "xhand_independent_validation_v1",
+    "maxeval": 20,
+    "contact_weight": 5.0,
+    "normal_weight": 0.05,
+    "penetration_weight": 2.0,
+    "contact_threshold_m": 0.02,
+    "min_contact_tips": 2,
+    "lift_delta_m": 0.03,
+    "region_neighbors": 32,
+    "contact_offset_m": -0.003,
+    "min_signed_distance_m": -0.006
+  },
+  "selection_rule": "比较关节先验0/2/4。先验是细化关节角与官方基线关节角的均方差：0允许自由调整，2为当前折中，4更强地保留原抓形。优先严格成功和配对回退，再看抬升、接触及关键点误差。",
+  "candidates": [
+    {
+      "name": "joint_prior_0",
+      "parameters": {"joint_prior_weight": 0.0},
+      "target_dir": "retarget_research/outputs/xhand_joint_prior_search_v1/joint_prior_0",
+      "evaluation_dir": "retarget_research/outputs/xhand_joint_prior_search_v1_evaluation/joint_prior_0"
+    },
+    {
+      "name": "joint_prior_2_current",
+      "parameters": {"joint_prior_weight": 2.0},
+      "target_dir": "retarget_research/outputs/xhand_penetration_weight_search_v1/penetration_weight_2",
+      "evaluation_dir": "retarget_research/outputs/xhand_penetration_weight_search_v1_evaluation/penetration_weight_2"
+    },
+    {
+      "name": "joint_prior_4",
+      "parameters": {"joint_prior_weight": 4.0},
+      "target_dir": "retarget_research/outputs/xhand_joint_prior_search_v1/joint_prior_4",
+      "evaluation_dir": "retarget_research/outputs/xhand_joint_prior_search_v1_evaluation/joint_prior_4"
+    }
+  ]
+}

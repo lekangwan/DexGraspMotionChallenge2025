@@ -45,3 +45,25 @@ Thumbs.db
 
 # Raw generated evaluation outputs
 /custom_tools/results/
+
+# Dexterous-hand retargeting: downloaded references and generated experiments
+/retarget_research/reference/
+/retarget_research/outputs/
+/retarget_research/advanced_policy/data/
+/retarget_research/advanced_policy/traces/
+/retarget_research/advanced_policy/runs/
+/retarget_research/advanced_policy/configs/generated/
+
+# Machine-local formal manifests contain absolute dataset paths and hashes
+/retarget_research/manifests/*.csv
+/retarget_research/manifests/*_audit.json
+/retarget_research/manifests/formal_*.json
+
+# Generated report media and visualization caches
+/retarget_research/reports/generated/
+*.mp4
+*.avi
+*.mov
+*.html
+events.out.tfevents.*
+wandb/

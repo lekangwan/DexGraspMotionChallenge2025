@@ -1,0 +1,39 @@
+{
+  "study_name": "xhand_contact_offset_search_v1",
+  "hand": "xhand",
+  "manifest": "retarget_research/retargeting/configs/linker_independent_validation_v1.json",
+  "fixed_parameters": {
+    "baseline": "xhand_independent_validation_v1",
+    "maxeval": 20,
+    "contact_weight": 5.0,
+    "normal_weight": 0.05,
+    "penetration_weight": 1.0,
+    "joint_prior_weight": 2.0,
+    "contact_threshold_m": 0.02,
+    "min_contact_tips": 2,
+    "lift_delta_m": 0.03,
+    "region_neighbors": 32,
+    "min_signed_distance_m": -0.006
+  },
+  "selection_rule": "比较指腹目标位于物体表面内1/3/5 mm。-1 mm接近轻触，-3 mm是当前预压，-5 mm接近-6 mm穿透硬下限。优先严格成功与配对回退，再看持续抬升、接触和穿透边界，不逐轨迹选不同内缩量。",
+  "candidates": [
+    {
+      "name": "contact_offset_m1mm",
+      "parameters": {"contact_offset_m": -0.001},
+      "target_dir": "retarget_research/outputs/xhand_contact_offset_search_v1/contact_offset_m1mm",
+      "evaluation_dir": "retarget_research/outputs/xhand_contact_offset_search_v1_evaluation/contact_offset_m1mm"
+    },
+    {
+      "name": "contact_offset_m3mm_current",
+      "parameters": {"contact_offset_m": -0.003},
+      "target_dir": "retarget_research/outputs/xhand_independent_validation_contact_v1",
+      "evaluation_dir": "retarget_research/outputs/xhand_independent_validation_contact_v1_evaluation"
+    },
+    {
+      "name": "contact_offset_m5mm",
+      "parameters": {"contact_offset_m": -0.005},
+      "target_dir": "retarget_research/outputs/xhand_contact_offset_search_v1/contact_offset_m5mm",
+      "evaluation_dir": "retarget_research/outputs/xhand_contact_offset_search_v1_evaluation/contact_offset_m5mm"
+    }
+  ]
+}

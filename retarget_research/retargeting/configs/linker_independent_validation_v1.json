@@ -1,0 +1,158 @@
+{
+  "purpose": "independent_validation_after_linker_v2_parameter_freeze",
+  "source_directory": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/data/sorting/seq41proc",
+  "seed": 20260811,
+  "object_count": 10,
+  "trajectories_per_object": 2,
+  "trajectory_count": 20,
+  "excluded_tuning_objects": [
+    "core-camera-fe669947912103aede650492e45fb14f",
+    "core-jar-fed045d07c91bb2723901b5a0f119b35",
+    "ddg-gd_lime_poisson_001",
+    "ddg-kit_HotPot2",
+    "mujoco-Ecoforms_Planter_Pot_QP6Ebony",
+    "mujoco-Mens_Gold_Cup_ASV_Capetown_Penny_Loafer_in_Black_GkQBKqABeQN",
+    "sem-Bottle-defc45107217afb846564a8a219239b",
+    "sem-Vase-aa080060dcfd22b3265d1076b4b6c5c"
+  ],
+  "excluded_objects": [
+    "core-camera-fe669947912103aede650492e45fb14f",
+    "core-jar-fed045d07c91bb2723901b5a0f119b35",
+    "ddg-gd_lime_poisson_001",
+    "ddg-kit_HotPot2",
+    "mujoco-Ecoforms_Planter_Pot_QP6Ebony",
+    "mujoco-Mens_Gold_Cup_ASV_Capetown_Penny_Loafer_in_Black_GkQBKqABeQN",
+    "sem-Bottle-defc45107217afb846564a8a219239b",
+    "sem-Vase-aa080060dcfd22b3265d1076b4b6c5c"
+  ],
+  "excluded_manifests": [
+    "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/retargeting/configs/linker_pilot_holdout_v1.json"
+  ],
+  "frozen_method": {
+    "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/retargeting/configs/linker_o6_adaptive_v2.json",
+    "sha256": "7b29d683522fde054561639c86077e4b8fc3d6a4cc5d3b2cf3e9900524175f70",
+    "method": "linker_o6_force_redistribution_adaptive_control_v2"
+  },
+  "entries": [
+    {
+      "object_name": "ddg-gd_pliers_poisson_017",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/data/sorting/seq41proc/ddg-gd_pliers_poisson_017.npy",
+      "source_sha256": "d93fb721f3a1cf97e9ba3853e60d5c930f733a032e79399cc01569d510c34502",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        2,
+        18
+      ]
+    },
+    {
+      "object_name": "ddg-gd_saucepan_poisson_000",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/data/sorting/seq41proc/ddg-gd_saucepan_poisson_000.npy",
+      "source_sha256": "ed64b6e006390c487ccfd16a9b641ffe7a73ade86ac54df71fd95ef2e9d6d232",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        3,
+        37
+      ]
+    },
+    {
+      "object_name": "ddg-gd_squash_poisson_000",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/data/sorting/seq41proc/ddg-gd_squash_poisson_000.npy",
+      "source_sha256": "4b1973a016dd173ead70a896821cdd3e3264f8b9b60c7e095cf7b5ceeeb07b9b",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        1,
+        7
+      ]
+    },
+    {
+      "object_name": "ddg-kit_ChocSticks2",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/data/sorting/seq41proc/ddg-kit_ChocSticks2.npy",
+      "source_sha256": "9d81a98367ce2f9e35f3ff3cb218c80e5948c4f93f5848a37428f967ee22e30d",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        24,
+        38
+      ]
+    },
+    {
+      "object_name": "ddg-kit_CoughDropsLemon",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/data/sorting/seq41proc/ddg-kit_CoughDropsLemon.npy",
+      "source_sha256": "1a9c9eb9635f84e819991a6841ec182000ae8be825b1f92e2b650bd59e483595",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        5,
+        30
+      ]
+    },
+    {
+      "object_name": "mujoco-Canon_Pixma_Ink_Cartridge_Cyan_251",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/data/sorting/seq41proc/mujoco-Canon_Pixma_Ink_Cartridge_Cyan_251.npy",
+      "source_sha256": "75be5ee24446f72df1a29dca9346591e540727681bf2be8063880a52b9136111",
+      "available_trajectory_count": 27,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        4,
+        11
+      ]
+    },
+    {
+      "object_name": "mujoco-D_ROSE_773_II_Kqclsph05pE",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/data/sorting/seq41proc/mujoco-D_ROSE_773_II_Kqclsph05pE.npy",
+      "source_sha256": "0f855aadecd8694410d01735fa7b610a35c7596059c0bff093d0c2bb3376ced1",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        8,
+        11
+      ]
+    },
+    {
+      "object_name": "mujoco-Great_Jones_Wingtip",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/data/sorting/seq41proc/mujoco-Great_Jones_Wingtip.npy",
+      "source_sha256": "94aebac2493ae1ccc5f09ce0fc6b514b4fb2eb154f354aee2a38567d6c9ae08d",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        11,
+        17
+      ]
+    },
+    {
+      "object_name": "mujoco-Squirt_Strain_Fruit_Basket",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/data/sorting/seq41proc/mujoco-Squirt_Strain_Fruit_Basket.npy",
+      "source_sha256": "97d117ed8741a45ece3391e6e7ef8d8f727ad5560047b54fb69d9a9a86a916f8",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        30,
+        32
+      ]
+    },
+    {
+      "object_name": "sem-Candle-1be58678b919b12bc5fe7f65b41f3b19",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/data/sorting/seq41proc/sem-Candle-1be58678b919b12bc5fe7f65b41f3b19.npy",
+      "source_sha256": "af2a6d57263620711802d26276105470b5236be99c94c17015b057f2963904b0",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        2,
+        26
+      ]
+    }
+  ]
+}

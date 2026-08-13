@@ -1,0 +1,38 @@
+{
+  "purpose": "select_primary_linker_method_after_independent_validation",
+  "selection_manifest": "linker_independent_validation_v1.json",
+  "trajectory_count": 20,
+  "object_count": 10,
+  "evaluated_methods": {
+    "geometry_baseline": {
+      "success_count": 4,
+      "success_rate": 0.2,
+      "mean_max_lift_m": 0.0683
+    },
+    "dynamic_squeeze_v1": {
+      "success_count": 7,
+      "success_rate": 0.35,
+      "mean_max_lift_m": 0.1354
+    },
+    "force_redistribution_v2_default_pd": {
+      "success_count": 6,
+      "success_rate": 0.3,
+      "mean_max_lift_m": 0.1081
+    },
+    "force_redistribution_v2_adaptive_pd": {
+      "success_count": 6,
+      "success_rate": 0.3,
+      "mean_max_lift_m": 0.1077
+    }
+  },
+  "selected_primary_method": "linker_o6_dynamic_squeeze_v1",
+  "selected_config": "linker_o6_squeeze_v1.json",
+  "selected_control": {
+    "finger_stiffness": 120.0,
+    "finger_damping": 5.0,
+    "mimic_stiffness": 120.0,
+    "mimic_damping": 5.0
+  },
+  "decision": "统一夹紧相对几何基线净增3条成功；固定六关节残差净减1条；自适应PD不改变成功集合。因此正式主方法回退为更简单的动态夹紧v1。",
+  "statistical_boundary": "样本仅20条，95% Wilson区间重叠；该选择用于后续正式测试，不宣称统计显著。独立20条现属于方法选择验证集，不再作为最终测试集。"
+}

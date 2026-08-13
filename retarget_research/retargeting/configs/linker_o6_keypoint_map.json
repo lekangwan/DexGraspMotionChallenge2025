@@ -1,0 +1,149 @@
+{
+  "status": "development_manifest_geometry_and_physics_evaluated",
+  "description": "掌心使用根link原点，近端点来自URDF关节中心，指尖来自distal mesh末端。稠密15点消融的四指中段位于distal指节从关节原点到指尖向量的37%处，对应Shadow中间指节末端；它们不改变6个主动自由度，只用于点密度消融。",
+  "source_hand": "shadow_hand",
+  "target_hand": "linker_o6",
+  "source_keypoint_count": 21,
+  "target_active_dof": 6,
+  "pairs": [
+    {
+      "semantic": "palm",
+      "shadow_index": 0,
+      "shadow_link": "robot0:palm",
+      "linker_link": "rh_hand_base_link",
+      "linker_local_xyz": [0.0, 0.0, 0.0],
+      "reference_target_index": 0,
+      "use_in_reference_baseline": true
+    },
+    {
+      "semantic": "index_proximal_end",
+      "shadow_index": 1,
+      "shadow_link": "robot0:ffproximal_child",
+      "linker_link": "rh_index_proximal",
+      "linker_local_xyz": [-0.0052516, 0.0, 0.036625],
+      "reference_target_index": 4,
+      "use_in_reference_baseline": true
+    },
+    {
+      "semantic": "index_middle_end",
+      "shadow_index": 3,
+      "shadow_link": "robot0:ffmiddle_child",
+      "linker_link": "rh_index_distal",
+      "linker_local_xyz": [0.005424345, 0.000002528, 0.013901684],
+      "reference_target_index": null,
+      "use_in_reference_baseline": false,
+      "use_in_dense15": true
+    },
+    {
+      "semantic": "index_tip",
+      "shadow_index": 4,
+      "shadow_link": "robot0:ffdistal_child",
+      "linker_link": "rh_index_distal",
+      "linker_local_xyz": [0.014660391, 0.000006831, 0.037572119],
+      "reference_target_index": 5,
+      "use_in_reference_baseline": true
+    },
+    {
+      "semantic": "middle_proximal_end",
+      "shadow_index": 5,
+      "shadow_link": "robot0:mfproximal_child",
+      "linker_link": "rh_middle_proximal",
+      "linker_local_xyz": [-0.0052516, 0.0, 0.036625],
+      "reference_target_index": 6,
+      "use_in_reference_baseline": true
+    },
+    {
+      "semantic": "middle_middle_end",
+      "shadow_index": 7,
+      "shadow_link": "robot0:mfmiddle_child",
+      "linker_link": "rh_middle_distal",
+      "linker_local_xyz": [0.005424345, 0.000002528, 0.013901684],
+      "reference_target_index": null,
+      "use_in_reference_baseline": false,
+      "use_in_dense15": true
+    },
+    {
+      "semantic": "middle_tip",
+      "shadow_index": 8,
+      "shadow_link": "robot0:mfdistal_child",
+      "linker_link": "rh_middle_distal",
+      "linker_local_xyz": [0.014660391, 0.000006831, 0.037572119],
+      "reference_target_index": 7,
+      "use_in_reference_baseline": true
+    },
+    {
+      "semantic": "ring_proximal_end",
+      "shadow_index": 9,
+      "shadow_link": "robot0:rfproximal_child",
+      "linker_link": "rh_ring_proximal",
+      "linker_local_xyz": [-0.0052516, 0.0, 0.036625],
+      "reference_target_index": 8,
+      "use_in_reference_baseline": true
+    },
+    {
+      "semantic": "ring_middle_end",
+      "shadow_index": 11,
+      "shadow_link": "robot0:rfmiddle_child",
+      "linker_link": "rh_ring_distal",
+      "linker_local_xyz": [0.005424345, 0.000002528, 0.013901684],
+      "reference_target_index": null,
+      "use_in_reference_baseline": false,
+      "use_in_dense15": true
+    },
+    {
+      "semantic": "ring_tip",
+      "shadow_index": 12,
+      "shadow_link": "robot0:rfdistal_child",
+      "linker_link": "rh_ring_distal",
+      "linker_local_xyz": [0.014660391, 0.000006831, 0.037572119],
+      "reference_target_index": 9,
+      "use_in_reference_baseline": true
+    },
+    {
+      "semantic": "little_proximal_end",
+      "shadow_index": 13,
+      "shadow_link": "robot0:lfproximal_child",
+      "linker_link": "rh_pinky_proximal",
+      "linker_local_xyz": [-0.0052516, 0.0, 0.036625],
+      "reference_target_index": 10,
+      "use_in_reference_baseline": true
+    },
+    {
+      "semantic": "little_middle_end",
+      "shadow_index": 15,
+      "shadow_link": "robot0:lfmiddle_child",
+      "linker_link": "rh_pinky_distal",
+      "linker_local_xyz": [0.005424345, 0.000002528, 0.013901684],
+      "reference_target_index": null,
+      "use_in_reference_baseline": false,
+      "use_in_dense15": true
+    },
+    {
+      "semantic": "little_tip",
+      "shadow_index": 16,
+      "shadow_link": "robot0:lfdistal_child",
+      "linker_link": "rh_pinky_distal",
+      "linker_local_xyz": [0.014660391, 0.000006831, 0.037572119],
+      "reference_target_index": 11,
+      "use_in_reference_baseline": true
+    },
+    {
+      "semantic": "thumb_middle",
+      "shadow_index": 19,
+      "shadow_link": "robot0:thmiddle_child",
+      "linker_link": "rh_thumb_metacarpals",
+      "linker_local_xyz": [0.0037776, 0.0, 0.045368],
+      "reference_target_index": 2,
+      "use_in_reference_baseline": false
+    },
+    {
+      "semantic": "thumb_tip",
+      "shadow_index": 20,
+      "shadow_link": "robot0:thdistal_child",
+      "linker_link": "rh_thumb_distal",
+      "linker_local_xyz": [-0.006392941, 0.0, 0.048517395],
+      "reference_target_index": 3,
+      "use_in_reference_baseline": true
+    }
+  ]
+}

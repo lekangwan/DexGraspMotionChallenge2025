@@ -1,0 +1,28 @@
+{
+  "purpose": "select_primary_xhand_method_after_independent_validation",
+  "selection_manifest": "linker_independent_validation_v1.json",
+  "object_count": 10,
+  "trajectory_count": 20,
+  "official_reference": {
+    "success_count": 14,
+    "success_rate": 0.7,
+    "mean_keypoint_distance_m": 0.00436,
+    "mean_max_lift_m": 0.2406,
+    "mean_final_lift_m": 0.2169
+  },
+  "contact_refinement_v1": {
+    "success_count": 16,
+    "success_rate": 0.8,
+    "mean_keypoint_distance_m": 0.00569,
+    "mean_max_lift_m": 0.267,
+    "mean_final_lift_m": 0.236,
+    "gained_source_trajectories": [
+      "ddg-gd_saucepan_poisson_000:37",
+      "mujoco-Squirt_Strain_Fruit_Basket:32"
+    ],
+    "lost_source_trajectories": []
+  },
+  "selected_primary_method": "xhand_phase_contact_v1",
+  "decision": "真实指腹细化在独立20条上净增2条且没有破坏官方成功轨迹，因此保留为正式主候选。",
+  "statistical_boundary": "20条样本不足以宣称显著提升；最终结论等待正式100物体/1000轨迹heldout。"
+}

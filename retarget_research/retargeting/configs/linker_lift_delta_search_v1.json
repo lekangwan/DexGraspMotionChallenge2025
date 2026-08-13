@@ -1,0 +1,36 @@
+{
+  "study_name": "linker_o6_lift_phase_delta_search_v1",
+  "hand": "linker",
+  "manifest": "retarget_research/retargeting/configs/linker_independent_validation_v1.json",
+  "fixed_parameters": {
+    "keypoint_count": 11,
+    "finger_delta_rad": 0.425,
+    "thumb_yaw_delta_rad": 0.075,
+    "thumb_pitch_delta_rad": 0.1875,
+    "contact_threshold_m": 0.02,
+    "min_contact_tips": 2,
+    "finger_stiffness": 120.0,
+    "finger_damping": 5.0
+  },
+  "selection_rule": "搜索从闭合开始后，Shadow手腕Z上升20/30/40 mm时认定进入抬升阶段。该参数只改变夹紧进度在何时达到1，不改变100 mm/0.5 s成功判据。优先比较成功数、配对回退和持续抬升。",
+  "candidates": [
+    {
+      "name": "lift_delta_20mm",
+      "parameters": {"lift_delta_m": 0.02},
+      "target_dir": "retarget_research/outputs/linker_lift_delta_search_v1/lift_delta_20mm",
+      "evaluation_dir": "retarget_research/outputs/linker_lift_delta_search_v1_evaluation/lift_delta_20mm"
+    },
+    {
+      "name": "lift_delta_30mm_current",
+      "parameters": {"lift_delta_m": 0.03},
+      "target_dir": "retarget_research/outputs/linker_thumb_scale_search_v1/thumb_scale_0p75",
+      "evaluation_dir": "retarget_research/outputs/linker_thumb_scale_search_v1_evaluation/thumb_scale_0p75"
+    },
+    {
+      "name": "lift_delta_40mm",
+      "parameters": {"lift_delta_m": 0.04},
+      "target_dir": "retarget_research/outputs/linker_lift_delta_search_v1/lift_delta_40mm",
+      "evaluation_dir": "retarget_research/outputs/linker_lift_delta_search_v1_evaluation/lift_delta_40mm"
+    }
+  ]
+}

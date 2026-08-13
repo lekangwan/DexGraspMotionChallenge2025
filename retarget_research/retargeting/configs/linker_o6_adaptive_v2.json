@@ -1,0 +1,54 @@
+{
+  "method": "linker_o6_force_redistribution_adaptive_control_v2",
+  "status": "frozen_after_development_pilot",
+  "active_finger_dofs": 6,
+  "stage_1": {
+    "method": "linker_o6_dynamic_squeeze_v1",
+    "config": "linker_o6_squeeze_v1.json",
+    "description": "接近阶段保留O6几何基线，闭合后叠加统一渐进夹紧。"
+  },
+  "stage_2": {
+    "method": "linker_o6_force_redistribution_v2",
+    "joint_residuals_rad": [
+      -0.1253,
+      0.031,
+      -0.13028,
+      -0.10577,
+      0.1063,
+      0.00391
+    ],
+    "joint_order": [
+      "thumb_yaw",
+      "thumb_pitch",
+      "index",
+      "middle",
+      "ring",
+      "little"
+    ],
+    "description": "从闭合开始线性加入同一组有符号残差，抬升期保持残差并保留原逐帧动态轨迹。"
+  },
+  "adaptive_pd": {
+    "decision_inputs": [
+      "obj_scale",
+      "lift_start_active_joint_std_rad"
+    ],
+    "high_gain_condition": "obj_scale <= 0.06 and lift_start_active_joint_std_rad >= 0.25",
+    "default_stiffness": 120.0,
+    "default_damping": 5.0,
+    "high_stiffness": 400.0,
+    "high_damping": 20.0,
+    "apply_to": "6 active joints and 5 mimic joints",
+    "description": "小尺度且六个主动关节指令角分布较不均匀时提高位置跟踪强度；规则不读取物体名称或物理成功标签。"
+  },
+  "selection_scope": "5-object 10-trajectory frozen development manifest",
+  "selection_rule": "one fixed trajectory transform and one deterministic pre-replay gain rule; no per-trajectory physics candidate union",
+  "development_success": {
+    "geometry_baseline_success_count": 1,
+    "squeeze_v1_success_count": 3,
+    "force_redistribution_default_pd_success_count": 4,
+    "adaptive_v2_success_count": 5,
+    "trajectory_count": 10
+  },
+  "validation_report": "outputs/linker_o6_force_redistribution_v2_evaluation/manifest_evaluation_summary.json",
+  "limitations": "残差和阈值均在同一10条开发清单上确定；5/10不能视为未见物体泛化结果，必须在独立heldout或正式1000轨迹上冻结验证。"
+}

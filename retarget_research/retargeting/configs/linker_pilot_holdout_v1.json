@@ -1,0 +1,75 @@
+{
+  "purpose": "development_pilot_not_official_submission",
+  "source_directory": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/data/sorting/seq41proc",
+  "seed": 20260809,
+  "object_count": 5,
+  "trajectories_per_object": 2,
+  "trajectory_count": 10,
+  "excluded_tuning_objects": [
+    "core-camera-fe669947912103aede650492e45fb14f",
+    "core-jar-fed045d07c91bb2723901b5a0f119b35",
+    "sem-Bottle-defc45107217afb846564a8a219239b"
+  ],
+  "entries": [
+    {
+      "object_name": "ddg-gd_lime_poisson_001",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/data/sorting/seq41proc/ddg-gd_lime_poisson_001.npy",
+      "source_sha256": "da55b2b8fa698e2d4914afd6d2302985783432bb24717f1293701da0c6a3a679",
+      "available_trajectory_count": 31,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        9,
+        27
+      ]
+    },
+    {
+      "object_name": "ddg-kit_HotPot2",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/data/sorting/seq41proc/ddg-kit_HotPot2.npy",
+      "source_sha256": "d81188161a9a0f055edc33831d468f104139ae48e5594d993def082b3f1555b1",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        19,
+        35
+      ]
+    },
+    {
+      "object_name": "mujoco-Ecoforms_Planter_Pot_QP6Ebony",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/data/sorting/seq41proc/mujoco-Ecoforms_Planter_Pot_QP6Ebony.npy",
+      "source_sha256": "2dbfc70a118bdf84fce372f9508734e3d573a6d8db8fec0632857239e42d2cc2",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        16,
+        26
+      ]
+    },
+    {
+      "object_name": "mujoco-Mens_Gold_Cup_ASV_Capetown_Penny_Loafer_in_Black_GkQBKqABeQN",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/data/sorting/seq41proc/mujoco-Mens_Gold_Cup_ASV_Capetown_Penny_Loafer_in_Black_GkQBKqABeQN.npy",
+      "source_sha256": "0783f2fe699c6cdf5d0273441a8bd0218439e1c4d590007683e46238affec35a",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        27,
+        33
+      ]
+    },
+    {
+      "object_name": "sem-Vase-aa080060dcfd22b3265d1076b4b6c5c",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/data/sorting/seq41proc/sem-Vase-aa080060dcfd22b3265d1076b4b6c5c.npy",
+      "source_sha256": "0b98f05987a7c0666d3c2bea54c7b341ae9aa6971c03c21c71ef99b86a2bd2db",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        2,
+        36
+      ]
+    }
+  ]
+}

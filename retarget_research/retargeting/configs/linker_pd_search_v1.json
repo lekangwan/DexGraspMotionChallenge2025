@@ -1,0 +1,69 @@
+{
+  "study_name": "linker_o6_pd_tracking_search_v1",
+  "hand": "linker",
+  "manifest": "retarget_research/retargeting/configs/linker_independent_validation_v1.json",
+  "fixed_parameters": {
+    "keypoint_count": 11,
+    "finger_delta_rad": 0.425,
+    "thumb_yaw_delta_rad": 0.075,
+    "thumb_pitch_delta_rad": 0.1875,
+    "contact_threshold_m": 0.02,
+    "min_contact_tips": 2,
+    "lift_delta_m": 0.03,
+    "adaptive_gains": false
+  },
+  "selection_rule": "在同一组目标角轨迹上只改变关节PD。先比较严格成功数与配对回退，再比较最终/最大抬升和主动、mimic关节跟踪误差；不因跟踪误差更小就自动选择更硬的控制，因为更强碰撞冲击也可能破坏抓取。",
+  "candidates": [
+    {
+      "name": "pd_80_3",
+      "parameters": {"stiffness": 80.0, "damping": 3.0},
+      "target_dir": "retarget_research/outputs/linker_thumb_scale_search_v1/thumb_scale_0p75",
+      "evaluation_dir": "retarget_research/outputs/linker_pd_search_v1_evaluation/pd_80_3",
+      "evaluation_args": [
+        "--linker-finger-stiffness", "80",
+        "--linker-finger-damping", "3",
+        "--linker-mimic-stiffness", "80",
+        "--linker-mimic-damping", "3"
+      ],
+      "expected_physics_options": {
+        "linker_finger_stiffness": 80.0,
+        "linker_finger_damping": 3.0,
+        "linker_mimic_stiffness": 80.0,
+        "linker_mimic_damping": 3.0,
+        "adaptive_gains": false
+      }
+    },
+    {
+      "name": "pd_120_5_current",
+      "parameters": {"stiffness": 120.0, "damping": 5.0},
+      "target_dir": "retarget_research/outputs/linker_thumb_scale_search_v1/thumb_scale_0p75",
+      "evaluation_dir": "retarget_research/outputs/linker_thumb_scale_search_v1_evaluation/thumb_scale_0p75",
+      "expected_physics_options": {
+        "linker_finger_stiffness": 120.0,
+        "linker_finger_damping": 5.0,
+        "linker_mimic_stiffness": 120.0,
+        "linker_mimic_damping": 5.0,
+        "adaptive_gains": false
+      }
+    },
+    {
+      "name": "pd_200_8",
+      "parameters": {"stiffness": 200.0, "damping": 8.0},
+      "target_dir": "retarget_research/outputs/linker_thumb_scale_search_v1/thumb_scale_0p75",
+      "evaluation_dir": "retarget_research/outputs/linker_pd_search_v1_evaluation/pd_200_8",
+      "evaluation_args": [
+        "--linker-finger-stiffness", "200",
+        "--linker-finger-damping", "8",
+        "--linker-mimic-stiffness", "200",
+        "--linker-mimic-damping", "8"
+      ],
+      "expected_physics_options": {
+        "linker_finger_stiffness": 200.0,
+        "linker_finger_damping": 8.0,
+        "linker_mimic_stiffness": 200.0,
+        "linker_mimic_damping": 8.0,
+        "adaptive_gains": false
+      }
+    }
+  ]
+}

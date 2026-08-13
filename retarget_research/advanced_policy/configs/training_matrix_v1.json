@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "seed": 20260813,
+  "device": "cuda",
+  "common": {
+    "epochs": 150,
+    "batch_size": 512,
+    "num_workers": 4,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "gradient_clip": 1.0,
+    "early_stopping_patience": 20,
+    "minimum_improvement": 0.000001,
+    "category_embedding_dim": 16,
+    "dropout": 0.05
+  },
+  "models": {
+    "bc": {
+      "hidden_dims": [256, 256, 256]
+    },
+    "temporal3": {
+      "history": 3,
+      "hidden_dims": [384, 384, 256]
+    },
+    "diffusion": {
+      "history": 3,
+      "action_horizon": 8,
+      "diffusion_steps": 50,
+      "time_embedding_dim": 64,
+      "hidden_dims": [512, 512, 384]
+    }
+  },
+  "hands": ["linker", "xhand", "wuji"],
+  "data_root": "retarget_research/advanced_policy/data/formal_v1",
+  "output_root": "retarget_research/advanced_policy/runs/formal_v1"
+}

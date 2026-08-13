@@ -1,0 +1,130 @@
+"""读取标准策略NPZ并构造单帧、Temporal3或动作片段样本。
+
+输入：`prepare_policy_dataset.py`生成的split与normalization NPZ。
+输出：PyTorch Dataset样本，保证历史和未来窗口不跨轨迹边界。
+内部逻辑：建立每个步骤在自身轨迹内的位置索引，开头复制首帧，末尾复制末帧。
+作用：避免时间窗口把相邻文件误拼在一起，并统一三类策略的归一化口径。
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import numpy as np
+import torch
+from torch.utils.data import Dataset
+
+
+class TargetHandPolicyDataset(Dataset):
+    """目标手状态—动作监督数据集。"""
+
+    def __init__(
+        self,
+        data_path,
+        normalization_path,
+        mode="bc",
+        history=3,
+        action_horizon=8,
+    ):
+        """读取数组、标准化观测/动作并预计算每条轨迹边界。
+
+        输入：split路径、归一化路径、模式、历史长度和动作片段长度。
+        输出：构造完成的数据集对象。
+        内部逻辑：按trajectory_id收集全局索引；拒绝非连续重复ID和未知模式。
+        作用：训练循环无需了解NPZ布局即可安全抽样。
+        """
+        if mode not in {"bc", "temporal3", "diffusion"}:
+            raise ValueError(f"未知数据模式: {mode}")
+        if mode == "temporal3" and int(history) != 3:
+            raise ValueError("Temporal3的history必须严格等于3")
+        with np.load(Path(data_path), allow_pickle=False) as archive:
+            self.data = {name: archive[name].copy() for name in archive.files}
+        with np.load(Path(normalization_path), allow_pickle=False) as archive:
+            self.normalization = {
+                name: archive[name].astype(np.float32) for name in archive.files
+            }
+        self.mode = mode
+        self.history = int(history)
+        self.action_horizon = int(action_horizon)
+        self.observations = (
+            self.data["observations"] - self.normalization["observation_mean"]
+        ) / self.normalization["observation_std"]
+        self.actions = (
+            self.data["actions"] - self.normalization["action_mean"]
+        ) / self.normalization["action_std"]
+        trajectory_ids = self.data["trajectory_id"].astype(np.int64)
+        self.trajectory_indices = {
+            int(trajectory_id): np.flatnonzero(trajectory_ids == trajectory_id)
+            for trajectory_id in np.unique(trajectory_ids)
+        }
+        self.local_position = np.empty(len(trajectory_ids), dtype=np.int64)
+        for indices in self.trajectory_indices.values():
+            if not np.array_equal(indices, np.arange(indices[0], indices[-1] + 1)):
+                raise ValueError("同一trajectory_id的步骤必须连续存储")
+            self.local_position[indices] = np.arange(len(indices))
+
+    def __len__(self):
+        """返回可作为当前时刻的物理步数量。"""
+        return len(self.observations)
+
+    def _window_indices(self, index, before, after):
+        """生成不跨轨迹且端点复制的窗口全局索引。
+
+        输入：当前全局index、向前/向后步数。
+        输出：长度`before+after+1`的全局索引。
+        内部逻辑：在当前trajectory局部坐标上clip，再映射回全局数组。
+        作用：Temporal3开头与Diffusion片段末尾都无需特殊丢样本。
+        """
+        trajectory_id = int(self.data["trajectory_id"][index])
+        indices = self.trajectory_indices[trajectory_id]
+        local = int(self.local_position[index])
+        offsets = np.arange(-before, after + 1)
+        local_indices = np.clip(local + offsets, 0, len(indices) - 1)
+        return indices[local_indices]
+
+    def __getitem__(self, index):
+        """按模式返回当前或时序监督样本。
+
+        输入：全局步骤索引。
+        输出：含观测、目标动作、类别和可选历史/动作片段的张量字典。
+        内部逻辑：BC取当前；Temporal3取三观测、前两动作；Diffusion取历史观测和未来片段。
+        作用：让训练脚本只根据model_type选择loss，而不重复窗口逻辑。
+        """
+        category = torch.tensor(self.data["category_id"][index], dtype=torch.long)
+        if self.mode == "bc":
+            return {
+                "observations": torch.from_numpy(self.observations[index]).float(),
+                "actions": torch.from_numpy(self.actions[index]).float(),
+                "category_id": category,
+            }
+        history_indices = self._window_indices(index, self.history - 1, 0)
+        if self.mode == "temporal3":
+            trajectory_id = int(self.data["trajectory_id"][index])
+            indices = self.trajectory_indices[trajectory_id]
+            local = int(self.local_position[index])
+            previous_actions = []
+            for offset in range(-(self.history - 1), 0):
+                previous_local = local + offset
+                previous_actions.append(
+                    np.zeros(self.actions.shape[1], dtype=np.float32)
+                    if previous_local < 0
+                    else self.actions[indices[previous_local]]
+                )
+            return {
+                "observation_history": torch.from_numpy(
+                    self.observations[history_indices]
+                ).float(),
+                "previous_actions": torch.from_numpy(
+                    np.stack(previous_actions)
+                ).float(),
+                "actions": torch.from_numpy(self.actions[index]).float(),
+                "category_id": category,
+            }
+        future_indices = self._window_indices(index, 0, self.action_horizon - 1)
+        return {
+            "observation_history": torch.from_numpy(
+                self.observations[history_indices]
+            ).float(),
+            "action_sequence": torch.from_numpy(self.actions[future_indices]).float(),
+            "category_id": category,
+        }

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "observation_schema": {
+    "name": "privileged_state_shape_v2",
+    "fields": [
+      "hand_dof_position",
+      "hand_dof_velocity",
+      "object_position",
+      "object_quaternion_xyzw",
+      "object_linear_velocity",
+      "object_angular_velocity",
+      "object_shape_descriptor_14d",
+      "object_translation_from_initial",
+      "remaining_lift_to_0p10m",
+      "log1p_hand_object_contact_count"
+    ],
+    "note": "这是仿真特权状态加轻量实例形状描述，不是完整DexRep；类别ID单独作为embedding输入。"
+  },
+  "hands": {
+    "linker": {
+      "policy_action_dimension": 12,
+      "physics_dof_dimension": 17,
+      "selected_method_config": "retarget_research/retargeting/configs/linker_o6_method_selection_v2.json"
+    },
+    "xhand": {
+      "policy_action_dimension": 18,
+      "physics_dof_dimension": 18,
+      "selected_method_config": "retarget_research/retargeting/configs/xhand_method_selection_v2.json"
+    },
+    "wuji": {
+      "policy_action_dimension": 26,
+      "physics_dof_dimension": 26,
+      "selected_method_config": "retarget_research/retargeting/configs/wuji_method_selection_v1.json"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "seed": 20260813,
+  "device": "cpu",
+  "common": {
+    "epochs": 1,
+    "batch_size": 32,
+    "num_workers": 0,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "gradient_clip": 1.0,
+    "early_stopping_patience": 2,
+    "minimum_improvement": 0.000001,
+    "category_embedding_dim": 16,
+    "dropout": 0.0
+  },
+  "models": {
+    "bc": {"hidden_dims": [32, 32]},
+    "temporal3": {"history": 3, "hidden_dims": [48, 32]},
+    "diffusion": {
+      "history": 3,
+      "action_horizon": 4,
+      "diffusion_steps": 3,
+      "time_embedding_dim": 16,
+      "hidden_dims": [64, 48]
+    }
+  },
+  "hands": ["linker", "xhand", "wuji"],
+  "data_root": "retarget_research/advanced_policy/data/formal_v1",
+  "output_root": "retarget_research/advanced_policy/runs/smoke_v1"
+}

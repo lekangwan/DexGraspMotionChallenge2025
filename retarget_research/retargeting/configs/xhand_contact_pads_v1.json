@@ -1,0 +1,565 @@
+{
+  "status": "physics_contact_calibrated_development_v1",
+  "hand": "xhand",
+  "calibration_rule": "仅使用严格成功重放；每0.5mm去重；每指确定性k-medoids；投影到配套STL最近顶点并读取局部外法向",
+  "points_per_finger": 6,
+  "evidence": [
+    {
+      "report": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/outputs/contact_pad_calibration/raw/xhand_hotpot_19.json",
+      "object_name": "ddg-kit_HotPot2",
+      "source_trajectory_index": 19,
+      "all_hand_object_contacts": 10740,
+      "selected_pad_contacts": 4391
+    },
+    {
+      "report": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/outputs/contact_pad_calibration/raw/xhand_hotpot_35.json",
+      "object_name": "ddg-kit_HotPot2",
+      "source_trajectory_index": 35,
+      "all_hand_object_contacts": 10595,
+      "selected_pad_contacts": 4166
+    },
+    {
+      "report": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/outputs/contact_pad_calibration/raw/xhand_loafer_27.json",
+      "object_name": "mujoco-Mens_Gold_Cup_ASV_Capetown_Penny_Loafer_in_Black_GkQBKqABeQN",
+      "source_trajectory_index": 27,
+      "all_hand_object_contacts": 6798,
+      "selected_pad_contacts": 2646
+    },
+    {
+      "report": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/outputs/contact_pad_calibration/raw/xhand_planter_16.json",
+      "object_name": "mujoco-Ecoforms_Planter_Pot_QP6Ebony",
+      "source_trajectory_index": 16,
+      "all_hand_object_contacts": 25975,
+      "selected_pad_contacts": 17091
+    },
+    {
+      "report": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/outputs/contact_pad_calibration/raw/xhand_planter_26.json",
+      "object_name": "mujoco-Ecoforms_Planter_Pot_QP6Ebony",
+      "source_trajectory_index": 26,
+      "all_hand_object_contacts": 16835,
+      "selected_pad_contacts": 7135
+    }
+  ],
+  "fingers": {
+    "index": {
+      "body_name": "right_hand_index_rota_link2",
+      "mesh_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/assets/xhand/meshes/right_hand_index_rota_link2.STL",
+      "raw_contact_sample_count": 5648,
+      "unique_0p5mm_cell_count": 587,
+      "observed_local_bounds_m": [
+        [
+          0.0007326875347644091,
+          -0.008173312991857529,
+          -0.0021202086936682463
+        ],
+        [
+          0.01092943362891674,
+          0.008306426927447319,
+          0.04344455152750015
+        ]
+      ],
+      "surface_points": [
+        {
+          "local_xyz_m": [
+            0.006295681465417147,
+            0.0018400113331153989,
+            0.039108604192733765
+          ],
+          "local_outward_normal": [
+            0.7875068720769525,
+            0.18958504346360963,
+            0.5864217234435265
+          ],
+          "cluster_unique_cell_support": 100,
+          "contact_to_mesh_projection_m": 0.0007158856176075071
+        },
+        {
+          "local_xyz_m": [
+            0.007242940831929445,
+            0.00831999909132719,
+            0.0007547870045527816
+          ],
+          "local_outward_normal": [
+            -6.81521078130831e-06,
+            0.999999999972355,
+            2.973732080053751e-06
+          ],
+          "cluster_unique_cell_support": 18,
+          "contact_to_mesh_projection_m": 0.0012629315509661914
+        },
+        {
+          "local_xyz_m": [
+            0.005317636299878359,
+            0.006499999202787876,
+            0.008665097877383232
+          ],
+          "local_outward_normal": [
+            0.9552763024444618,
+            9.921233808858632e-14,
+            0.2957147037061858
+          ],
+          "cluster_unique_cell_support": 34,
+          "contact_to_mesh_projection_m": 0.00320714401504832
+        },
+        {
+          "local_xyz_m": [
+            0.009457089006900787,
+            0.0034383563324809074,
+            0.028396112844347954
+          ],
+          "local_outward_normal": [
+            0.9746510790857698,
+            0.20112078986458123,
+            0.0980086828867301
+          ],
+          "cluster_unique_cell_support": 180,
+          "contact_to_mesh_projection_m": 0.002083526929741372
+        },
+        {
+          "local_xyz_m": [
+            0.007285792846232653,
+            -0.004999999888241291,
+            0.013591794297099113
+          ],
+          "local_outward_normal": [
+            0.44994476176610115,
+            1.105946278537385e-05,
+            -0.8930563874901376
+          ],
+          "cluster_unique_cell_support": 108,
+          "contact_to_mesh_projection_m": 0.0026164665993059885
+        },
+        {
+          "local_xyz_m": [
+            0.010202117264270782,
+            -0.003935330547392368,
+            0.016463054344058037
+          ],
+          "local_outward_normal": [
+            0.9633855897147988,
+            -0.2646123788171098,
+            0.043226085950728396
+          ],
+          "cluster_unique_cell_support": 147,
+          "contact_to_mesh_projection_m": 0.0018177117611588105
+        }
+      ]
+    },
+    "middle": {
+      "body_name": "right_hand_mid_link2",
+      "mesh_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/assets/xhand/meshes/right_hand_mid_link2.STL",
+      "raw_contact_sample_count": 5569,
+      "unique_0p5mm_cell_count": 463,
+      "observed_local_bounds_m": [
+        [
+          -0.0031629353761672974,
+          -0.007824188098311424,
+          0.01053028553724289
+        ],
+        [
+          0.010688127018511295,
+          0.00760573148727417,
+          0.04340807721018791
+        ]
+      ],
+      "surface_points": [
+        {
+          "local_xyz_m": [
+            -0.002399999415501952,
+            0.0020511066541075706,
+            0.04191625118255615
+          ],
+          "local_outward_normal": [
+            1.1245787840527895e-14,
+            0.17424090066057674,
+            0.9847030560209464
+          ],
+          "cluster_unique_cell_support": 20,
+          "contact_to_mesh_projection_m": 0.00038486298168657413
+        },
+        {
+          "local_xyz_m": [
+            0.0067962524481117725,
+            0.0043976763263344765,
+            0.03665219247341156
+          ],
+          "local_outward_normal": [
+            0.7508050347424636,
+            0.4908447359832348,
+            0.4419991458848269
+          ],
+          "cluster_unique_cell_support": 50,
+          "contact_to_mesh_projection_m": 0.0007502050257009727
+        },
+        {
+          "local_xyz_m": [
+            0.008264556527137756,
+            -0.003438361920416355,
+            0.03463578224182129
+          ],
+          "local_outward_normal": [
+            0.8911436593682174,
+            -0.28617050593479526,
+            0.3520929137327902
+          ],
+          "cluster_unique_cell_support": 82,
+          "contact_to_mesh_projection_m": 0.0005433292234186738
+        },
+        {
+          "local_xyz_m": [
+            0.007285792846232653,
+            0.006499999202787876,
+            0.013591794297099113
+          ],
+          "local_outward_normal": [
+            6.978388403259737e-16,
+            -1.0,
+            3.3006930522105904e-13
+          ],
+          "cluster_unique_cell_support": 20,
+          "contact_to_mesh_projection_m": 0.002304500940225427
+        },
+        {
+          "local_xyz_m": [
+            0.009994938969612122,
+            0.0034383581951260567,
+            0.02292233519256115
+          ],
+          "local_outward_normal": [
+            0.9528747127740241,
+            0.2966010249709976,
+            0.06369940142556209
+          ],
+          "cluster_unique_cell_support": 171,
+          "contact_to_mesh_projection_m": 0.0010902587996100659
+        },
+        {
+          "local_xyz_m": [
+            0.010296173393726349,
+            -0.003592134453356266,
+            0.01646771840751171
+          ],
+          "local_outward_normal": [
+            0.9633855897147988,
+            -0.2646123788171098,
+            0.043226085950728396
+          ],
+          "cluster_unique_cell_support": 120,
+          "contact_to_mesh_projection_m": 0.001520355263256734
+        }
+      ]
+    },
+    "ring": {
+      "body_name": "right_hand_ring_link2",
+      "mesh_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/assets/xhand/meshes/right_hand_ring_link2.STL",
+      "raw_contact_sample_count": 5877,
+      "unique_0p5mm_cell_count": 524,
+      "observed_local_bounds_m": [
+        [
+          -0.0033410657197237015,
+          -0.0027722064405679703,
+          0.017630210146307945
+        ],
+        [
+          0.009868440218269825,
+          0.006783454678952694,
+          0.04314546287059784
+        ]
+      ],
+      "surface_points": [
+        {
+          "local_xyz_m": [
+            -0.002100888406857848,
+            0.004514108411967754,
+            0.041247621178627014
+          ],
+          "local_outward_normal": [
+            -0.9999947097461711,
+            -0.0032314735469581124,
+            -0.00037156208959290463
+          ],
+          "cluster_unique_cell_support": 6,
+          "contact_to_mesh_projection_m": 0.0007895745626917478
+        },
+        {
+          "local_xyz_m": [
+            0.005561501253396273,
+            0.0018403540598228574,
+            0.03988294303417206
+          ],
+          "local_outward_normal": [
+            0.7062848854370548,
+            0.20729698381607264,
+            0.6768970535494487
+          ],
+          "cluster_unique_cell_support": 123,
+          "contact_to_mesh_projection_m": 0.0003454223672768427
+        },
+        {
+          "local_xyz_m": [
+            0.007612087298184633,
+            0.004430062137544155,
+            0.034872815012931824
+          ],
+          "local_outward_normal": [
+            0.7335337893033205,
+            0.6015393649143689,
+            0.31635197550944705
+          ],
+          "cluster_unique_cell_support": 69,
+          "contact_to_mesh_projection_m": 0.0005903819249888942
+        },
+        {
+          "local_xyz_m": [
+            0.008348464965820312,
+            0.0061868345364928246,
+            0.023881850764155388
+          ],
+          "local_outward_normal": [
+            0.7635498042414754,
+            0.641389488799224,
+            0.07490807767307013
+          ],
+          "cluster_unique_cell_support": 89,
+          "contact_to_mesh_projection_m": 0.0011823721237485005
+        },
+        {
+          "local_xyz_m": [
+            0.009356874972581863,
+            0.0026926854625344276,
+            0.03043949417769909
+          ],
+          "local_outward_normal": [
+            0.9792556128607315,
+            0.12551967750902393,
+            0.15906996963218398
+          ],
+          "cluster_unique_cell_support": 130,
+          "contact_to_mesh_projection_m": 0.0011080052291289242
+        },
+        {
+          "local_xyz_m": [
+            0.010011442005634308,
+            0.0027069924399256706,
+            0.024384139105677605
+          ],
+          "local_outward_normal": [
+            0.9858745943154317,
+            0.15397323684519476,
+            0.06590543694413138
+          ],
+          "cluster_unique_cell_support": 107,
+          "contact_to_mesh_projection_m": 0.0015121771197882212
+        }
+      ]
+    },
+    "little": {
+      "body_name": "right_hand_pinky_link2",
+      "mesh_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/assets/xhand/meshes/right_hand_pinky_link2.STL",
+      "raw_contact_sample_count": 11284,
+      "unique_0p5mm_cell_count": 962,
+      "observed_local_bounds_m": [
+        [
+          -0.007899252697825432,
+          -0.008197281509637833,
+          -0.008008900098502636
+        ],
+        [
+          0.010441331192851067,
+          0.008490538224577904,
+          0.0427958108484745
+        ]
+      ],
+      "surface_points": [
+        {
+          "local_xyz_m": [
+            -0.008000001311302185,
+            0.006499999202787876,
+            0.011000005528330803
+          ],
+          "local_outward_normal": [
+            -3.1245427591281884e-15,
+            -1.0,
+            8.465450562766819e-15
+          ],
+          "cluster_unique_cell_support": 17,
+          "contact_to_mesh_projection_m": 0.001658388632419852
+        },
+        {
+          "local_xyz_m": [
+            0.001526229432784021,
+            -0.008060426451265812,
+            0.02966359071433544
+          ],
+          "local_outward_normal": [
+            0.07640851506164784,
+            -0.9938009663703733,
+            0.08075504979495839
+          ],
+          "cluster_unique_cell_support": 80,
+          "contact_to_mesh_projection_m": 0.0010645920584438345
+        },
+        {
+          "local_xyz_m": [
+            0.003178332233801484,
+            -0.005129302851855755,
+            0.03951452672481537
+          ],
+          "local_outward_normal": [
+            0.2774354219399856,
+            -0.7459224462410243,
+            0.605499207965451
+          ],
+          "cluster_unique_cell_support": 138,
+          "contact_to_mesh_projection_m": 0.0002901708515199962
+        },
+        {
+          "local_xyz_m": [
+            0.007134236861020327,
+            0.00831999909132719,
+            -0.0023135854862630367
+          ],
+          "local_outward_normal": [
+            3.1245427591281888e-15,
+            1.0,
+            -8.46545056276682e-15
+          ],
+          "cluster_unique_cell_support": 131,
+          "contact_to_mesh_projection_m": 0.0017747862409142091
+        },
+        {
+          "local_xyz_m": [
+            0.0054062907584011555,
+            0.003976975567638874,
+            0.035135746002197266
+          ],
+          "local_outward_normal": [
+            -0.8270128217667216,
+            -0.5306346319161418,
+            -0.18567897038885584
+          ],
+          "cluster_unique_cell_support": 451,
+          "contact_to_mesh_projection_m": 0.000880500059244734
+        },
+        {
+          "local_xyz_m": [
+            0.007285792846232653,
+            0.00712601188570261,
+            0.013591794297099113
+          ],
+          "local_outward_normal": [
+            0.503066540942757,
+            -8.84012374923007e-15,
+            -0.8642476817347499
+          ],
+          "cluster_unique_cell_support": 145,
+          "contact_to_mesh_projection_m": 0.00022022866555435975
+        }
+      ]
+    },
+    "thumb": {
+      "body_name": "right_hand_thumb_rota_link2",
+      "mesh_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/reference/HandRetargetTask2026/scripts/assets/xhand/meshes/right_hand_thumb_rota_link2.STL",
+      "raw_contact_sample_count": 7051,
+      "unique_0p5mm_cell_count": 883,
+      "observed_local_bounds_m": [
+        [
+          -0.008006888441741467,
+          0.005739178508520126,
+          -0.00579502247273922
+        ],
+        [
+          0.016685040667653084,
+          0.051522377878427505,
+          0.010964620858430862
+        ]
+      ],
+      "surface_points": [
+        {
+          "local_xyz_m": [
+            -0.001257320400327444,
+            0.049590423703193665,
+            0.0013579170918092132
+          ],
+          "local_outward_normal": [
+            -0.024233784041131554,
+            0.6562019263385143,
+            -0.7541960988898516
+          ],
+          "cluster_unique_cell_support": 138,
+          "contact_to_mesh_projection_m": 0.0014626487909483066
+        },
+        {
+          "local_xyz_m": [
+            0.0044274409301579,
+            0.046139612793922424,
+            0.004901143256574869
+          ],
+          "local_outward_normal": [
+            0.22690318889218666,
+            0.6574064598112773,
+            0.7185622377142847
+          ],
+          "cluster_unique_cell_support": 295,
+          "contact_to_mesh_projection_m": 0.0009264795066921583
+        },
+        {
+          "local_xyz_m": [
+            0.005112232640385628,
+            0.022915225476026535,
+            0.010540831834077835
+          ],
+          "local_outward_normal": [
+            0.2435600850806544,
+            0.10000298770449721,
+            0.9647164803224203
+          ],
+          "cluster_unique_cell_support": 78,
+          "contact_to_mesh_projection_m": 0.001215813410926565
+        },
+        {
+          "local_xyz_m": [
+            0.009535850957036018,
+            0.028029920533299446,
+            0.008094490505754948
+          ],
+          "local_outward_normal": [
+            0.6167133934498068,
+            0.08254134541768554,
+            0.7828483356540155
+          ],
+          "cluster_unique_cell_support": 98,
+          "contact_to_mesh_projection_m": 0.0004405400322599868
+        },
+        {
+          "local_xyz_m": [
+            0.012965728528797626,
+            0.026382405310869217,
+            0.004946441855281591
+          ],
+          "local_outward_normal": [
+            0.7850015839024185,
+            0.05120087869527852,
+            0.6173742651678361
+          ],
+          "cluster_unique_cell_support": 119,
+          "contact_to_mesh_projection_m": 0.00018495137099535476
+        },
+        {
+          "local_xyz_m": [
+            0.013111860491335392,
+            0.01580294594168663,
+            0.00526419235393405
+          ],
+          "local_outward_normal": [
+            0.551749481124012,
+            0.7110159616098031,
+            0.43592294320839603
+          ],
+          "cluster_unique_cell_support": 155,
+          "contact_to_mesh_projection_m": 0.001437051108073881
+        }
+      ]
+    }
+  }
+}

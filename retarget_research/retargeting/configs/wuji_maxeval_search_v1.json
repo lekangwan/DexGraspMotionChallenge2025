@@ -1,0 +1,34 @@
+{
+  "study_name": "wuji_v1_maxeval_search_v1",
+  "hand": "wuji",
+  "manifest": "retarget_research/retargeting/configs/linker_independent_validation_v1.json",
+  "fixed_parameters": {
+    "mapping_config": "retarget_research/retargeting/configs/wuji_keypoint_map.json",
+    "translation_bound": 2.0,
+    "source_z_offset": 0.4,
+    "joint_temporal_weight": 0.0,
+    "translation_temporal_weight": 0.0,
+    "rotation_temporal_weight": 0.0
+  },
+  "selection_rule": "比较每帧SLSQP最多50/100/150次函数评估。主指标为严格成功与配对回退；成功等价时优先更小迭代数。低几何误差不能代替物理成功，150若只降低loss则不采用。",
+  "candidates": [
+    {
+      "name": "maxeval_50",
+      "parameters": {"maxeval": 50},
+      "target_dir": "retarget_research/outputs/wuji_maxeval_search_v1/maxeval_50",
+      "evaluation_dir": "retarget_research/outputs/wuji_maxeval_search_v1_evaluation/maxeval_50"
+    },
+    {
+      "name": "maxeval_100_current",
+      "parameters": {"maxeval": 100},
+      "target_dir": "retarget_research/outputs/wuji_independent_validation_v1",
+      "evaluation_dir": "retarget_research/outputs/wuji_independent_validation_v1_evaluation"
+    },
+    {
+      "name": "maxeval_150",
+      "parameters": {"maxeval": 150},
+      "target_dir": "retarget_research/outputs/wuji_maxeval_search_v1/maxeval_150",
+      "evaluation_dir": "retarget_research/outputs/wuji_maxeval_search_v1_evaluation/maxeval_150"
+    }
+  ]
+}

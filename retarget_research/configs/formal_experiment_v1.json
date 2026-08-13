@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "experiment_name": "formal_50c_100o_1000t_v1",
+  "manifest": "retarget_research/manifests/formal_50c_100o_1000t_seed20260808.json",
+  "inventory": "retarget_research/manifests/inventory.csv",
+  "input_files": [
+    "retarget_research/manifests/category_map.csv",
+    "retarget_research/manifests/category_map_audit.json",
+    "retarget_research/manifests/inventory_audit.json",
+    "retarget_research/outputs/formal_1000/preflight.json"
+  ],
+  "protocol": {
+    "selection_seed": 20260808,
+    "category_count": 50,
+    "object_count": 100,
+    "objects_per_category": 2,
+    "trajectories_per_object": 10,
+    "trajectory_count": 1000,
+    "calibration_per_object": 2,
+    "heldout_per_object": 8
+  },
+  "method_files": [
+    "retarget_research/retargeting/configs/linker_o6_method_selection_v2.json",
+    "retarget_research/retargeting/configs/linker_o6_keypoint_map.json",
+    "retarget_research/retargeting/configs/wuji_method_selection_v1.json",
+    "retarget_research/retargeting/configs/wuji_keypoint_map.json",
+    "retarget_research/retargeting/configs/xhand_method_selection_v2.json",
+    "retarget_research/retargeting/configs/xhand_keypoint_map.json",
+    "retarget_research/retargeting/configs/xhand_contact_pads_v1.json",
+    "retarget_research/advanced_policy/configs/hand_data_specs_v1.json",
+    "retarget_research/advanced_policy/configs/training_matrix_v1.json"
+  ],
+  "code_roots": [
+    "retarget_research/retargeting",
+    "retarget_research/advanced_policy",
+    "retarget_research/scripts"
+  ],
+  "candidate_sets": {
+    "linker_main": {
+      "hand": "linker",
+      "action_dimension": 12,
+      "target_dir": "retarget_research/outputs/formal_1000/linker_o6_optimized_v2",
+      "evaluation_dir": "retarget_research/outputs/formal_1000/linker_o6_optimized_v2_evaluation",
+      "trace_dir": "retarget_research/advanced_policy/traces/formal_v1/linker",
+      "policy_source": true
+    },
+    "wuji_main": {
+      "hand": "wuji",
+      "action_dimension": 26,
+      "target_dir": "retarget_research/outputs/formal_1000/wuji_v1",
+      "evaluation_dir": "retarget_research/outputs/formal_1000/wuji_v1_evaluation",
+      "trace_dir": "retarget_research/advanced_policy/traces/formal_v1/wuji",
+      "policy_source": true
+    },
+    "xhand_official": {
+      "hand": "xhand",
+      "action_dimension": 18,
+      "target_dir": "retarget_research/outputs/formal_1000/xhand_official",
+      "evaluation_dir": "retarget_research/outputs/formal_1000/xhand_official_evaluation",
+      "trace_dir": "retarget_research/advanced_policy/traces/formal_v1/xhand_official",
+      "policy_source": false
+    },
+    "xhand_main": {
+      "hand": "xhand",
+      "action_dimension": 18,
+      "target_dir": "retarget_research/outputs/formal_1000/xhand_phase_contact_v2",
+      "evaluation_dir": "retarget_research/outputs/formal_1000/xhand_phase_contact_v2_evaluation",
+      "trace_dir": "retarget_research/advanced_policy/traces/formal_v1/xhand",
+      "policy_source": true
+    }
+  },
+  "policy": {
+    "split": "retarget_research/advanced_policy/data/formal_v1/policy_split_seed20260813.json",
+    "data_root": "retarget_research/advanced_policy/data/formal_v1",
+    "generated_config_dir": "retarget_research/advanced_policy/configs/generated/formal_v1",
+    "run_root": "retarget_research/advanced_policy/runs/formal_v1"
+  }
+}

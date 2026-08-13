@@ -1,0 +1,43 @@
+{
+  "study_name": "wuji_v1_temporal_strength_search_v1",
+  "hand": "wuji",
+  "manifest": "retarget_research/retargeting/configs/linker_independent_validation_v1.json",
+  "fixed_parameters": {
+    "mapping_config": "retarget_research/retargeting/configs/wuji_keypoint_map.json",
+    "maxeval": 50,
+    "translation_bound": 2.0,
+    "source_z_offset": 0.4,
+    "base_temporal_weights": {
+      "joint": 1.0,
+      "translation": 300.0,
+      "rotation": 1.0
+    }
+  },
+  "selection_rule": "先比较严格成功数，再检查相对无时序基线的配对新增与回退。成功集合相同时选择更弱约束；关节、手腕平移和旋转跳变只用于解释，不能代替物理成功。若所有非零强度都不产生净新增成功，则正式保留无时序。",
+  "candidates": [
+    {
+      "name": "temporal_0_baseline",
+      "parameters": {"strength": 0.0, "joint": 0.0, "translation": 0.0, "rotation": 0.0},
+      "target_dir": "retarget_research/outputs/wuji_maxeval_search_v1/maxeval_50",
+      "evaluation_dir": "retarget_research/outputs/wuji_maxeval_search_v1_evaluation/maxeval_50"
+    },
+    {
+      "name": "temporal_0p1",
+      "parameters": {"strength": 0.1, "joint": 0.1, "translation": 30.0, "rotation": 0.1},
+      "target_dir": "retarget_research/outputs/wuji_temporal_strength_search_v1/temporal_0p1",
+      "evaluation_dir": "retarget_research/outputs/wuji_temporal_strength_search_v1_evaluation/temporal_0p1"
+    },
+    {
+      "name": "temporal_0p3",
+      "parameters": {"strength": 0.3, "joint": 0.3, "translation": 90.0, "rotation": 0.3},
+      "target_dir": "retarget_research/outputs/wuji_temporal_strength_search_v1/temporal_0p3",
+      "evaluation_dir": "retarget_research/outputs/wuji_temporal_strength_search_v1_evaluation/temporal_0p3"
+    },
+    {
+      "name": "temporal_1p0",
+      "parameters": {"strength": 1.0, "joint": 1.0, "translation": 300.0, "rotation": 1.0},
+      "target_dir": "retarget_research/outputs/wuji_temporal_strength_search_v1/temporal_1p0",
+      "evaluation_dir": "retarget_research/outputs/wuji_temporal_strength_search_v1_evaluation/temporal_1p0"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+reference/
+data/raw/
+data/assets/
+data/selected/
+outputs/
+runs/
+renders/
+videos/
+logs/
+*.ckpt
+*.pt
+*.pth
+__pycache__/
+*.pyc
