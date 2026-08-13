@@ -190,7 +190,7 @@ MPLCONFIGDIR=/tmp/matplotlib-retarget OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 \
   --target-dir retarget_research/outputs/formal_1000/linker_o6_optimized_v2 \
   --output-dir retarget_research/outputs/formal_1000/linker_o6_optimized_v2_evaluation \
   --policy-trace-dir retarget_research/advanced_policy/traces/formal_v1/linker \
-  --workers 2 \
+  --workers 2 --resume \
   --linker-finger-stiffness 120 --linker-finger-damping 5 \
   --linker-mimic-stiffness 120 --linker-mimic-damping 5
 
@@ -201,7 +201,7 @@ MPLCONFIGDIR=/tmp/matplotlib-retarget OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 \
   --target-dir retarget_research/outputs/formal_1000/wuji_v1 \
   --output-dir retarget_research/outputs/formal_1000/wuji_v1_evaluation \
   --policy-trace-dir retarget_research/advanced_policy/traces/formal_v1/wuji \
-  --workers 2
+  --workers 2 --resume
 
 /home/lekangwan/miniconda3/envs/hand-retarget/bin/python \
   retarget_research/retargeting/evaluate/evaluate_hand_manifest.py \
@@ -210,7 +210,7 @@ MPLCONFIGDIR=/tmp/matplotlib-retarget OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 \
   --target-dir retarget_research/outputs/formal_1000/xhand_official \
   --output-dir retarget_research/outputs/formal_1000/xhand_official_evaluation \
   --policy-trace-dir retarget_research/advanced_policy/traces/formal_v1/xhand_official \
-  --workers 2
+  --workers 2 --resume
 
 /home/lekangwan/miniconda3/envs/hand-retarget/bin/python \
   retarget_research/retargeting/evaluate/evaluate_hand_manifest.py \
@@ -219,7 +219,7 @@ MPLCONFIGDIR=/tmp/matplotlib-retarget OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 \
   --target-dir retarget_research/outputs/formal_1000/xhand_phase_contact_v2 \
   --output-dir retarget_research/outputs/formal_1000/xhand_phase_contact_v2_evaluation \
   --policy-trace-dir retarget_research/advanced_policy/traces/formal_v1/xhand \
-  --workers 2
+  --workers 2 --resume
 ```
 
 三手当前主方法为：Linker无时序渐进夹紧v2+固定PD 120/5，XHand指腹细化v2，Wuji单次v1映射、maxeval50和无时序约束。Wuji 50/100/150均为16/20且成功集合相同，所以选择成本最低的50；时序0/0.1/0.3/1.0倍也均为16/20且没有任何配对新增或回退，非零强度只降低跳变并轻微降低最终抬升，因此正式保持0倍。XHand官方几何方法是必须保留的对照组，它不参与“主方法三选三”，但必须在同一manifest、同一仿真参数和同一成功判据下单独重放。报告时优先给出8条/物体的heldout统计，并把2条/物体的calibration统计分开列出。

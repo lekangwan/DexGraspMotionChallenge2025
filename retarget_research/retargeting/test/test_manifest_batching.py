@@ -14,7 +14,11 @@ RETARGET_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RETARGET_ROOT / "run"))
 sys.path.insert(0, str(RETARGET_ROOT / "evaluate"))
 
-from evaluate_hand_manifest import summarize_results, verify_target  # noqa: E402
+from evaluate_hand_manifest import (  # noqa: E402
+    load_completed_evaluation,
+    summarize_results,
+    verify_target,
+)
 from retarget_xhand_reference import select_source_trajectories  # noqa: E402
 from run_xhand_manifest import existing_output_matches as xhand_matches  # noqa: E402
 from run_wuji_manifest import existing_output_matches  # noqa: E402
@@ -164,6 +168,84 @@ class ManifestBatchingTest(unittest.TestCase):
         self.assertAlmostEqual(summary["object_macro_success_rate"], 0.75)
         self.assertAlmostEqual(summary["category_macro_success_rate"], 0.75)
         self.assertEqual(summary["per_split"]["heldout"]["trajectory_count"], 2)
+
+    def test_resume_requires_matching_reports_and_complete_trace(self):
+        """续跑只接受路径/索引匹配且恰好240步的完整产物。"""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "source.npy"
+            target = root / "target.npy"
+            source.touch()
+            target.touch()
+            entry = {
+                "object_name": "object",
+                "category": "category",
+                "source_path": str(source),
+                "trajectory_indices": [2],
+                "heldout_indices": [2],
+            }
+            item = root / "reports" / "object"
+            item.mkdir(parents=True)
+            common = {
+                "source": str(source.resolve()),
+                "target": str(target.resolve()),
+                "source_trajectory_index": 2,
+                "target_trajectory_index": 0,
+            }
+            geometry = {
+                **common,
+                "keypoint_mean_distance_m": 0.01,
+                "keypoint_max_distance_m": 0.02,
+                "max_joint_step_l2_rad": 0.03,
+            }
+            physics = {
+                **common,
+                "object_name": "object",
+                "target_dimensions": 18,
+                "max_lift_m": 0.2,
+                "final_lift_m": 0.15,
+                "hand_object_contact_steps": 40,
+                "longest_sustained_lift_time_s": 0.5,
+                "success": True,
+            }
+            (item / "source_2_geometry.json").write_text(json.dumps(geometry))
+            (item / "source_2_physics.json").write_text(json.dumps(physics))
+            trace = root / "traces" / "object" / "source_2_trace.npz"
+            trace.parent.mkdir(parents=True)
+            metadata = {
+                "trace_alignment": "pre_action_state_to_command_v1",
+                "hand": "xhand",
+                "object_name": "object",
+                "source": str(source.resolve()),
+                "target": str(target.resolve()),
+                "source_trajectory_index": 2,
+                "target_trajectory_index": 0,
+            }
+            np.savez_compressed(
+                trace,
+                policy_action=np.zeros((240, 18), dtype=np.float32),
+                source_frame_index=np.zeros(240, dtype=np.int64),
+                metadata_json=np.asarray(json.dumps(metadata)),
+            )
+
+            result = load_completed_evaluation(
+                "xhand", entry, target, 0, root / "reports", policy_trace_dir=root / "traces"
+            )
+            self.assertTrue(result["resumed_existing"])
+            self.assertEqual(result["evaluation_split"], "heldout")
+
+            metadata["target_trajectory_index"] = 1
+            np.savez_compressed(
+                trace,
+                policy_action=np.zeros((240, 18), dtype=np.float32),
+                source_frame_index=np.zeros(240, dtype=np.int64),
+                metadata_json=np.asarray(json.dumps(metadata)),
+            )
+            self.assertIsNone(
+                load_completed_evaluation(
+                    "xhand", entry, target, 0, root / "reports", policy_trace_dir=root / "traces"
+                )
+            )
 
     def test_physics_selection_prefers_sustained_success(self):
         """A stable success outranks a higher instantaneous but failed lift."""

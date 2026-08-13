@@ -128,7 +128,7 @@ def run_command(command):
     return process.stdout
 
 
-def evaluate_trajectory(
+def load_completed_evaluation(
     hand,
     entry,
     target_path,
@@ -138,6 +138,148 @@ def evaluate_trajectory(
     control_decision=None,
     policy_trace_dir=None,
 ):
+    """严格核对并恢复一条已完成的几何/PhysX评测。
+
+    输入：手类型、manifest条目、候选路径/索引、报告与trace目录及物理参数。
+    输出：可直接参与汇总的result；缺文件或任一元数据不匹配时返回None。
+    内部逻辑：同时核对源/目标绝对路径、双索引、物体、Linker PD、
+    必需数值字段和240步对齐trace，然后从两份JSON重建结果。
+    作用：中断后只重跑缺失/不匹配的轨迹，不把旧方法或残缺文件误当正式结果。
+    """
+    source_index = int(entry["trajectory_indices"][target_index])
+    item_dir = output_dir / entry["object_name"]
+    geometry_path = item_dir / f"source_{source_index}_geometry.json"
+    physics_path = item_dir / f"source_{source_index}_physics.json"
+    trace_path = (
+        None
+        if policy_trace_dir is None
+        else policy_trace_dir
+        / entry["object_name"]
+        / f"source_{source_index}_trace.npz"
+    )
+    required = [geometry_path, physics_path]
+    if trace_path is not None:
+        required.append(trace_path)
+    if not all(path.is_file() for path in required):
+        return None
+    try:
+        geometry = json.loads(geometry_path.read_text(encoding="utf-8"))
+        physics = json.loads(physics_path.read_text(encoding="utf-8"))
+        expected_source = Path(entry["source_path"]).resolve()
+        expected_target = target_path.resolve()
+        for report in (geometry, physics):
+            if Path(report["source"]).resolve() != expected_source:
+                return None
+            if Path(report["target"]).resolve() != expected_target:
+                return None
+            if int(report["source_trajectory_index"]) != source_index:
+                return None
+            if int(report["target_trajectory_index"]) != target_index:
+                return None
+        if physics["object_name"] != entry["object_name"]:
+            return None
+        if int(physics["target_dimensions"]) != HAND_SPECS[hand]["dimension"]:
+            return None
+        expected_physics = {
+            name[2:].replace("-", "_"): float(value)
+            for name, value in zip(physics_extra_args[0::2], physics_extra_args[1::2])
+        }
+        if any(
+            not np.isclose(float(physics.get(name, np.nan)), value)
+            for name, value in expected_physics.items()
+        ):
+            return None
+        metric_names = (
+            "keypoint_mean_distance_m",
+            "keypoint_max_distance_m",
+            "max_joint_step_l2_rad",
+        )
+        physics_names = (
+            "max_lift_m",
+            "final_lift_m",
+            "hand_object_contact_steps",
+            "longest_sustained_lift_time_s",
+        )
+        values = [geometry[name] for name in metric_names] + [
+            physics[name] for name in physics_names
+        ]
+        if not np.isfinite(np.asarray(values, dtype=np.float64)).all():
+            return None
+        if trace_path is not None:
+            with np.load(trace_path, allow_pickle=False) as trace:
+                metadata = json.loads(str(trace["metadata_json"].item()))
+                if metadata.get("trace_alignment") != "pre_action_state_to_command_v1":
+                    return None
+                if metadata.get("hand") != hand:
+                    return None
+                if metadata.get("object_name") != entry["object_name"]:
+                    return None
+                if Path(metadata["source"]).resolve() != expected_source:
+                    return None
+                if Path(metadata["target"]).resolve() != expected_target:
+                    return None
+                if int(metadata["source_trajectory_index"]) != source_index:
+                    return None
+                if int(metadata["target_trajectory_index"]) != target_index:
+                    return None
+                lengths = {len(trace[name]) for name in trace.files if name != "metadata_json"}
+                if lengths != {240}:
+                    return None
+                if not np.isfinite(trace["policy_action"]).all():
+                    return None
+    except (KeyError, OSError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+    result = {
+        "hand": hand,
+        "object_name": entry["object_name"],
+        "category": entry.get("category"),
+        "evaluation_split": (
+            "calibration"
+            if source_index in entry.get("calibration_indices", [])
+            else "heldout"
+            if source_index in entry.get("heldout_indices", [])
+            else "all"
+        ),
+        "source_trajectory_index": source_index,
+        "target_trajectory_index": target_index,
+        "geometry_report": str(geometry_path.resolve()),
+        "physics_report": str(physics_path.resolve()),
+        "keypoint_mean_distance_m": geometry["keypoint_mean_distance_m"],
+        "keypoint_max_distance_m": geometry["keypoint_max_distance_m"],
+        "max_joint_step_l2_rad": geometry["max_joint_step_l2_rad"],
+        "max_lift_m": physics["max_lift_m"],
+        "final_lift_m": physics["final_lift_m"],
+        "hand_object_contact_steps": physics["hand_object_contact_steps"],
+        "longest_sustained_lift_time_s": physics[
+            "longest_sustained_lift_time_s"
+        ],
+        "success": bool(physics["success"]),
+        "finger_stiffness": physics.get("finger_stiffness"),
+        "finger_damping": physics.get("finger_damping"),
+        "mimic_stiffness": physics.get("mimic_stiffness"),
+        "mimic_damping": physics.get("mimic_damping"),
+        "adaptive_control_decision": control_decision,
+        "elapsed_seconds": 0.0,
+        "geometry_stdout": "resumed: validated existing report",
+        "physics_stdout": "resumed: validated existing report",
+        "resumed_existing": True,
+    }
+    if trace_path is not None:
+        result["policy_trace"] = str(trace_path.resolve())
+    return result
+
+
+def evaluate_trajectory(
+    hand,
+    entry,
+    target_path,
+    target_index,
+    output_dir,
+    physics_extra_args=(),
+    control_decision=None,
+    policy_trace_dir=None,
+    resume=False,
+):
     """评估一条固定源—目标轨迹对。
 
     输入：手类型、manifest条目、候选、内部索引、报告目录、物理参数和可选轨迹目录。
@@ -145,6 +287,19 @@ def evaluate_trajectory(
     内部逻辑：先调用对应几何入口，再以相同索引调用对应PhysX入口。
     作用：构成可并行且跨手字段一致的最小评估任务。
     """
+    if resume:
+        completed = load_completed_evaluation(
+            hand,
+            entry,
+            target_path,
+            target_index,
+            output_dir,
+            physics_extra_args,
+            control_decision,
+            policy_trace_dir,
+        )
+        if completed is not None:
+            return completed
     spec = HAND_SPECS[hand]
     source_index = int(entry["trajectory_indices"][target_index])
     item_dir = output_dir / entry["object_name"]
@@ -226,6 +381,7 @@ def evaluate_trajectory(
         "elapsed_seconds": time.perf_counter() - started,
         "geometry_stdout": geometry_stdout,
         "physics_stdout": physics_stdout,
+        "resumed_existing": False,
     }
     if trace_path is not None:
         if not trace_path.is_file():
@@ -345,6 +501,11 @@ def main():
         help="可选目录；为每条物理重放同时保存进阶策略专家NPZ",
     )
     parser.add_argument("--workers", type=int, default=2)
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="严格验证已有几何/PhysX/trace后跳过已完成轨迹",
+    )
     parser.add_argument("--linker-finger-stiffness", type=float, default=120.0)
     parser.add_argument("--linker-finger-damping", type=float, default=5.0)
     parser.add_argument("--linker-mimic-stiffness", type=float, default=120.0)
@@ -408,6 +569,7 @@ def main():
                 selected_physics_args,
                 decision,
                 args.policy_trace_dir,
+                args.resume,
             ): (entry, target_index)
             for entry, target_path, target_index, selected_physics_args, decision in tasks
         }
@@ -446,6 +608,9 @@ def main():
         if args.hand in {"linker", "linker11"}
         else {},
         "wall_time_seconds": time.perf_counter() - started,
+        "resumed_trajectory_count": sum(
+            int(item["resumed_existing"]) for item in results
+        ),
         **summarize_results(results),
         "results": results,
     }
