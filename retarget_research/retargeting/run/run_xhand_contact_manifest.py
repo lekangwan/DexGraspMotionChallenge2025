@@ -117,6 +117,14 @@ def existing_output_matches(output, entry, baseline, args):
             "lift_delta": args.lift_delta,
             "region_neighbors": args.region_neighbors,
         }
+        stored_fallback = data.get("contact_fallback", "error")
+        fallback_compatible = (
+            stored_fallback == args.contact_fallback
+            or (
+                stored_fallback == "error"
+                and args.contact_fallback == "nearest"
+            )
+        )
         return bool(
             data["method"] == "xhand_official_baseline_phase_contact_refinement_v1"
             and np.array_equal(
@@ -128,7 +136,9 @@ def existing_output_matches(output, entry, baseline, args):
             and Path(data["initial_target"]).resolve() == baseline.resolve()
             and Path(data["contact_pad_config"]).resolve()
             == args.contact_pad_config.resolve()
-            and data.get("contact_fallback", "error") == args.contact_fallback
+            # 严格模式能成功产出文件，就证明该物体所有轨迹都不需要回退。
+            # 因此error产物可安全复用于nearest，动作数值必然相同；反向不兼容。
+            and fallback_compatible
             and all(float(data[name]) == float(value) for name, value in expected_values.items())
         )
     except (KeyError, OSError, TypeError, ValueError):
@@ -166,6 +176,11 @@ def run_entry(entry, args):
     output.parent.mkdir(parents=True, exist_ok=True)
     command = build_command(entry, source, baseline, output, args)
     if args.resume and existing_output_matches(output, entry, baseline, args):
+        stored = np.load(output, allow_pickle=True).item()
+        reused_strict = (
+            stored.get("contact_fallback", "error") == "error"
+            and args.contact_fallback == "nearest"
+        )
         return {
             "object_name": entry["object_name"],
             "trajectory_indices": entry["trajectory_indices"],
@@ -177,6 +192,7 @@ def run_entry(entry, args):
             "stdout": "skipped: matching output already exists",
             "success": True,
             "skipped_existing": True,
+            "reused_strict_output_for_nearest": reused_strict,
             "contact_fallback_trajectory_count": output_fallback_count(output),
         }
     started = time.perf_counter()
@@ -193,6 +209,7 @@ def run_entry(entry, args):
         "stdout": output_text,
         "success": success,
         "skipped_existing": False,
+        "reused_strict_output_for_nearest": False,
         "contact_fallback_trajectory_count": (
             output_fallback_count(output) if success else 0
         ),
@@ -263,6 +280,9 @@ def main():
         "all_successful": all(item["success"] for item in results),
         "contact_fallback_trajectory_count": sum(
             item["contact_fallback_trajectory_count"] for item in results
+        ),
+        "strict_output_reuse_object_count": sum(
+            int(item["reused_strict_output_for_nearest"]) for item in results
         ),
         "parameters": {
             "contact_pad_config": str(args.contact_pad_config.resolve()),
