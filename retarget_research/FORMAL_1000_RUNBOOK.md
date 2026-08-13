@@ -174,6 +174,7 @@ MPLCONFIGDIR=/tmp/matplotlib-retarget OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 \
   --contact-weight 5 --normal-weight 0.05 --penetration-weight 2 \
   --joint-prior-weight 0 --contact-threshold 0.02 \
   --min-contact-tips 2 --lift-delta 0.03 --region-neighbors 32 \
+  --contact-fallback nearest \
   --contact-offset -0.003 --min-signed-distance -0.006
 ```
 

@@ -12,6 +12,7 @@ sys.path.insert(0, str(RUN_DIR))
 
 from phase_contact import (  # noqa: E402
     TIP_SEMANTICS,
+    build_phase_contact_plan,
     infer_motion_phases,
     friction_wrench_residual,
     load_pad_config,
@@ -83,6 +84,33 @@ class PhaseContactTest(unittest.TestCase):
             infer_motion_phases(
                 frames, source_tips, object_vertices, 0.01, 2, 0.03
             )
+
+    def test_fallback_contact_plan_keeps_nearest_pair_during_close(self):
+        """回退轨迹的闭合段应始终优化最接近的两根指尖。"""
+        frames = np.zeros((6, 28), dtype=np.float64)
+        frames[:, 2] = [0.10, 0.08, 0.07, 0.07, 0.10, 0.12]
+        vertices = np.asarray([[0.0, 0.0, 0.0], [0.001, 0.0, 0.0]])
+        normals = np.asarray([[1.0, 0.0, 0.0], [1.0, 0.0, 0.0]])
+        far = np.tile([0.10, 0.0, 0.0], (6, 1))
+        tips = {name: far.copy() for name in TIP_SEMANTICS}
+        tips["index"][2] = [0.015, 0.0, 0.0]
+        tips["thumb"][2] = [0.030, 0.0, 0.0]
+
+        plan = build_phase_contact_plan(
+            frames,
+            tips,
+            vertices,
+            normals,
+            contact_threshold=0.01,
+            min_contact_tips=2,
+            lift_delta=0.03,
+            region_neighbors=1,
+            contact_fallback="nearest",
+        )
+
+        self.assertEqual(plan["grasp_frame"], plan["close_start_frame"])
+        for frame in plan["frames"][plan["close_start_frame"] : plan["lift_start_frame"]]:
+            self.assertEqual(set(frame["targets"]), {"index", "thumb"})
 
     def test_moves_points_with_wrist_translation(self):
         """A 5cm wrist translation moves points equally and leaves normals fixed."""

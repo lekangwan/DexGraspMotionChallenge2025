@@ -85,6 +85,7 @@ def build_command(entry, source, baseline, output, args):
         "--contact-threshold", str(args.contact_threshold),
         "--min-contact-tips", str(args.min_contact_tips),
         "--lift-delta", str(args.lift_delta),
+        "--contact-fallback", args.contact_fallback,
         "--region-neighbors", str(args.region_neighbors),
         "--contact-offset", str(args.contact_offset),
         "--min-signed-distance", str(args.min_signed_distance),
@@ -127,10 +128,26 @@ def existing_output_matches(output, entry, baseline, args):
             and Path(data["initial_target"]).resolve() == baseline.resolve()
             and Path(data["contact_pad_config"]).resolve()
             == args.contact_pad_config.resolve()
+            and data.get("contact_fallback", "error") == args.contact_fallback
             and all(float(data[name]) == float(value) for name, value in expected_values.items())
         )
     except (KeyError, OSError, TypeError, ValueError):
         return False
+
+
+def output_fallback_count(output):
+    """读取一个XHand细化文件的阶段回退数。
+
+    输入：已成功生成的XHand Numpy输出路径。
+    输出：使用最近多指帧回退的轨迹整数。
+    内部逻辑：遍历`phase_metadata`并累加布尔审计字段。
+    作用：让批处理摘要直接报告边界轨迹数，无需再遍历100个文件。
+    """
+    data = np.load(output, allow_pickle=True).item()
+    return sum(
+        int(phase.get("contact_fallback_used", False))
+        for phase in data.get("phase_metadata", [])
+    )
 
 
 def run_entry(entry, args):
@@ -160,9 +177,11 @@ def run_entry(entry, args):
             "stdout": "skipped: matching output already exists",
             "success": True,
             "skipped_existing": True,
+            "contact_fallback_trajectory_count": output_fallback_count(output),
         }
     started = time.perf_counter()
     return_code, output_text = run_streaming_command(command, entry["object_name"])
+    success = return_code == 0 and output.is_file()
     return {
         "object_name": entry["object_name"],
         "trajectory_indices": entry["trajectory_indices"],
@@ -172,8 +191,11 @@ def run_entry(entry, args):
         "elapsed_seconds": time.perf_counter() - started,
         "return_code": return_code,
         "stdout": output_text,
-        "success": return_code == 0 and output.is_file(),
+        "success": success,
         "skipped_existing": False,
+        "contact_fallback_trajectory_count": (
+            output_fallback_count(output) if success else 0
+        ),
     }
 
 
@@ -200,6 +222,11 @@ def main():
     parser.add_argument("--contact-threshold", type=float, default=0.02)
     parser.add_argument("--min-contact-tips", type=int, default=2)
     parser.add_argument("--lift-delta", type=float, default=0.03)
+    parser.add_argument(
+        "--contact-fallback",
+        choices=("error", "nearest"),
+        default="error",
+    )
     parser.add_argument("--region-neighbors", type=int, default=32)
     parser.add_argument("--contact-offset", type=float, default=-0.003)
     parser.add_argument("--min-signed-distance", type=float, default=-0.006)
@@ -234,6 +261,9 @@ def main():
         "workers": args.workers,
         "wall_time_seconds": time.perf_counter() - started,
         "all_successful": all(item["success"] for item in results),
+        "contact_fallback_trajectory_count": sum(
+            item["contact_fallback_trajectory_count"] for item in results
+        ),
         "parameters": {
             "contact_pad_config": str(args.contact_pad_config.resolve()),
             "maxeval": args.maxeval,
@@ -244,6 +274,7 @@ def main():
             "contact_threshold": args.contact_threshold,
             "min_contact_tips": args.min_contact_tips,
             "lift_delta": args.lift_delta,
+            "contact_fallback": args.contact_fallback,
             "region_neighbors": args.region_neighbors,
             "contact_offset": args.contact_offset,
             "min_signed_distance": args.min_signed_distance,

@@ -337,6 +337,7 @@ def retarget_file(args):
             args.min_contact_tips,
             args.lift_delta,
             args.region_neighbors,
+            contact_fallback=args.contact_fallback,
         )
         internal, losses, components = refine_trajectory(
             saved_to_internal(baseline_by_index[source_index]),
@@ -357,6 +358,11 @@ def retarget_file(args):
                 "close_start_frame": int(plan["close_start_frame"]),
                 "lift_start_frame": int(plan["lift_start_frame"]),
                 "grasp_frame": int(plan["grasp_frame"]),
+                "close_detection": plan["close_detection"],
+                "contact_fallback_used": bool(plan["contact_fallback_used"]),
+                "close_contact_order_distance_m": float(
+                    plan["close_contact_order_distance_m"]
+                ),
                 "source_contact_tip_count": np.asarray(
                     plan["source_contact_tip_count"]
                 ).tolist(),
@@ -384,6 +390,7 @@ def retarget_file(args):
         "contact_threshold": float(args.contact_threshold),
         "min_contact_tips": int(args.min_contact_tips),
         "lift_delta": float(args.lift_delta),
+        "contact_fallback": args.contact_fallback,
         "region_neighbors": int(args.region_neighbors),
         "object_clearance": float(args.object_clearance),
         "source_z_offset": float(args.source_z_offset),
@@ -423,6 +430,12 @@ def main():
     parser.add_argument("--contact-threshold", type=float, default=0.02)
     parser.add_argument("--min-contact-tips", type=int, default=2)
     parser.add_argument("--lift-delta", type=float, default=0.03)
+    parser.add_argument(
+        "--contact-fallback",
+        choices=("error", "nearest"),
+        default="error",
+        help="多指接触阈值无解时，是报错还是使用最接近多指帧",
+    )
     parser.add_argument("--region-neighbors", type=int, default=32)
     parser.add_argument("--contact-offset", type=float, default=-0.001)
     parser.add_argument("--min-signed-distance", type=float, default=-0.003)

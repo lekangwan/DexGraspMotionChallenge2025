@@ -128,10 +128,14 @@ def infer_motion_phases(
     if not len(lift_candidates):
         raise ValueError("专家轨迹没有达到指定手腕抬升量，无法建立抬升阶段")
     lift_start = int(lift_candidates[0])
-    window_counts = counts[close_start : lift_start + 1]
-    maximum = int(window_counts.max())
-    maximum_frames = np.flatnonzero(window_counts == maximum) + close_start
-    grasp_frame = int(maximum_frames[-1])
+    if fallback_used:
+        # 回退帧本身就是多指同时最接近的帧，不再被单指入阈值帧覆盖。
+        grasp_frame = close_start
+    else:
+        window_counts = counts[close_start : lift_start + 1]
+        maximum = int(window_counts.max())
+        maximum_frames = np.flatnonzero(window_counts == maximum) + close_start
+        grasp_frame = int(maximum_frames[-1])
     return {
         "close_start_frame": close_start,
         "lift_start_frame": lift_start,
@@ -505,6 +509,7 @@ def build_phase_contact_plan(
     friction_coefficient=1.0,
     friction_cone_edges=4,
     max_reachable_distance=0.0,
+    contact_fallback="error",
 ):
     """生成每帧静态或随腕移动的物体及五指语义接触区域。
 
@@ -522,6 +527,7 @@ def build_phase_contact_plan(
         contact_threshold,
         min_contact_tips,
         lift_delta,
+        contact_fallback,
     )
     tree = cKDTree(vertices)
     grasp_frame = phases["grasp_frame"]
@@ -559,6 +565,14 @@ def build_phase_contact_plan(
                 )
             )
     else:
+        if phases["contact_fallback_used"]:
+            grasp_finger_indices = np.argsort(
+                phases["source_tip_distances_m"][grasp_frame]
+            )[: int(min_contact_tips)]
+        else:
+            grasp_finger_indices = np.flatnonzero(
+                phases["source_contact_mask"][grasp_frame]
+            )
         grasp_regions = {
             semantic: nearest_surface_region(
                 tree,
@@ -567,8 +581,8 @@ def build_phase_contact_plan(
                 source_tip_points[semantic][grasp_frame],
                 region_neighbors,
             )
-            for semantic in TIP_SEMANTICS
-            if phases["source_contact_mask"][grasp_frame, TIP_SEMANTICS.index(semantic)]
+            for finger_index, semantic in enumerate(TIP_SEMANTICS)
+            if finger_index in grasp_finger_indices
         }
     opposition_start = max(
         phases["close_start_frame"],
@@ -582,6 +596,16 @@ def build_phase_contact_plan(
             )
             continue
         if frame_index < phases["lift_start_frame"]:
+            if phases["contact_fallback_used"]:
+                plan.append(
+                    {
+                        "phase": "close",
+                        "object_vertices": vertices,
+                        "object_normals": normals,
+                        "targets": grasp_regions,
+                    }
+                )
+                continue
             if opposition_candidate_neighbors > 0 and frame_index >= opposition_start:
                 plan.append(
                     {
