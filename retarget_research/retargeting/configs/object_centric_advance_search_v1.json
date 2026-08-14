@@ -1,6 +1,6 @@
 {
   "purpose": "screen_geometry_conditioned_grasp_center_to_object_center_wrist_correction",
-  "status": "A_candidates_generated_and_static_audit_passed_before_physics",
+  "status": "advance_3mm_selected_on_A_and_awaiting_frozen_C_confirmation",
   "primary_hand": "linker_o6",
   "development_manifest": "retarget_research/manifests/formal_method_selection_a_50c_50t_seed20260814.json",
   "confirmation_manifest": "retarget_research/manifests/formal_confirmation_c_50c_50t_seed20260814.json",
@@ -38,6 +38,44 @@
     "rotation_and_joint_commands_unchanged": true,
     "lift_relative_translation_unchanged": true
   },
+  "development_A_physics_results": {
+    "current_linker": {
+      "success": "7/50",
+      "mean_keypoint_distance_m": 0.02303717575967312,
+      "mean_max_lift_m": 0.060339498706161974,
+      "mean_final_lift_m": 0.02779060147702694
+    },
+    "advance_3mm": {
+      "success": "8/50",
+      "added_success": 1,
+      "lost_success": 0,
+      "net_success_change": 1,
+      "mean_keypoint_distance_m": 0.02300434246659279,
+      "mean_max_lift_m": 0.06340874701738358,
+      "mean_final_lift_m": 0.027955628093332054
+    },
+    "advance_6mm": {
+      "success": "7/50",
+      "added_success": 1,
+      "lost_success": 1,
+      "net_success_change": 0,
+      "mean_final_lift_m": 0.02671048542484641
+    },
+    "advance_9mm": {
+      "success": "8/50",
+      "added_success": 1,
+      "lost_success": 0,
+      "net_success_change": 1,
+      "mean_final_lift_m": 0.02646433774381876
+    },
+    "changed_categories": {
+      "advance_3mm": {"added": ["wii"], "lost": []},
+      "advance_6mm": {"added": ["wii"], "lost": ["horse"]},
+      "advance_9mm": {"added": ["wii"], "lost": []}
+    }
+  },
+  "selected_for_confirmation_C": "advance_3mm",
+  "A_selection_reason": "3和9毫米均为8/50且配对净增1；3毫米最终抬升更高、关键点距离更低且修正更小，按事前并列规则唯一进入C。",
   "selection_rule": "A组严格成功数和相对当前夹紧方法的配对净增益优先；若并列，依次比较丢失成功更少、最终抬升更高和修正更小，只允许一个全局上限进入C。",
   "confirmation_rule": "候选必须在冻结C组相对同轨迹当前夹紧方法净增加成功，才能称为可泛化改进。",
   "prohibited": [
