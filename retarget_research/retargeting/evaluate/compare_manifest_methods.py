@@ -11,9 +11,90 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 
 from evaluate_hand_manifest import summarize_results
+
+
+PAIRED_CONTINUOUS_FIELDS = (
+    "keypoint_mean_distance_m",
+    "max_lift_m",
+    "final_lift_m",
+    "hand_object_contact_steps",
+    "longest_sustained_lift_time_s",
+)
+
+
+def exact_two_sided_binomial_p(added_success: int, lost_success: int) -> float:
+    """计算配对成败变化的双侧精确二项检验概率。
+
+    输入：候选新增成功数和丢失成功数。
+    输出：零假设“两个方向同概率”下的双侧p值；无变化时为1。
+    内部逻辑：只使用成败不一致样本，对更小方向及同等/更极端概率质量求和。
+    作用：量化净增益是否超过小样本偶然波动，不依赖SciPy。
+    """
+    added = int(added_success)
+    lost = int(lost_success)
+    if added < 0 or lost < 0:
+        raise ValueError("新增和丢失成功数不能为负")
+    discordant = added + lost
+    if discordant == 0:
+        return 1.0
+    tail = min(added, lost)
+    one_sided = sum(math.comb(discordant, k) for k in range(tail + 1)) / (
+        2**discordant
+    )
+    return float(min(1.0, 2.0 * one_sided))
+
+
+def paired_continuous_deltas(
+    baseline: list[dict], candidate: list[dict]
+) -> dict[str, dict]:
+    """统计候选减基线的逐轨迹连续指标变化。
+
+    输入：两个已按同一manifest顺序对齐的逐轨迹结果列表。
+    输出：每个共有指标的均值、中位数、改善/恶化/相同条数。
+    内部逻辑：几何距离越小越好，其余抬升、接触和持续时间越大越好；
+    缺少任一字段时跳过该指标，避免旧摘要不兼容。
+    作用：防止只依据二值成功率，观察方法是否整体改善物理行为。
+    """
+    if len(baseline) != len(candidate):
+        raise ValueError("配对连续指标要求两个结果列表长度相同")
+    output = {}
+    for field in PAIRED_CONTINUOUS_FIELDS:
+        if not all(field in item for item in baseline + candidate):
+            continue
+        deltas = [
+            float(candidate_item[field]) - float(baseline_item[field])
+            for baseline_item, candidate_item in zip(baseline, candidate)
+        ]
+        lower_is_better = field == "keypoint_mean_distance_m"
+        tolerance = 1e-12
+        improved = sum(
+            delta < -tolerance if lower_is_better else delta > tolerance
+            for delta in deltas
+        )
+        worsened = sum(
+            delta > tolerance if lower_is_better else delta < -tolerance
+            for delta in deltas
+        )
+        ordered = sorted(deltas)
+        middle = len(ordered) // 2
+        median = (
+            ordered[middle]
+            if len(ordered) % 2
+            else (ordered[middle - 1] + ordered[middle]) / 2.0
+        )
+        output[field] = {
+            "candidate_minus_baseline_mean": sum(deltas) / len(deltas),
+            "candidate_minus_baseline_median": median,
+            "improved_trajectory_count": improved,
+            "worsened_trajectory_count": worsened,
+            "unchanged_trajectory_count": len(deltas) - improved - worsened,
+            "direction": "lower_is_better" if lower_is_better else "higher_is_better",
+        }
+    return output
 
 
 def manifest_keys(manifest: dict) -> list[tuple[str, int]]:
@@ -140,6 +221,15 @@ def compare_methods(
             "baseline": baseline_name,
             **counts,
             "net_success_change": counts["added_success"] - counts["lost_success"],
+            "discordant_trajectory_count": (
+                counts["added_success"] + counts["lost_success"]
+            ),
+            "paired_exact_two_sided_p": exact_two_sided_binomial_p(
+                counts["added_success"], counts["lost_success"]
+            ),
+            "continuous_metric_deltas": paired_continuous_deltas(
+                baseline, candidate
+            ),
             "paired_results": paired,
         }
     return {
@@ -185,7 +275,8 @@ def main() -> None:
         print(
             f"{name} vs {comparison['baseline']}: "
             f"+{comparison['added_success']} -{comparison['lost_success']} "
-            f"net={comparison['net_success_change']:+d}"
+            f"net={comparison['net_success_change']:+d} "
+            f"exact_p={comparison['paired_exact_two_sided_p']:.6g}"
         )
     print(f"output={args.output.resolve()}")
 

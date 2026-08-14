@@ -32,6 +32,10 @@ from retarget_research.retargeting.run.refine_linker_object_centric_advance impo
     apply_object_centric_advance,
     bounded_center_correction,
 )
+from retarget_research.retargeting.evaluate.compare_manifest_methods import (
+    exact_two_sided_binomial_p,
+    paired_continuous_deltas,
+)
 
 
 class MethodSelectionReuseTest(unittest.TestCase):
@@ -302,6 +306,57 @@ class MethodSelectionReuseTest(unittest.TestCase):
         np.testing.assert_allclose(correction, [0.0, -0.002, 0.0], atol=1e-8)
         self.assertAlmostEqual(audit["actual_advance_m"], 0.002, places=7)
         self.assertAlmostEqual(audit["center_distance_after_m"], 0.0, places=7)
+
+    def test_paired_statistics_include_exact_test_and_metric_direction(self):
+        """配对统计应正确区分几何距离和抬升指标的改善方向。
+
+        输入：两条人工基线/候选结果，几何均变小，一条抬升增大、一条减小。
+        输出：精确检验`14增2失`的p值约0.00418，几何改善2条、抬升各1条。
+        内部逻辑：直接测试纯统计函数，不读取任何真实实验成败。
+        作用：保证A/C报告的显著性与连续指标不会因方向写反而误导结论。
+        """
+        baseline = [
+            {
+                "keypoint_mean_distance_m": 0.03,
+                "max_lift_m": 0.10,
+                "final_lift_m": 0.05,
+                "hand_object_contact_steps": 10,
+                "longest_sustained_lift_time_s": 0.1,
+            },
+            {
+                "keypoint_mean_distance_m": 0.04,
+                "max_lift_m": 0.20,
+                "final_lift_m": 0.15,
+                "hand_object_contact_steps": 20,
+                "longest_sustained_lift_time_s": 0.2,
+            },
+        ]
+        candidate = [
+            {
+                "keypoint_mean_distance_m": 0.02,
+                "max_lift_m": 0.15,
+                "final_lift_m": 0.08,
+                "hand_object_contact_steps": 15,
+                "longest_sustained_lift_time_s": 0.15,
+            },
+            {
+                "keypoint_mean_distance_m": 0.03,
+                "max_lift_m": 0.10,
+                "final_lift_m": 0.10,
+                "hand_object_contact_steps": 10,
+                "longest_sustained_lift_time_s": 0.1,
+            },
+        ]
+        statistics = paired_continuous_deltas(baseline, candidate)
+        self.assertEqual(
+            statistics["keypoint_mean_distance_m"]["improved_trajectory_count"], 2
+        )
+        self.assertEqual(statistics["max_lift_m"]["improved_trajectory_count"], 1)
+        self.assertEqual(statistics["max_lift_m"]["worsened_trajectory_count"], 1)
+        self.assertAlmostEqual(
+            exact_two_sided_binomial_p(14, 2), 0.004180908203125
+        )
+        self.assertEqual(exact_two_sided_binomial_p(0, 0), 1.0)
 
 
 if __name__ == "__main__":
