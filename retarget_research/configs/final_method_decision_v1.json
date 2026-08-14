@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "decision_date": "2026-08-14",
+  "purpose": "freeze_three_hand_retargeting_methods_after_formal_1000_and_balanced_ab_closeout",
+  "formal_manifest": "retarget_research/manifests/formal_50c_100o_1000t_seed20260808.json",
+  "method_selection_protocol": {
+    "source_split": "formal_manifest_calibration_only",
+    "selection_seed": 20260814,
+    "a_manifest": "retarget_research/manifests/formal_method_selection_a_50c_50t_seed20260814.json",
+    "b_manifest": "retarget_research/manifests/formal_method_selection_b_50c_50t_seed20260814.json",
+    "category_count": 50,
+    "unique_trajectory_count": 100,
+    "objects_per_category": 2,
+    "trajectories_per_object": 1,
+    "a_b_object_overlap": 0
+  },
+  "hands": {
+    "linker": {
+      "selected_method": "linker_o6_no_temporal_dynamic_squeeze_v2",
+      "method_config": "retarget_research/retargeting/configs/linker_o6_method_selection_v2.json",
+      "action_dimension": 12,
+      "formal_candidate_dir": "retarget_research/outputs/formal_1000/linker_o6_optimized_v2",
+      "formal_evaluation_summary": "retarget_research/outputs/formal_1000/linker_o6_optimized_v2_evaluation/manifest_evaluation_summary.json",
+      "policy_trace_dir": "retarget_research/advanced_policy/traces/formal_v1/linker",
+      "formal_success_count": 231,
+      "formal_trajectory_count": 1000,
+      "formal_success_rate": 0.231,
+      "ab_baseline_success_count": 6,
+      "ab_selected_success_count": 18,
+      "ab_trajectory_count": 100,
+      "paired_added_success": 14,
+      "paired_lost_success": 2,
+      "paired_exact_two_sided_p": 0.004180908203125,
+      "decision": "A/B均为净正收益，保留统一渐进夹紧和固定PD 120/5。"
+    },
+    "wuji": {
+      "selected_method": "wuji_v1_single_mapping",
+      "method_config": "retarget_research/retargeting/configs/wuji_method_selection_v1.json",
+      "action_dimension": 26,
+      "formal_candidate_dir": "retarget_research/outputs/formal_1000/wuji_v1",
+      "formal_evaluation_summary": "retarget_research/outputs/formal_1000/wuji_v1_evaluation/manifest_evaluation_summary.json",
+      "policy_trace_dir": "retarget_research/advanced_policy/traces/formal_v1/wuji",
+      "formal_success_count": 638,
+      "formal_trajectory_count": 1000,
+      "formal_success_rate": 0.638,
+      "decision": "映射、maxeval和时序消融均已结束，保持v1映射、maxeval50和无时序。"
+    },
+    "xhand": {
+      "selected_method": "xhand_official_reference",
+      "method_config": "retarget_research/retargeting/configs/xhand_official_final_v1.json",
+      "action_dimension": 18,
+      "formal_candidate_dir": "retarget_research/outputs/formal_1000/xhand_official",
+      "formal_evaluation_summary": "retarget_research/outputs/formal_1000/xhand_official_evaluation/manifest_evaluation_summary.json",
+      "policy_trace_dir": "retarget_research/advanced_policy/traces/formal_v1/xhand_official",
+      "formal_success_count": 574,
+      "formal_trajectory_count": 1000,
+      "formal_success_rate": 0.574,
+      "dynamic_ab_official_success_count": 57,
+      "dynamic_ab_candidate_success_count": 55,
+      "dynamic_ab_trajectory_count": 100,
+      "paired_added_success": 2,
+      "paired_lost_success": 4,
+      "paired_exact_two_sided_p": 0.6875,
+      "decision": "接触细化正式结果下降；动态修正B组仍无净增益，最终回退官方方法。"
+    }
+  },
+  "policy_source_change": {
+    "historical_formal_experiment": "retarget_research/configs/formal_experiment_v1.json",
+    "historical_lock_is_immutable": true,
+    "xhand_old_source": "retarget_research/advanced_policy/traces/formal_v1/xhand",
+    "xhand_final_source": "retarget_research/advanced_policy/traces/formal_v1/xhand_official",
+    "hand_data_specs": "retarget_research/advanced_policy/configs/hand_data_specs_v2.json",
+    "decision": "旧formal lock保留原实验历史，不覆盖；进阶策略从v2配置读取三只手最终专家。"
+  },
+  "selection_boundary": "不按逐轨迹物理结果拼接候选；A/B完成后停止重定向调参，后续进入策略学习。"
+}

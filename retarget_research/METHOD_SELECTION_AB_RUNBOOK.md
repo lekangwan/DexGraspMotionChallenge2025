@@ -118,3 +118,7 @@ MPLCONFIGDIR=/tmp/matplotlib-retarget OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
   --output-dir retarget_research/outputs/method_selection_ab/b/xhand_dynamic_r05_evaluation \
   --workers 1 --resume
 ```
+
+## 最终结果
+
+B组已完成：`r=0.5`为26/50，官方为28/50；新增0、回退2。因此XHand最终使用官方参考，不再运行动态残差1000条。Linker夹紧在A/B分别净增5/7条，最终保留夹紧；Wuji保持v1。至此本手册的所有运行任务结束。

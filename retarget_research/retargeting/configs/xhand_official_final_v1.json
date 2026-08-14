@@ -1,0 +1,46 @@
+{
+  "purpose": "freeze_xhand_official_after_formal_and_balanced_ab_evaluation",
+  "selected_primary_method": "xhand_official_reference",
+  "reference_wrapper": "retarget_research/retargeting/run/retarget_xhand_reference.py",
+  "parameters": {
+    "iter_num": 100,
+    "sample_frame_num": 5,
+    "trans_lr": 0.005,
+    "ang_lr": 0.01,
+    "trans_bound": 2.0,
+    "enlarge_scale": 1.0,
+    "source_z_offset": 0.4
+  },
+  "formal_1000_result": {
+    "success_count": 574,
+    "trajectory_count": 1000,
+    "success_rate": 0.574,
+    "heldout_success_count": 459,
+    "heldout_trajectory_count": 800,
+    "heldout_success_rate": 0.57375
+  },
+  "rejected_contact_refinement": {
+    "method": "xhand_official_baseline_phase_contact_refinement_v1",
+    "formal_success_count": 541,
+    "formal_trajectory_count": 1000,
+    "paired_added_success": 35,
+    "paired_lost_success": 68,
+    "decision": "正式1000条净少33个成功，不能替代官方方法。"
+  },
+  "rejected_dynamic_residual_followup": {
+    "method": "xhand_contact_close_official_dynamic_lift_residual_v1",
+    "screened_retention_values": [0.0, 0.5, 1.0],
+    "selected_for_b": 0.5,
+    "a_success_counts": [28, 29, 27],
+    "a_trajectory_count": 50,
+    "official_a_success_count": 29,
+    "b_success_count": 26,
+    "official_b_success_count": 28,
+    "b_trajectory_count": 50,
+    "combined_paired_added_success": 2,
+    "combined_paired_lost_success": 4,
+    "decision": "动态抬升修复了关节冻结，但A组仅追平官方，B组无新增且回退2条，因此不保留。"
+  },
+  "selection_rule": "one global method for every object; no per-trajectory union",
+  "final_decision": "XHand最终使用官方参考轨迹；两种接触细化均作为负消融保留。"
+}
