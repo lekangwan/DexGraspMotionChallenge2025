@@ -1,0 +1,25 @@
+{
+  "purpose": "screen_target_hand_pre_lift_contact_settle_without_changing_episode_or_lift_path",
+  "status": "a_candidates_generated_before_physics_evaluation",
+  "primary_hand": "linker",
+  "development_manifest": "retarget_research/manifests/formal_method_selection_a_50c_50t_seed20260814.json",
+  "confirmation_manifest": "retarget_research/manifests/formal_confirmation_c_50c_50t_seed20260814.json",
+  "input_method": "linker_o6_no_temporal_dynamic_squeeze_v2",
+  "mechanism": {
+    "total_frame_count_unchanged": 70,
+    "lift_start_frame_unchanged": true,
+    "lift_segment_actions_unchanged": true,
+    "time_source": "compress_no_contact_approach_segment",
+    "time_destination": "repeat_last_closed_pose_before_lift"
+  },
+  "screened_settle_frames": [2, 4, 6],
+  "physical_time_per_settle_frame_s": 0.05,
+  "screened_settle_time_s": [0.1, 0.2, 0.3],
+  "selection_rule": "A组严格成功数优先，其次相对当前夹紧方法的新增/回退、最终抬升和接触步数；只允许一个全局值进入C组。",
+  "confirmation_rule": "C组相对同轨迹当前夹紧方法必须净增加成功；43类为全新物体，7类为正式物体从未使用轨迹。",
+  "prohibited": [
+    "per_trajectory_candidate_union",
+    "selecting_settle_frames_from_C_results",
+    "changing_lift_actions_or_total_episode_length"
+  ]
+}

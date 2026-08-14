@@ -18,9 +18,15 @@ from retarget_research.retargeting.prepare.build_method_selection_ab import (
 from retarget_research.retargeting.prepare.slice_manifest_candidates import (
     slice_candidate,
 )
+from retarget_research.retargeting.prepare.build_independent_confirmation_c import (
+    build_confirmation_manifest,
+)
 from retarget_research.retargeting.run.refine_xhand_dynamic_residual import (
     blend_dynamic_residual,
     residual_factor,
+)
+from retarget_research.retargeting.run.refine_phase_retiming import (
+    add_pre_lift_settle,
 )
 
 
@@ -90,6 +96,66 @@ class MethodSelectionReuseTest(unittest.TestCase):
                 source_by_object[entry["object_name"]]["calibration_indices"],
             )
 
+    def test_confirmation_c_prefers_new_objects_and_never_reuses_formal_key(self):
+        """C组应优先第三实例；无第三实例时只能使用正式物体未选轨迹。
+
+        输入：50类人工正式清单，其中49类有第三物体、最后1类没有。
+        输出：49个新实例和1条已知物体新轨迹，且与正式轨迹键交集为空。
+        内部逻辑：临时源文件为新物体提供真实哈希输入，再调用C组构造函数。
+        作用：锁定正式结果之后的新方法不能继续复用已经看过的轨迹。
+        """
+        categories = [f"category_{index:02d}" for index in range(50)]
+        formal_entries = []
+        for category in categories:
+            for object_index in range(2):
+                formal_entries.append(
+                    {
+                        "object_name": f"{category}_formal_{object_index}",
+                        "category": category,
+                        "source_path": f"/{category}_{object_index}.npy",
+                        "source_sha256": str(object_index) * 64,
+                        "object_asset_path": f"/assets/{category}_{object_index}",
+                        "available_trajectory_count": 12,
+                        "frame_count": 70,
+                        "action_dimension": 28,
+                        "trajectory_indices": list(range(10)),
+                        "calibration_indices": [0, 1],
+                        "heldout_indices": list(range(2, 10)),
+                    }
+                )
+        formal = {"categories": categories, "entries": formal_entries}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "source.npy"
+            source.write_bytes(b"confirmation-source")
+            formal_path = root / "formal.json"
+            formal_path.write_text("{}", encoding="utf-8")
+            inventory = [
+                {
+                    "object_name": f"{category}_new",
+                    "category": category,
+                    "source_path": str(source),
+                    "object_asset_path": str(root),
+                    "available_trajectory_count": 20,
+                }
+                for category in categories[:-1]
+            ]
+            confirmation = build_confirmation_manifest(
+                formal, inventory, 20260814, formal_path
+            )
+        self.assertEqual(confirmation["new_object_instance_count"], 49)
+        self.assertEqual(confirmation["known_object_new_trajectory_count"], 1)
+        formal_keys = {
+            (entry["object_name"], index)
+            for entry in formal_entries
+            for index in entry["trajectory_indices"]
+        }
+        confirmation_keys = {
+            (entry["object_name"], entry["trajectory_indices"][0])
+            for entry in confirmation["entries"]
+        }
+        self.assertFalse(formal_keys & confirmation_keys)
+
     def test_candidate_slice_preserves_requested_order_and_metadata_alignment(self):
         """按源编号反序请求时，动作、尺度和阶段列表必须同步反序。
 
@@ -145,6 +211,45 @@ class MethodSelectionReuseTest(unittest.TestCase):
         self.assertEqual(audit["joint_limit_clipped_value_count"], 0)
         self.assertEqual(residual_factor(lift_start, lift_start, 0.0, 3), 1.0)
         self.assertEqual(residual_factor(lift_start + 2, lift_start, 0.0, 3), 0.0)
+
+    def test_phase_retiming_keeps_total_length_and_full_lift_unchanged(self):
+        """四帧稳定段应提前闭合，同时逐元素保留原lift段和70帧总长度。
+
+        输入：每帧都有唯一数值的70×12轨迹，close=28、lift=37、settle=4。
+        输出：原close段前移4帧，33–36帧重复第36帧，37帧以后完全不变。
+        内部逻辑：通过可辨认帧编号检查拼接边界，不依赖物理仿真。
+        作用：锁定“从接近阶段借时间，而不是截断或减慢抬升”的核心方法定义。
+        """
+        frames = np.repeat(
+            np.arange(70, dtype=np.float32)[:, None], 12, axis=1
+        )
+        output, audit = add_pre_lift_settle(frames, 28, 37, 4)
+        self.assertEqual(output.shape, (70, 12))
+        np.testing.assert_array_equal(output[24:33], frames[28:37])
+        np.testing.assert_array_equal(
+            output[33:37], np.repeat(frames[36:37], 4, axis=0)
+        )
+        np.testing.assert_array_equal(output[37:], frames[37:])
+        self.assertTrue(audit["lift_segment_unchanged"])
+        self.assertEqual(audit["retimed_close_start_frame"], 24)
+
+    def test_phase_retiming_supports_equal_close_and_lift_frame(self):
+        """阶段回退导致close等于lift时，应提前保持完整闭合首帧而不报错。
+
+        输入：70×12轨迹、close=lift=20及2帧稳定时间。
+        输出：18–19帧重复原20帧，20帧以后仍等于原轨迹。
+        内部逻辑：覆盖没有显式闭合区间的边界分支。
+        作用：保证正式数据中的少数阶段回退轨迹也能使用同一全局方法。
+        """
+        frames = np.repeat(
+            np.arange(70, dtype=np.float32)[:, None], 12, axis=1
+        )
+        output, audit = add_pre_lift_settle(frames, 20, 20, 2)
+        np.testing.assert_array_equal(
+            output[18:20], np.repeat(frames[20:21], 2, axis=0)
+        )
+        np.testing.assert_array_equal(output[20:], frames[20:])
+        self.assertEqual(audit["settle_pose_source_frame"], 20)
 
 
 if __name__ == "__main__":
