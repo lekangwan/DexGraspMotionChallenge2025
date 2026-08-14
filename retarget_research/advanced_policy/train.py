@@ -153,20 +153,26 @@ def run_epoch(
     optimizer=None,
     betas=None,
     grad_clip=1.0,
+    max_batches=None,
 ):
     """训练或验证一个epoch。
 
-    输入：模型、loader、类型、设备、可选优化器/beta和梯度裁剪。
-    输出：按样本加权的MSE与MAE。
-    内部逻辑：有optimizer时反向传播和裁剪；验证时使用no_grad且不更新状态。
-    作用：保证训练/验证统计口径一致并正确处理最后一个小batch。
+    输入：模型、loader、类型、设备、可选优化器/beta、梯度裁剪和batch上限。
+    输出：按样本加权的MSE/MAE，以及实际batch数和样本数。
+    内部逻辑：有optimizer时反向传播和裁剪；验证时使用no_grad且不更新状态；
+    `max_batches`只用于快速冒烟，正式配置不提供该字段时仍遍历完整loader。
+    作用：保证训练/验证统计口径一致，并让CPU冒烟无需假装跑完整epoch。
     """
+    if max_batches is not None and int(max_batches) <= 0:
+        raise ValueError("max_batches必须为正整数或None")
     training = optimizer is not None
     model.train(training)
-    totals = {"loss": 0.0, "mae": 0.0, "samples": 0}
+    totals = {"loss": 0.0, "mae": 0.0, "samples": 0, "batches": 0}
     context = torch.enable_grad() if training else torch.no_grad()
     with context:
-        for batch in loader:
+        for batch_index, batch in enumerate(loader):
+            if max_batches is not None and batch_index >= int(max_batches):
+                break
             if training:
                 optimizer.zero_grad(set_to_none=True)
             loss, mae = compute_loss(model, batch, model_type, device, betas)
@@ -178,9 +184,14 @@ def run_epoch(
             totals["loss"] += float(loss.item()) * batch_size
             totals["mae"] += float(mae.item()) * batch_size
             totals["samples"] += batch_size
+            totals["batches"] += 1
+    if totals["samples"] == 0:
+        raise ValueError("当前epoch没有实际处理任何样本")
     return {
         "loss": totals["loss"] / totals["samples"],
         "mae": totals["mae"] / totals["samples"],
+        "batch_count": totals["batches"],
+        "sample_count": totals["samples"],
     }
 
 
@@ -409,8 +420,17 @@ def main():
             optimizer,
             betas,
             config.get("gradient_clip", 1.0),
+            config.get("max_train_batches"),
         )
-        valid_metrics = run_epoch(model, valid_loader, mode, device, None, betas)
+        valid_metrics = run_epoch(
+            model,
+            valid_loader,
+            mode,
+            device,
+            None,
+            betas,
+            max_batches=config.get("max_valid_batches"),
+        )
         scheduler.step()
         improved = valid_metrics["loss"] < best_valid - float(
             config.get("minimum_improvement", 1e-6)
@@ -426,6 +446,10 @@ def main():
             "train_mae": train_metrics["mae"],
             "valid_loss": valid_metrics["loss"],
             "valid_mae": valid_metrics["mae"],
+            "train_batch_count": train_metrics["batch_count"],
+            "train_sample_count": train_metrics["sample_count"],
+            "valid_batch_count": valid_metrics["batch_count"],
+            "valid_sample_count": valid_metrics["sample_count"],
             "learning_rate": optimizer.param_groups[0]["lr"],
             "elapsed_seconds": time.perf_counter() - started,
         }

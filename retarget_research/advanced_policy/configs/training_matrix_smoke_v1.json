@@ -4,6 +4,8 @@
   "device": "cpu",
   "common": {
     "epochs": 1,
+    "max_train_batches": 4,
+    "max_valid_batches": 2,
     "batch_size": 32,
     "num_workers": 0,
     "learning_rate": 0.0003,

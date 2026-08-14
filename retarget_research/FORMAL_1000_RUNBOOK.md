@@ -286,16 +286,18 @@ trace固定为每条240个60 Hz物理步：70个源帧×每帧3步，再保持30
   --hand linker \
   --trace-dir retarget_research/advanced_policy/traces/formal_v1/linker \
   --evaluation-summary retarget_research/outputs/formal_1000/linker_o6_optimized_v2_evaluation/manifest_evaluation_summary.json \
-  --output-dir retarget_research/advanced_policy/data/formal_v1/linker
+  --output-dir retarget_research/advanced_policy/data/formal_v1/linker \
+  --hand-specs retarget_research/advanced_policy/configs/hand_data_specs_v2.json
 
 /home/lekangwan/miniconda3/envs/hand-retarget/bin/python \
   retarget_research/advanced_policy/prepare/prepare_policy_dataset.py \
   --manifest retarget_research/manifests/formal_50c_100o_1000t_seed20260808.json \
   --policy-split retarget_research/advanced_policy/data/formal_v1/policy_split_seed20260813.json \
   --hand xhand \
-  --trace-dir retarget_research/advanced_policy/traces/formal_v1/xhand \
-  --evaluation-summary retarget_research/outputs/formal_1000/xhand_phase_contact_v2_evaluation/manifest_evaluation_summary.json \
-  --output-dir retarget_research/advanced_policy/data/formal_v1/xhand
+  --trace-dir retarget_research/advanced_policy/traces/formal_v1/xhand_official \
+  --evaluation-summary retarget_research/outputs/formal_1000/xhand_official_evaluation/manifest_evaluation_summary.json \
+  --output-dir retarget_research/advanced_policy/data/formal_v1/xhand \
+  --hand-specs retarget_research/advanced_policy/configs/hand_data_specs_v2.json
 
 /home/lekangwan/miniconda3/envs/hand-retarget/bin/python \
   retarget_research/advanced_policy/prepare/prepare_policy_dataset.py \
@@ -304,7 +306,8 @@ trace固定为每条240个60 Hz物理步：70个源帧×每帧3步，再保持30
   --hand wuji \
   --trace-dir retarget_research/advanced_policy/traces/formal_v1/wuji \
   --evaluation-summary retarget_research/outputs/formal_1000/wuji_v1_evaluation/manifest_evaluation_summary.json \
-  --output-dir retarget_research/advanced_policy/data/formal_v1/wuji
+  --output-dir retarget_research/advanced_policy/data/formal_v1/wuji \
+  --hand-specs retarget_research/advanced_policy/configs/hand_data_specs_v2.json
 ```
 
 先阅读每只手的`dataset_summary.json`。若状态是`ready_with_gaps`，表示成功轨迹过滤后某些类别在train中为0；不要隐瞒，也不要根据test结果重选对象。可以将“成功轨迹不足”作为重定向质量对进阶策略的限制写入报告。随后运行策略数据门：
@@ -319,7 +322,7 @@ trace固定为每条240个60 Hz物理步：70个源帧×每帧3步，再保持30
 
 ## 8. 先做1 epoch CPU冒烟，再开始正式训练
 
-先生成并运行小网络配置，确认三手×三模型共9条训练链都能读数据、反向传播、写checkpoint和画曲线。该冒烟不是实验结果：
+先生成并运行小网络配置，确认三手×三模型共9条训练链都能读数据、反向传播、写checkpoint和画曲线。冒烟配置每个模型只执行4个训练batch和2个验证batch，不遍历完整epoch；该loss不是实验结果：
 
 ```bash
 /home/lekangwan/miniconda3/envs/hand-retarget/bin/python \

@@ -804,3 +804,11 @@
 - 新增`evaluate/analyze_object_centric_results.py`，严格按`物体名+源轨迹索引`联合候选内几何审计和两套PhysX摘要，输出中心误差四分组、修正方向分组、描述性Pearson相关、成败改变案例和中文Markdown。它只分析已有结果，不修改候选或成功判据，可在A和C上复用。
 - A组诊断显示：3 mm相对基线平均最大抬升+3.07 mm、最终抬升+0.17 mm、接触+1.76步；新增成功Wii的最大抬升+163.02 mm、接触+52步。但只有1个不一致样本，精确检验`p=1`；中心误差与三项物理变化的相关绝对值均小于0.1。因此报告中明确把它写成“待独立确认的候选信号”，不是已证明提升。
 - 新增`reports/OBJECT_CENTRIC_LINKER_STUDY.md`作为方法、消融、验证边界和复现入口的一页报告草稿。统计纯函数测试加入后，重定向完整测试增至85项并全部通过。
+
+### C组运行期间提前完成进阶策略数据与冒烟链路
+
+- 本机NVIDIA驱动当前不可用，PyTorch 2.4.1也报告`cuda=False`，因此没有在C组SLSQP期间启动正式训练；同时确认正式三手各1000条、每条240步的物理trace均已存在。对象级split已按seed 20260813首次物化，严格为50个训练物体、50个同类别未见测试物体，原始train/valid/test轨迹数400/100/500。
+- 不依赖Linker最终C结论的XHand官方与Wuji策略数据已并行物化。XHand成功过滤后train/valid为256/61条、观测68维、动作18维；Wuji为270/73条、观测84维、动作26维；两者test均完整保留500条。两只手训练物体上的Battery和Cap类别都没有成功专家，因此状态为`READY_WITH_GAPS`，未用test轨迹回填。
+- 修正策略手册中过时的XHand输入：最终应读取`traces/formal_v1/xhand_official`和官方57.4%评测摘要，而不是已被否定的接触细化trace；三手数据准备均显式使用`hand_data_specs_v2.json`。
+- 原`training_matrix_smoke_v1.json`名为冒烟却会完整遍历6万多个训练步骤。训练循环新增可选`max_train_batches/max_valid_batches`，冒烟固定为4/2并在CSV记录真实batch/样本数；正式矩阵不设置上限，行为不变。新增边界测试后进阶策略16项测试全部通过。
+- XHand和Wuji的BC、Temporal3、Diffusion共6条CPU链路均完成限量冒烟；每条实际处理4个训练batch（128样本）和2个验证batch（64样本），成功写出best/last checkpoint、CSV和loss图。冒烟loss只证明数据读取、前反向传播和产物链路可用，不用于模型优劣比较。Linker冒烟等待C组确定最终专家数据后再运行。

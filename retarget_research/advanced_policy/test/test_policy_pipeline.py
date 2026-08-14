@@ -19,7 +19,7 @@ from dataset import TargetHandPolicyDataset
 from models import ConditionalDiffusionPolicy, MLPBCPolicy, Temporal3BCPolicy, linear_beta_schedule, sample_diffusion
 from observations import build_object_shape_descriptor, build_observation_batch
 from runtime import PolicyRunner
-from train import compute_loss
+from train import compute_loss, run_epoch
 
 
 class PolicyPipelineTest(unittest.TestCase):
@@ -162,7 +162,14 @@ class PolicyPipelineTest(unittest.TestCase):
         )
         loss.backward()
         self.assertTrue(torch.isfinite(loss))
-        diffusion = ConditionalDiffusionPolicy(5, 3, 2, action_horizon=4, observation_history=3, hidden_dims=(8,))
+        diffusion = ConditionalDiffusionPolicy(
+            5,
+            3,
+            2,
+            action_horizon=4,
+            observation_history=3,
+            hidden_dims=(8,),
+        )
         loss, _ = compute_loss(
             diffusion,
             {
@@ -176,6 +183,43 @@ class PolicyPipelineTest(unittest.TestCase):
         )
         loss.backward()
         self.assertTrue(torch.isfinite(loss))
+
+    def test_smoke_epoch_respects_batch_limit_and_reports_work(self):
+        """CPU冒烟必须只执行配置数量的batch并报告真实样本数。
+
+        输入：5个各含2样本的人工BC batch，训练上限2。
+        输出：仅处理2个batch和4个样本，loss有限；0上限被拒绝。
+        内部逻辑：使用小MLP和SGD调用共享`run_epoch`，不写checkpoint。
+        作用：防止所谓冒烟测试意外遍历完整正式数据集并长期占用CPU。
+        """
+        model = MLPBCPolicy(3, 2, 1, hidden_dims=(4,))
+        batches = [
+            {
+                "observations": torch.randn(2, 3),
+                "actions": torch.randn(2, 2),
+                "category_id": torch.zeros(2, dtype=torch.long),
+            }
+            for _ in range(5)
+        ]
+        metrics = run_epoch(
+            model,
+            batches,
+            "bc",
+            torch.device("cpu"),
+            torch.optim.SGD(model.parameters(), lr=1e-3),
+            max_batches=2,
+        )
+        self.assertEqual(metrics["batch_count"], 2)
+        self.assertEqual(metrics["sample_count"], 4)
+        self.assertTrue(np.isfinite(metrics["loss"]))
+        with self.assertRaises(ValueError):
+            run_epoch(
+                model,
+                batches,
+                "bc",
+                torch.device("cpu"),
+                max_batches=0,
+            )
 
 
 if __name__ == "__main__":
