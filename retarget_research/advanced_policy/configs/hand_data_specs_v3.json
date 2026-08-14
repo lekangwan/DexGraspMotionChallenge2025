@@ -1,0 +1,47 @@
+{
+  "schema_version": 3,
+  "final_method_decision": "retarget_research/configs/final_method_decision_v2.json",
+  "observation_schema": {
+    "name": "privileged_state_shape_v2",
+    "fields": [
+      "hand_dof_position",
+      "hand_dof_velocity",
+      "object_position",
+      "object_quaternion_xyzw",
+      "object_linear_velocity",
+      "object_angular_velocity",
+      "object_shape_descriptor_14d",
+      "object_translation_from_initial",
+      "remaining_lift_to_0p10m",
+      "log1p_hand_object_contact_count"
+    ],
+    "note": "仿真特权状态加轻量实例形状描述；不是相机感知或完整DexRep。"
+  },
+  "hands": {
+    "linker": {
+      "policy_action_dimension": 12,
+      "physics_dof_dimension": 17,
+      "selected_method_config": "retarget_research/retargeting/configs/object_centric_advance_search_v1.json",
+      "target_dir": "retarget_research/outputs/formal_1000/linker_object_centric_3mm_v1",
+      "evaluation_summary": "retarget_research/outputs/formal_1000/linker_object_centric_3mm_v1_evaluation/manifest_evaluation_summary.json",
+      "trace_dir": "retarget_research/advanced_policy/traces/formal_v2/linker_object_centric_3mm"
+    },
+    "xhand": {
+      "policy_action_dimension": 18,
+      "physics_dof_dimension": 18,
+      "selected_method_config": "retarget_research/retargeting/configs/xhand_official_final_v1.json",
+      "target_dir": "retarget_research/outputs/formal_1000/xhand_official",
+      "evaluation_summary": "retarget_research/outputs/formal_1000/xhand_official_evaluation/manifest_evaluation_summary.json",
+      "trace_dir": "retarget_research/advanced_policy/traces/formal_v1/xhand_official"
+    },
+    "wuji": {
+      "policy_action_dimension": 26,
+      "physics_dof_dimension": 26,
+      "selected_method_config": "retarget_research/retargeting/configs/wuji_method_selection_v1.json",
+      "target_dir": "retarget_research/outputs/formal_1000/wuji_v1",
+      "evaluation_summary": "retarget_research/outputs/formal_1000/wuji_v1_evaluation/manifest_evaluation_summary.json",
+      "trace_dir": "retarget_research/advanced_policy/traces/formal_v1/wuji"
+    }
+  },
+  "version_reason": "Linker由渐进夹紧升级为经独立C组确认的3毫米物体中心指向校准；XHand和Wuji保持v2选择。"
+}

@@ -42,11 +42,20 @@ C组在看到本方法任何物理结果前已经冻结，共50类50轨迹：43�
 
 最终判断规则是：3 mm必须在C组取得配对净成功增益，才可写为具有独立泛化证据的改进；若持平或下降，则将其报告为A组有效、C组未复现的负结果，Linker最终方法仍保持原渐进夹紧基线。
 
+## C组结果与最终决定
+
+C组当前方法为14/50，3 mm候选为15/50；新增FileCabinet一条，丢失0条。平均最大抬升由100.29 mm提高到109.37 mm，平均最终抬升由57.98 mm提高到77.49 mm，平均接触步增加4.38；关键点距离由23.017 mm降至22.850 mm。新增FileCabinet的最大抬升增加333.90 mm、接触增加127步，属于清晰的抓取状态改变。
+
+因此3 mm满足事前规定的C组净增益规则，正式升级为Linker最终方法。A+C合并为当前方法21/100、候选23/100，配对新增2、丢失0；两个不一致样本的双侧精确检验`p=0.5`，仍不具有统计显著性。准确表述应为“在独立C组复现同方向净提升，且没有观察到成功回退”，不能写成“已证明普遍有效”。
+
+正式1000条候选已经由旧Linker主方法秒级生成，平均执行3 mm修正；接下来只做全规模描述性PhysX评测和策略trace采集，不再改变方法或参数。
+
 ## 实现与复现入口
 
 - 方法实现：`retargeting/run/refine_linker_object_centric_advance.py`
 - 实验配置：`retargeting/configs/object_centric_advance_search_v1.json`
 - 机制诊断：`retargeting/evaluate/analyze_object_centric_results.py`
 - C组流水线：`retargeting/run/run_object_centric_confirmation_c.sh`
+- 正式1000与策略trace：`retargeting/run/run_linker_object_centric_formal_1000.sh`
 
 上述模块均记录输入、输出、内部逻辑和作用；当前重定向单元测试为85项并全部通过。

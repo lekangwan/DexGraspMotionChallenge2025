@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "decision_date": "2026-08-14",
+  "purpose": "promote_linker_object_centric_3mm_after_independent_confirmation_C",
+  "supersedes_for_future_work": "retarget_research/configs/final_method_decision_v1.json",
+  "historical_v1_is_immutable": true,
+  "linker": {
+    "selected_method": "linker_o6_dynamic_squeeze_plus_object_centric_3mm_v1",
+    "base_method": "linker_o6_no_temporal_dynamic_squeeze_v2",
+    "method_config": "retarget_research/retargeting/configs/object_centric_advance_search_v1.json",
+    "action_dimension": 12,
+    "mechanism": "闭合期间沿五指抓取中心到物体AABB中心方向渐进加入最多3毫米手腕平移，lift后保持常量。",
+    "development_A": {
+      "baseline_success": "7/50",
+      "candidate_success": "8/50",
+      "added": 1,
+      "lost": 0
+    },
+    "independent_confirmation_C": {
+      "manifest": "retarget_research/manifests/formal_confirmation_c_50c_50t_seed20260814.json",
+      "new_object_instance_count": 43,
+      "known_object_new_trajectory_count": 7,
+      "baseline_success": "14/50",
+      "candidate_success": "15/50",
+      "added": 1,
+      "lost": 0,
+      "paired_exact_two_sided_p": 1.0
+    },
+    "combined_A_C": {
+      "baseline_success": "21/100",
+      "candidate_success": "23/100",
+      "added": 2,
+      "lost": 0,
+      "paired_exact_two_sided_p": 0.5
+    },
+    "evidence_boundary": "满足事前C组净增益规则并在A/C方向一致；样本仍不足以声称统计显著。",
+    "formal_candidate_dir": "retarget_research/outputs/formal_1000/linker_object_centric_3mm_v1",
+    "formal_evaluation_summary": "retarget_research/outputs/formal_1000/linker_object_centric_3mm_v1_evaluation/manifest_evaluation_summary.json",
+    "policy_trace_dir": "retarget_research/advanced_policy/traces/formal_v2/linker_object_centric_3mm",
+    "formal_1000_status": "candidate_ready; evaluation_and_policy_traces_pending"
+  },
+  "xhand": {
+    "selected_method": "xhand_official_reference",
+    "inherited_from_v1": true
+  },
+  "wuji": {
+    "selected_method": "wuji_v1_single_mapping",
+    "inherited_from_v1": true
+  },
+  "selection_boundary": "3毫米在冻结C确认后不再调参；正式1000只用于规模化结果与策略trace，不作为新的独立确认集。"
+}

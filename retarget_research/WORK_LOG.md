@@ -812,3 +812,11 @@
 - 修正策略手册中过时的XHand输入：最终应读取`traces/formal_v1/xhand_official`和官方57.4%评测摘要，而不是已被否定的接触细化trace；三手数据准备均显式使用`hand_data_specs_v2.json`。
 - 原`training_matrix_smoke_v1.json`名为冒烟却会完整遍历6万多个训练步骤。训练循环新增可选`max_train_batches/max_valid_batches`，冒烟固定为4/2并在CSV记录真实batch/样本数；正式矩阵不设置上限，行为不变。新增边界测试后进阶策略16项测试全部通过。
 - XHand和Wuji的BC、Temporal3、Diffusion共6条CPU链路均完成限量冒烟；每条实际处理4个训练batch（128样本）和2个验证batch（64样本），成功写出best/last checkpoint、CSV和loss图。冒烟loss只证明数据读取、前反向传播和产物链路可用，不用于模型优劣比较。Linker冒烟等待C组确定最终专家数据后再运行。
+
+### 3毫米方法通过独立C确认
+
+- 冻结C组两套50条物理回放完整结束。当前Linker夹紧为14/50，3 mm物体中心校准为15/50；新增FileCabinet14，丢失0，净增1。平均最大抬升从100.285 mm升至109.371 mm，平均最终抬升从57.978 mm升至77.487 mm，接触步平均增加4.38，关键点距离从23.017 mm降至22.850 mm。
+- 新增FileCabinet最大抬升增加333.90 mm、接触增加127步，并非刚好擦过成功阈值。C的中心误差四分组中，新增成功位于Q3；但中心距离/方向与连续物理变化的相关绝对值仍约不超过0.1，不能推导只对某个误差区间有效。
+- C只有1个不一致样本，双侧精确检验`p=1`；A+C合并为当前21/100、候选23/100，配对新增2、丢失0，`p=0.5`。因此结论是“满足事前C净增益规则、独立样本方向一致、正式保留”，而不是“达到统计显著”。C之后禁止继续调整3 mm距离。
+- 新增`configs/final_method_decision_v2.json`，保留v1为历史记录；新增`advanced_policy/configs/hand_data_specs_v3.json`，Linker策略源升级为3 mm正式候选和新trace，XHand/Wuji选择不变。
+- 3 mm已应用到正式1000条Linker候选，全部生成完毕；平均抓取中心距离58.529→55.529 mm，实际修正均为3 mm。新增`run/run_linker_object_centric_formal_1000.sh`，一次完成1000条PhysX重放、新策略trace、旧新配对、机制分析、Linker策略数据和三模型限量冒烟，避免为进阶任务重复重放。
