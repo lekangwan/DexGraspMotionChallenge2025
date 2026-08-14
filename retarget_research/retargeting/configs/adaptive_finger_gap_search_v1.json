@@ -1,6 +1,6 @@
 {
   "purpose": "screen_expert_contact_gated_per_finger_kinematic_gap_recovery_for_three_hands",
-  "status": "physics_screen_A_complete_xhand_0.10_selected_for_D",
+  "status": "confirmation_D_complete_xhand_0.10_rejected",
   "development_manifest": "retarget_research/manifests/formal_method_selection_a_50c_50t_seed20260814.json",
   "baselines": {
     "linker": "current object-centric 3 mm candidate",
@@ -95,5 +95,31 @@
       "paired_delta_0.10": "+1/-2",
       "decision": "reject both"
     }
+  },
+  "confirmation_D": {
+    "manifest": "retarget_research/manifests/formal_confirmation_d_50c_50t_seed20260815.json",
+    "xhand_official_success": 25,
+    "xhand_delta_0.10_success": 25,
+    "paired_change": "+3/-3",
+    "both_success": 22,
+    "both_failure": 22,
+    "paired_exact_two_sided_p": 1.0,
+    "continuous_mean_change_candidate_minus_official": {
+      "keypoint_distance_mm": 0.0953,
+      "max_lift_mm": -2.231,
+      "final_lift_mm": -1.654,
+      "contact_steps": -0.4,
+      "sustained_lift_s": -0.00733
+    },
+    "added_categories": ["clock", "pan", "thumbtack"],
+    "lost_categories": ["can", "palette", "soapbottle"],
+    "mechanism_observation": "the bounded residual changed real contacts and sometimes converted full failures into stable lifts, but the same nearest-surface rule also destroyed three previously stable grasps; smaller unsigned surface distance is not a reliable proxy for force-bearing contact",
+    "combined_A_and_D": {
+      "xhand_official_success": 54,
+      "xhand_delta_0.10_success": 55,
+      "paired_change": "+4/-3",
+      "paired_exact_two_sided_p": 1.0
+    },
+    "decision": "reject delta 0.10 because the predeclared independent-D rule requires positive net success on D; keep XHand official reference and do not retune the gap rule after seeing D"
   }
 }

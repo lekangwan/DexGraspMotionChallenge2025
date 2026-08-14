@@ -142,8 +142,8 @@ def load_completed_evaluation(
 
     输入：手类型、manifest条目、候选路径/索引、报告与trace目录及物理参数。
     输出：可直接参与汇总的result；缺文件或任一元数据不匹配时返回None。
-    内部逻辑：同时核对源/目标绝对路径、双索引、物体、Linker PD、
-    必需数值字段和240步对齐trace，然后从两份JSON重建结果。
+    内部逻辑：同时核对源/目标绝对路径、双索引、物体、全部显式物理参数、
+    必需数值字段和与执行速度匹配的对齐trace，然后从两份JSON重建结果。
     作用：中断后只重跑缺失/不匹配的轨迹，不把旧方法或残缺文件误当正式结果。
     """
     source_index = int(entry["trajectory_indices"][target_index])
@@ -222,8 +222,16 @@ def load_completed_evaluation(
                     return None
                 if int(metadata["target_trajectory_index"]) != target_index:
                     return None
-                lengths = {len(trace[name]) for name in trace.files if name != "metadata_json"}
-                if lengths != {240}:
+                expected_trace_steps = int(
+                    70 * expected_physics.get("steps_per_frame", 3.0)
+                    + expected_physics.get("hold_steps", 30.0)
+                )
+                lengths = {
+                    len(trace[name])
+                    for name in trace.files
+                    if name != "metadata_json"
+                }
+                if lengths != {expected_trace_steps}:
                     return None
                 if not np.isfinite(trace["policy_action"]).all():
                     return None
@@ -506,6 +514,18 @@ def main():
         action="store_true",
         help="严格验证已有几何/PhysX/trace后跳过已完成轨迹",
     )
+    parser.add_argument(
+        "--steps-per-frame",
+        type=int,
+        default=3,
+        help="每个70帧动作插值执行的60 Hz物理步数；3/4/6分别对应20/15/10 Hz",
+    )
+    parser.add_argument(
+        "--hold-steps",
+        type=int,
+        default=30,
+        help="70帧结束后保持末动作的物理步数；默认30步即0.5秒",
+    )
     parser.add_argument("--linker-finger-stiffness", type=float, default=120.0)
     parser.add_argument("--linker-finger-damping", type=float, default=5.0)
     parser.add_argument("--linker-mimic-stiffness", type=float, default=120.0)
@@ -531,6 +551,11 @@ def main():
         "--mimic-damping",
         str(args.linker_mimic_damping),
     ]
+    if args.steps_per_frame < 1:
+        parser.error("--steps-per-frame必须至少为1")
+    if args.hold_steps < 0:
+        parser.error("--hold-steps不能为负")
+
     if args.hand in {"linker", "linker11"}:
         physics_extra_args = linker_physics_args
     elif args.hand == "xhand":
@@ -570,6 +595,14 @@ def main():
                         "--mimic-stiffness", str(args.linker_high_stiffness),
                         "--mimic-damping", str(args.linker_high_damping),
                     ]
+            selected_physics_args.extend(
+                [
+                    "--steps-per-frame",
+                    str(args.steps_per_frame),
+                    "--hold-steps",
+                    str(args.hold_steps),
+                ]
+            )
             tasks.append(
                 (entry, target_path, index, selected_physics_args, decision)
             )
@@ -623,6 +656,9 @@ def main():
             ),
             "high_stiffness": args.linker_high_stiffness,
             "high_damping": args.linker_high_damping,
+            "steps_per_frame": args.steps_per_frame,
+            "replay_frequency_hz": 60.0 / args.steps_per_frame,
+            "hold_steps": args.hold_steps,
         }
         if args.hand in {"linker", "linker11"}
         else {
@@ -636,6 +672,9 @@ def main():
                 if args.hand == "xhand"
                 else args.wuji_finger_damping
             ),
+            "steps_per_frame": args.steps_per_frame,
+            "replay_frequency_hz": 60.0 / args.steps_per_frame,
+            "hold_steps": args.hold_steps,
         },
         "wall_time_seconds": time.perf_counter() - started,
         "resumed_trajectory_count": sum(

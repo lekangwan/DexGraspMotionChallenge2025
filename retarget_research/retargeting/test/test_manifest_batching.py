@@ -170,7 +170,7 @@ class ManifestBatchingTest(unittest.TestCase):
         self.assertEqual(summary["per_split"]["heldout"]["trajectory_count"], 2)
 
     def test_resume_requires_matching_reports_and_complete_trace(self):
-        """续跑只接受路径/索引匹配且恰好240步的完整产物。"""
+        """续跑只接受路径/索引匹配且长度与执行速度一致的完整产物。"""
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             source = root / "source.npy"
@@ -234,16 +234,51 @@ class ManifestBatchingTest(unittest.TestCase):
             self.assertTrue(result["resumed_existing"])
             self.assertEqual(result["evaluation_split"], "heldout")
 
+            physics.update({"steps_per_frame": 4, "hold_steps": 30})
+            (item / "source_2_physics.json").write_text(json.dumps(physics))
+            np.savez_compressed(
+                trace,
+                policy_action=np.zeros((310, 18), dtype=np.float32),
+                source_frame_index=np.zeros(310, dtype=np.int64),
+                metadata_json=np.asarray(json.dumps(metadata)),
+            )
+            slower_result = load_completed_evaluation(
+                "xhand",
+                entry,
+                target,
+                0,
+                root / "reports",
+                physics_extra_args=(
+                    "--steps-per-frame",
+                    "4",
+                    "--hold-steps",
+                    "30",
+                ),
+                policy_trace_dir=root / "traces",
+            )
+            self.assertTrue(slower_result["resumed_existing"])
+
             metadata["target_trajectory_index"] = 1
             np.savez_compressed(
                 trace,
-                policy_action=np.zeros((240, 18), dtype=np.float32),
-                source_frame_index=np.zeros(240, dtype=np.int64),
+                policy_action=np.zeros((310, 18), dtype=np.float32),
+                source_frame_index=np.zeros(310, dtype=np.int64),
                 metadata_json=np.asarray(json.dumps(metadata)),
             )
             self.assertIsNone(
                 load_completed_evaluation(
-                    "xhand", entry, target, 0, root / "reports", policy_trace_dir=root / "traces"
+                    "xhand",
+                    entry,
+                    target,
+                    0,
+                    root / "reports",
+                    physics_extra_args=(
+                        "--steps-per-frame",
+                        "4",
+                        "--hold-steps",
+                        "30",
+                    ),
+                    policy_trace_dir=root / "traces",
                 )
             )
 

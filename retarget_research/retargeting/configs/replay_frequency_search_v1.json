@@ -1,0 +1,47 @@
+{
+  "purpose": "screen_global_trajectory_replay_frequency_for_each_target_hand",
+  "status": "A_screen_prepared_confirmation_E_frozen_unseen",
+  "development_manifest": "retarget_research/manifests/formal_method_selection_a_50c_50t_seed20260814.json",
+  "confirmation_manifest": "retarget_research/manifests/formal_confirmation_e_50c_50t_seed20260816.json",
+  "baselines": {
+    "linker": "object-centric 3 mm trajectory with 120/5 active and mimic PD",
+    "xhand": "official reference trajectory with 120/5 finger PD",
+    "wuji": "v1 no-temporal trajectory with 120/5 finger PD"
+  },
+  "fixed_physics": {
+    "simulation_frequency_hz": 60,
+    "substeps": 2,
+    "end_hold_steps": 30,
+    "sustain_success_steps": 30,
+    "note": "the final hold and success duration remain 0.5 s for every replay frequency"
+  },
+  "candidates": [
+    {
+      "steps_per_frame": 2,
+      "replay_frequency_hz": 30,
+      "reason": "tests whether faster execution preserves the expert motion while reducing time available for gravity-driven slip"
+    },
+    {
+      "steps_per_frame": 3,
+      "replay_frequency_hz": 20,
+      "reason": "current common baseline; 70 frames take 3.5 s before the fixed 0.5 s hold"
+    },
+    {
+      "steps_per_frame": 4,
+      "replay_frequency_hz": 15,
+      "reason": "a modest slowdown that gives the PD controller 33 percent more physical settling time per command interval"
+    },
+    {
+      "steps_per_frame": 6,
+      "replay_frequency_hz": 10,
+      "reason": "a common low-rate demonstration playback boundary; doubles tracking time relative to 20 Hz without using the reference script's extreme 1 Hz setting"
+    }
+  ],
+  "method_boundary": {
+    "what_changes": "only the interpolation duration between consecutive commands",
+    "what_does_not_change": "all 70 command values, object initialization, PD gains, friction, success height, sustain duration and final hold duration",
+    "interpretation": "controller/execution ablation rather than a new geometric retargeting objective",
+    "no_slower_search": "below 10 Hz would make each 70-frame replay longer than 7 s and risks improving the benchmark mainly through excessive settling rather than better retargeting"
+  },
+  "selection_rule": "for each hand, compare 30/15/10 Hz with its existing 20 Hz baseline on identical A keys; only the single rate with higher success and positive paired net gain may enter the already-frozen E set; ties choose the rate closest to 20 Hz; E must again have positive net gain before replacing 20 Hz"
+}
