@@ -61,7 +61,7 @@ echo "[4/5] Materialize the final Linker policy dataset."
   --trace-dir "$TRACE_DIR" \
   --evaluation-summary "$NEW_SUMMARY" \
   --output-dir "$DATA_ROOT/linker" \
-  --hand-specs retarget_research/advanced_policy/configs/hand_data_specs_v3.json
+  --hand-specs retarget_research/advanced_policy/configs/hand_data_specs_v4.json
 
 echo "[5/5] Run the three limited Linker CPU smoke trainings."
 "$PYTHON_BIN" retarget_research/advanced_policy/prepare/generate_training_configs.py \

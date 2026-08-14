@@ -1,6 +1,6 @@
 {
   "purpose": "replace_unsigned_nearest_surface_finger_recovery_with_shadow_semantic_contact_regions",
-  "status": "static_A_complete_physics_A_prepared_confirmation_E_frozen_unseen",
+  "status": "physics_A_complete_all_candidates_rejected_E_unused",
   "development_manifest": "retarget_research/manifests/formal_method_selection_a_50c_50t_seed20260814.json",
   "confirmation_manifest": "retarget_research/manifests/formal_confirmation_e_50c_50t_seed20260816.json",
   "motivation": {
@@ -53,5 +53,44 @@
     },
     "joint_limit_clipped_values_all_candidates": 0
   },
-  "selection_rule": "within each hand require success_count above the current A baseline and positive paired net gain; at most one cap may enter E; ties choose 0.05 rad; E must again have positive net gain before replacing the current method"
+  "selection_rule": "within each hand require success_count above the current A baseline and positive paired net gain; at most one cap may enter E; ties choose 0.05 rad; E must again have positive net gain before replacing the current method",
+  "physics_results_A": {
+    "linker": {
+      "current_success": 8,
+      "region_0.05_success": 8,
+      "region_0.10_success": 7,
+      "paired_0.05": "+0/-0",
+      "paired_0.10": "+0/-1 (lost Wii)",
+      "region_0.05_mean_changes": {
+        "keypoint_distance_mm": -0.639,
+        "max_lift_mm": 1.659,
+        "final_lift_mm": -0.079,
+        "contact_steps": 0.48
+      },
+      "decision": "reject both; 0.05 improves geometry but not the success set, while 0.10 loses one success"
+    },
+    "xhand": {
+      "current_success": 29,
+      "region_0.05_success": 28,
+      "region_0.10_success": 29,
+      "paired_0.05": "+1 Bowl/-2 BeanBag,Pan",
+      "paired_0.10": "+1 Bowl/-1 Pan",
+      "region_0.10_mean_changes": {
+        "keypoint_distance_mm": 0.085,
+        "max_lift_mm": -0.302,
+        "final_lift_mm": 5.919,
+        "contact_steps": 0.30
+      },
+      "decision": "reject both; 0.10 exchanges one success rather than providing a positive net gain"
+    },
+    "wuji": {
+      "current_success": 33,
+      "region_0.05_success": 32,
+      "region_0.10_success": 31,
+      "paired_0.05": "+0/-1 VideoGameController",
+      "paired_0.10": "+0/-2 Phonebooth,VideoGameController",
+      "decision": "reject both; every semantic-region candidate has negative paired net success"
+    }
+  },
+  "overall_decision": "no candidate enters E; semantic expert-region proximity is still not a sufficient proxy for force-bearing contact"
 }

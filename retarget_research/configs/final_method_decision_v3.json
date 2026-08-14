@@ -1,0 +1,51 @@
+{
+  "schema_version": 3,
+  "decision_date": "2026-08-15",
+  "purpose": "freeze_three_hand_retargeting_after_post_C_improvement_exhaustion",
+  "supersedes_for_future_work": "retarget_research/configs/final_method_decision_v2.json",
+  "historical_decisions_are_immutable": true,
+  "linker": {
+    "selected_method": "linker_o6_dynamic_squeeze_plus_object_centric_3mm_v1",
+    "action_dimension": 12,
+    "method_config": "retarget_research/retargeting/configs/object_centric_advance_search_v1.json",
+    "replay_frequency_hz": 20,
+    "selection_evidence": "A 8/50 vs 7/50 and independent C 15/50 vs 14/50; combined +2/-0",
+    "formal_candidate_dir": "retarget_research/outputs/formal_1000/linker_object_centric_3mm_v1",
+    "formal_evaluation_summary": "retarget_research/outputs/formal_1000/linker_object_centric_3mm_v1_evaluation/manifest_evaluation_summary.json",
+    "policy_trace_dir": "retarget_research/advanced_policy/traces/formal_v2/linker_object_centric_3mm",
+    "formal_1000_status": "candidate_ready; evaluation_and_policy_traces_pending"
+  },
+  "xhand": {
+    "selected_method": "xhand_official_reference",
+    "action_dimension": 18,
+    "method_config": "retarget_research/retargeting/configs/xhand_official_final_v1.json",
+    "replay_frequency_hz": 20,
+    "formal_candidate_dir": "retarget_research/outputs/formal_1000/xhand_official",
+    "formal_evaluation_summary": "retarget_research/outputs/formal_1000/xhand_official_evaluation/manifest_evaluation_summary.json",
+    "formal_1000_status": "complete; 574/1000"
+  },
+  "wuji": {
+    "selected_method": "wuji_v1_single_mapping_no_temporal",
+    "action_dimension": 26,
+    "method_config": "retarget_research/retargeting/configs/wuji_method_selection_v1.json",
+    "replay_frequency_hz": 20,
+    "formal_candidate_dir": "retarget_research/outputs/formal_1000/wuji_v1",
+    "formal_evaluation_summary": "retarget_research/outputs/formal_1000/wuji_v1_evaluation/manifest_evaluation_summary.json",
+    "formal_1000_status": "complete; 638/1000"
+  },
+  "post_C_screening": {
+    "candidate_count": 39,
+    "families": [
+      "shared grasp-center wrist correction",
+      "finger PD soft/stiff control",
+      "pre-lift phase retiming",
+      "expert-gated nearest-surface per-finger residual",
+      "global replay frequency 10/15/20/30 Hz",
+      "Shadow semantic contact-region per-finger residual"
+    ],
+    "only_candidate_reaching_confirmation": "XHand nearest-surface 0.10 rad; A +1/-0, independent D +3/-3, rejected",
+    "confirmation_E": "frozen before later screens but intentionally unused because no A candidate passed the promotion rule"
+  },
+  "stop_reason": "geometric alignment, bounded contact correction, normal/opposition/contact-region objectives, temporal execution, PD gains and replay speed have all been tested under a single-method paired protocol. Further meaningful improvement requires a new learned or physics-in-the-loop method rather than more local A-set tuning, so retargeting is frozen and effort moves to the advanced policy task.",
+  "selection_boundary": "formal 1000 is now only for the already-selected Linker 3 mm scale result and policy traces; it cannot be used to retune any of the three methods"
+}
