@@ -116,10 +116,14 @@ def phase_metadata(data: dict, trajectory_count: int) -> list[dict]:
 
     输入：候选字典和预期轨迹数。
     输出：逐轨迹阶段字典列表。
-    内部逻辑：优先读取Linker的`squeeze_phase_metadata`，否则读取共享`phase_metadata`。
+    内部逻辑：优先读取Linker的`squeeze_phase_metadata`，其次读取
+    通用中心模块推断的`shared_grasp_center_phase_metadata`，最后读`phase_metadata`。
     作用：让同一个阶段重定时模块后续可用于Linker、XHand和Wuji候选。
     """
-    metadata = data.get("squeeze_phase_metadata", data.get("phase_metadata"))
+    metadata = data.get(
+        "squeeze_phase_metadata",
+        data.get("shared_grasp_center_phase_metadata", data.get("phase_metadata")),
+    )
     if not isinstance(metadata, list) or len(metadata) != trajectory_count:
         raise ValueError("候选缺少与轨迹数一致的阶段元数据")
     return metadata

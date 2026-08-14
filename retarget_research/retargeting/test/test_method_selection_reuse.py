@@ -39,6 +39,10 @@ from retarget_research.retargeting.evaluate.compare_manifest_methods import (
 from retarget_research.retargeting.run.refine_shared_grasp_center import (
     desired_center,
 )
+from retarget_research.retargeting.run.refine_adaptive_finger_gap import (
+    apply_finger_residuals,
+    bounded_descent_residual,
+)
 
 
 class MethodSelectionReuseTest(unittest.TestCase):
@@ -320,6 +324,81 @@ class MethodSelectionReuseTest(unittest.TestCase):
         )
         np.testing.assert_array_equal(output[20:], frames[20:])
         self.assertEqual(audit["settle_pose_source_frame"], 20)
+
+    def test_zero_center_correction_is_exact_phase_annotation_noop(self):
+        """0毫米中心修正应只标注阶段，不改任何动作。
+
+        输入：可辨认70×18轨迹、有效阶段、两个不同中心和0上限。
+        输出：结果与原轨迹逐元素相等，实际修正为0。
+        内部逻辑：覆盖共享阶段推断将被用于纯时序消融的无操作路径。
+        作用：防止时序候选意外混入任何腕部平移。
+        """
+        frames = np.arange(70 * 18, dtype=np.float32).reshape(70, 18) / 1000
+        output, audit = apply_object_centric_advance(
+            frames,
+            28,
+            37,
+            np.asarray([0.0, 0.0, 0.0], dtype=np.float32),
+            np.asarray([1.0, -2.0, 3.0], dtype=np.float32),
+            0.0,
+        )
+        np.testing.assert_array_equal(output, frames)
+        self.assertEqual(audit["actual_advance_m"], 0.0)
+
+    def test_bounded_finger_descent_finds_correct_sign_without_joint_convention(self):
+        """数值下降应自动找到两个关节的正确方向。
+
+        输入：三关节人工距离函数，仅允许前两关节参与。
+        输出：距离下降、残差不越界，第三关节严格为0。
+        内部逻辑：用已知最优点的二次函数检查中心差分与线搜索。
+        作用：保证方法不依赖人工猜测XHand/Wuji关节的闭合正负号。
+        """
+        base = np.zeros(3, dtype=np.float32)
+        target = np.asarray([0.4, -0.2, 0.9], dtype=np.float32)
+        distance = lambda q: float(np.sum((q - target) ** 2))
+        residual, audit = bounded_descent_residual(
+            base,
+            [0, 1],
+            np.full(3, -1.0, dtype=np.float32),
+            np.full(3, 1.0, dtype=np.float32),
+            distance,
+            0.01,
+            0.1,
+        )
+        self.assertLess(audit["optimized_distance_m"], audit["baseline_distance_m"])
+        self.assertLessEqual(np.linalg.norm(residual), 0.1 + 1e-7)
+        self.assertGreater(residual[0], 0)
+        self.assertLess(residual[1], 0)
+        self.assertEqual(residual[2], 0)
+
+    def test_finger_residual_preserves_wrist_and_original_lift_dynamics(self):
+        """分指残差不得改腕部，也不得冻结原有lift关节动态。
+
+        输入：关节逐帧线性变化的70×18轨迹和仅作用于一指的残差。
+        输出：前6维逐元素不变；抓取帧后相邻关节差与原轨迹相同。
+        内部逻辑：检查“保持常量残差”而不是“保持常量关节角”。
+        作用：直接防止重复以前XHand接触方法在lift段硬冻结的问题。
+        """
+        frames = np.zeros((70, 18), dtype=np.float32)
+        frames[:, :6] = np.arange(70, dtype=np.float32)[:, None] * 0.001
+        frames[:, 6:] = np.arange(70, dtype=np.float32)[:, None] * 0.002
+        residual = np.zeros(12, dtype=np.float32)
+        residual[4:6] = [0.05, -0.02]
+        output, audit = apply_finger_residuals(
+            frames,
+            residual,
+            28,
+            36,
+            np.full(12, -2.0, dtype=np.float32),
+            np.full(12, 2.0, dtype=np.float32),
+        )
+        np.testing.assert_array_equal(output[:, :6], frames[:, :6])
+        np.testing.assert_allclose(
+            np.diff(output[36:, 6:], axis=0),
+            np.diff(frames[36:, 6:], axis=0),
+            atol=1e-7,
+        )
+        self.assertTrue(audit["wrist_commands_unchanged"])
 
     def test_object_centric_advance_only_changes_translation_smoothly(self):
         """6毫米中心修正应在闭合期渐进加入，抬升后保持恒定。

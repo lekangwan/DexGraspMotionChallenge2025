@@ -373,7 +373,8 @@ def main() -> None:
     输入：`--hand/--center-mode/--manifest/--input-dir/--output-dir`及几何阈值。
     输出：候选npy和`shared_grasp_center_summary.json`；不启动物理仿真。
     内部逻辑：毫米转米后调用批处理函数，并打印中心距离和阶段回退数。
-    作用：为三手统一的少量参数筛选提供可复现入口。
+    作用：为三手统一的少量参数筛选提供可复现入口；
+    距离为0时只添加阶段元数据，动作逐元素保持不变。
     """
     parser = argparse.ArgumentParser()
     parser.add_argument("--hand", choices=sorted(HAND_DIMENSIONS), required=True)
@@ -390,8 +391,8 @@ def main() -> None:
     parser.add_argument("--min-contact-tips", type=int, default=2)
     parser.add_argument("--lift-delta", type=float, default=0.03)
     args = parser.parse_args()
-    if args.max_advance_mm <= 0:
-        parser.error("--max-advance-mm必须为正数")
+    if args.max_advance_mm < 0:
+        parser.error("--max-advance-mm不能为负数")
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
     summary = refine_manifest(
         args.hand,

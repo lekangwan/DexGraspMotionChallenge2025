@@ -1,0 +1,57 @@
+{
+  "purpose": "screen_expert_contact_gated_per_finger_kinematic_gap_recovery_for_three_hands",
+  "status": "parameters_frozen_before_physics_screen_A",
+  "development_manifest": "retarget_research/manifests/formal_method_selection_a_50c_50t_seed20260814.json",
+  "baselines": {
+    "linker": "current object-centric 3 mm candidate",
+    "xhand": "official reference",
+    "wuji": "wuji v1 no-temporal"
+  },
+  "gate": {
+    "source_contact_threshold_m": 0.02,
+    "target_minus_source_distance_margin_m": 0.003,
+    "rule": "activate a target finger only when the corresponding Shadow expert fingertip is within 20 mm of the object and the target fingertip remains more than 3 mm farther away"
+  },
+  "optimization": {
+    "frame": "Shadow expert grasp_frame with maximum source contact-tip count",
+    "numeric_gradient_epsilon_rad": 0.01,
+    "joint_groups": "only joints belonging to the activated semantic finger",
+    "line_search_fractions": [0.5, 1.0],
+    "candidate_max_residual_l2_rad_per_finger": [0.05, 0.1],
+    "temporal_application": "ramp residual from close_start to grasp_frame and keep the constant residual afterward while preserving original frame-to-frame dynamics",
+    "joint_limits": "bound the effective residual against every trajectory frame so physical commands never require post-hoc clipping"
+  },
+  "range_reason": {
+    "0.05_rad": "about 2.9 degrees, a conservative local contact correction",
+    "0.10_rad": "about 5.7 degrees, large enough to change fingertip clearance but much smaller than the earlier Linker all-finger squeeze of 0.425 rad",
+    "no_larger_values": "larger residuals make unsigned nearest-surface descent more likely to cross the intended contact surface and disturb already correct grasp geometry"
+  },
+  "static_A_audit": {
+    "linker": {
+      "active_fingers": 116,
+      "active_trajectories": 42,
+      "distance_mm_0.05": [25.441, 22.622],
+      "distance_mm_0.10": [25.441, 19.961]
+    },
+    "xhand": {
+      "active_fingers": 29,
+      "active_trajectories": 24,
+      "distance_mm_0.05": [19.106, 16.68],
+      "distance_mm_0.10": [19.106, 14.508]
+    },
+    "wuji": {
+      "active_fingers": 73,
+      "active_trajectories": 39,
+      "distance_mm_0.05": [17.092, 14.739],
+      "distance_mm_0.10": [17.092, 12.699]
+    },
+    "joint_limit_clipped_values_all_candidates": 0
+  },
+  "difference_from_rejected_xhand_contact_refinement": [
+    "does not jointly re-optimize the full wrist and all finger joints",
+    "does not force fingers that the Shadow expert did not use as contacts",
+    "does not freeze finger joints during lift",
+    "preserves the complete original trajectory and adds only a bounded constant residual after grasp"
+  ],
+  "selection_rule": "within each hand require success_count above the current A baseline and positive paired net gain; ties favor 0.05 rad; at most one global residual cap can enter D"
+}

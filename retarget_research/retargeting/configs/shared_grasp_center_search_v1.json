@@ -1,6 +1,6 @@
 {
   "purpose": "screen_shared_geometry_conditioned_wrist_calibration_for_all_three_hands",
-  "status": "parameters_frozen_before_physics_screen_A",
+  "status": "physics_screen_A_complete_no_candidate_selected",
   "development_manifest": "retarget_research/manifests/formal_method_selection_a_50c_50t_seed20260814.json",
   "fresh_confirmation_manifest": "retarget_research/manifests/formal_confirmation_d_50c_50t_seed20260815.json",
   "shared_rule": {
@@ -67,5 +67,35 @@
     "no_cross_hand_union": "each hand freezes one global method; per-trajectory oracle union is forbidden",
     "confirmation": "the selected candidate must have positive paired net gain on frozen D before it may replace the current method",
     "formal_1000": "do not replay formal 1000 until all planned mechanism families are exhausted and one method per hand is frozen"
+  },
+  "physics_results_A": {
+    "linker": {
+      "current_object3": 8,
+      "shadow_tips_1.5mm": 8,
+      "shadow_tips_3mm": 8,
+      "paired_changes": {
+        "shadow_tips_1.5mm": "+1/-1",
+        "shadow_tips_3mm": "+0/-0"
+      }
+    },
+    "xhand": {
+      "current": 29,
+      "shadow_tips_1mm": 28,
+      "shadow_tips_2mm": 27,
+      "object_bbox_1.5mm": 28,
+      "object_bbox_3mm": 27
+    },
+    "wuji": {
+      "current": 33,
+      "shadow_tips_1.5mm": 32,
+      "shadow_tips_3mm": 32,
+      "object_bbox_1.5mm": 32,
+      "object_bbox_3mm": 33,
+      "object_bbox_3mm_continuous_delta_mm": {
+        "mean_max_lift": 4.176,
+        "mean_final_lift": 16.371
+      }
+    },
+    "decision": "reject all shared-center candidates because none exceeds the current success count"
   }
 }

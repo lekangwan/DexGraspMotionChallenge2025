@@ -1,6 +1,6 @@
 {
   "purpose": "screen_target_hand_finger_position_controller_gains_without_changing_trajectory",
-  "status": "parameters_frozen_before_physics_screen_A",
+  "status": "physics_screen_A_complete_no_candidate_selected",
   "development_manifest": "retarget_research/manifests/formal_method_selection_a_50c_50t_seed20260814.json",
   "current_gain": {
     "stiffness": 120.0,
@@ -37,5 +37,22 @@
     "stiff": "double stiffness tests whether failures are mainly tracking lag during closing/lifting; doubled damping limits overshoot",
     "wrist": "virtual wrist gains remain fixed because changing global hand tracking would confound grasp-shape and lift-path effects"
   },
-  "selection_rule": "one global gain pair per hand; no per-trajectory gain oracle; require positive paired net gain before confirmation"
+  "selection_rule": "one global gain pair per hand; no per-trajectory gain oracle; require positive paired net gain before confirmation",
+  "physics_results_A": {
+    "xhand": {
+      "current": 29,
+      "soft": 28,
+      "stiff": 28,
+      "paired_soft": "+1/-2",
+      "paired_stiff": "+1/-2"
+    },
+    "wuji": {
+      "current": 33,
+      "soft": 30,
+      "stiff": 33,
+      "paired_soft": "+0/-3",
+      "paired_stiff": "+0/-0"
+    },
+    "decision": "retain stiffness 120 and damping 5 for both hands because no candidate adds net success"
+  }
 }

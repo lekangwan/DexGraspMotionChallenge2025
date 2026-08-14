@@ -1,0 +1,32 @@
+{
+  "purpose": "screen_pre_lift_contact_settle_for_xhand_and_wuji_after_wrist_and_pd_failures",
+  "status": "parameters_frozen_before_physics_screen_A",
+  "development_manifest": "retarget_research/manifests/formal_method_selection_a_50c_50t_seed20260814.json",
+  "baseline": {
+    "xhand": "official_reference",
+    "wuji": "wuji_v1_no_temporal",
+    "linker": "excluded because 2/4/6-frame study already yielded 7/7/5 versus baseline 7"
+  },
+  "candidates": {
+    "xhand": [2, 4],
+    "wuji": [2, 4]
+  },
+  "time_interpretation": {
+    "trajectory_rate_hz": 20,
+    "settle_2_frames_s": 0.1,
+    "settle_4_frames_s": 0.2
+  },
+  "method": {
+    "approach": "compress only the pre-contact approach segment",
+    "closing": "shift the original closing commands earlier without changing their order",
+    "settle": "repeat the final pre-lift closed command for 2 or 4 frames",
+    "lift": "preserve every original frame from lift_start onward exactly",
+    "episode_length": "remain exactly 70 trajectory frames"
+  },
+  "range_reason": {
+    "2_frames": "minimum meaningful 0.1 s contact stabilization at the 20 Hz demonstration rate",
+    "4_frames": "tests a moderate 0.2 s settle while avoiding the 6-frame setting that increased action jumps and hurt Linker",
+    "no_larger_search": "larger holds consume more approach time and the prior Linker ablation already contradicts monotonic benefit"
+  },
+  "selection_rule": "within each hand, require success_count above the current A baseline and positive paired net gain; ties favor 2 frames; only one global setting can enter D"
+}

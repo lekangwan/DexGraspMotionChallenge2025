@@ -54,7 +54,7 @@ def bounded_center_correction(
 ) -> tuple[np.ndarray, dict]:
     """计算指向物体中心、但长度受全局上限约束的三维平移。
 
-    输入：三维抓取中心、三维物体中心和正的最大修正距离（米）。
+    输入：三维抓取中心、三维物体中心和非负最大修正距离（米）。
     输出：三维修正向量与原始距离、实际长度、单位方向等审计字典。
     内部逻辑：距离小于上限时完整对齐，否则只沿中心连线前进上限长度；
     两中心数值重合时返回零向量，避免除零。
@@ -66,8 +66,8 @@ def bounded_center_correction(
         raise ValueError(f"中心坐标必须为三维，实际{grasp.shape}与{object_.shape}")
     if not np.isfinite(grasp).all() or not np.isfinite(object_).all():
         raise ValueError("中心坐标包含非有限值")
-    if max_advance_m <= 0:
-        raise ValueError(f"最大修正距离必须为正数，实际{max_advance_m}")
+    if max_advance_m < 0:
+        raise ValueError(f"最大修正距离不能为负数，实际{max_advance_m}")
 
     residual = object_ - grasp
     original_distance = float(np.linalg.norm(residual))
