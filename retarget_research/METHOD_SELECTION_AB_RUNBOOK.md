@@ -100,3 +100,21 @@ MPLCONFIGDIR=/tmp/matplotlib-retarget OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
 XHand先比较严格成功数，再比较相对官方的配对新增/丢失；若成功数仍相同，依次看最终抬升、最大抬升和接触步数。A组只留下一个系数进入B组，不能逐物体混合三种候选。Linker把新跑的无夹紧摘要与正式夹紧摘要过滤到同一A/B键；若夹紧在A和B均无净收益，则最终应回退到几何基线，不能因为正式夹紧已经跑完1000条就强行保留。
 
 B组XHand候选必须等A组第一名确定后再生成；该生成仍是秒级。B组只重放“官方已有结果 vs A组第一名”，不再比较三个系数，也不重新调整参数。
+
+## A组已完成后的冻结决定
+
+- `r=0/0.5/1`为28/50、29/50、27/50，A组唯一入选系数为`r=0.5`。
+- Linker夹紧相对无夹紧在A净增5、B净增7，Linker最终保留夹紧。
+- B组`r=0.5`候选已经生成。执行下面最后50条确认，不再改系数：
+
+```bash
+cd /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release
+MPLCONFIGDIR=/tmp/matplotlib-retarget OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
+/home/lekangwan/miniconda3/envs/hand-retarget/bin/python \
+  retarget_research/retargeting/evaluate/evaluate_hand_manifest.py \
+  --hand xhand \
+  --manifest retarget_research/manifests/formal_method_selection_b_50c_50t_seed20260814.json \
+  --target-dir retarget_research/outputs/method_selection_ab/b/xhand_dynamic_r05 \
+  --output-dir retarget_research/outputs/method_selection_ab/b/xhand_dynamic_r05_evaluation \
+  --workers 1 --resume
+```
