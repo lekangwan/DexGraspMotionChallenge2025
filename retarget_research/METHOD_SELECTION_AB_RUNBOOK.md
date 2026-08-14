@@ -10,6 +10,15 @@
 
 以下只有Isaac Gym物理重放可能超过3分钟，按约定由用户终端运行。第一阶段五条命令互不依赖；为避免同时启动过多CPU PhysX进程，每条使用一个worker，可开五个终端并行。如果机器明显卡顿，可以只并行三条，完成后再运行剩余两条。
 
+推荐直接使用已经写好的总入口。它先并行三个XHand进程，完成后再并行两个Linker进程，失败后可原命令续跑：
+
+```bash
+cd /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release
+bash retarget_research/retargeting/run/run_method_selection_stage_a.sh
+```
+
+下面保留五条展开命令，便于检查参数或在不同终端中单独恢复。
+
 ## 第一阶段：A组三个XHand候选 + Linker A/B基线
 
 ### 终端1：XHand残差最终归零
