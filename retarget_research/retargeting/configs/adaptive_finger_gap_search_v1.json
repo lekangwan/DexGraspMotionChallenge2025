@@ -1,6 +1,6 @@
 {
   "purpose": "screen_expert_contact_gated_per_finger_kinematic_gap_recovery_for_three_hands",
-  "status": "parameters_frozen_before_physics_screen_A",
+  "status": "physics_screen_A_complete_xhand_0.10_selected_for_D",
   "development_manifest": "retarget_research/manifests/formal_method_selection_a_50c_50t_seed20260814.json",
   "baselines": {
     "linker": "current object-centric 3 mm candidate",
@@ -53,5 +53,47 @@
     "does not freeze finger joints during lift",
     "preserves the complete original trajectory and adds only a bounded constant residual after grasp"
   ],
-  "selection_rule": "within each hand require success_count above the current A baseline and positive paired net gain; ties favor 0.05 rad; at most one global residual cap can enter D"
+  "selection_rule": "within each hand require success_count above the current A baseline and positive paired net gain; ties favor 0.05 rad; at most one global residual cap can enter D",
+  "physics_results_A": {
+    "linker": {
+      "current": 8,
+      "delta_0.05": 8,
+      "delta_0.10": 8,
+      "paired_delta_0.05": "+0/-0",
+      "paired_delta_0.10": "+0/-0",
+      "decision": "reject both because success set is unchanged"
+    },
+    "xhand": {
+      "current": 29,
+      "delta_0.05": 28,
+      "delta_0.10": 30,
+      "paired_delta_0.05": "+1/-2",
+      "paired_delta_0.10": "+1/-0",
+      "delta_0.10_continuous_mean_change": {
+        "max_lift_mm": 3.541,
+        "final_lift_mm": 10.819,
+        "contact_steps": 1.58,
+        "sustained_lift_s": 0.037
+      },
+      "added_case": {
+        "category": "bowl",
+        "object_name": "core-bowl-45603bffc6a2866b5d1ac0d5489f7d84",
+        "source_trajectory_index": 17,
+        "activated_finger": "thumb",
+        "thumb_distance_mm": [24.113, 14.189],
+        "max_lift_m": [0.10693, 0.351644],
+        "final_lift_m": [-0.011621, 0.351568],
+        "contact_steps": [63, 156]
+      },
+      "decision": "select only delta 0.10 for frozen D confirmation; evidence is directional but not statistically significant"
+    },
+    "wuji": {
+      "current": 33,
+      "delta_0.05": 31,
+      "delta_0.10": 32,
+      "paired_delta_0.05": "+0/-2",
+      "paired_delta_0.10": "+1/-2",
+      "decision": "reject both"
+    }
+  }
 }

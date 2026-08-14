@@ -1,6 +1,6 @@
 {
   "purpose": "screen_pre_lift_contact_settle_for_xhand_and_wuji_after_wrist_and_pd_failures",
-  "status": "parameters_frozen_before_physics_screen_A",
+  "status": "physics_screen_A_complete_all_candidates_rejected",
   "development_manifest": "retarget_research/manifests/formal_method_selection_a_50c_50t_seed20260814.json",
   "baseline": {
     "xhand": "official_reference",
@@ -28,5 +28,22 @@
     "4_frames": "tests a moderate 0.2 s settle while avoiding the 6-frame setting that increased action jumps and hurt Linker",
     "no_larger_search": "larger holds consume more approach time and the prior Linker ablation already contradicts monotonic benefit"
   },
-  "selection_rule": "within each hand, require success_count above the current A baseline and positive paired net gain; ties favor 2 frames; only one global setting can enter D"
+  "selection_rule": "within each hand, require success_count above the current A baseline and positive paired net gain; ties favor 2 frames; only one global setting can enter D",
+  "physics_results_A": {
+    "xhand": {
+      "current": 29,
+      "settle_2": 28,
+      "settle_4": 25,
+      "paired_settle_2": "+1/-2",
+      "paired_settle_4": "+1/-5"
+    },
+    "wuji": {
+      "current": 33,
+      "settle_2": 31,
+      "settle_4": 31,
+      "paired_settle_2": "+0/-2",
+      "paired_settle_4": "+0/-2"
+    },
+    "decision": "reject all candidates; additional pre-lift settling increases contacts in some cases but reduces lift success"
+  }
 }
