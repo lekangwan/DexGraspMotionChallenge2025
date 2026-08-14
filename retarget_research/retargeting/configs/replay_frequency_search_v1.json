@@ -1,6 +1,6 @@
 {
   "purpose": "screen_global_trajectory_replay_frequency_for_each_target_hand",
-  "status": "A_screen_prepared_confirmation_E_frozen_unseen",
+  "status": "A_screen_complete_all_non_20hz_rates_rejected",
   "development_manifest": "retarget_research/manifests/formal_method_selection_a_50c_50t_seed20260814.json",
   "confirmation_manifest": "retarget_research/manifests/formal_confirmation_e_50c_50t_seed20260816.json",
   "baselines": {
@@ -43,5 +43,32 @@
     "interpretation": "controller/execution ablation rather than a new geometric retargeting objective",
     "no_slower_search": "below 10 Hz would make each 70-frame replay longer than 7 s and risks improving the benchmark mainly through excessive settling rather than better retargeting"
   },
-  "selection_rule": "for each hand, compare 30/15/10 Hz with its existing 20 Hz baseline on identical A keys; only the single rate with higher success and positive paired net gain may enter the already-frozen E set; ties choose the rate closest to 20 Hz; E must again have positive net gain before replacing 20 Hz"
+  "selection_rule": "for each hand, compare 30/15/10 Hz with its existing 20 Hz baseline on identical A keys; only the single rate with higher success and positive paired net gain may enter the already-frozen E set; ties choose the rate closest to 20 Hz; E must again have positive net gain before replacing 20 Hz",
+  "physics_results_A": {
+    "linker": {
+      "success_by_frequency_hz": {"30": 8, "20": 8, "15": 7, "10": 7},
+      "paired_30_vs_20": "+2/-2",
+      "paired_15_vs_20": "+0/-1",
+      "paired_10_vs_20": "+1/-2",
+      "mean_final_lift_mm_by_frequency_hz": {"30": 17.271, "20": 27.956, "15": 27.976, "10": 17.947},
+      "decision": "reject all; 30 Hz only ties success with two regressions and much lower final lift"
+    },
+    "xhand": {
+      "success_by_frequency_hz": {"30": 28, "20": 29, "15": 25, "10": 22},
+      "paired_30_vs_20": "+1/-2",
+      "paired_15_vs_20": "+1/-5",
+      "paired_10_vs_20": "+1/-8",
+      "mean_final_lift_mm_by_frequency_hz": {"30": 161.782, "20": 169.463, "15": 142.472, "10": 134.110},
+      "decision": "reject all; slowdown monotonically reduces success and lift, while 30 Hz also loses one net success"
+    },
+    "wuji": {
+      "success_by_frequency_hz": {"30": 32, "20": 33, "15": 30, "10": 29},
+      "paired_30_vs_20": "+1/-2",
+      "paired_15_vs_20": "+0/-3",
+      "paired_10_vs_20": "+0/-4",
+      "mean_final_lift_mm_by_frequency_hz": {"30": 197.001, "20": 199.464, "15": 185.881, "10": 173.710},
+      "decision": "reject all; 20 Hz is the best tested global replay frequency"
+    }
+  },
+  "overall_decision": "no replay-frequency candidate enters E; retain 20 Hz for all three hands"
 }

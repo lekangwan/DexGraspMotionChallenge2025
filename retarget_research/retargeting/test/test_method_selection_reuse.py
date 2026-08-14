@@ -42,7 +42,11 @@ from retarget_research.retargeting.run.refine_shared_grasp_center import (
 from retarget_research.retargeting.run.refine_adaptive_finger_gap import (
     apply_finger_residuals,
     bounded_descent_residual,
+    contact_region,
+    point_to_region_distance,
+    residual_method_name,
 )
+from scipy.spatial import cKDTree
 
 
 class MethodSelectionReuseTest(unittest.TestCase):
@@ -370,6 +374,36 @@ class MethodSelectionReuseTest(unittest.TestCase):
         self.assertGreater(residual[0], 0)
         self.assertLess(residual[1], 0)
         self.assertEqual(residual[2], 0)
+
+    def test_expert_contact_region_keeps_semantic_surface_target(self):
+        """专家区域应只含源指尖附近表面，并与旧任意表面方法使用不同名称。
+
+        输入：分居物体左右两侧的四个表面点、靠近左侧的Shadow指尖和右侧目标指尖。
+        输出：区域只取左侧两点，目标到专家区域远于其到任意表面的距离。
+        内部逻辑：用KD-tree选择两个近邻，再显式比较局部与全局距离。
+        作用：锁定新方法不会因为目标手当前靠近右侧，就把右侧误当成专家接触目标。
+        """
+        vertices = np.asarray(
+            [[-1.0, 0.0, 0.0], [-0.9, 0.0, 0.0], [0.9, 0.0, 0.0], [1.0, 0.0, 0.0]],
+            dtype=np.float32,
+        )
+        tree = cKDTree(vertices)
+        region = contact_region(
+            vertices,
+            tree,
+            np.asarray([-1.05, 0.0, 0.0], dtype=np.float32),
+            2,
+        )
+        target = np.asarray([1.05, 0.0, 0.0], dtype=np.float32)
+        self.assertTrue(np.all(region[:, 0] < 0))
+        self.assertGreater(
+            point_to_region_distance(target, region),
+            float(tree.query(target, k=1)[0]),
+        )
+        self.assertEqual(
+            residual_method_name("expert_contact_region", 0.1),
+            "expert_contact_region_0.1rad_v1",
+        )
 
     def test_finger_residual_preserves_wrist_and_original_lift_dynamics(self):
         """分指残差不得改腕部，也不得冻结原有lift关节动态。

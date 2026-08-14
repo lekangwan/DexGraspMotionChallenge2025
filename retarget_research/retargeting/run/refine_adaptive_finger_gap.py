@@ -4,8 +4,9 @@
 输入：手类型、冻结manifest、当前候选目录、单指最大关节残差和距离阈值。
 输出：与manifest对齐的唯一候选npy，以及每指激活、距离和关节残差审计。
 内部逻辑：在Shadow专家抓取帧判定哪些指头本应靠近物体；若目标手同指
-距离还明显更大，就用数值运动学梯度找到减小距离的小关节残差。残差从闭合帧
-渐进加入，抓取帧后保持，同时完整保留原轨迹的手腕和后续关节动态。
+距离还明显更大，就用数值运动学梯度找到小关节残差。优化目标可选“任意最近
+表面”或“Shadow同指实际接触的局部表面”，残差从闭合帧渐进加入，抓取帧后
+保持，同时完整保留原轨迹的手腕和后续关节动态。
 作用：比“五指统一继续夹紧”更有针对性地恢复缺失接触，并共享同一规则
 覆盖Linker、XHand和Wuji三种不同自由度结构。
 """
@@ -72,6 +73,53 @@ FINGER_JOINT_GROUPS = {
         "little": [5],
     },
 }
+
+
+def contact_region(vertices: np.ndarray, tree: cKDTree, source_point: np.ndarray, neighbors: int) -> np.ndarray:
+    """选出Shadow某根指尖实际接近的局部物体表面。
+
+    输入：世界物体顶点、对应KD-tree、Shadow指尖点和邻域顶点数。
+    输出：形状`(K,3)`的局部表面顶点，K不超过物体总顶点数。
+    内部逻辑：按欧氏距离取源指尖最近的K个物体顶点并保持二维形状。
+    作用：给目标手同名手指一个有语义的接触区域，避免滑向任意更近但错误的一侧。
+    """
+    if int(neighbors) < 1:
+        raise ValueError("接触区域邻居数必须至少为1")
+    count = min(int(neighbors), len(vertices))
+    _, indices = tree.query(np.asarray(source_point, dtype=np.float32), k=count)
+    return np.asarray(vertices, dtype=np.float32)[
+        np.atleast_1d(indices).astype(np.int64)
+    ]
+
+
+def point_to_region_distance(point: np.ndarray, region: np.ndarray) -> float:
+    """计算一个目标手指尖到专家局部接触区域的最近距离。
+
+    输入：三维指尖点和`(K,3)`局部表面点。
+    输出：非负欧氏距离标量。
+    内部逻辑：逐点计算距离并取最小值；拒绝空区域或错误形状。
+    作用：作为专家区域模式的数值梯度目标，而不是到整个物体任意位置的距离。
+    """
+    point = np.asarray(point, dtype=np.float32)
+    region = np.asarray(region, dtype=np.float32)
+    if point.shape != (3,) or region.ndim != 2 or region.shape[1] != 3 or not len(region):
+        raise ValueError(f"指尖或接触区域形状错误: {point.shape}, {region.shape}")
+    return float(np.min(np.linalg.norm(region - point[None, :], axis=1)))
+
+
+def residual_method_name(target_mode: str, max_delta_rad: float) -> str:
+    """生成不混淆两种几何目标的方法名。
+
+    输入：`nearest_surface`或`expert_contact_region`及单指残差上限。
+    输出：写入候选和摘要的稳定方法字符串。
+    内部逻辑：旧最近表面模式保留原名，新模式使用独立前缀。
+    作用：防止续跑、报告或策略数据把两种不同接触目标误当同一候选。
+    """
+    if target_mode == "nearest_surface":
+        return f"adaptive_finger_gap_{max_delta_rad:g}rad_v1"
+    if target_mode == "expert_contact_region":
+        return f"expert_contact_region_{max_delta_rad:g}rad_v1"
+    raise ValueError(f"未知分指优化目标: {target_mode}")
 
 
 def joint_limits(target_model) -> tuple[np.ndarray, np.ndarray]:
@@ -300,10 +348,12 @@ def refine_manifest(
     lift_delta: float,
     mismatch_margin: float,
     epsilon_rad: float,
+    target_mode: str = "nearest_surface",
+    region_neighbors: int = 32,
 ) -> dict:
     """为一只手的manifest批量生成缺口驱动分指候选。
 
-    输入：手/manifest/目录、残差上限、物体/阶段参数和数值差分步长。
+    输入：手/manifest/目录、残差上限、物体/阶段参数、数值差分步长及目标模式。
     输出：批次摘要；同时写出每物体候选npy。
     内部逻辑：恢复源手/目标手/物体几何，在专家抓取帧对五指逐一做门控、
     受限数值下降与时序叠加，最后核对轨迹数。
@@ -311,6 +361,9 @@ def refine_manifest(
     """
     if hand not in HAND_DIMENSIONS:
         raise ValueError(f"未知手类型: {hand}")
+    method = residual_method_name(target_mode, max_delta_rad)
+    if int(region_neighbors) < 1:
+        raise ValueError("专家接触区域邻居数必须至少为1")
     output_dir.mkdir(parents=True, exist_ok=True)
     shadow_model, target_model = build_hand_models(hand)
     lower, upper = joint_limits(target_model)
@@ -361,6 +414,12 @@ def refine_manifest(
                 source_point = shadow_points[grasp, SHADOW_TIP_INDICES[name]]
                 source_distance = float(tree.query(source_point, k=1)[0])
                 target_distance = float(tree.query(target_points[name], k=1)[0])
+                expert_region = contact_region(
+                    vertices, tree, source_point, region_neighbors
+                )
+                expert_region_distance = point_to_region_distance(
+                    target_points[name], expert_region
+                )
                 source_contact = source_distance <= float(contact_threshold)
                 gap = target_distance - source_distance
                 active = bool(source_contact and gap > float(mismatch_margin))
@@ -368,20 +427,28 @@ def refine_manifest(
                     "source_distance_m": source_distance,
                     "target_distance_before_m": target_distance,
                     "target_minus_source_gap_m": gap,
+                    "expert_region_distance_before_m": expert_region_distance,
                     "source_contact": source_contact,
                     "active": active,
+                    "optimization_target_mode": target_mode,
                 }
                 if active:
                     group = FINGER_JOINT_GROUPS[hand][name]
 
-                    def distance_fn(candidate_joints, finger=name):
-                        """输入候选关节，输出指定指尖到物体顶点的最近距离。"""
+                    def distance_fn(
+                        candidate_joints,
+                        finger=name,
+                        region=expert_region,
+                    ):
+                        """输入候选关节，输出到当前模式指定表面目标的距离。"""
                         candidate = base_frame.copy()
                         candidate[6:] = candidate_joints
                         point = target_tip_positions(
                             hand, target_model, data, candidate, position
                         )[finger]
-                        return float(tree.query(point, k=1)[0])
+                        if target_mode == "nearest_surface":
+                            return float(tree.query(point, k=1)[0])
+                        return point_to_region_distance(point, region)
 
                     residual, descent = bounded_descent_residual(
                         base_joints,
@@ -428,6 +495,11 @@ def refine_manifest(
                 finger_audit["optimized_distance_after_trajectory_bound_m"] = float(
                     tree.query(final_points[name], k=1)[0]
                 )
+                source_point = shadow_points[grasp, SHADOW_TIP_INDICES[name]]
+                region = contact_region(vertices, tree, source_point, region_neighbors)
+                finger_audit["expert_region_distance_after_trajectory_bound_m"] = (
+                    point_to_region_distance(final_points[name], region)
+                )
             trajectory_audit.update(
                 {
                     "source_trajectory_index": source_index,
@@ -450,10 +522,12 @@ def refine_manifest(
         result.update(
             {
                 "grasp_seqs": np.stack(outputs).astype(np.float32),
-                "method": f"adaptive_finger_gap_{max_delta_rad:g}rad_v1",
+                "method": method,
                 "adaptive_finger_gap_input": str(input_path.resolve()),
                 "adaptive_finger_gap_max_delta_rad": float(max_delta_rad),
                 "adaptive_finger_gap_mismatch_margin_m": float(mismatch_margin),
+                "adaptive_finger_gap_target_mode": target_mode,
+                "adaptive_finger_gap_region_neighbors": int(region_neighbors),
                 "adaptive_finger_gap_audit": audits,
                 "adaptive_finger_gap_phase_metadata": phase_records,
             }
@@ -469,7 +543,7 @@ def refine_manifest(
     ]
     active_records = [item for item in finger_records if item["active"]]
     return {
-        "method": f"adaptive_finger_gap_{max_delta_rad:g}rad_v1",
+        "method": method,
         "hand": hand,
         "manifest_purpose": manifest.get("purpose"),
         "input_dir": str(input_dir.resolve()),
@@ -477,6 +551,8 @@ def refine_manifest(
         "trajectory_count": len(records),
         "max_delta_rad_per_finger": float(max_delta_rad),
         "mismatch_margin_m": float(mismatch_margin),
+        "target_mode": target_mode,
+        "expert_contact_region_neighbors": int(region_neighbors),
         "active_finger_count": len(active_records),
         "trajectory_with_active_finger_count": sum(
             record["active_finger_count"] > 0 for record in records
@@ -491,6 +567,23 @@ def refine_manifest(
                 np.mean(
                     [
                         item["optimized_distance_after_trajectory_bound_m"]
+                        for item in active_records
+                    ]
+                )
+            )
+            if active_records
+            else 0.0
+        ),
+        "mean_active_expert_region_distance_before_m": (
+            float(np.mean([item["expert_region_distance_before_m"] for item in active_records]))
+            if active_records
+            else 0.0
+        ),
+        "mean_active_expert_region_distance_after_m": (
+            float(
+                np.mean(
+                    [
+                        item["expert_region_distance_after_trajectory_bound_m"]
                         for item in active_records
                     ]
                 )
@@ -526,12 +619,25 @@ def main() -> None:
     parser.add_argument("--lift-delta", type=float, default=0.03)
     parser.add_argument("--mismatch-margin", type=float, default=0.003)
     parser.add_argument("--epsilon-rad", type=float, default=0.01)
+    parser.add_argument(
+        "--target-mode",
+        choices=("nearest_surface", "expert_contact_region"),
+        default="nearest_surface",
+        help="数值残差追逐整个物体最近表面，或Shadow同指接触的局部表面",
+    )
+    parser.add_argument(
+        "--region-neighbors",
+        type=int,
+        default=32,
+        help="专家接触区域包含的邻近物体顶点数",
+    )
     args = parser.parse_args()
     if (
         args.max_delta_rad <= 0
         or args.contact_threshold <= 0
         or args.mismatch_margin < 0
         or args.epsilon_rad <= 0
+        or args.region_neighbors < 1
     ):
         parser.error("残差/接触/差分参数无效")
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
@@ -548,8 +654,15 @@ def main() -> None:
         args.lift_delta,
         args.mismatch_margin,
         args.epsilon_rad,
+        args.target_mode,
+        args.region_neighbors,
     )
-    summary_path = args.output_dir / "adaptive_finger_gap_summary.json"
+    summary_name = (
+        "adaptive_finger_gap_summary.json"
+        if args.target_mode == "nearest_surface"
+        else "expert_contact_region_summary.json"
+    )
+    summary_path = args.output_dir / summary_name
     summary_path.write_text(
         json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
@@ -562,6 +675,11 @@ def main() -> None:
         "mean_active_distance_mm="
         f"{1000 * summary['mean_active_distance_before_m']:.3f}->"
         f"{1000 * summary['mean_active_distance_after_m']:.3f}"
+    )
+    print(
+        "mean_active_expert_region_distance_mm="
+        f"{1000 * summary['mean_active_expert_region_distance_before_m']:.3f}->"
+        f"{1000 * summary['mean_active_expert_region_distance_after_m']:.3f}"
     )
     print(f"joint_limit_clips={summary['joint_limit_clipped_value_count']}")
     print(f"summary={summary_path.resolve()}")

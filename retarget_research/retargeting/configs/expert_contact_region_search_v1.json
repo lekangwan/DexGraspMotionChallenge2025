@@ -1,0 +1,57 @@
+{
+  "purpose": "replace_unsigned_nearest_surface_finger_recovery_with_shadow_semantic_contact_regions",
+  "status": "static_A_complete_physics_A_prepared_confirmation_E_frozen_unseen",
+  "development_manifest": "retarget_research/manifests/formal_method_selection_a_50c_50t_seed20260814.json",
+  "confirmation_manifest": "retarget_research/manifests/formal_confirmation_e_50c_50t_seed20260816.json",
+  "motivation": {
+    "observed_failure": "the nearest-surface XHand residual passed A by +1/-0 but became +3/-3 on D; moving closer rescued Clock/Pan/Thumbtack yet destroyed Can/Palette/SoapBottle",
+    "diagnosis": "distance to any surface is unsigned and has no semantic side information, so a finger can approach a nearby but mechanically wrong object face",
+    "new_hypothesis": "the local object patch actually approached by the same Shadow expert finger carries more useful contact-side information than the globally nearest target-hand surface point"
+  },
+  "method": {
+    "activation_gate": "unchanged: Shadow fingertip within 20 mm and target fingertip nearest-surface gap more than 3 mm larger",
+    "expert_region": "32 object vertices nearest to the corresponding Shadow fingertip at the expert grasp frame",
+    "objective": "numerically minimize target fingertip distance to that semantic local region using only the activated finger's joints",
+    "residual_caps_rad_per_finger": [0.05, 0.1],
+    "numeric_gradient_epsilon_rad": 0.01,
+    "temporal_application": "ramp from close to grasp and preserve a constant residual afterward, leaving wrist and original lift dynamics unchanged",
+    "joint_limits": "effective residual is bounded against all 70 frames; no post-hoc clipping is allowed"
+  },
+  "why_32_neighbors": "a single mesh vertex is sensitive to tessellation, while 32 vertices define a small local patch already used by the earlier contact-region prototype; it preserves the expert side without requiring a new region-size sweep",
+  "difference_from_prior_methods": [
+    "unlike adaptive_finger_gap_v1 it does not optimize distance to the entire object",
+    "unlike the rejected full XHand contact refinement it does not jointly optimize the wrist or all fingers",
+    "it does not freeze the lift phase and does not query physics success while generating a candidate"
+  ],
+  "static_A_audit": {
+    "linker": {
+      "active_fingers": 116,
+      "active_trajectories": 42,
+      "nearest_surface_mm_0.05": [25.441, 23.442],
+      "expert_region_mm_0.05": [33.278, 29.091],
+      "nearest_surface_mm_0.10": [25.441, 20.884],
+      "expert_region_mm_0.10": [33.278, 24.984],
+      "trajectories_with_residual_different_from_nearest_surface": {"0.05": 28, "0.10": 29}
+    },
+    "xhand": {
+      "active_fingers": 29,
+      "active_trajectories": 24,
+      "nearest_surface_mm_0.05": [19.106, 16.676],
+      "expert_region_mm_0.05": [19.579, 17.065],
+      "nearest_surface_mm_0.10": [19.106, 14.731],
+      "expert_region_mm_0.10": [19.579, 15.154],
+      "trajectories_with_residual_different_from_nearest_surface": {"0.05": 11, "0.10": 15}
+    },
+    "wuji": {
+      "active_fingers": 73,
+      "active_trajectories": 39,
+      "nearest_surface_mm_0.05": [17.092, 14.818],
+      "expert_region_mm_0.05": [17.284, 15.085],
+      "nearest_surface_mm_0.10": [17.092, 12.842],
+      "expert_region_mm_0.10": [17.284, 13.287],
+      "trajectories_with_residual_different_from_nearest_surface": {"0.05": 23, "0.10": 33}
+    },
+    "joint_limit_clipped_values_all_candidates": 0
+  },
+  "selection_rule": "within each hand require success_count above the current A baseline and positive paired net gain; at most one cap may enter E; ties choose 0.05 rad; E must again have positive net gain before replacing the current method"
+}
