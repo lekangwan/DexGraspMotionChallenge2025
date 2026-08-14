@@ -1,0 +1,201 @@
+label,category,success_rate
+Linker O6主方法,ball,0.0
+Linker O6主方法,battery,0.05
+Linker O6主方法,beanbag,0.0
+Linker O6主方法,blender,0.25
+Linker O6主方法,book,0.35
+Linker O6主方法,bowl,0.1
+Linker O6主方法,camera,0.2
+Linker O6主方法,can,0.15
+Linker O6主方法,canister,0.4
+Linker O6主方法,cap,0.0
+Linker O6主方法,cerealbox,0.35
+Linker O6主方法,clock,0.15
+Linker O6主方法,cookie,0.0
+Linker O6主方法,disccase,0.15
+Linker O6主方法,dog,0.3
+Linker O6主方法,filecabinet,0.35
+Linker O6主方法,flashlight,0.35
+Linker O6主方法,fruit,0.15
+Linker O6主方法,headphones,0.3
+Linker O6主方法,horse,0.3
+Linker O6主方法,ipad,0.0
+Linker O6主方法,knife,0.1
+Linker O6主方法,milkcarton,0.2
+Linker O6主方法,palette,0.0
+Linker O6主方法,pan,0.2
+Linker O6主方法,pencil,0.5
+Linker O6主方法,personstanding,0.25
+Linker O6主方法,phonebooth,0.35
+Linker O6主方法,piano,0.25
+Linker O6主方法,pillow,0.0
+Linker O6主方法,remote,0.25
+Linker O6主方法,rubikscube,0.05
+Linker O6主方法,ship,0.3
+Linker O6主方法,showerhead,0.2
+Linker O6主方法,snowman,0.3
+Linker O6主方法,soapbar,0.3
+Linker O6主方法,soapbottle,0.2
+Linker O6主方法,stapler,0.4
+Linker O6主方法,tapedispenser,0.35
+Linker O6主方法,thumbtack,0.3
+Linker O6主方法,tissuebox,0.4
+Linker O6主方法,toaster,0.5
+Linker O6主方法,toasteroven,0.45
+Linker O6主方法,usbstick,0.2
+Linker O6主方法,vase,0.2
+Linker O6主方法,videogamecontroller,0.0
+Linker O6主方法,wallclock,0.0
+Linker O6主方法,watch,0.35
+Linker O6主方法,wii,0.45
+Linker O6主方法,winebottle,0.6
+Wuji v1,ball,0.2
+Wuji v1,battery,0.4
+Wuji v1,beanbag,0.35
+Wuji v1,blender,0.75
+Wuji v1,book,0.45
+Wuji v1,bowl,0.55
+Wuji v1,camera,0.65
+Wuji v1,can,0.7
+Wuji v1,canister,0.9
+Wuji v1,cap,0.2
+Wuji v1,cerealbox,0.85
+Wuji v1,clock,0.9
+Wuji v1,cookie,0.4
+Wuji v1,disccase,0.95
+Wuji v1,dog,0.75
+Wuji v1,filecabinet,0.8
+Wuji v1,flashlight,0.8
+Wuji v1,fruit,0.6
+Wuji v1,headphones,0.7
+Wuji v1,horse,0.6
+Wuji v1,ipad,0.6
+Wuji v1,knife,0.45
+Wuji v1,milkcarton,0.75
+Wuji v1,palette,0.65
+Wuji v1,pan,0.2
+Wuji v1,pencil,0.55
+Wuji v1,personstanding,0.5
+Wuji v1,phonebooth,0.85
+Wuji v1,piano,0.75
+Wuji v1,pillow,0.6
+Wuji v1,remote,0.8
+Wuji v1,rubikscube,0.45
+Wuji v1,ship,0.85
+Wuji v1,showerhead,0.5
+Wuji v1,snowman,0.6
+Wuji v1,soapbar,0.65
+Wuji v1,soapbottle,0.75
+Wuji v1,stapler,0.8
+Wuji v1,tapedispenser,0.85
+Wuji v1,thumbtack,0.8
+Wuji v1,tissuebox,0.7
+Wuji v1,toaster,0.8
+Wuji v1,toasteroven,0.7
+Wuji v1,usbstick,0.65
+Wuji v1,vase,0.55
+Wuji v1,videogamecontroller,0.25
+Wuji v1,wallclock,0.45
+Wuji v1,watch,0.7
+Wuji v1,wii,0.95
+Wuji v1,winebottle,0.7
+XHand官方基线,ball,0.15
+XHand官方基线,battery,0.4
+XHand官方基线,beanbag,0.35
+XHand官方基线,blender,0.65
+XHand官方基线,book,0.3
+XHand官方基线,bowl,0.4
+XHand官方基线,camera,0.7
+XHand官方基线,can,0.55
+XHand官方基线,canister,0.9
+XHand官方基线,cap,0.0
+XHand官方基线,cerealbox,0.9
+XHand官方基线,clock,0.75
+XHand官方基线,cookie,0.45
+XHand官方基线,disccase,0.95
+XHand官方基线,dog,0.75
+XHand官方基线,filecabinet,0.75
+XHand官方基线,flashlight,0.95
+XHand官方基线,fruit,0.6
+XHand官方基线,headphones,0.5
+XHand官方基线,horse,0.65
+XHand官方基线,ipad,0.6
+XHand官方基线,knife,0.2
+XHand官方基线,milkcarton,0.7
+XHand官方基线,palette,0.4
+XHand官方基线,pan,0.15
+XHand官方基线,pencil,0.55
+XHand官方基线,personstanding,0.35
+XHand官方基线,phonebooth,0.85
+XHand官方基线,piano,0.75
+XHand官方基线,pillow,0.75
+XHand官方基线,remote,0.65
+XHand官方基线,rubikscube,0.35
+XHand官方基线,ship,0.7
+XHand官方基线,showerhead,0.55
+XHand官方基线,snowman,0.5
+XHand官方基线,soapbar,0.7
+XHand官方基线,soapbottle,0.5
+XHand官方基线,stapler,0.6
+XHand官方基线,tapedispenser,0.65
+XHand官方基线,thumbtack,0.6
+XHand官方基线,tissuebox,0.75
+XHand官方基线,toaster,0.6
+XHand官方基线,toasteroven,0.85
+XHand官方基线,usbstick,0.55
+XHand官方基线,vase,0.65
+XHand官方基线,videogamecontroller,0.05
+XHand官方基线,wallclock,0.3
+XHand官方基线,watch,0.6
+XHand官方基线,wii,0.95
+XHand官方基线,winebottle,0.65
+XHand指腹细化,ball,0.1
+XHand指腹细化,battery,0.35
+XHand指腹细化,beanbag,0.3
+XHand指腹细化,blender,0.6
+XHand指腹细化,book,0.35
+XHand指腹细化,bowl,0.5
+XHand指腹细化,camera,0.7
+XHand指腹细化,can,0.4
+XHand指腹细化,canister,0.85
+XHand指腹细化,cap,0.0
+XHand指腹细化,cerealbox,0.85
+XHand指腹细化,clock,0.75
+XHand指腹细化,cookie,0.45
+XHand指腹细化,disccase,0.85
+XHand指腹细化,dog,0.85
+XHand指腹细化,filecabinet,0.6
+XHand指腹细化,flashlight,0.8
+XHand指腹细化,fruit,0.5
+XHand指腹细化,headphones,0.4
+XHand指腹细化,horse,0.65
+XHand指腹细化,ipad,0.5
+XHand指腹细化,knife,0.25
+XHand指腹细化,milkcarton,0.7
+XHand指腹细化,palette,0.5
+XHand指腹细化,pan,0.2
+XHand指腹细化,pencil,0.55
+XHand指腹细化,personstanding,0.35
+XHand指腹细化,phonebooth,0.7
+XHand指腹细化,piano,0.7
+XHand指腹细化,pillow,0.55
+XHand指腹细化,remote,0.75
+XHand指腹细化,rubikscube,0.35
+XHand指腹细化,ship,0.7
+XHand指腹细化,showerhead,0.45
+XHand指腹细化,snowman,0.55
+XHand指腹细化,soapbar,0.35
+XHand指腹细化,soapbottle,0.4
+XHand指腹细化,stapler,0.6
+XHand指腹细化,tapedispenser,0.65
+XHand指腹细化,thumbtack,0.6
+XHand指腹细化,tissuebox,0.75
+XHand指腹细化,toaster,0.65
+XHand指腹细化,toasteroven,0.65
+XHand指腹细化,usbstick,0.65
+XHand指腹细化,vase,0.6
+XHand指腹细化,videogamecontroller,0.0
+XHand指腹细化,wallclock,0.35
+XHand指腹细化,watch,0.55
+XHand指腹细化,wii,0.9
+XHand指腹细化,winebottle,0.7
