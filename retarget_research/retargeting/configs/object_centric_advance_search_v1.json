@@ -1,0 +1,49 @@
+{
+  "purpose": "screen_geometry_conditioned_grasp_center_to_object_center_wrist_correction",
+  "status": "A_candidates_generated_and_static_audit_passed_before_physics",
+  "primary_hand": "linker_o6",
+  "development_manifest": "retarget_research/manifests/formal_method_selection_a_50c_50t_seed20260814.json",
+  "confirmation_manifest": "retarget_research/manifests/formal_confirmation_c_50c_50t_seed20260814.json",
+  "input_method": "linker_o6_no_temporal_dynamic_squeeze_v2",
+  "motivation": "阶段重计时在A组没有净提升；Linker失败主要是未建立承力抓取，因此转向补偿异构手型造成的整体抓取中心错位。",
+  "mechanism": {
+    "grasp_center": "抬升首帧五个Linker校准指尖世界坐标的平均值",
+    "object_center": "与PhysX初始化一致的物体世界AABB中心",
+    "correction_direction": "grasp_center_to_object_center",
+    "correction_schedule": "闭合前为0，闭合至抬升线性增至完整值，抬升后恒定",
+    "rotation_and_joint_commands_unchanged": true,
+    "lift_relative_translation_unchanged": true,
+    "physics_success_used_by_rule": false
+  },
+  "development_geometry_audit": {
+    "trajectory_count": 50,
+    "grasp_center_to_object_center_distance_mm": {
+      "minimum": 11.101,
+      "median": 45.450,
+      "maximum": 199.134,
+      "mean": 57.867
+    }
+  },
+  "screened_max_advance_mm": [3.0, 6.0, 9.0],
+  "range_reason": "3/6/9毫米分别代表保守、中等和较强校准；相对45.5毫米中位中心偏差足够小，并且规则会在真实误差小于上限时自动停止，避免越过中心。",
+  "candidate_static_audit": {
+    "trajectory_count_per_candidate": 50,
+    "mean_actual_advance_mm": [3.0, 6.0, 9.0],
+    "mean_max_translation_step_mm": {
+      "input": 12.349,
+      "advance_3mm": 12.359,
+      "advance_6mm": 12.370,
+      "advance_9mm": 12.402
+    },
+    "rotation_and_joint_commands_unchanged": true,
+    "lift_relative_translation_unchanged": true
+  },
+  "selection_rule": "A组严格成功数和相对当前夹紧方法的配对净增益优先；若并列，依次比较丢失成功更少、最终抬升更高和修正更小，只允许一个全局上限进入C。",
+  "confirmation_rule": "候选必须在冻结C组相对同轨迹当前夹紧方法净增加成功，才能称为可泛化改进。",
+  "prohibited": [
+    "per_trajectory_physics_based_candidate_selection",
+    "candidate_success_union",
+    "selecting_parameters_from_confirmation_C",
+    "changing_finger_commands_or_lift_relative_motion"
+  ]
+}

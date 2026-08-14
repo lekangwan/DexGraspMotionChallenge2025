@@ -28,6 +28,10 @@ from retarget_research.retargeting.run.refine_xhand_dynamic_residual import (
 from retarget_research.retargeting.run.refine_phase_retiming import (
     add_pre_lift_settle,
 )
+from retarget_research.retargeting.run.refine_linker_object_centric_advance import (
+    apply_object_centric_advance,
+    bounded_center_correction,
+)
 
 
 class MethodSelectionReuseTest(unittest.TestCase):
@@ -250,6 +254,54 @@ class MethodSelectionReuseTest(unittest.TestCase):
         )
         np.testing.assert_array_equal(output[20:], frames[20:])
         self.assertEqual(audit["settle_pose_source_frame"], 20)
+
+    def test_object_centric_advance_only_changes_translation_smoothly(self):
+        """6毫米中心修正应在闭合期渐进加入，抬升后保持恒定。
+
+        输入：零动作、close=20、lift=30、沿X轴相距10厘米的两个中心。
+        输出：第20帧仍无修正、第30帧达到6毫米，之后相对抬升动作保持不变。
+        内部逻辑：同时检查旋转/关节逐元素不变和审计字段。
+        作用：锁定方法只校准整体掌物位置，不会暗中改变抓形或抬升速度。
+        """
+        frames = np.zeros((70, 12), dtype=np.float32)
+        frames[30:, 2] = np.arange(40, dtype=np.float32) * 0.01
+        output, audit = apply_object_centric_advance(
+            frames,
+            20,
+            30,
+            np.asarray([0.0, 0.0, 0.0], dtype=np.float32),
+            np.asarray([0.1, 0.0, 0.0], dtype=np.float32),
+            0.006,
+        )
+        np.testing.assert_array_equal(output[:21, :3], frames[:21, :3])
+        self.assertAlmostEqual(float(output[25, 0]), 0.003, places=7)
+        self.assertAlmostEqual(float(output[30, 0]), 0.006, places=7)
+        np.testing.assert_allclose(output[30:, 0], 0.006, atol=1e-7)
+        np.testing.assert_array_equal(output[:, 3:], frames[:, 3:])
+        np.testing.assert_allclose(
+            np.diff(output[30:, :3], axis=0),
+            np.diff(frames[30:, :3], axis=0),
+            atol=1e-7,
+        )
+        self.assertAlmostEqual(audit["actual_advance_m"], 0.006, places=7)
+        self.assertTrue(audit["lift_relative_translation_unchanged"])
+
+    def test_object_centric_correction_does_not_overshoot_near_center(self):
+        """中心误差小于上限时应只修正真实误差，不能越过物体中心。
+
+        输入：相距2毫米的抓取/物体中心和9毫米全局上限。
+        输出：恰好2毫米的修正，修正后中心距离为零。
+        内部逻辑：直接测试与运动学无关的纯向量函数。
+        作用：保证小物体或原本已对齐轨迹不会被统一上限强行推过中心。
+        """
+        correction, audit = bounded_center_correction(
+            np.asarray([0.0, 0.0, 0.0], dtype=np.float32),
+            np.asarray([0.0, -0.002, 0.0], dtype=np.float32),
+            0.009,
+        )
+        np.testing.assert_allclose(correction, [0.0, -0.002, 0.0], atol=1e-8)
+        self.assertAlmostEqual(audit["actual_advance_m"], 0.002, places=7)
+        self.assertAlmostEqual(audit["center_distance_after_m"], 0.0, places=7)
 
 
 if __name__ == "__main__":

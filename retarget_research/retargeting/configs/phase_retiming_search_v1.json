@@ -1,6 +1,6 @@
 {
   "purpose": "screen_target_hand_pre_lift_contact_settle_without_changing_episode_or_lift_path",
-  "status": "a_candidates_generated_before_physics_evaluation",
+  "status": "rejected_after_balanced_A_physics_evaluation",
   "primary_hand": "linker",
   "development_manifest": "retarget_research/manifests/formal_method_selection_a_50c_50t_seed20260814.json",
   "confirmation_manifest": "retarget_research/manifests/formal_confirmation_c_50c_50t_seed20260814.json",
@@ -15,6 +15,32 @@
   "screened_settle_frames": [2, 4, 6],
   "physical_time_per_settle_frame_s": 0.05,
   "screened_settle_time_s": [0.1, 0.2, 0.3],
+  "development_A_results": {
+    "current_linker": {
+      "success": "7/50",
+      "mean_max_lift_m": 0.060339498706161974,
+      "mean_final_lift_m": 0.02779060147702694
+    },
+    "settle_2": {
+      "success": "7/50",
+      "added_success": 0,
+      "lost_success": 0,
+      "net_success_change": 0
+    },
+    "settle_4": {
+      "success": "7/50",
+      "added_success": 1,
+      "lost_success": 1,
+      "net_success_change": 0
+    },
+    "settle_6": {
+      "success": "5/50",
+      "added_success": 0,
+      "lost_success": 2,
+      "net_success_change": -2
+    }
+  },
+  "decision": "三个值均无净提升，阶段重计时不进入确认集C；C继续保持未见。",
   "selection_rule": "A组严格成功数优先，其次相对当前夹紧方法的新增/回退、最终抬升和接触步数；只允许一个全局值进入C组。",
   "confirmation_rule": "C组相对同轨迹当前夹紧方法必须净增加成功；43类为全新物体，7类为正式物体从未使用轨迹。",
   "prohibited": [
