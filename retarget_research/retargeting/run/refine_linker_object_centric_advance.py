@@ -99,15 +99,15 @@ def apply_object_centric_advance(
 ) -> tuple[np.ndarray, dict]:
     """把物体中心指向修正平滑叠加到一条Linker轨迹。
 
-    输入：`(70,12)`动作、闭合/抬升首帧、两个中心和全局距离上限。
+    输入：`(70,D>=6)`动作、闭合/抬升首帧、两个中心和全局距离上限。
     输出：同形状新轨迹及修正幅度、动作保持检查和步长统计。
     内部逻辑：闭合前修正为0，闭合至抬升线性增至完整值，抬升后保持；
     只改前三维平移，不改欧拉角与六个主动关节。
     作用：避免瞬移，同时保证抬升阶段每两个相邻帧的相对位移与原轨迹相同。
     """
     original = np.asarray(frames, dtype=np.float32)
-    if original.shape != (70, 12):
-        raise ValueError(f"Linker O6候选应为(70,12)，实际{original.shape}")
+    if original.ndim != 2 or original.shape[0] != 70 or original.shape[1] < 6:
+        raise ValueError(f"目标手候选应为(70,D>=6)，实际{original.shape}")
     close = int(close_start_frame)
     lift = int(lift_start_frame)
     progress = squeeze_progress(len(original), close, lift)

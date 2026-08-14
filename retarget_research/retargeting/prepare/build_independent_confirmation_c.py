@@ -118,26 +118,50 @@ def build_confirmation_manifest(
     inventory_rows: list[dict],
     seed: int,
     formal_path: Path,
+    excluded_manifests: list[dict] | None = None,
+    split_label: str = "C",
+    excluded_manifest_paths: list[Path] | None = None,
 ) -> dict:
     """构造每类一条且尽量使用新实例的C组manifest。
 
-    输入：正式manifest、inventory行、种子和正式清单路径。
+    输入：正式manifest、inventory行、种子、正式清单路径，
+    可选已使用manifest列表和新分组名。
     输出：批处理兼容的确认manifest字典。
-    内部逻辑：每类先哈希选择未进正式清单的物体及其轨迹；若没有，则从两个
-    正式物体全部未选索引中哈希取一条。任何类别无候选都会立即报错。
-    作用：在新方法物理结果出现前冻结最终确认数据，阻止事后换样本。
+    内部逻辑：每类先哈希选择所有已用清单外的新物体；若没有，
+    再从旧物体的全部未使用索引中哈希取一条。任何类别无候选都会立即报错。
+    作用：可依次冻结C/D等独立确认集，阻止事后换样本或重复轨迹。
     """
+    excluded_manifests = excluded_manifests or []
+    excluded_manifest_paths = excluded_manifest_paths or []
+    split_label = str(split_label).upper()
+    if not split_label.isalpha():
+        raise ValueError(f"分组名必须为字母: {split_label}")
     categories = sorted(str(value) for value in formal.get("categories", []))
     if len(categories) != 50:
         raise ValueError(f"正式manifest应含50类，实际{len(categories)}")
     formal_by_category: dict[str, list[dict]] = defaultdict(list)
     formal_objects = set()
+    used_objects = set()
+    used_keys = set()
     for entry in formal.get("entries", []):
         formal_by_category[str(entry["category"])].append(entry)
         formal_objects.add(str(entry["object_name"]))
+        used_objects.add(str(entry["object_name"]))
+        used_keys.update(
+            (str(entry["object_name"]), int(index))
+            for index in entry["trajectory_indices"]
+        )
+    for manifest in excluded_manifests:
+        for entry in manifest.get("entries", []):
+            object_name = str(entry["object_name"])
+            used_objects.add(object_name)
+            used_keys.update(
+                (object_name, int(index))
+                for index in entry["trajectory_indices"]
+            )
     inventory_by_category: dict[str, list[dict]] = defaultdict(list)
     for row in inventory_rows:
-        if row["category"] in categories and row["object_name"] not in formal_objects:
+        if row["category"] in categories and row["object_name"] not in used_objects:
             inventory_by_category[row["category"]].append(row)
 
     entries = []
@@ -147,14 +171,14 @@ def build_confirmation_manifest(
             row = min(
                 unseen,
                 key=lambda item: stable_rank(
-                    seed, "C", category, "object", item["object_name"]
+                    seed, split_label, category, "object", item["object_name"]
                 ),
             )
             candidates = range(int(row["available_trajectory_count"]))
             source_index = min(
                 candidates,
                 key=lambda index: stable_rank(
-                    seed, "C", category, row["object_name"], index
+                    seed, split_label, category, row["object_name"], index
                 ),
             )
             entries.append(new_object_entry(row, source_index))
@@ -164,28 +188,43 @@ def build_confirmation_manifest(
         for formal_entry in formal_by_category.get(category, []):
             selected = {int(value) for value in formal_entry["trajectory_indices"]}
             for source_index in range(int(formal_entry["available_trajectory_count"])):
-                if source_index not in selected:
+                if (
+                    source_index not in selected
+                    and (str(formal_entry["object_name"]), source_index)
+                    not in used_keys
+                ):
                     unused.append((formal_entry, source_index))
         if not unused:
             raise ValueError(f"类别{category}既无第三实例，也无未使用轨迹")
         formal_entry, source_index = min(
             unused,
             key=lambda item: stable_rank(
-                seed, "C", category, item[0]["object_name"], item[1]
+                seed, split_label, category, item[0]["object_name"], item[1]
             ),
         )
         entries.append(unused_trajectory_entry(formal_entry, source_index))
 
     entries.sort(key=lambda item: item["category"])
     new_count = sum(bool(item["new_object_instance"]) for item in entries)
+    exclusion_records = []
+    for index, path in enumerate(excluded_manifest_paths):
+        exclusion_records.append(
+            {
+                "path": str(path.resolve()),
+                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                "purpose": excluded_manifests[index].get("purpose"),
+            }
+        )
+    split_lower = split_label.lower()
     return {
         "schema_version": 2,
-        "purpose": "post_formal_independent_confirmation_c_50c_50t",
+        "purpose": f"post_formal_independent_confirmation_{split_lower}_50c_50t",
         "selection_seed": int(seed),
         "source_formal_manifest": str(formal_path.resolve()),
         "source_formal_manifest_sha256": hashlib.sha256(
             formal_path.read_bytes()
         ).hexdigest(),
+        "excluded_prior_manifests": exclusion_records,
         "category_count": 50,
         "object_count": 50,
         "trajectory_count": 50,
@@ -201,7 +240,8 @@ def build_confirmation_manifest(
 def main() -> None:
     """解析正式数据路径并写出冻结C组。
 
-    输入：`--formal-manifest/--inventory/--output/--seed`。
+    输入：`--formal-manifest/--inventory/--output/--seed`，可重复指定
+    `--exclude-manifest`并用`--split-label`命名新分组。
     输出：50条确认JSON及新实例/新轨迹数量摘要。
     内部逻辑：读取两个输入，调用纯构造函数并以UTF-8缩进JSON写盘。
     作用：作为阶段重定时或以后新方法唯一允许的最终小样本确认入口。
@@ -211,11 +251,23 @@ def main() -> None:
     parser.add_argument("--inventory", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--seed", type=int, default=20260814)
+    parser.add_argument("--exclude-manifest", type=Path, action="append", default=[])
+    parser.add_argument("--split-label", default="C")
     args = parser.parse_args()
     formal = json.loads(args.formal_manifest.read_text(encoding="utf-8"))
     inventory = load_inventory(args.inventory)
+    excluded = [
+        json.loads(path.read_text(encoding="utf-8"))
+        for path in args.exclude_manifest
+    ]
     manifest = build_confirmation_manifest(
-        formal, inventory, args.seed, args.formal_manifest
+        formal,
+        inventory,
+        args.seed,
+        args.formal_manifest,
+        excluded,
+        args.split_label,
+        args.exclude_manifest,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(

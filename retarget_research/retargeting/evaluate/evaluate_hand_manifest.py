@@ -515,6 +515,10 @@ def main():
     parser.add_argument("--linker-adaptive-joint-std-threshold", type=float, default=0.25)
     parser.add_argument("--linker-high-stiffness", type=float, default=400.0)
     parser.add_argument("--linker-high-damping", type=float, default=20.0)
+    parser.add_argument("--xhand-finger-stiffness", type=float, default=120.0)
+    parser.add_argument("--xhand-finger-damping", type=float, default=5.0)
+    parser.add_argument("--wuji-finger-stiffness", type=float, default=120.0)
+    parser.add_argument("--wuji-finger-damping", type=float, default=5.0)
     args = parser.parse_args()
 
     linker_physics_args = [
@@ -527,7 +531,22 @@ def main():
         "--mimic-damping",
         str(args.linker_mimic_damping),
     ]
-    physics_extra_args = linker_physics_args if args.hand in {"linker", "linker11"} else []
+    if args.hand in {"linker", "linker11"}:
+        physics_extra_args = linker_physics_args
+    elif args.hand == "xhand":
+        physics_extra_args = [
+            "--finger-stiffness",
+            str(args.xhand_finger_stiffness),
+            "--finger-damping",
+            str(args.xhand_finger_damping),
+        ]
+    else:
+        physics_extra_args = [
+            "--finger-stiffness",
+            str(args.wuji_finger_stiffness),
+            "--finger-damping",
+            str(args.wuji_finger_damping),
+        ]
 
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
     tasks = []
@@ -606,7 +625,18 @@ def main():
             "high_damping": args.linker_high_damping,
         }
         if args.hand in {"linker", "linker11"}
-        else {},
+        else {
+            "finger_stiffness": (
+                args.xhand_finger_stiffness
+                if args.hand == "xhand"
+                else args.wuji_finger_stiffness
+            ),
+            "finger_damping": (
+                args.xhand_finger_damping
+                if args.hand == "xhand"
+                else args.wuji_finger_damping
+            ),
+        },
         "wall_time_seconds": time.perf_counter() - started,
         "resumed_trajectory_count": sum(
             int(item["resumed_existing"]) for item in results

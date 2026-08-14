@@ -1,0 +1,71 @@
+{
+  "purpose": "screen_shared_geometry_conditioned_wrist_calibration_for_all_three_hands",
+  "status": "parameters_frozen_before_physics_screen_A",
+  "development_manifest": "retarget_research/manifests/formal_method_selection_a_50c_50t_seed20260814.json",
+  "fresh_confirmation_manifest": "retarget_research/manifests/formal_confirmation_d_50c_50t_seed20260815.json",
+  "shared_rule": {
+    "measurement_frame": "lift_start_frame inferred from Shadow expert contact",
+    "target_hand_grasp_center": "mean world position of five target-hand calibrated fingertips",
+    "object_bbox": "move target-hand grasp center a bounded distance toward transformed object world-AABB center",
+    "shadow_tips": "move target-hand grasp center a bounded distance toward the Shadow expert five-tip center at the same frame",
+    "temporal_application": "zero before close_start, linear ramp through closing, constant correction from lift_start onward",
+    "changed_action_dimensions": "wrist translation xyz only; rotation and all joint commands remain unchanged"
+  },
+  "static_A_distance_audit_mm": {
+    "linker_shadow_tips": {
+      "mean": 30.919,
+      "median": 30.49,
+      "max": 39.72
+    },
+    "xhand_shadow_tips": {
+      "mean": 3.341,
+      "median": 3.19,
+      "max": 6.96
+    },
+    "xhand_object_bbox": {
+      "mean": 52.649,
+      "median": 42.90,
+      "max": 172.68
+    },
+    "wuji_shadow_tips": {
+      "mean": 10.164,
+      "median": 10.56,
+      "max": 12.68
+    },
+    "wuji_object_bbox": {
+      "mean": 50.654,
+      "median": 37.86,
+      "max": 178.45
+    }
+  },
+  "physics_candidates_A": {
+    "linker": [
+      "shadow_tips_1.5mm",
+      "shadow_tips_3mm"
+    ],
+    "xhand": [
+      "shadow_tips_1mm",
+      "shadow_tips_2mm",
+      "object_bbox_1.5mm",
+      "object_bbox_3mm"
+    ],
+    "wuji": [
+      "shadow_tips_1.5mm",
+      "shadow_tips_3mm",
+      "object_bbox_1.5mm",
+      "object_bbox_3mm"
+    ]
+  },
+  "range_reason": {
+    "lower_bound": "1-1.5 mm is large enough to alter marginal contact but small relative to typical fingertip and collision-pad scales",
+    "upper_bound": "3 mm is the largest previously confirmed beneficial Linker correction; larger 6/9 mm values already showed no additional gain",
+    "xhand_shadow_cap": "XHand is already close to the Shadow expert center, so its second point is capped at 2 mm to avoid nearly complete or overshooting alignment",
+    "object_center_cap": "object-center residual can exceed 17 cm, so only a local bounded correction is tested rather than full centering"
+  },
+  "selection_rule": {
+    "within_hand": "select at most one candidate only when success_count exceeds that hand's current A baseline; break ties by fewer regressions, then smaller correction",
+    "no_cross_hand_union": "each hand freezes one global method; per-trajectory oracle union is forbidden",
+    "confirmation": "the selected candidate must have positive paired net gain on frozen D before it may replace the current method",
+    "formal_1000": "do not replay formal 1000 until all planned mechanism families are exhausted and one method per hand is frozen"
+  }
+}

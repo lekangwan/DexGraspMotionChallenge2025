@@ -51,10 +51,12 @@ WUJI_ASSET_ROOT = REFERENCE_SCRIPTS / "assets" / "wujihand_urdf" / "urdf"
 OBJECT_ROOT = REFERENCE_SCRIPTS / "data" / "sorting" / "object_41"
 
 
-def load_wuji_asset(gym, sim, expected_joint_names):
+def load_wuji_asset(
+    gym, sim, expected_joint_names, finger_stiffness=120.0, finger_damping=5.0
+):
     """加载26-DOF Wuji虚拟手腕URDF并配置位置驱动。
 
-    输入：Gym接口、sim句柄和候选元数据中的20个手指关节名。
+    输入：Gym接口、sim句柄、20个手指关节名和手指PD刚度/阻尼。
     输出：Wuji asset、DOF属性和Isaac实际DOF名称。
     内部逻辑：固定最外层基座，校验6+20名称集合，并按平移/旋转/手指分配PD。
     作用：把26维数学动作变成可与物体发生碰撞的物理位置目标。
@@ -79,10 +81,18 @@ def load_wuji_asset(gym, sim, expected_joint_names):
         is_translation = name in set(WRIST_NAMES[:3])
         is_rotation = name in set(WRIST_NAMES[3:])
         properties["stiffness"][index] = (
-            20000.0 if is_translation else 2000.0 if is_rotation else 120.0
+            20000.0
+            if is_translation
+            else 2000.0
+            if is_rotation
+            else float(finger_stiffness)
         )
         properties["damping"][index] = (
-            500.0 if is_translation else 80.0 if is_rotation else 5.0
+            500.0
+            if is_translation
+            else 80.0
+            if is_rotation
+            else float(finger_damping)
         )
     return asset, properties, names
 
@@ -118,7 +128,11 @@ def replay(args):
     recorder = None
     try:
         hand_asset, dof_properties, dof_names = load_wuji_asset(
-            gym, sim, optimizer_joint_names
+            gym,
+            sim,
+            optimizer_joint_names,
+            args.finger_stiffness,
+            args.finger_damping,
         )
         object_asset = load_object_asset(gym, sim, object_dir)
         env = gym.create_env(
@@ -214,6 +228,8 @@ def replay(args):
             "steps_per_frame": args.steps_per_frame,
             "settle_steps": args.settle_steps,
             "hold_steps": args.hold_steps,
+            "finger_stiffness": float(args.finger_stiffness),
+            "finger_damping": float(args.finger_damping),
             "object_scale": scale,
             "rotated_scaled_mesh_min_z_m": mesh_min_z,
             **metrics,
@@ -285,6 +301,8 @@ def main():
     parser.add_argument("--hold-steps", type=int, default=30)
     parser.add_argument("--clearance", type=float, default=0.005)
     parser.add_argument("--object-friction", type=float, default=1.0)
+    parser.add_argument("--finger-stiffness", type=float, default=120.0)
+    parser.add_argument("--finger-damping", type=float, default=5.0)
     parser.add_argument("--lift-threshold", type=float, default=0.10)
     parser.add_argument("--max-xy-drift", type=float, default=0.25)
     parser.add_argument("--sustain-steps", type=int, default=30)

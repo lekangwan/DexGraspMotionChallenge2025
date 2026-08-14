@@ -60,10 +60,10 @@ OBJECT_ROOT = REFERENCE_SCRIPTS / "data" / "sorting" / "object_41"
 EXPECTED_DOF_NAMES = set(WRIST_NAMES + OPTIMIZER_FINGER_NAMES)
 
 
-def load_xhand_asset(gym, sim):
+def load_xhand_asset(gym, sim, finger_stiffness=120.0, finger_damping=5.0):
     """加载18-DOF XHand欧拉手腕URDF并配置位置驱动。
 
-    输入：Gym接口和sim句柄。
+    输入：Gym接口、sim句柄和手指位置环PD刚度/阻尼。
     输出：XHand asset、DOF属性和Isaac实际DOF名称顺序。
     逻辑：固定最外层基座，保留6个虚拟手腕与12个手指关节并分组设PD参数。
     作用：把数学重定向输出转换为可发生真实接触的物理执行器目标。
@@ -89,10 +89,18 @@ def load_xhand_asset(gym, sim):
         is_translation = name in {"virtual_x", "virtual_y", "virtual_z"}
         is_rotation = name in {"virtual_rx", "virtual_ry", "virtual_rz"}
         properties["stiffness"][index] = (
-            20000.0 if is_translation else 2000.0 if is_rotation else 120.0
+            20000.0
+            if is_translation
+            else 2000.0
+            if is_rotation
+            else float(finger_stiffness)
         )
         properties["damping"][index] = (
-            500.0 if is_translation else 80.0 if is_rotation else 5.0
+            500.0
+            if is_translation
+            else 80.0
+            if is_rotation
+            else float(finger_damping)
         )
     return asset, properties, names
 
@@ -124,7 +132,9 @@ def replay(args):
     )
     recorder = None
     try:
-        hand_asset, dof_properties, dof_names = load_xhand_asset(gym, sim)
+        hand_asset, dof_properties, dof_names = load_xhand_asset(
+            gym, sim, args.finger_stiffness, args.finger_damping
+        )
         object_asset = load_object_asset(gym, sim, object_dir)
         env = gym.create_env(
             sim,
@@ -216,6 +226,8 @@ def replay(args):
             "steps_per_frame": args.steps_per_frame,
             "settle_steps": args.settle_steps,
             "hold_steps": args.hold_steps,
+            "finger_stiffness": float(args.finger_stiffness),
+            "finger_damping": float(args.finger_damping),
             "object_scale": scale,
             "rotated_scaled_mesh_min_z_m": mesh_min_z,
             **metrics,
@@ -287,6 +299,8 @@ def main():
     parser.add_argument("--hold-steps", type=int, default=30)
     parser.add_argument("--clearance", type=float, default=0.005)
     parser.add_argument("--object-friction", type=float, default=1.0)
+    parser.add_argument("--finger-stiffness", type=float, default=120.0)
+    parser.add_argument("--finger-damping", type=float, default=5.0)
     parser.add_argument("--lift-threshold", type=float, default=0.10)
     parser.add_argument("--max-xy-drift", type=float, default=0.25)
     parser.add_argument("--sustain-steps", type=int, default=30)

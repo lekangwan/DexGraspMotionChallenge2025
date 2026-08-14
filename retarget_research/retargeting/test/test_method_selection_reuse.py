@@ -36,6 +36,9 @@ from retarget_research.retargeting.evaluate.compare_manifest_methods import (
     exact_two_sided_binomial_p,
     paired_continuous_deltas,
 )
+from retarget_research.retargeting.run.refine_shared_grasp_center import (
+    desired_center,
+)
 
 
 class MethodSelectionReuseTest(unittest.TestCase):
@@ -163,6 +166,65 @@ class MethodSelectionReuseTest(unittest.TestCase):
             for entry in confirmation["entries"]
         }
         self.assertFalse(formal_keys & confirmation_keys)
+
+    def test_confirmation_d_excludes_prior_confirmation_objects_and_keys(self):
+        """检查D组会同时排除正式集和C组已用的物体、轨迹。
+
+        输入：50类人工正式物体，每类两个额外物体，C固定占用其中一个。
+        输出：D全部选另一个新物体，且不与正式/C的联合轨迹键相交。
+        内部逻辑：直接调用通用确认集构造器的排除参数。
+        作用：保证看过C组后研究的新方法仍有真正未见的D组。
+        """
+        formal = self.artificial_formal_manifest()
+        categories = formal["categories"]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "source.npy"
+            source.write_bytes(b"confirmation-source")
+            formal_path = root / "formal.json"
+            formal_path.write_text("{}", encoding="utf-8")
+            inventory = []
+            c_entries = []
+            for category in categories:
+                for suffix in ("c", "d"):
+                    inventory.append(
+                        {
+                            "object_name": f"{category}_{suffix}",
+                            "category": category,
+                            "source_path": str(source),
+                            "object_asset_path": str(root),
+                            "available_trajectory_count": 20,
+                        }
+                    )
+                c_entries.append(
+                    {
+                        "object_name": f"{category}_c",
+                        "category": category,
+                        "trajectory_indices": [3],
+                    }
+                )
+            confirmation = build_confirmation_manifest(
+                formal,
+                inventory,
+                20260815,
+                formal_path,
+                [{"purpose": "confirmation_c", "entries": c_entries}],
+                "D",
+            )
+        self.assertEqual(confirmation["new_object_instance_count"], 50)
+        self.assertTrue(
+            all(entry["object_name"].endswith("_d") for entry in confirmation["entries"])
+        )
+        used = {
+            (entry["object_name"], index)
+            for entry in formal["entries"] + c_entries
+            for index in entry["trajectory_indices"]
+        }
+        selected = {
+            (entry["object_name"], entry["trajectory_indices"][0])
+            for entry in confirmation["entries"]
+        }
+        self.assertFalse(used & selected)
 
     def test_candidate_slice_preserves_requested_order_and_metadata_alignment(self):
         """按源编号反序请求时，动作、尺度和阶段列表必须同步反序。
@@ -357,6 +419,42 @@ class MethodSelectionReuseTest(unittest.TestCase):
             exact_two_sided_binomial_p(14, 2), 0.004180908203125
         )
         self.assertEqual(exact_two_sided_binomial_p(0, 0), 1.0)
+
+    def test_shared_center_supports_three_hand_dimensions_and_two_targets(self):
+        """共享中心函数应支持18/26维动作和物体/专家两种目标。
+
+        输入：人工XHand/Wuji零轨迹、立方体顶点和可辨认Shadow五指点。
+        输出：两种维度只改XYZ；物体中心为原点，专家中心为五指坐标均值。
+        内部逻辑：复用已确认的平滑修正纯函数并单独检查`desired_center`。
+        作用：锁定三手共享方法不会仍暗含Linker 12维假设或混淆中心定义。
+        """
+        for dimension in (18, 26):
+            frames = np.zeros((70, dimension), dtype=np.float32)
+            output, _ = apply_object_centric_advance(
+                frames,
+                20,
+                30,
+                np.asarray([0.0, 0.0, 0.0], dtype=np.float32),
+                np.asarray([0.0, 0.01, 0.0], dtype=np.float32),
+                0.002,
+            )
+            self.assertEqual(output.shape, (70, dimension))
+            np.testing.assert_array_equal(output[:, 3:], frames[:, 3:])
+        vertices = np.asarray(
+            [[-1.0, -1.0, -1.0], [1.0, 1.0, 1.0]], dtype=np.float32
+        )
+        shadow = np.zeros((70, 21, 3), dtype=np.float32)
+        tip_indices = [4, 8, 12, 16, 20]
+        shadow[30, tip_indices] = np.asarray(
+            [[1, 0, 0], [2, 0, 0], [3, 0, 0], [4, 0, 0], [5, 0, 0]],
+            dtype=np.float32,
+        )
+        np.testing.assert_allclose(
+            desired_center("object_bbox", vertices, shadow, 30), [0, 0, 0]
+        )
+        np.testing.assert_allclose(
+            desired_center("shadow_tips", vertices, shadow, 30), [3, 0, 0]
+        )
 
 
 if __name__ == "__main__":
