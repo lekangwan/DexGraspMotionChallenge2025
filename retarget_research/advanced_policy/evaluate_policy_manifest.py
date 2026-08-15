@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from collections import defaultdict
+import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -22,6 +23,18 @@ import numpy as np
 
 
 ROLLOUT_SCRIPT = Path(__file__).resolve().parent / "evaluate_policy_isaac.py"
+
+
+def stable_task_seed(base_seed, task):
+    """由固定总seed和轨迹键生成跨进程稳定的单轨迹seed。
+
+    输入：总seed及含物体名、源轨迹索引的任务。
+    输出：PyTorch/NumPy均可接受的31位正整数。
+    内部逻辑：对字符串键做SHA-256而不使用进程随机化的Python `hash`。
+    作用：使Diffusion同一轨迹重跑完全可复现，同时不同轨迹不共享同一噪声样本。
+    """
+    key = f"{int(base_seed)}:{task['object_name']}:{int(task['source_index'])}"
+    return int.from_bytes(hashlib.sha256(key.encode("utf-8")).digest()[:8], "little") % (2 ** 31)
 
 
 def build_tasks(manifest, policy_split, target_dir, split_name="test"):
@@ -76,6 +89,7 @@ def run_task(task, args):
     作用：支持数百条长评测中断后安全续跑，同时控制总summary体积。
     """
     output = args.output_dir / task["object_name"] / f"source_{task['source_index']}.json"
+    task_seed = stable_task_seed(args.seed, task)
     reusable = False
     if args.resume and output.is_file():
         previous = json.loads(output.read_text(encoding="utf-8"))
@@ -84,6 +98,10 @@ def run_task(task, args):
             and previous.get("object_name") == task["object_name"]
             and int(previous.get("source_trajectory_index", -1)) == task["source_index"]
             and Path(previous.get("checkpoint", "")).resolve() == args.checkpoint.resolve()
+            and int(previous.get("evaluation_seed", -1)) == task_seed
+            and int(previous.get("diffusion_execute_steps", -1)) == args.diffusion_execute_steps
+            and float(previous.get("normalized_action_clip", -1.0)) == args.normalized_action_clip
+            and float(previous.get("action_rate_limit_scale", -1.0)) == args.action_rate_limit_scale
         )
     if not reusable:
         command = [
@@ -95,6 +113,8 @@ def run_task(task, args):
             "--data-dir", str(args.data_dir), "--output", str(output),
             "--device", args.device, "--diffusion-execute-steps", str(args.diffusion_execute_steps),
             "--normalized-action-clip", str(args.normalized_action_clip),
+            "--action-rate-limit-scale", str(args.action_rate_limit_scale),
+            "--seed", str(task_seed),
         ]
         process = subprocess.run(command, text=True, capture_output=True, check=False)
         if process.returncode != 0:
@@ -156,6 +176,8 @@ def main():
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--diffusion-execute-steps", type=int, default=2)
     parser.add_argument("--normalized-action-clip", type=float, default=5.0)
+    parser.add_argument("--action-rate-limit-scale", type=float, default=0.0)
+    parser.add_argument("--seed", type=int, default=20260813)
     args = parser.parse_args()
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
     policy_split = json.loads(args.policy_split.read_text(encoding="utf-8"))
@@ -189,6 +211,10 @@ def main():
         "manifest": str(args.manifest.resolve()),
         "policy_split": str(args.policy_split.resolve()),
         "evaluation_boundary": boundaries[args.split],
+        "evaluation_seed": int(args.seed),
+        "diffusion_execute_steps": int(args.diffusion_execute_steps),
+        "normalized_action_clip": float(args.normalized_action_clip),
+        "action_rate_limit_scale": float(args.action_rate_limit_scale),
         "wall_time_seconds": time.perf_counter() - started,
         **summarize(results),
         "results": results,

@@ -13,6 +13,8 @@ POLICY_SPLIT="$PROJECT_ROOT/retarget_research/advanced_policy/data/formal_v1/pol
 RUN_ROOT="$PROJECT_ROOT/retarget_research/advanced_policy/runs/formal_v1"
 DATA_ROOT="$PROJECT_ROOT/retarget_research/advanced_policy/data/formal_v1"
 EVALUATOR="$PROJECT_ROOT/retarget_research/advanced_policy/evaluate_policy_manifest.py"
+ACTION_RATE_LIMIT_SCALE="${ACTION_RATE_LIMIT_SCALE:-0}"
+VALIDATION_OUTPUT_NAME="${VALIDATION_OUTPUT_NAME:-closed_loop_valid}"
 
 cd "$PROJECT_ROOT"
 export MPLCONFIGDIR=/tmp/matplotlib-retarget
@@ -42,9 +44,10 @@ for retarget_hand in linker wuji xhand; do
       --target-dir "$target_dir" \
       --checkpoint "$experiment_dir/best.pt" \
       --data-dir "$DATA_ROOT/$retarget_hand" \
-      --output-dir "$experiment_dir/closed_loop_valid" \
+      --output-dir "$experiment_dir/$VALIDATION_OUTPUT_NAME" \
       --device cuda \
       --workers 1 \
+      --action-rate-limit-scale "$ACTION_RATE_LIMIT_SCALE" \
       --resume
   done
 done

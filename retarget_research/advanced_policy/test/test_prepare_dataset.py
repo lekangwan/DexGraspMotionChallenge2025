@@ -15,7 +15,7 @@ import numpy as np
 POLICY_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(POLICY_ROOT / "prepare"))
 
-from prepare_policy_dataset import prepare_dataset
+from prepare_policy_dataset import compute_action_delta_limits, prepare_dataset
 
 
 def write_trace(path, object_name, source_index, position_offset):
@@ -126,8 +126,20 @@ class PrepareDatasetTest(unittest.TestCase):
                 np.testing.assert_allclose(
                     normalization["observation_mean"], train["observations"].mean(axis=0), atol=1e-6
                 )
+                self.assertEqual(normalization["action_delta_limit"].shape, (18,))
+                self.assertGreater(float(normalization["action_delta_norm_limit"]), 0.0)
             with np.load(output / "test.npz") as test:
                 self.assertFalse(test["expert_replay_success"].any())
+
+    def test_action_delta_limits_exclude_trajectory_boundaries(self):
+        """跨轨迹的100倍跳变不能污染由train同轨迹步骤计算的限速值。"""
+        actions = np.asarray([[0, 0], [1, 2], [3, 2], [100, 100], [101, 101]], dtype=np.float32)
+        trajectory_ids = np.asarray([0, 0, 0, 1, 1])
+        per_dimension, vector_norm = compute_action_delta_limits(
+            actions, trajectory_ids, quantile=1.0
+        )
+        np.testing.assert_allclose(per_dimension, [2, 2])
+        self.assertAlmostEqual(float(vector_norm), np.sqrt(5), places=6)
 
 
 if __name__ == "__main__":

@@ -15,6 +15,7 @@ from pathlib import Path
 
 from isaacgym import gymapi
 import numpy as np
+import torch
 
 EVALUATE_DIR = Path(__file__).resolve().parents[1] / "retargeting" / "evaluate"
 import sys
@@ -107,6 +108,10 @@ def rollout(args):
     内部逻辑：张开落稳后，反复读取执行前状态、策略推理、映射/限幅、推进一步PhysX并统计接触。
     作用：提供最小但严格的进阶任务最终成功率测量单元。
     """
+    np.random.seed(int(args.seed) % (2 ** 32))
+    torch.manual_seed(int(args.seed))
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(int(args.seed))
     source_data = np.load(args.source, allow_pickle=True).item()
     target_data = np.load(args.target, allow_pickle=True).item()
     policy_frames = np.asarray(target_data["grasp_seqs"][args.target_index], dtype=np.float32)
@@ -121,7 +126,7 @@ def rollout(args):
     )
     recorder = None
     try:
-        hand_asset, dof_properties, dof_names, _, open_first, mapper, action_order = prepare_hand(
+        hand_asset, dof_properties, dof_names, policy_open, open_first, mapper, action_order = prepare_hand(
             gym, sim, args.hand, target_data, policy_frames, args
         )
         object_asset = load_object_asset(gym, sim, object_dir)
@@ -153,6 +158,7 @@ def rollout(args):
         runner = PolicyRunner(
             args.checkpoint, args.data_dir, args.device,
             args.diffusion_execute_steps, args.normalized_action_clip,
+            args.action_rate_limit_scale,
         )
         if runner.mappings.get("policy_action_order") != action_order:
             raise ValueError("策略训练数据的动作名称顺序与当前目标手候选不一致")
@@ -167,7 +173,7 @@ def rollout(args):
             shape_descriptor,
             args.lift_threshold,
         )
-        runner.reset(args.category, first_observation)
+        runner.reset(args.category, first_observation, initial_action=policy_open)
         lower = np.asarray(dof_properties["lower"], dtype=np.float32)
         upper = np.asarray(dof_properties["upper"], dtype=np.float32)
         positions, object_quaternions, contacts, actions, actual_dof_positions = [], [], [], [], []
@@ -223,6 +229,16 @@ def rollout(args):
             "object_dir": str(args.object_dir.resolve()),
             "data_dir": str(args.data_dir.resolve()),
             "initialization_rule": "retargeted_first_frame_wrist_with_all_fingers_open; no_future_expert_actions",
+            "evaluation_seed": int(args.seed),
+            "diffusion_execute_steps": int(args.diffusion_execute_steps),
+            "normalized_action_clip": float(args.normalized_action_clip),
+            "action_rate_limit_scale": float(args.action_rate_limit_scale),
+            "action_delta_quantile": (
+                None
+                if args.action_rate_limit_scale <= 0.0
+                else float(runner.normalization["action_delta_quantile"])
+            ),
+            "action_delta_norm_limit": runner.action_delta_norm_limit,
             "policy_steps": int(horizon),
             "dt_s": float(args.dt),
             "physics_dof_names": dof_names,
@@ -262,6 +278,8 @@ def main():
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--diffusion-execute-steps", type=int, default=2)
     parser.add_argument("--normalized-action-clip", type=float, default=5.0)
+    parser.add_argument("--action-rate-limit-scale", type=float, default=0.0)
+    parser.add_argument("--seed", type=int, default=20260813)
     parser.add_argument("--dt", type=float, default=1.0 / 60.0)
     parser.add_argument("--substeps", type=int, default=2)
     parser.add_argument("--steps-per-frame", type=int, default=3)

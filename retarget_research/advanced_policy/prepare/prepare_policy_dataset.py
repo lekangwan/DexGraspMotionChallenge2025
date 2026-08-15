@@ -133,6 +133,31 @@ def save_split(path, chunks):
     }, merged
 
 
+def compute_action_delta_limits(actions, trajectory_ids, quantile=0.995):
+    """只用训练轨迹计算逐步动作变化的高分位安全范围。
+
+    输入：未归一化动作、对应trajectory id和分位数。
+    输出：逐动作维绝对变化上限与整向量L2变化上限。
+    内部逻辑：只比较同一轨迹内相邻步骤，排除文件拼接边界，再取高分位并加极小下限。
+    作用：闭环时限制策略产生训练专家从未出现过的剧烈位置目标跳变，而不读取valid/test。
+    """
+    actions = np.asarray(actions, dtype=np.float32)
+    trajectory_ids = np.asarray(trajectory_ids, dtype=np.int64)
+    if actions.ndim != 2 or len(actions) != len(trajectory_ids):
+        raise ValueError("动作与trajectory id形状不一致")
+    if not 0.0 < float(quantile) <= 1.0:
+        raise ValueError("动作变化分位数必须位于(0,1]")
+    same_trajectory = trajectory_ids[1:] == trajectory_ids[:-1]
+    deltas = np.abs(actions[1:] - actions[:-1])[same_trajectory]
+    if len(deltas) == 0:
+        raise ValueError("训练数据没有同轨迹相邻动作，无法计算限速范围")
+    per_dimension = np.maximum(np.quantile(deltas, quantile, axis=0), 1e-5)
+    vector_norm = max(
+        float(np.quantile(np.linalg.norm(deltas, axis=1), quantile)), 1e-5
+    )
+    return per_dimension.astype(np.float32), np.float32(vector_norm)
+
+
 def prepare_dataset(args):
     """执行完整trace到策略数据集转换。
 
@@ -241,12 +266,19 @@ def prepare_dataset(args):
     observation_std = np.maximum(merged_train["observations"].std(axis=0), 1e-6)
     action_mean = merged_train["actions"].mean(axis=0)
     action_std = np.maximum(merged_train["actions"].std(axis=0), 1e-6)
+    delta_quantile = 0.995
+    action_delta_limit, action_delta_norm_limit = compute_action_delta_limits(
+        merged_train["actions"], merged_train["trajectory_id"], delta_quantile
+    )
     np.savez_compressed(
         args.output_dir / "normalization.npz",
         observation_mean=observation_mean.astype(np.float32),
         observation_std=observation_std.astype(np.float32),
         action_mean=action_mean.astype(np.float32),
         action_std=action_std.astype(np.float32),
+        action_delta_limit=action_delta_limit,
+        action_delta_norm_limit=np.asarray(action_delta_norm_limit, dtype=np.float32),
+        action_delta_quantile=np.asarray(delta_quantile, dtype=np.float32),
     )
     mappings = {
         "category_to_id": category_to_id,
@@ -269,6 +301,12 @@ def prepare_dataset(args):
         "trace_dir": str(args.trace_dir.resolve()),
         "quality_rule": "train_and_valid_strict_replay_success_only; test_unfiltered",
         "normalization_rule": "train_steps_only",
+        "runtime_action_rate_limit": {
+            "source": "train_same_trajectory_adjacent_action_delta",
+            "quantile": delta_quantile,
+            "per_dimension_limit": action_delta_limit.tolist(),
+            "vector_l2_limit": float(action_delta_norm_limit),
+        },
         "split_summaries": split_summaries,
         "skipped": dict(skipped),
         "missing_successful_train_categories": missing_train_categories,

@@ -373,6 +373,16 @@ bash retarget_research/advanced_policy/run_validation_matrix.sh 2>&1 | \
   tee retarget_research/advanced_policy/runs/formal_v1/closed_loop_validation.log
 ```
 
+若原始策略出现远超train专家的相邻动作跳变，使用train同轨迹动作delta的99.5%分位
+做预先定义的执行层限速，并写入独立目录，不能覆盖或按轨迹混合原始结果：
+
+```bash
+ACTION_RATE_LIMIT_SCALE=1 \
+VALIDATION_OUTPUT_NAME=closed_loop_valid_rate_q995 \
+bash retarget_research/advanced_policy/run_validation_matrix.sh 2>&1 | \
+  tee retarget_research/advanced_policy/runs/formal_v1/closed_loop_validation_rate_q995.log
+```
+
 每只手根据valid闭环成功率冻结唯一模型后，才运行最终test闭环。示例：
 
 ```bash

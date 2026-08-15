@@ -20,7 +20,7 @@ from models import ConditionalDiffusionPolicy, MLPBCPolicy, Temporal3BCPolicy, l
 from observations import build_object_shape_descriptor, build_observation_batch
 from runtime import PolicyRunner
 from train import compute_loss, run_epoch
-from evaluate_policy_manifest import build_tasks
+from evaluate_policy_manifest import build_tasks, stable_task_seed
 
 
 class PolicyPipelineTest(unittest.TestCase):
@@ -156,6 +156,9 @@ class PolicyPipelineTest(unittest.TestCase):
                 observation_std=np.ones(3, dtype=np.float32),
                 action_mean=np.asarray([0.25, -0.5], dtype=np.float32),
                 action_std=np.asarray([2, 3], dtype=np.float32),
+                action_delta_limit=np.asarray([0.1, 0.2], dtype=np.float32),
+                action_delta_norm_limit=np.asarray(0.15, dtype=np.float32),
+                action_delta_quantile=np.asarray(0.995, dtype=np.float32),
             )
             (root / "mappings.json").write_text(
                 json.dumps({"category_to_id": {"cup": 0}, "object_to_id": {}, "policy_action_order": ["a", "b"]}), encoding="utf-8"
@@ -167,6 +170,27 @@ class PolicyPipelineTest(unittest.TestCase):
                 [0.25, -0.5],
                 atol=1e-6,
             )
+            limited = PolicyRunner(
+                root / "model.pt", root, "cpu", action_rate_limit_scale=1.0
+            )
+            with self.assertRaisesRegex(ValueError, "initial_action"):
+                limited.reset("cup", np.asarray([1, 2, 3], dtype=np.float32))
+            limited.reset(
+                "cup",
+                np.asarray([1, 2, 3], dtype=np.float32),
+                initial_action=np.zeros(2, dtype=np.float32),
+            )
+            command = limited.act(np.asarray([1, 2, 3], dtype=np.float32))
+            self.assertLessEqual(float(np.linalg.norm(command)), 0.150001)
+            self.assertLessEqual(abs(float(command[0])), 0.100001)
+            self.assertLessEqual(abs(float(command[1])), 0.200001)
+
+    def test_diffusion_task_seed_is_stable_and_trajectory_specific(self):
+        """相同轨迹键必须得到相同seed，不同源轨迹必须得到不同seed。"""
+        first = {"object_name": "cup", "source_index": 3}
+        second = {"object_name": "cup", "source_index": 4}
+        self.assertEqual(stable_task_seed(7, first), stable_task_seed(7, first))
+        self.assertNotEqual(stable_task_seed(7, first), stable_task_seed(7, second))
 
     def test_three_training_losses_are_finite_and_backwardable(self):
         """BC、Temporal3和Diffusion的监督目标都应产生可反传有限loss。"""

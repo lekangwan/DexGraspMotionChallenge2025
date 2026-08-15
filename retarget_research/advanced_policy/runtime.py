@@ -26,10 +26,18 @@ except ImportError:
 class PolicyRunner:
     """持有一个已训练策略及其单条episode时序状态。"""
 
-    def __init__(self, checkpoint, data_dir, device="cpu", diffusion_execute_steps=2, normalized_action_clip=5.0):
+    def __init__(
+        self,
+        checkpoint,
+        data_dir,
+        device="cpu",
+        diffusion_execute_steps=2,
+        normalized_action_clip=5.0,
+        action_rate_limit_scale=0.0,
+    ):
         """加载模型、维度、归一化参数和类别映射。
 
-        输入：checkpoint、数据目录、设备、Diffusion每次执行片段长度和标准化裁剪。
+        输入：checkpoint、数据目录、设备、Diffusion片段长度、标准化裁剪和动作限速倍率。
         输出：可调用`reset/act`的推理器。
         内部逻辑：完全使用checkpoint内配置构造网络，拒绝数据维度或类别数错配。
         作用：确保推理结构与训练结构一致，并对异常大动作提供统一安全边界。
@@ -66,6 +74,23 @@ class PolicyRunner:
         if self.diffusion_execute_steps <= 0:
             raise ValueError("diffusion_execute_steps必须为正数")
         self.action_clip = float(normalized_action_clip)
+        self.action_rate_limit_scale = float(action_rate_limit_scale)
+        if self.action_rate_limit_scale < 0.0:
+            raise ValueError("动作限速倍率不能为负数")
+        if self.action_rate_limit_scale > 0.0:
+            required_limits = {"action_delta_limit", "action_delta_norm_limit"}
+            missing_limits = required_limits - set(self.normalization)
+            if missing_limits:
+                raise ValueError(f"normalization缺少动作限速统计: {sorted(missing_limits)}")
+            self.action_delta_limit = (
+                self.normalization["action_delta_limit"] * self.action_rate_limit_scale
+            )
+            self.action_delta_norm_limit = float(
+                self.normalization["action_delta_norm_limit"]
+            ) * self.action_rate_limit_scale
+        else:
+            self.action_delta_limit = None
+            self.action_delta_norm_limit = None
         self.betas = (
             linear_beta_schedule(int(self.config.get("diffusion_steps", 50))).to(self.device)
             if self.model_type == "diffusion"
@@ -75,6 +100,7 @@ class PolicyRunner:
         self.previous_actions = deque(maxlen=max(self.history - 1, 1))
         self.action_cache = deque()
         self.category_id = None
+        self.previous_command = None
 
     def normalize_observation(self, observation):
         """输入原始一维观测，输出按训练集统计标准化的一维数组。"""
@@ -88,10 +114,38 @@ class PolicyRunner:
         clipped = np.clip(np.asarray(action, dtype=np.float32), -self.action_clip, self.action_clip)
         return clipped * self.normalization["action_std"] + self.normalization["action_mean"]
 
-    def reset(self, category_name, initial_observation):
+    def normalize_action(self, action):
+        """输入未标准化动作，输出供Temporal历史使用的训练标准化动作。"""
+        action = np.asarray(action, dtype=np.float32)
+        return (action - self.normalization["action_mean"]) / self.normalization["action_std"]
+
+    def apply_action_rate_limit(self, action):
+        """按train专家相邻动作分布限制当前绝对位置命令的变化速度。
+
+        输入：反归一化后的原始策略动作。
+        输出：相对上一条实际命令同时满足逐维和L2范围的动作。
+        内部逻辑：先逐维截断delta，再在总L2超限时等比例缩放；倍率0保持原动作。
+        作用：阻止闭环分布偏移导致手腕和手指在相邻60 Hz步产生非专家式跳变。
+        """
+        action = np.asarray(action, dtype=np.float32)
+        if self.action_rate_limit_scale <= 0.0:
+            return action
+        if self.previous_command is None:
+            raise RuntimeError("启用动作限速时reset必须提供initial_action")
+        delta = np.clip(
+            action - self.previous_command,
+            -self.action_delta_limit,
+            self.action_delta_limit,
+        )
+        norm = float(np.linalg.norm(delta))
+        if norm > self.action_delta_norm_limit:
+            delta *= self.action_delta_norm_limit / max(norm, 1e-12)
+        return self.previous_command + delta
+
+    def reset(self, category_name, initial_observation, initial_action=None):
         """开始新episode并用首观测初始化历史。
 
-        输入：官方类别名和当前原始观测。
+        输入：官方类别名、当前原始观测，以及可选的episode实际初始动作命令。
         输出：无返回值。
         内部逻辑：首观测复制history次，历史动作置零，清空Diffusion动作缓存。
         作用：阻止上一条轨迹的历史状态泄漏到下一条物体。
@@ -103,6 +157,15 @@ class PolicyRunner:
         self.observation_history.clear()
         self.previous_actions.clear()
         self.action_cache.clear()
+        self.previous_command = (
+            None if initial_action is None else np.asarray(initial_action, dtype=np.float32).copy()
+        )
+        if self.previous_command is not None and self.previous_command.shape != (
+            self.dimensions["action_dim"],
+        ):
+            raise ValueError(f"初始动作维度错误: {self.previous_command.shape}")
+        if self.action_rate_limit_scale > 0.0 and self.previous_command is None:
+            raise ValueError("启用动作限速时必须提供initial_action")
         for _ in range(self.history):
             self.observation_history.append(normalized.copy())
         for _ in range(max(self.history - 1, 1)):
@@ -129,7 +192,6 @@ class PolicyRunner:
             observations = torch.from_numpy(np.stack(self.observation_history)[None]).to(self.device)
             previous = torch.from_numpy(np.stack(self.previous_actions)[None]).to(self.device)
             action = self.model(observations, previous, category)[0].cpu().numpy()
-            self.previous_actions.append(action.copy())
         else:
             if not self.action_cache:
                 observations = torch.from_numpy(np.stack(self.observation_history)[None]).to(self.device)
@@ -137,4 +199,8 @@ class PolicyRunner:
                 for value in sequence[: self.diffusion_execute_steps]:
                     self.action_cache.append(value.copy())
             action = self.action_cache.popleft()
-        return self.denormalize_action(action)
+        command = self.apply_action_rate_limit(self.denormalize_action(action))
+        self.previous_command = command.copy()
+        if self.model_type == "temporal3":
+            self.previous_actions.append(self.normalize_action(command))
+        return command
