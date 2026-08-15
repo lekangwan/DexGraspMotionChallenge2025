@@ -34,7 +34,7 @@ class TargetHandPolicyDataset(Dataset):
         内部逻辑：按trajectory_id收集全局索引；拒绝非连续重复ID和未知模式。
         作用：训练循环无需了解NPZ布局即可安全抽样；统一学生可在同一索引读取教师动作。
         """
-        if mode not in {"bc", "temporal3", "diffusion"}:
+        if mode not in {"bc", "phase_residual", "temporal3", "diffusion"}:
             raise ValueError(f"未知数据模式: {mode}")
         if mode == "temporal3" and int(history) != 3:
             raise ValueError("Temporal3的history必须严格等于3")
@@ -83,6 +83,41 @@ class TargetHandPolicyDataset(Dataset):
             if not np.array_equal(indices, np.arange(indices[0], indices[-1] + 1)):
                 raise ValueError("同一trajectory_id的步骤必须连续存储")
             self.local_position[indices] = np.arange(len(indices))
+        self.previous_commands = None
+        self.action_deltas = None
+        self.phase = None
+        if self.mode == "phase_residual":
+            required = {"action_delta_mean", "action_delta_std"}
+            missing = required - set(self.normalization)
+            if missing:
+                raise ValueError(f"残差策略缺少训练增量统计: {sorted(missing)}")
+            previous_raw = np.empty_like(self.data["actions"], dtype=np.float32)
+            phase = np.empty((len(self.actions), 1), dtype=np.float32)
+            is_hold = self.data.get(
+                "is_hold", np.zeros(len(self.actions), dtype=bool)
+            ).astype(bool)
+            for indices in self.trajectory_indices.values():
+                if len(indices) < 2:
+                    raise ValueError("残差策略每条轨迹至少需要两个动作")
+                raw = self.data["actions"][indices]
+                # 专家trace首步是张开初态到第0帧的1/3线性插值，故由前两步
+                # `open = 2*a0-a1`精确恢复episode真正的上一命令。
+                previous_raw[indices[0]] = 2.0 * raw[0] - raw[1]
+                previous_raw[indices[1:]] = raw[:-1]
+                non_hold = int(np.count_nonzero(~is_hold[indices]))
+                motion_denominator = max(non_hold - 1, 1)
+                phase[indices, 0] = np.minimum(
+                    np.arange(len(indices), dtype=np.float32) / motion_denominator,
+                    1.0,
+                )
+            self.previous_commands = (
+                previous_raw - self.normalization["action_mean"]
+            ) / self.normalization["action_std"]
+            raw_delta = self.data["actions"] - previous_raw
+            self.action_deltas = (
+                raw_delta - self.normalization["action_delta_mean"]
+            ) / self.normalization["action_delta_std"]
+            self.phase = phase
 
     def __len__(self):
         """返回可作为当前时刻的物理步数量。"""
@@ -112,6 +147,16 @@ class TargetHandPolicyDataset(Dataset):
         作用：让训练脚本只根据model_type选择loss，而不重复窗口逻辑。
         """
         category = torch.tensor(self.data["category_id"][index], dtype=torch.long)
+        if self.mode == "phase_residual":
+            return {
+                "observations": torch.from_numpy(self.observations[index]).float(),
+                "previous_actions": torch.from_numpy(
+                    self.previous_commands[index]
+                ).float(),
+                "phase": torch.from_numpy(self.phase[index]).float(),
+                "action_deltas": torch.from_numpy(self.action_deltas[index]).float(),
+                "category_id": category,
+            }
         if self.mode == "bc":
             sample = {
                 "observations": torch.from_numpy(self.observations[index]).float(),

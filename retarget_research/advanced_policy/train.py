@@ -28,6 +28,7 @@ try:
     from .models import (
         ConditionalDiffusionPolicy,
         MLPBCPolicy,
+        PhaseResidualPolicy,
         SharedCategoryExpertPolicy,
         Temporal3BCPolicy,
         initialize_category_expert_from_bc,
@@ -39,6 +40,7 @@ except ImportError:
     from models import (
         ConditionalDiffusionPolicy,
         MLPBCPolicy,
+        PhaseResidualPolicy,
         SharedCategoryExpertPolicy,
         Temporal3BCPolicy,
         initialize_category_expert_from_bc,
@@ -97,6 +99,8 @@ def build_model(config, observation_dim, action_dim, category_count):
     model_type = config["model_type"]
     if model_type in {"bc", "student", "online_student"}:
         return MLPBCPolicy(**common)
+    if model_type == "phase_residual":
+        return PhaseResidualPolicy(**common)
     if model_type == "category_teacher":
         return SharedCategoryExpertPolicy(
             observation_dim=observation_dim,
@@ -189,6 +193,14 @@ def compute_loss(
             target = weight * batch["teacher_actions"] + (1.0 - weight) * batch["actions"]
         else:
             target = batch["actions"]
+    elif model_type == "phase_residual":
+        prediction = model(
+            batch["observations"],
+            batch["previous_actions"],
+            batch["phase"],
+            batch["category_id"],
+        )
+        target = batch["action_deltas"]
     elif model_type == "temporal3":
         prediction = model(
             batch["observation_history"],

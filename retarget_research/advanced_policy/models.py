@@ -74,6 +74,50 @@ class MLPBCPolicy(nn.Module):
         return self.actor(torch.cat([observations, self.category(category_id)], dim=-1))
 
 
+class PhaseResidualPolicy(nn.Module):
+    """根据当前状态、执行阶段和上一命令预测小动作增量的闭环策略。
+
+    绝对动作BC在离线轨迹上误差很低，但闭环时会在不同阶段的动作模式间跳变。
+    本模型显式读取0到1的轨迹阶段，并输出`当前命令-上一命令`，推理器再积分为
+    绝对位置目标。这样模型学习的量与专家相邻60 Hz命令变化处于同一小尺度。
+    """
+
+    def __init__(
+        self,
+        observation_dim,
+        action_dim,
+        category_count,
+        category_embedding_dim=16,
+        hidden_dims=(256, 256, 256),
+        dropout=0.0,
+    ):
+        """建立状态、上一动作、阶段和Task-ID共同条件化的增量MLP。
+
+        输入：观测/动作/类别维度及通用网络参数。
+        输出：构造完成的PyTorch模块。
+        内部逻辑：上一动作使用训练动作统计标准化，阶段保持[0,1]标量，输出为
+        训练增量统计标准化后的动作delta。
+        作用：同时消除阶段歧义，并把闭环动作变化限制在专家监督的局部尺度。
+        """
+        super().__init__()
+        self.category = CategoryConditioner(category_count, category_embedding_dim)
+        self.actor = make_mlp(
+            observation_dim + action_dim + 1 + category_embedding_dim,
+            action_dim,
+            hidden_dims,
+            dropout,
+        )
+
+    def forward(self, observations, previous_actions, phase, category_id):
+        """输入当前观测、标准化上一命令、`(B,1)`阶段和类别，输出标准化delta。"""
+        return self.actor(
+            torch.cat(
+                [observations, previous_actions, phase, self.category(category_id)],
+                dim=-1,
+            )
+        )
+
+
 class SharedCategoryExpertPolicy(nn.Module):
     """共享状态理解、但为每个物体类别保留轻量动作修正的类别教师。
 

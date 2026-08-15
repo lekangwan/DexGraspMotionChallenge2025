@@ -19,6 +19,7 @@ from dataset import TargetHandPolicyDataset
 from models import (
     ConditionalDiffusionPolicy,
     MLPBCPolicy,
+    PhaseResidualPolicy,
     SharedCategoryExpertPolicy,
     Temporal3BCPolicy,
     initialize_category_expert_from_bc,
@@ -223,6 +224,36 @@ class PolicyPipelineTest(unittest.TestCase):
             np.testing.assert_allclose(sample["previous_actions"].numpy(), [[1], [2]])
             np.testing.assert_allclose(sample["actions"].numpy(), [30])
 
+    def test_phase_residual_dataset_recovers_open_command_and_phase(self):
+        """首步上一命令应由插值反解，动作delta和0到1阶段必须正确。"""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            actions = np.asarray([[1.0], [2.0], [3.0], [3.0]], dtype=np.float32)
+            np.savez_compressed(
+                root / "data.npz",
+                observations=np.zeros((4, 2), dtype=np.float32),
+                actions=actions,
+                trajectory_id=np.zeros(4, dtype=np.int64),
+                category_id=np.zeros(4, dtype=np.int64),
+                is_hold=np.asarray([False, False, False, True]),
+            )
+            np.savez_compressed(
+                root / "normalization.npz",
+                observation_mean=np.zeros(2, dtype=np.float32),
+                observation_std=np.ones(2, dtype=np.float32),
+                action_mean=np.zeros(1, dtype=np.float32),
+                action_std=np.ones(1, dtype=np.float32),
+                action_delta_mean=np.zeros(1, dtype=np.float32),
+                action_delta_std=np.ones(1, dtype=np.float32),
+            )
+            dataset = TargetHandPolicyDataset(
+                root / "data.npz", root / "normalization.npz", "phase_residual"
+            )
+            np.testing.assert_allclose(dataset[0]["previous_actions"].numpy(), [0.0])
+            np.testing.assert_allclose(dataset[0]["action_deltas"].numpy(), [1.0])
+            self.assertAlmostEqual(float(dataset[2]["phase"].item()), 1.0)
+            self.assertAlmostEqual(float(dataset[3]["phase"].item()), 1.0)
+
     def test_policy_runner_loads_checkpoint_and_denormalizes(self):
         """统一推理器应按checkpoint构模并把零标准化输出恢复到动作均值。"""
         with tempfile.TemporaryDirectory() as directory:
@@ -283,6 +314,51 @@ class PolicyPipelineTest(unittest.TestCase):
         self.assertEqual(stable_task_seed(7, first), stable_task_seed(7, first))
         self.assertNotEqual(stable_task_seed(7, first), stable_task_seed(7, second))
 
+    def test_phase_residual_runner_integrates_small_deltas(self):
+        """残差推理器应把网络delta逐步积分，而不是每步重写无关绝对动作。"""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            config = {
+                "model_type": "phase_residual",
+                "category_embedding_dim": 2,
+                "hidden_dims": [4],
+                "dropout": 0.0,
+                "motion_steps": 3,
+            }
+            dimensions = {"observation_dim": 3, "action_dim": 2, "category_count": 1}
+            model = PhaseResidualPolicy(3, 2, 1, 2, (4,), 0.0)
+            for parameter in model.parameters():
+                parameter.data.zero_()
+            torch.save(
+                {"config": config, "dimensions": dimensions, "model_state": model.state_dict()},
+                root / "model.pt",
+            )
+            np.savez_compressed(
+                root / "normalization.npz",
+                observation_mean=np.zeros(3, dtype=np.float32),
+                observation_std=np.ones(3, dtype=np.float32),
+                action_mean=np.zeros(2, dtype=np.float32),
+                action_std=np.ones(2, dtype=np.float32),
+                action_delta_mean=np.asarray([0.1, -0.2], dtype=np.float32),
+                action_delta_std=np.ones(2, dtype=np.float32),
+            )
+            (root / "mappings.json").write_text(
+                json.dumps(
+                    {
+                        "category_to_id": {"cup": 0},
+                        "object_to_id": {},
+                        "policy_action_order": ["a", "b"],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            runner = PolicyRunner(root / "model.pt", root, "cpu")
+            runner.reset("cup", np.zeros(3, dtype=np.float32), initial_action=np.zeros(2))
+            first = runner.act(np.zeros(3, dtype=np.float32))
+            second = runner.act(np.zeros(3, dtype=np.float32))
+            np.testing.assert_allclose(first, [0.1, -0.2], atol=1e-6)
+            np.testing.assert_allclose(second, [0.2, -0.4], atol=1e-6)
+
     def test_three_training_losses_are_finite_and_backwardable(self):
         """BC、Temporal3和Diffusion的监督目标都应产生可反传有限loss。"""
         device = torch.device("cpu")
@@ -328,6 +404,21 @@ class PolicyPipelineTest(unittest.TestCase):
             "diffusion",
             device,
             linear_beta_schedule(3),
+        )
+        loss.backward()
+        self.assertTrue(torch.isfinite(loss))
+        residual = PhaseResidualPolicy(5, 3, 2, hidden_dims=(8,))
+        loss, _ = compute_loss(
+            residual,
+            {
+                "observations": torch.randn(2, 5),
+                "previous_actions": torch.randn(2, 3),
+                "phase": torch.rand(2, 1),
+                "action_deltas": torch.randn(2, 3),
+                "category_id": category,
+            },
+            "phase_residual",
+            device,
         )
         loss.backward()
         self.assertTrue(torch.isfinite(loss))

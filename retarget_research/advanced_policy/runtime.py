@@ -67,6 +67,11 @@ class PolicyRunner:
             raise ValueError("checkpoint类别数量与mappings不一致")
         if len(self.mappings.get("policy_action_order", [])) != self.dimensions["action_dim"]:
             raise ValueError("mappings缺少与checkpoint维度一致的policy_action_order")
+        if self.model_type == "phase_residual":
+            required_delta = {"action_delta_mean", "action_delta_std"}
+            missing_delta = required_delta - set(self.normalization)
+            if missing_delta:
+                raise ValueError(f"残差策略缺少动作增量统计: {sorted(missing_delta)}")
         self.history = int(self.config.get("history", 3))
         if self.model_type == "temporal3" and self.history != 3:
             raise ValueError("当前Temporal3网络只接受history=3")
@@ -101,6 +106,10 @@ class PolicyRunner:
         self.action_cache = deque()
         self.category_id = None
         self.previous_command = None
+        self.phase_step = 0
+        self.motion_steps = int(self.config.get("motion_steps", 210))
+        if self.motion_steps < 2:
+            raise ValueError("motion_steps必须至少为2")
 
     def normalize_observation(self, observation):
         """输入原始一维观测，输出按训练集统计标准化的一维数组。"""
@@ -118,6 +127,16 @@ class PolicyRunner:
         """输入未标准化动作，输出供Temporal历史使用的训练标准化动作。"""
         action = np.asarray(action, dtype=np.float32)
         return (action - self.normalization["action_mean"]) / self.normalization["action_std"]
+
+    def denormalize_action_delta(self, delta):
+        """输入标准化动作增量，按train delta统计恢复为一帧真实命令变化。"""
+        clipped = np.clip(
+            np.asarray(delta, dtype=np.float32), -self.action_clip, self.action_clip
+        )
+        return (
+            clipped * self.normalization["action_delta_std"]
+            + self.normalization["action_delta_mean"]
+        )
 
     def apply_action_rate_limit(self, action):
         """按train专家相邻动作分布限制当前绝对位置命令的变化速度。
@@ -160,12 +179,15 @@ class PolicyRunner:
         self.previous_command = (
             None if initial_action is None else np.asarray(initial_action, dtype=np.float32).copy()
         )
+        self.phase_step = 0
         if self.previous_command is not None and self.previous_command.shape != (
             self.dimensions["action_dim"],
         ):
             raise ValueError(f"初始动作维度错误: {self.previous_command.shape}")
         if self.action_rate_limit_scale > 0.0 and self.previous_command is None:
             raise ValueError("启用动作限速时必须提供initial_action")
+        if self.model_type == "phase_residual" and self.previous_command is None:
+            raise ValueError("phase_residual必须提供episode初始动作")
         for _ in range(self.history):
             self.observation_history.append(normalized.copy())
         for _ in range(max(self.history - 1, 1)):
@@ -188,6 +210,22 @@ class PolicyRunner:
         if self.model_type in {"bc", "category_teacher", "student", "online_student"}:
             tensor = torch.from_numpy(normalized[None]).to(self.device)
             action = self.model(tensor, category)[0].cpu().numpy()
+        elif self.model_type == "phase_residual":
+            tensor = torch.from_numpy(normalized[None]).to(self.device)
+            previous = torch.from_numpy(
+                self.normalize_action(self.previous_command)[None]
+            ).to(self.device)
+            phase_value = min(
+                self.phase_step / float(self.motion_steps - 1), 1.0
+            )
+            phase = torch.tensor(
+                [[phase_value]], dtype=torch.float32, device=self.device
+            )
+            delta = self.model(tensor, previous, phase, category)[0].cpu().numpy()
+            command = self.previous_command + self.denormalize_action_delta(delta)
+            self.previous_command = command.copy()
+            self.phase_step += 1
+            return command
         elif self.model_type == "temporal3":
             observations = torch.from_numpy(np.stack(self.observation_history)[None]).to(self.device)
             previous = torch.from_numpy(np.stack(self.previous_actions)[None]).to(self.device)

@@ -80,6 +80,28 @@ def build_tasks(manifest, policy_split, target_dir, split_name="test"):
     return sorted(tasks, key=lambda item: (item["object_name"], item["source_index"]))
 
 
+def load_expert_success_keys(data_dir, split_name):
+    """从物化策略NPZ恢复该split中通过专家重放筛选的轨迹键。
+
+    输入：单手数据目录和split名。
+    输出：`(object_name, source_index)`集合。
+    内部逻辑：使用NPZ的轨迹边界、object id和映射文件恢复，不读取策略结果。
+    作用：只用于小规模故障诊断，正式valid/test仍必须报告完整预定split。
+    """
+    data_dir = Path(data_dir)
+    with np.load(data_dir / f"{split_name}.npz", allow_pickle=False) as archive:
+        trajectory_ids = archive["trajectory_id"].astype(np.int64)
+        object_ids = archive["object_id"].astype(np.int64)
+        source_indices = archive["source_trajectory_index"].astype(np.int64)
+    mappings = json.loads((data_dir / "mappings.json").read_text(encoding="utf-8"))
+    object_names = {int(value): name for name, value in mappings["object_to_id"].items()}
+    keys = set()
+    for trajectory_id in np.unique(trajectory_ids):
+        index = int(np.flatnonzero(trajectory_ids == trajectory_id)[0])
+        keys.add((object_names[int(object_ids[index])], int(source_indices[index])))
+    return keys
+
+
 def run_task(task, args):
     """运行或复用一条闭环任务并返回精简摘要。
 
@@ -209,6 +231,17 @@ def main():
         default=0,
         help="0表示完整split；正数按已排序轨迹对每类取前N条，供均衡Online-R1采集",
     )
+    parser.add_argument(
+        "--expert-success-only",
+        action="store_true",
+        help="仅用于诊断：只评测已进入该split策略NPZ的成功专家轨迹",
+    )
+    parser.add_argument(
+        "--max-tasks",
+        type=int,
+        default=0,
+        help="0表示不截断；正数在所有过滤后按稳定排序取前N条，仅用于小规模screen",
+    )
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--diffusion-execute-steps", type=int, default=2)
     parser.add_argument("--normalized-action-clip", type=float, default=5.0)
@@ -220,6 +253,13 @@ def main():
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
     policy_split = json.loads(args.policy_split.read_text(encoding="utf-8"))
     tasks = build_tasks(manifest, policy_split, args.target_dir, args.split)
+    if args.expert_success_only:
+        successful_keys = load_expert_success_keys(args.data_dir, args.split)
+        tasks = [
+            task
+            for task in tasks
+            if (task["object_name"], task["source_index"]) in successful_keys
+        ]
     if args.max_tasks_per_category < 0:
         raise ValueError("max-tasks-per-category不能为负数")
     if args.max_tasks_per_category > 0:
@@ -231,6 +271,10 @@ def main():
             selected.append(task)
             category_counts[task["category"]] += 1
         tasks = selected
+    if args.max_tasks < 0:
+        raise ValueError("max-tasks不能为负数")
+    if args.max_tasks > 0:
+        tasks = tasks[: args.max_tasks]
     if not tasks:
         raise ValueError(f"策略split没有{args.split}任务")
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -261,6 +305,8 @@ def main():
         "policy_split": str(args.policy_split.resolve()),
         "evaluation_boundary": boundaries[args.split],
         "max_tasks_per_category": int(args.max_tasks_per_category),
+        "expert_success_only": bool(args.expert_success_only),
+        "max_tasks": int(args.max_tasks),
         "evaluation_seed": int(args.seed),
         "diffusion_execute_steps": int(args.diffusion_execute_steps),
         "normalized_action_clip": float(args.normalized_action_clip),
