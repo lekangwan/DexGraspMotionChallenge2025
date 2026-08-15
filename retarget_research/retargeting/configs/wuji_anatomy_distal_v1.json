@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "name": "wuji_distal_extension_limit_v1",
+  "purpose": "prevent the four non-thumb distal joints from exploiting the URDF -28.3 degree lower limit",
+  "lower_bound_overrides_rad": {
+    "finger2_joint4": -0.08726646,
+    "finger3_joint4": -0.08726646,
+    "finger4_joint4": -0.08726646,
+    "finger5_joint4": -0.08726646
+  },
+  "upper_bound_overrides_rad": {},
+  "soft_flexion_couplings": [],
+  "interpretation": "allow at most 5 degrees of distal extension; this is a hard anatomical safety screen, not a learned prior"
+}

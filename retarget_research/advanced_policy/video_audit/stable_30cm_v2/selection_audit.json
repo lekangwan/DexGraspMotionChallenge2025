@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "required_success_field": "transport_quality_success",
+  "policy_split": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy/data/formal_v1/policy_split_seed20260813.json",
+  "success_train_counts": {
+    "linker": 56,
+    "xhand": 225,
+    "wuji": 244
+  },
+  "common_success_pool_count": 42,
+  "selected_common_keys": [
+    [
+      "sem-RubiksCube-cdda3ea70d829d5baa9ba8e71ae84fd3",
+      19
+    ],
+    [
+      "sem-Dog-e5cf3055d4dbe35c6cee5c93a7be9401",
+      12
+    ],
+    [
+      "sem-Wii-84f45a5c3f9de48ae1c30bc7caf261be",
+      38
+    ],
+    [
+      "sem-Stapler-988004d506b3b75e5e40cf2ee4f6ead",
+      29
+    ],
+    [
+      "sem-TapeDispenser-4674032e53b9fd37c1935c9110af1bff",
+      13
+    ],
+    [
+      "sem-Book-c8691c86e110318ef2bc9da1ba799c60",
+      18
+    ],
+    [
+      "sem-WineBottle-f331ad8d0e6654ef8f992b1fe7075c8f",
+      12
+    ],
+    [
+      "sem-PersonStanding-a0dfc28cdafc3be913497dd48d9d7c76",
+      7
+    ],
+    [
+      "sem-Canister-abeaed132c7266b73e9c38134dedd15c",
+      30
+    ],
+    [
+      "sem-Ship-3f31208bf7adf03610aa1fb812b74966",
+      17
+    ]
+  ],
+  "per_hand_selected_count": {
+    "linker": 20,
+    "xhand": 20,
+    "wuji": 20
+  },
+  "video_root": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy/videos/stable_30cm_v2"
+}

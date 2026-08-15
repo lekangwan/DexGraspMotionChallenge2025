@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""为三只手固定各20条成功训练专家轨迹的视频审查清单。
+"""为三只手固定各20条稳定30 cm物理轨迹的视频审查清单。
 
 输入：策略split和三手正式物理评测摘要。
 输出：每手一个渲染选择JSON、总审计JSON和带预期视频名的中文Markdown索引。
 内部逻辑：先从三手共同成功交集按质量分位和类别多样性选10条相同轨迹；再为
 每只手从非共同成功集中选10条，覆盖脆弱/典型/稳定成功且尽量类别不重复。
-作用：让人工审查既能同轨迹横向比较，也不会只看到三手都容易的最好案例。
+作用：让人工审查既能同轨迹横向比较，也不会再混入10 cm后掉落的旧成功。
 """
 
 from __future__ import annotations
@@ -24,9 +24,9 @@ DEFAULT_SPLIT = (
     / "retarget_research/advanced_policy/data/formal_v1/policy_split_seed20260813.json"
 )
 DEFAULT_REPORTS = {
-    "linker": PROJECT_ROOT / "retarget_research/outputs/formal_1000/linker_object_centric_3mm_v1_evaluation/manifest_evaluation_summary.json",
-    "xhand": PROJECT_ROOT / "retarget_research/outputs/formal_1000/xhand_official_evaluation/manifest_evaluation_summary.json",
-    "wuji": PROJECT_ROOT / "retarget_research/outputs/formal_1000/wuji_v1_evaluation/manifest_evaluation_summary.json",
+    "linker": PROJECT_ROOT / "retarget_research/outputs/stable_success_audit_v2/linker_stable_audit.json",
+    "xhand": PROJECT_ROOT / "retarget_research/outputs/stable_success_audit_v2/xhand_stable_audit.json",
+    "wuji": PROJECT_ROOT / "retarget_research/outputs/stable_success_audit_v2/wuji_stable_audit.json",
 }
 
 
@@ -36,7 +36,14 @@ def trajectory_key(item):
 
 
 def quality_key(item):
-    """把成功轨迹按持续时间、最终高度和接触步数从弱到强排序。"""
+    """把轨迹按稳定30 cm质量从弱到强排序，并兼容旧测试数据。"""
+    if "terminal_min_lift_m" in item:
+        return (
+            float(item["terminal_min_lift_m"]),
+            -float(item["peak_to_final_drop_m"]),
+            -float(item["max_palm_relative_translation_change_m"]),
+            float(item["final_lift_m"]),
+        )
     return (
         float(item["longest_sustained_lift_time_s"]),
         float(item["final_lift_m"]),
@@ -103,18 +110,28 @@ def slim_item(item, reason):
         "hand_object_contact_steps",
         "max_simultaneous_hand_object_contacts",
         "success",
+        "stable_physics_success",
+        "transport_quality_success",
+        "training_eligible",
+        "anatomy_gate",
+        "terminal_min_lift_m",
+        "terminal_lift_range_m",
+        "peak_to_final_drop_m",
+        "terminal_contact_ratio",
+        "max_palm_relative_translation_change_m",
+        "max_palm_relative_rotation_change_deg",
     }
     result = {name: item[name] for name in fields if name in item}
     result["selection_reason"] = reason
     return result
 
 
-def build_selections(policy_split, reports):
+def build_selections(policy_split, reports, success_field="success"):
     """构造三手共同10条和各手分层10条清单。
 
     输入：策略split字典和手到评测摘要字典。
     输出：每手分组、共同键及整体统计。
-    内部逻辑：只允许`split=train AND success=True`；共同样本的质量由三手中最短
+    内部逻辑：只允许`split=train`且指定质量字段为True；共同样本的质量由三手中最短
     持续时间优先，再看三手平均最终高度/接触，保证弱的一只手也确实成功。
     作用：严格审查训练监督本身，不查看对象级test或失败策略rollout。
     """
@@ -128,7 +145,8 @@ def build_selections(policy_split, reports):
         values = {
             trajectory_key(item): item
             for item in summary["results"]
-            if bool(item["success"]) and trajectory_key(item) in train_keys
+            if bool(item.get(success_field, False))
+            and trajectory_key(item) in train_keys
         }
         by_hand[hand] = values
     common_keys = set.intersection(*(set(values) for values in by_hand.values()))
@@ -136,11 +154,22 @@ def build_selections(policy_split, reports):
     for key in common_keys:
         hand_items = [by_hand[hand][key] for hand in ("linker", "xhand", "wuji")]
         representative = dict(hand_items[0])
-        representative["common_quality"] = (
-            min(float(item["longest_sustained_lift_time_s"]) for item in hand_items),
-            float(np.mean([item["final_lift_m"] for item in hand_items])),
-            float(np.mean([item["hand_object_contact_steps"] for item in hand_items])),
-        )
+        if success_field == "success":
+            representative["common_quality"] = (
+                min(float(item["longest_sustained_lift_time_s"]) for item in hand_items),
+                float(np.mean([item["final_lift_m"] for item in hand_items])),
+                float(np.mean([item["hand_object_contact_steps"] for item in hand_items])),
+            )
+        else:
+            representative["common_quality"] = (
+                min(float(item["terminal_min_lift_m"]) for item in hand_items),
+                -max(float(item["peak_to_final_drop_m"]) for item in hand_items),
+                -max(
+                    float(item["max_palm_relative_translation_change_m"])
+                    for item in hand_items
+                ),
+                float(np.mean([item["final_lift_m"] for item in hand_items])),
+            )
         common_candidates.append(representative)
     common_selected = stratified_diverse_take(
         common_candidates, 10, lambda item: item["common_quality"]
@@ -164,10 +193,10 @@ def build_selections(policy_split, reports):
             ]
         own = stratified_diverse_take(hand_only_candidates, 10, quality_key)
         selections[hand] = {
-            "schema_version": 1,
+            "schema_version": 2 if success_field != "success" else 1,
             "summary_kind": "expert_replay",
             "selection_rule": (
-                "train_success_only; 10 shared cross-hand + 10 hand-specific; "
+                f"train_{success_field}_only; 10 shared cross-hand + 10 hand-specific; "
                 "quality-stratified and category-diverse; no policy/test outcome"
             ),
             "groups": {
@@ -193,9 +222,11 @@ def build_selections(policy_split, reports):
 def write_markdown(path, selections, video_root):
     """写包含60条指标和预期MP4路径的中文人工审查索引。"""
     lines = [
-        "# 成功专家轨迹视频审查索引",
+        "# 稳定30 cm物理轨迹视频审查索引",
         "",
-        "全部样本来自策略train划分且专家PhysX严格成功。每手前10条`shared_success`使用相同轨迹键，便于三手横向比较；其余10条覆盖该手从边界到稳定的成功质量。",
+        "全部样本来自策略train划分，并通过稳定30 cm末段保持与掌物运输防滑门。每手前10条`shared_success`使用相同轨迹键，便于三手横向比较；其余10条覆盖该手从边界到稳定的物理质量。",
+        "",
+        "注意：Wuji仍因远端关节反向弯曲被手型门整体隔离；这里的Wuji视频只用于诊断物理运输和手型，不能作为可训练专家。",
         "",
         "建议重点观察：手是否真正包覆而非撞飞；抬升是否主要由手腕穿过物体；接触是否只在单侧/单指；物体是否明显滑移；末端保持时是否仍稳定。",
         "",
@@ -230,6 +261,11 @@ def main():
     parser.add_argument("--wuji-report", type=Path, default=DEFAULT_REPORTS["wuji"])
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--video-root", type=Path, required=True)
+    parser.add_argument(
+        "--success-field",
+        default="transport_quality_success",
+        help="逐轨迹必须为True的质量字段；v2默认要求稳定30 cm且运输不滑移",
+    )
     args = parser.parse_args()
     policy_split = json.loads(args.policy_split.read_text(encoding="utf-8"))
     report_paths = {
@@ -241,7 +277,9 @@ def main():
         hand: json.loads(path.read_text(encoding="utf-8"))
         for hand, path in report_paths.items()
     }
-    selections, common_keys, pool_stats = build_selections(policy_split, reports)
+    selections, common_keys, pool_stats = build_selections(
+        policy_split, reports, args.success_field
+    )
     args.output_dir.mkdir(parents=True, exist_ok=True)
     for hand, selection in selections.items():
         selection["source_summary"] = str(report_paths[hand].resolve())
@@ -250,7 +288,8 @@ def main():
             encoding="utf-8",
         )
     audit = {
-        "schema_version": 1,
+        "schema_version": 2,
+        "required_success_field": args.success_field,
         "policy_split": str(args.policy_split.resolve()),
         "success_train_counts": pool_stats["per_hand"],
         "common_success_pool_count": pool_stats["common_pool_count"],

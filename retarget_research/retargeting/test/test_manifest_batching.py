@@ -72,6 +72,43 @@ class ManifestBatchingTest(unittest.TestCase):
             args.maxeval = 50
             self.assertFalse(existing_output_matches(output, self.entry, args))
 
+    def test_wuji_resume_requires_exact_anatomy_file_hash(self):
+        """同名手型配置内容变化后必须拒绝续跑旧候选。"""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            mapping = root / "mapping.json"
+            anatomy = root / "anatomy.json"
+            mapping.write_text("{}", encoding="utf-8")
+            anatomy.write_text('{"version": 1}', encoding="utf-8")
+            import hashlib
+
+            payload = {
+                "grasp_seqs": np.zeros((2, 70, 26), dtype=np.float32),
+                "source_trajectory_indices": np.asarray([2, 7]),
+                "mapping_config": str(mapping.resolve()),
+                "maxeval": 50,
+                "source_z_offset": 0.4,
+                "joint_temporal_weight": 0.0,
+                "translation_temporal_weight": 0.0,
+                "rotation_temporal_weight": 0.0,
+                "anatomy_config": str(anatomy.resolve()),
+                "anatomy_config_sha256": hashlib.sha256(anatomy.read_bytes()).hexdigest(),
+            }
+            output = root / "candidate.npy"
+            np.save(output, payload, allow_pickle=True)
+            args = Namespace(
+                mapping_config=mapping,
+                anatomy_config=anatomy,
+                maxeval=50,
+                source_z_offset=0.4,
+                joint_temporal_weight=0.0,
+                translation_temporal_weight=0.0,
+                rotation_temporal_weight=0.0,
+            )
+            self.assertTrue(existing_output_matches(output, self.entry, args))
+            anatomy.write_text('{"version": 2}', encoding="utf-8")
+            self.assertFalse(existing_output_matches(output, self.entry, args))
+
     def test_cross_hand_verifier_checks_dimension_and_indices(self):
         """The same manifest accepts 26-D Wuji but rejects it as 18-D XHand."""
         with tempfile.TemporaryDirectory() as directory:

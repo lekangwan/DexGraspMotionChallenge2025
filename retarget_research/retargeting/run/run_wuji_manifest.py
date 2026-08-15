@@ -73,7 +73,7 @@ def build_command(entry, source, output, args):
     内部逻辑：显式写入固定索引、v2映射、SLSQP次数和三类时序权重。
     作用：让每个候选文件都能从批处理摘要完整复现。
     """
-    return [
+    command = [
         sys.executable,
         str(RETARGET_SCRIPT),
         "--source",
@@ -97,6 +97,9 @@ def build_command(entry, source, output, args):
         "--rotation-temporal-weight",
         str(args.rotation_temporal_weight),
     ]
+    if getattr(args, "anatomy_config", None) is not None:
+        command.extend(["--anatomy-config", str(args.anatomy_config)])
+    return command
 
 
 def run_streaming_command(command, label):
@@ -136,6 +139,17 @@ def existing_output_matches(output, entry, args):
     try:
         data = np.load(output, allow_pickle=True).item()
         mapping = Path(str(data["mapping_config"])).resolve()
+        anatomy_config = getattr(args, "anatomy_config", None)
+        anatomy_matches = anatomy_config is None and data.get("anatomy_config") is None
+        if anatomy_config is not None:
+            anatomy_bytes = anatomy_config.read_bytes()
+            anatomy_matches = bool(
+                data.get("anatomy_config")
+                and Path(str(data["anatomy_config"])).resolve()
+                == anatomy_config.resolve()
+                and data.get("anatomy_config_sha256")
+                == hashlib.sha256(anatomy_bytes).hexdigest()
+            )
         return bool(
             np.array_equal(
                 np.asarray(data["source_trajectory_indices"]),
@@ -152,6 +166,7 @@ def existing_output_matches(output, entry, args):
             == args.translation_temporal_weight
             and float(data["rotation_temporal_weight"])
             == args.rotation_temporal_weight
+            and anatomy_matches
         )
     except (KeyError, OSError, TypeError, ValueError):
         return False
@@ -220,8 +235,15 @@ def main():
     parser.add_argument("--joint-temporal-weight", type=float, default=0.0)
     parser.add_argument("--translation-temporal-weight", type=float, default=0.0)
     parser.add_argument("--rotation-temporal-weight", type=float, default=0.0)
+    parser.add_argument(
+        "--anatomy-config",
+        type=Path,
+        help="可选Wuji解剖学关节边界与协调配置",
+    )
     args = parser.parse_args()
     args.mapping_config = args.mapping_config.resolve()
+    if args.anatomy_config is not None:
+        args.anatomy_config = args.anatomy_config.resolve()
 
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
     entries = manifest["entries"]
@@ -258,6 +280,14 @@ def main():
             "joint_temporal_weight": args.joint_temporal_weight,
             "translation_temporal_weight": args.translation_temporal_weight,
             "rotation_temporal_weight": args.rotation_temporal_weight,
+            "anatomy_config": (
+                None if args.anatomy_config is None else str(args.anatomy_config)
+            ),
+            "anatomy_config_sha256": (
+                None
+                if args.anatomy_config is None
+                else file_sha256(args.anatomy_config)
+            ),
         },
         "results": results,
     }

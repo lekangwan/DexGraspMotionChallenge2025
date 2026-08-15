@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -136,6 +137,90 @@ def clip_start_to_bounds(values, lower, upper, epsilon=1e-6):
     )
 
 
+def apply_anatomy_profile(joint_names, urdf_lower, urdf_upper, profile):
+    """把可审查的手型配置应用到Wuji原始关节边界并解析协调项。
+
+    输入：20个关节名、URDF上下界和JSON字典。
+    输出：收紧后的上下界，以及已转换成关节索引的软协调项。
+    内部逻辑：只允许在URDF范围内收紧指定关节；协调项表达
+    `distal≈ratio*proximal+offset`，并拒绝未知关节或负权重。
+    作用：阻止优化器利用远端反向弯曲降低关键点误差，同时保留可消融性。
+    """
+    names = list(joint_names)
+    by_name = {name: index for index, name in enumerate(names)}
+    if len(by_name) != len(names):
+        raise ValueError("Wuji关节名存在重复")
+    lower = np.asarray(urdf_lower, dtype=np.float64).copy()
+    upper = np.asarray(urdf_upper, dtype=np.float64).copy()
+    if lower.shape != (len(names),) or upper.shape != (len(names),):
+        raise ValueError("Wuji关节边界维度与关节名不一致")
+    original_lower, original_upper = lower.copy(), upper.copy()
+    for name, value in profile.get("lower_bound_overrides_rad", {}).items():
+        if name not in by_name:
+            raise ValueError(f"手型配置含未知关节: {name}")
+        index = by_name[name]
+        value = float(value)
+        if not np.isfinite(value) or value < original_lower[index] or value >= upper[index]:
+            raise ValueError(f"{name}下界{value}不在URDF可收紧范围内")
+        lower[index] = value
+    for name, value in profile.get("upper_bound_overrides_rad", {}).items():
+        if name not in by_name:
+            raise ValueError(f"手型配置含未知关节: {name}")
+        index = by_name[name]
+        value = float(value)
+        if not np.isfinite(value) or value > original_upper[index] or value <= lower[index]:
+            raise ValueError(f"{name}上界{value}不在URDF可收紧范围内")
+        upper[index] = value
+    couplings = []
+    for item in profile.get("soft_flexion_couplings", []):
+        proximal = item["proximal_joint"]
+        distal = item["distal_joint"]
+        if proximal not in by_name or distal not in by_name:
+            raise ValueError(f"协调项含未知关节: {proximal}/{distal}")
+        weight = float(item["weight"])
+        ratio = float(item.get("ratio", 2.0 / 3.0))
+        offset = float(item.get("offset_rad", 0.0))
+        if not np.isfinite(weight) or weight < 0:
+            raise ValueError("关节协调权重不能为负")
+        if not np.isfinite(ratio) or not np.isfinite(offset):
+            raise ValueError("关节协调比例和偏置必须是有限数")
+        couplings.append(
+            {
+                "proximal_index": by_name[proximal],
+                "distal_index": by_name[distal],
+                "ratio": ratio,
+                "offset_rad": offset,
+                "weight": weight,
+            }
+        )
+    return lower, upper, couplings
+
+
+def load_anatomy_profile(path, joint_names, urdf_lower, urdf_upper):
+    """读取手型JSON并返回边界、协调项和可复现元数据。
+
+    输入：可选配置路径、关节名及URDF边界。
+    输出：实际边界、协调项、绝对路径和文件SHA-256；未配置时保持URDF原值。
+    内部逻辑：解析JSON后调用严格校验函数，并对原始文件字节计算哈希。
+    作用：让批量续跑不能误用同名但内容已变化的手型配置。
+    """
+    if path is None:
+        return (
+            np.asarray(urdf_lower, dtype=np.float64),
+            np.asarray(urdf_upper, dtype=np.float64),
+            [],
+            None,
+            None,
+        )
+    resolved = Path(path).resolve()
+    raw = resolved.read_bytes()
+    profile = json.loads(raw.decode("utf-8"))
+    lower, upper, couplings = apply_anatomy_profile(
+        joint_names, urdf_lower, urdf_upper, profile
+    )
+    return lower, upper, couplings, str(resolved), hashlib.sha256(raw).hexdigest()
+
+
 def initial_values(shadow_frame, joint_count):
     """用Shadow手腕构造Wuji首帧优化初值。
 
@@ -180,6 +265,7 @@ class WujiFrameObjective:
         reference_joint_weight=0.0,
         reference_translation_weight=0.0,
         reference_rotation_weight=0.0,
+        flexion_couplings=None,
     ):
         """保存单帧目标、目标索引和上一帧姿态。
 
@@ -219,13 +305,14 @@ class WujiFrameObjective:
         self.reference_joint_weight = float(reference_joint_weight)
         self.reference_translation_weight = float(reference_translation_weight)
         self.reference_rotation_weight = float(reference_rotation_weight)
+        self.flexion_couplings = list(flexion_couplings or [])
 
     def __call__(self, values, gradient=None):
         """返回一组26维候选姿态的可求导标量损失。
 
         输入：`[关节20,平移3,欧拉角3]`和可选NLopt梯度缓冲区。
-        输出：关键点均方平方距离乘1000，加三类相邻帧正则。
-        内部逻辑：欧拉角转旋转6D，计算15点、可选接触锚点和连续/参考损失。
+        输出：关键点均方平方距离乘1000，加连续、参考及可选屈曲协调正则。
+        内部逻辑：欧拉角转旋转6D，计算15点、可选接触锚点和各正则损失。
         作用：告诉SLSQP候选姿态的好坏及下降方向。
         """
         values_tensor = torch.tensor(
@@ -284,6 +371,11 @@ class WujiFrameObjective:
             loss = loss + self.reference_rotation_weight * torch.mean(
                 (rotation - reference_rotation) ** 2
             )
+        for coupling in self.flexion_couplings:
+            proximal = values_tensor[coupling["proximal_index"]]
+            distal = values_tensor[coupling["distal_index"]]
+            expected = coupling["ratio"] * proximal + coupling["offset_rad"]
+            loss = loss + coupling["weight"] * (distal - expected) ** 2
         if gradient is not None and len(gradient) > 0:
             loss.backward()
             gradient[:] = values_tensor.grad.detach().numpy().astype(np.float64)
@@ -300,17 +392,23 @@ def retarget_trajectory(
     joint_temporal_weight,
     translation_temporal_weight,
     rotation_temporal_weight,
+    anatomy_profile=None,
     progress_prefix=None,
 ):
     """逐帧优化一条Shadow轨迹对应的Wuji姿态。
 
-    输入：源帧、Wuji模型、15点目标/索引、优化边界、时序权重和进度前缀。
+    输入：源帧、Wuji模型、15点目标/索引、优化边界、时序权重、手型配置和进度前缀。
     输出：内部顺序`(T,26)`轨迹和`(T,)`最终损失。
-    内部逻辑：每帧新建有界SLSQP；首帧对齐初始化，之后以上一帧热启动。
+    内部逻辑：先用手型配置收紧边界并解析协调项；每帧新建有界SLSQP，首帧
+    对齐初始化，之后以上一帧热启动。
     作用：把单帧目标组合成连续可保存的完整候选轨迹。
     """
-    joint_lower = model.revolute_joints_q_lower[0].detach().numpy()
-    joint_upper = model.revolute_joints_q_upper[0].detach().numpy()
+    urdf_lower = model.revolute_joints_q_lower[0].detach().numpy()
+    urdf_upper = model.revolute_joints_q_upper[0].detach().numpy()
+    joint_names = list(model.robot.get_joint_parameter_names())
+    joint_lower, joint_upper, flexion_couplings = apply_anatomy_profile(
+        joint_names, urdf_lower, urdf_upper, anatomy_profile or {}
+    )
     joint_count = len(joint_lower)
     lower = np.concatenate(
         [joint_lower, np.full(3, -translation_bound), np.full(3, -np.pi)]
@@ -335,6 +433,7 @@ def retarget_trajectory(
             joint_temporal_weight=joint_temporal_weight,
             translation_temporal_weight=translation_temporal_weight,
             rotation_temporal_weight=rotation_temporal_weight,
+            flexion_couplings=flexion_couplings,
         )
         optimizer = nlopt.opt(nlopt.LD_SLSQP, joint_count + 6)
         optimizer.set_min_objective(objective)
@@ -363,9 +462,9 @@ def retarget_trajectory(
 def retarget_file(args):
     """读取源数据、运行Wuji优化并保存标准候选文件。
 
-    输入：命令行source/output/索引、优化次数、边界和时序权重。
+    输入：命令行source/output/索引、优化次数、边界、时序权重和可选手型配置。
     输出：包含候选、源索引、物体姿态、语义和方法元数据的`.npy`。
-    内部逻辑：为源Z加参考0.4 m偏移，恢复Shadow点，逐轨迹优化并重排维度。
+    内部逻辑：验证手型配置及哈希，为源Z加0.4 m，恢复Shadow点并逐轨迹优化。
     作用：提供可复现、可供独立几何/物理评估读取的文件级入口。
     """
     source_data = np.load(args.source, allow_pickle=True).item()
@@ -376,6 +475,17 @@ def retarget_file(args):
     source_frames[:, :, 2] += args.source_z_offset
     shadow_model = build_shadow_model()
     wuji_model = build_wuji_model()
+    joint_names = list(wuji_model.robot.get_joint_parameter_names())
+    urdf_lower = wuji_model.revolute_joints_q_lower[0].detach().numpy()
+    urdf_upper = wuji_model.revolute_joints_q_upper[0].detach().numpy()
+    _, _, _, anatomy_path, anatomy_sha256 = load_anatomy_profile(
+        args.anatomy_config, joint_names, urdf_lower, urdf_upper
+    )
+    anatomy_profile = (
+        {}
+        if args.anatomy_config is None
+        else json.loads(Path(args.anatomy_config).read_text(encoding="utf-8"))
+    )
     pairs = load_pairs(args.mapping_config)
     shadow_indices = [pair["shadow_index"] for pair in pairs]
     wuji_indices = [pair["wuji_index"] for pair in pairs]
@@ -392,6 +502,7 @@ def retarget_file(args):
             args.joint_temporal_weight,
             args.translation_temporal_weight,
             args.rotation_temporal_weight,
+            anatomy_profile=anatomy_profile,
             progress_prefix=(
                 f"trajectory={trajectory_index + 1}/{len(source_frames)} "
                 f"source_index={indices[trajectory_index]}"
@@ -410,7 +521,9 @@ def retarget_file(args):
         "obj_scale": np.asarray(source_data["obj_scale"])[indices],
         "mapping_semantics": [pair["semantic"] for pair in pairs],
         "mapping_config": str(args.mapping_config.resolve()),
-        "wuji_joint_names": wuji_model.robot.get_joint_parameter_names(),
+        "wuji_joint_names": joint_names,
+        "anatomy_config": anatomy_path,
+        "anatomy_config_sha256": anatomy_sha256,
         "source_z_offset": float(args.source_z_offset),
         "maxeval": int(args.maxeval),
         "joint_temporal_weight": float(args.joint_temporal_weight),
@@ -450,6 +563,11 @@ def main():
     parser.add_argument("--joint-temporal-weight", type=float, default=0.0)
     parser.add_argument("--translation-temporal-weight", type=float, default=0.0)
     parser.add_argument("--rotation-temporal-weight", type=float, default=0.0)
+    parser.add_argument(
+        "--anatomy-config",
+        type=Path,
+        help="可选Wuji手型边界与PIP-DIP协调配置；不提供时严格复现旧基线",
+    )
     retarget_file(parser.parse_args())
 
 

@@ -193,6 +193,28 @@ def render_video(state, object_dir, output, fps=20, max_faces=1200, title=""):
         all_points.append(world_vertices.min(axis=0))
         all_points.append(world_vertices.max(axis=0))
     all_points = np.asarray(all_points)
+    initial_object_z = float(state["object_positions"][0, 2])
+    initial_vertices = transformed_object_vertices(
+        vertices,
+        state["object_positions"][0],
+        state["object_quaternions"][0],
+        scale,
+    )
+    table_z = float(initial_vertices[:, 2].min())
+    target_z = initial_object_z + 0.30
+    guide_xy = (all_points.min(axis=0) + all_points.max(axis=0))[:2] / 2.0
+    all_points = np.concatenate(
+        [
+            all_points,
+            np.asarray(
+                [
+                    [guide_xy[0], guide_xy[1], table_z],
+                    [guide_xy[0], guide_xy[1], target_z],
+                ]
+            ),
+        ],
+        axis=0,
+    )
     minimum, maximum = all_points.min(axis=0), all_points.max(axis=0)
     center = (minimum + maximum) / 2.0
     radius = max(float(np.max(maximum - minimum)) * 0.62, 0.12)
@@ -226,6 +248,36 @@ def render_video(state, object_dir, output, fps=20, max_faces=1200, title=""):
                 linewidth=0.08, alpha=0.9,
             )
             axis.add_collection3d(collection)
+            plane_extent = radius * 0.82
+            plane_x = np.asarray([center[0] - plane_extent, center[0] + plane_extent])
+            plane_y = np.asarray([center[1] - plane_extent, center[1] + plane_extent])
+            plane_x, plane_y = np.meshgrid(plane_x, plane_y)
+            axis.plot_surface(
+                plane_x,
+                plane_y,
+                np.full_like(plane_x, table_z),
+                color="#C8B79A",
+                alpha=0.22,
+                shade=False,
+            )
+            axis.plot(
+                [center[0] - plane_extent, center[0] + plane_extent],
+                [center[1], center[1]],
+                [initial_object_z, initial_object_z],
+                color="#5E6B73",
+                linestyle="--",
+                linewidth=1.2,
+                label="initial object height",
+            )
+            axis.plot(
+                [center[0] - plane_extent, center[0] + plane_extent],
+                [center[1], center[1]],
+                [target_z, target_z],
+                color="#C62828",
+                linestyle="--",
+                linewidth=2.0,
+                label="+30 cm target",
+            )
             axis.set_xlim(center[0] - radius, center[0] + radius)
             axis.set_ylim(center[1] - radius, center[1] + radius)
             axis.set_zlim(center[2] - radius, center[2] + radius)
@@ -234,7 +286,15 @@ def render_video(state, object_dir, output, fps=20, max_faces=1200, title=""):
             axis.set_xlabel("x / m")
             axis.set_ylabel("y / m")
             axis.set_zlabel("z / m")
-            axis.set_title(title or f"{hand}  step={int(state_index)}")
+            current_lift_cm = 100.0 * (
+                float(state["object_positions"][state_index, 2]) - initial_object_z
+            )
+            prefix = title or hand
+            axis.set_title(
+                f"{prefix}  frame={video_index + 1}/{len(sampled)}  "
+                f"lift={current_lift_cm:+.1f} cm"
+            )
+            axis.legend(loc="upper left", fontsize=7)
             figure.tight_layout()
             figure.canvas.draw()
             frame = np.asarray(figure.canvas.buffer_rgba())[:, :, :3].copy()

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "study_name": "wuji_anatomical_retargeting_ablation_v1",
+  "screen_manifest": "retarget_research/manifests/wuji_anatomy_train20_seed20260817.json",
+  "frozen_common_parameters": {
+    "mapping_config": "retarget_research/retargeting/configs/wuji_keypoint_map.json",
+    "maxeval": 50,
+    "translation_bound": 2.0,
+    "source_z_offset": 0.4,
+    "joint_temporal_weight": 0.0,
+    "translation_temporal_weight": 0.0,
+    "rotation_temporal_weight": 0.0,
+    "physics_pd": [120.0, 5.0],
+    "stable_lift_threshold_m": 0.3,
+    "terminal_hold_steps": 30
+  },
+  "candidates": [
+    {
+      "name": "legacy_unconstrained",
+      "anatomy_config": null,
+      "role": "historical baseline regenerated only if a v2 physics report is unavailable"
+    },
+    {
+      "name": "distal_bound",
+      "anatomy_config": "retarget_research/retargeting/configs/wuji_anatomy_distal_v1.json",
+      "role": "isolates the effect of limiting visible distal hyperextension"
+    },
+    {
+      "name": "coupled_flexion",
+      "anatomy_config": "retarget_research/retargeting/configs/wuji_anatomy_coupled_v1.json",
+      "role": "tests hard middle/distal bounds plus a weak PIP-DIP coordination prior"
+    }
+  ],
+  "selection_rule": "first require zero trajectories below the configured anatomical lower bounds; then maximize stable 30 cm terminal success, compare paired gains/losses, and use keypoint loss only as a diagnostic tie-breaker",
+  "escalation_rule": "the best constrained candidate must next pass one train trajectory from all 50 categories before replacing the formal Wuji method"
+}

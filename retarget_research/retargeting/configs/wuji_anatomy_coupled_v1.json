@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "name": "wuji_flexion_bounds_and_pip_dip_coupling_v1",
+  "purpose": "prevent reverse middle/distal bending and softly coordinate the two flexion joints",
+  "lower_bound_overrides_rad": {
+    "finger2_joint3": -0.08726646,
+    "finger2_joint4": -0.08726646,
+    "finger3_joint3": -0.08726646,
+    "finger3_joint4": -0.08726646,
+    "finger4_joint3": -0.08726646,
+    "finger4_joint4": -0.08726646,
+    "finger5_joint3": -0.08726646,
+    "finger5_joint4": -0.08726646
+  },
+  "upper_bound_overrides_rad": {},
+  "soft_flexion_couplings": [
+    {"proximal_joint": "finger2_joint3", "distal_joint": "finger2_joint4", "ratio": 0.66666667, "offset_rad": 0.0, "weight": 0.02},
+    {"proximal_joint": "finger3_joint3", "distal_joint": "finger3_joint4", "ratio": 0.66666667, "offset_rad": 0.0, "weight": 0.02},
+    {"proximal_joint": "finger4_joint3", "distal_joint": "finger4_joint4", "ratio": 0.66666667, "offset_rad": 0.0, "weight": 0.02},
+    {"proximal_joint": "finger5_joint3", "distal_joint": "finger5_joint4", "ratio": 0.66666667, "offset_rad": 0.0, "weight": 0.02}
+  ],
+  "interpretation": "hard bounds remove visible hyperextension; the weak coupling favors coordinated flexion without forcing exact equality"
+}
