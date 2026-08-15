@@ -1,201 +1,251 @@
-label,category,success_rate
-Linker O6主方法,ball,0.0
-Linker O6主方法,battery,0.05
-Linker O6主方法,beanbag,0.0
-Linker O6主方法,blender,0.25
-Linker O6主方法,book,0.35
-Linker O6主方法,bowl,0.1
-Linker O6主方法,camera,0.2
-Linker O6主方法,can,0.15
-Linker O6主方法,canister,0.4
-Linker O6主方法,cap,0.0
-Linker O6主方法,cerealbox,0.35
-Linker O6主方法,clock,0.15
-Linker O6主方法,cookie,0.0
-Linker O6主方法,disccase,0.15
-Linker O6主方法,dog,0.3
-Linker O6主方法,filecabinet,0.35
-Linker O6主方法,flashlight,0.35
-Linker O6主方法,fruit,0.15
-Linker O6主方法,headphones,0.3
-Linker O6主方法,horse,0.3
-Linker O6主方法,ipad,0.0
-Linker O6主方法,knife,0.1
-Linker O6主方法,milkcarton,0.2
-Linker O6主方法,palette,0.0
-Linker O6主方法,pan,0.2
-Linker O6主方法,pencil,0.5
-Linker O6主方法,personstanding,0.25
-Linker O6主方法,phonebooth,0.35
-Linker O6主方法,piano,0.25
-Linker O6主方法,pillow,0.0
-Linker O6主方法,remote,0.25
-Linker O6主方法,rubikscube,0.05
-Linker O6主方法,ship,0.3
-Linker O6主方法,showerhead,0.2
-Linker O6主方法,snowman,0.3
-Linker O6主方法,soapbar,0.3
-Linker O6主方法,soapbottle,0.2
-Linker O6主方法,stapler,0.4
-Linker O6主方法,tapedispenser,0.35
-Linker O6主方法,thumbtack,0.3
-Linker O6主方法,tissuebox,0.4
-Linker O6主方法,toaster,0.5
-Linker O6主方法,toasteroven,0.45
-Linker O6主方法,usbstick,0.2
-Linker O6主方法,vase,0.2
-Linker O6主方法,videogamecontroller,0.0
-Linker O6主方法,wallclock,0.0
-Linker O6主方法,watch,0.35
-Linker O6主方法,wii,0.45
-Linker O6主方法,winebottle,0.6
-Wuji v1,ball,0.2
-Wuji v1,battery,0.4
-Wuji v1,beanbag,0.35
-Wuji v1,blender,0.75
-Wuji v1,book,0.45
-Wuji v1,bowl,0.55
-Wuji v1,camera,0.65
-Wuji v1,can,0.7
-Wuji v1,canister,0.9
-Wuji v1,cap,0.2
-Wuji v1,cerealbox,0.85
-Wuji v1,clock,0.9
-Wuji v1,cookie,0.4
-Wuji v1,disccase,0.95
-Wuji v1,dog,0.75
-Wuji v1,filecabinet,0.8
-Wuji v1,flashlight,0.8
-Wuji v1,fruit,0.6
-Wuji v1,headphones,0.7
-Wuji v1,horse,0.6
-Wuji v1,ipad,0.6
-Wuji v1,knife,0.45
-Wuji v1,milkcarton,0.75
-Wuji v1,palette,0.65
-Wuji v1,pan,0.2
-Wuji v1,pencil,0.55
-Wuji v1,personstanding,0.5
-Wuji v1,phonebooth,0.85
-Wuji v1,piano,0.75
-Wuji v1,pillow,0.6
-Wuji v1,remote,0.8
-Wuji v1,rubikscube,0.45
-Wuji v1,ship,0.85
-Wuji v1,showerhead,0.5
-Wuji v1,snowman,0.6
-Wuji v1,soapbar,0.65
-Wuji v1,soapbottle,0.75
-Wuji v1,stapler,0.8
-Wuji v1,tapedispenser,0.85
-Wuji v1,thumbtack,0.8
-Wuji v1,tissuebox,0.7
-Wuji v1,toaster,0.8
-Wuji v1,toasteroven,0.7
-Wuji v1,usbstick,0.65
-Wuji v1,vase,0.55
-Wuji v1,videogamecontroller,0.25
-Wuji v1,wallclock,0.45
-Wuji v1,watch,0.7
-Wuji v1,wii,0.95
-Wuji v1,winebottle,0.7
-XHand官方基线,ball,0.15
-XHand官方基线,battery,0.4
-XHand官方基线,beanbag,0.35
-XHand官方基线,blender,0.65
-XHand官方基线,book,0.3
-XHand官方基线,bowl,0.4
-XHand官方基线,camera,0.7
-XHand官方基线,can,0.55
-XHand官方基线,canister,0.9
-XHand官方基线,cap,0.0
-XHand官方基线,cerealbox,0.9
-XHand官方基线,clock,0.75
-XHand官方基线,cookie,0.45
-XHand官方基线,disccase,0.95
-XHand官方基线,dog,0.75
-XHand官方基线,filecabinet,0.75
-XHand官方基线,flashlight,0.95
-XHand官方基线,fruit,0.6
-XHand官方基线,headphones,0.5
-XHand官方基线,horse,0.65
-XHand官方基线,ipad,0.6
-XHand官方基线,knife,0.2
-XHand官方基线,milkcarton,0.7
-XHand官方基线,palette,0.4
-XHand官方基线,pan,0.15
-XHand官方基线,pencil,0.55
-XHand官方基线,personstanding,0.35
-XHand官方基线,phonebooth,0.85
-XHand官方基线,piano,0.75
-XHand官方基线,pillow,0.75
-XHand官方基线,remote,0.65
-XHand官方基线,rubikscube,0.35
-XHand官方基线,ship,0.7
-XHand官方基线,showerhead,0.55
-XHand官方基线,snowman,0.5
-XHand官方基线,soapbar,0.7
-XHand官方基线,soapbottle,0.5
-XHand官方基线,stapler,0.6
-XHand官方基线,tapedispenser,0.65
-XHand官方基线,thumbtack,0.6
-XHand官方基线,tissuebox,0.75
-XHand官方基线,toaster,0.6
-XHand官方基线,toasteroven,0.85
-XHand官方基线,usbstick,0.55
-XHand官方基线,vase,0.65
-XHand官方基线,videogamecontroller,0.05
-XHand官方基线,wallclock,0.3
-XHand官方基线,watch,0.6
-XHand官方基线,wii,0.95
-XHand官方基线,winebottle,0.65
-XHand指腹细化,ball,0.1
-XHand指腹细化,battery,0.35
-XHand指腹细化,beanbag,0.3
-XHand指腹细化,blender,0.6
-XHand指腹细化,book,0.35
-XHand指腹细化,bowl,0.5
-XHand指腹细化,camera,0.7
-XHand指腹细化,can,0.4
-XHand指腹细化,canister,0.85
-XHand指腹细化,cap,0.0
-XHand指腹细化,cerealbox,0.85
-XHand指腹细化,clock,0.75
-XHand指腹细化,cookie,0.45
-XHand指腹细化,disccase,0.85
-XHand指腹细化,dog,0.85
-XHand指腹细化,filecabinet,0.6
-XHand指腹细化,flashlight,0.8
-XHand指腹细化,fruit,0.5
-XHand指腹细化,headphones,0.4
-XHand指腹细化,horse,0.65
-XHand指腹细化,ipad,0.5
-XHand指腹细化,knife,0.25
-XHand指腹细化,milkcarton,0.7
-XHand指腹细化,palette,0.5
-XHand指腹细化,pan,0.2
-XHand指腹细化,pencil,0.55
-XHand指腹细化,personstanding,0.35
-XHand指腹细化,phonebooth,0.7
-XHand指腹细化,piano,0.7
-XHand指腹细化,pillow,0.55
-XHand指腹细化,remote,0.75
-XHand指腹细化,rubikscube,0.35
-XHand指腹细化,ship,0.7
-XHand指腹细化,showerhead,0.45
-XHand指腹细化,snowman,0.55
-XHand指腹细化,soapbar,0.35
-XHand指腹细化,soapbottle,0.4
-XHand指腹细化,stapler,0.6
-XHand指腹细化,tapedispenser,0.65
-XHand指腹细化,thumbtack,0.6
-XHand指腹细化,tissuebox,0.75
-XHand指腹细化,toaster,0.65
-XHand指腹细化,toasteroven,0.65
-XHand指腹细化,usbstick,0.65
-XHand指腹细化,vase,0.6
-XHand指腹细化,videogamecontroller,0.0
-XHand指腹细化,wallclock,0.35
-XHand指腹细化,watch,0.55
-XHand指腹细化,wii,0.9
-XHand指腹细化,winebottle,0.7
+label,role,hand,category,success_count,trajectory_count,success_rate
+Linker 3 mm最终方法,selected,linker,ball,0,20,0.0
+Linker 3 mm最终方法,selected,linker,battery,2,20,0.1
+Linker 3 mm最终方法,selected,linker,beanbag,0,20,0.0
+Linker 3 mm最终方法,selected,linker,blender,6,20,0.3
+Linker 3 mm最终方法,selected,linker,book,7,20,0.35
+Linker 3 mm最终方法,selected,linker,bowl,1,20,0.05
+Linker 3 mm最终方法,selected,linker,camera,6,20,0.3
+Linker 3 mm最终方法,selected,linker,can,3,20,0.15
+Linker 3 mm最终方法,selected,linker,canister,7,20,0.35
+Linker 3 mm最终方法,selected,linker,cap,0,20,0.0
+Linker 3 mm最终方法,selected,linker,cerealbox,7,20,0.35
+Linker 3 mm最终方法,selected,linker,clock,3,20,0.15
+Linker 3 mm最终方法,selected,linker,cookie,0,20,0.0
+Linker 3 mm最终方法,selected,linker,disccase,3,20,0.15
+Linker 3 mm最终方法,selected,linker,dog,7,20,0.35
+Linker 3 mm最终方法,selected,linker,filecabinet,7,20,0.35
+Linker 3 mm最终方法,selected,linker,flashlight,7,20,0.35
+Linker 3 mm最终方法,selected,linker,fruit,3,20,0.15
+Linker 3 mm最终方法,selected,linker,headphones,6,20,0.3
+Linker 3 mm最终方法,selected,linker,horse,6,20,0.3
+Linker 3 mm最终方法,selected,linker,ipad,0,20,0.0
+Linker 3 mm最终方法,selected,linker,knife,2,20,0.1
+Linker 3 mm最终方法,selected,linker,milkcarton,5,20,0.25
+Linker 3 mm最终方法,selected,linker,palette,0,20,0.0
+Linker 3 mm最终方法,selected,linker,pan,4,20,0.2
+Linker 3 mm最终方法,selected,linker,pencil,10,20,0.5
+Linker 3 mm最终方法,selected,linker,personstanding,5,20,0.25
+Linker 3 mm最终方法,selected,linker,phonebooth,7,20,0.35
+Linker 3 mm最终方法,selected,linker,piano,7,20,0.35
+Linker 3 mm最终方法,selected,linker,pillow,0,20,0.0
+Linker 3 mm最终方法,selected,linker,remote,5,20,0.25
+Linker 3 mm最终方法,selected,linker,rubikscube,1,20,0.05
+Linker 3 mm最终方法,selected,linker,ship,7,20,0.35
+Linker 3 mm最终方法,selected,linker,showerhead,3,20,0.15
+Linker 3 mm最终方法,selected,linker,snowman,7,20,0.35
+Linker 3 mm最终方法,selected,linker,soapbar,5,20,0.25
+Linker 3 mm最终方法,selected,linker,soapbottle,3,20,0.15
+Linker 3 mm最终方法,selected,linker,stapler,7,20,0.35
+Linker 3 mm最终方法,selected,linker,tapedispenser,8,20,0.4
+Linker 3 mm最终方法,selected,linker,thumbtack,6,20,0.3
+Linker 3 mm最终方法,selected,linker,tissuebox,8,20,0.4
+Linker 3 mm最终方法,selected,linker,toaster,10,20,0.5
+Linker 3 mm最终方法,selected,linker,toasteroven,8,20,0.4
+Linker 3 mm最终方法,selected,linker,usbstick,4,20,0.2
+Linker 3 mm最终方法,selected,linker,vase,4,20,0.2
+Linker 3 mm最终方法,selected,linker,videogamecontroller,0,20,0.0
+Linker 3 mm最终方法,selected,linker,wallclock,0,20,0.0
+Linker 3 mm最终方法,selected,linker,watch,7,20,0.35
+Linker 3 mm最终方法,selected,linker,wii,8,20,0.4
+Linker 3 mm最终方法,selected,linker,winebottle,12,20,0.6
+Linker渐进夹紧基线,historical_baseline,linker,ball,0,20,0.0
+Linker渐进夹紧基线,historical_baseline,linker,battery,1,20,0.05
+Linker渐进夹紧基线,historical_baseline,linker,beanbag,0,20,0.0
+Linker渐进夹紧基线,historical_baseline,linker,blender,5,20,0.25
+Linker渐进夹紧基线,historical_baseline,linker,book,7,20,0.35
+Linker渐进夹紧基线,historical_baseline,linker,bowl,2,20,0.1
+Linker渐进夹紧基线,historical_baseline,linker,camera,4,20,0.2
+Linker渐进夹紧基线,historical_baseline,linker,can,3,20,0.15
+Linker渐进夹紧基线,historical_baseline,linker,canister,8,20,0.4
+Linker渐进夹紧基线,historical_baseline,linker,cap,0,20,0.0
+Linker渐进夹紧基线,historical_baseline,linker,cerealbox,7,20,0.35
+Linker渐进夹紧基线,historical_baseline,linker,clock,3,20,0.15
+Linker渐进夹紧基线,historical_baseline,linker,cookie,0,20,0.0
+Linker渐进夹紧基线,historical_baseline,linker,disccase,3,20,0.15
+Linker渐进夹紧基线,historical_baseline,linker,dog,6,20,0.3
+Linker渐进夹紧基线,historical_baseline,linker,filecabinet,7,20,0.35
+Linker渐进夹紧基线,historical_baseline,linker,flashlight,7,20,0.35
+Linker渐进夹紧基线,historical_baseline,linker,fruit,3,20,0.15
+Linker渐进夹紧基线,historical_baseline,linker,headphones,6,20,0.3
+Linker渐进夹紧基线,historical_baseline,linker,horse,6,20,0.3
+Linker渐进夹紧基线,historical_baseline,linker,ipad,0,20,0.0
+Linker渐进夹紧基线,historical_baseline,linker,knife,2,20,0.1
+Linker渐进夹紧基线,historical_baseline,linker,milkcarton,4,20,0.2
+Linker渐进夹紧基线,historical_baseline,linker,palette,0,20,0.0
+Linker渐进夹紧基线,historical_baseline,linker,pan,4,20,0.2
+Linker渐进夹紧基线,historical_baseline,linker,pencil,10,20,0.5
+Linker渐进夹紧基线,historical_baseline,linker,personstanding,5,20,0.25
+Linker渐进夹紧基线,historical_baseline,linker,phonebooth,7,20,0.35
+Linker渐进夹紧基线,historical_baseline,linker,piano,5,20,0.25
+Linker渐进夹紧基线,historical_baseline,linker,pillow,0,20,0.0
+Linker渐进夹紧基线,historical_baseline,linker,remote,5,20,0.25
+Linker渐进夹紧基线,historical_baseline,linker,rubikscube,1,20,0.05
+Linker渐进夹紧基线,historical_baseline,linker,ship,6,20,0.3
+Linker渐进夹紧基线,historical_baseline,linker,showerhead,4,20,0.2
+Linker渐进夹紧基线,historical_baseline,linker,snowman,6,20,0.3
+Linker渐进夹紧基线,historical_baseline,linker,soapbar,6,20,0.3
+Linker渐进夹紧基线,historical_baseline,linker,soapbottle,4,20,0.2
+Linker渐进夹紧基线,historical_baseline,linker,stapler,8,20,0.4
+Linker渐进夹紧基线,historical_baseline,linker,tapedispenser,7,20,0.35
+Linker渐进夹紧基线,historical_baseline,linker,thumbtack,6,20,0.3
+Linker渐进夹紧基线,historical_baseline,linker,tissuebox,8,20,0.4
+Linker渐进夹紧基线,historical_baseline,linker,toaster,10,20,0.5
+Linker渐进夹紧基线,historical_baseline,linker,toasteroven,9,20,0.45
+Linker渐进夹紧基线,historical_baseline,linker,usbstick,4,20,0.2
+Linker渐进夹紧基线,historical_baseline,linker,vase,4,20,0.2
+Linker渐进夹紧基线,historical_baseline,linker,videogamecontroller,0,20,0.0
+Linker渐进夹紧基线,historical_baseline,linker,wallclock,0,20,0.0
+Linker渐进夹紧基线,historical_baseline,linker,watch,7,20,0.35
+Linker渐进夹紧基线,historical_baseline,linker,wii,9,20,0.45
+Linker渐进夹紧基线,historical_baseline,linker,winebottle,12,20,0.6
+Wuji v1最终方法,selected,wuji,ball,4,20,0.2
+Wuji v1最终方法,selected,wuji,battery,8,20,0.4
+Wuji v1最终方法,selected,wuji,beanbag,7,20,0.35
+Wuji v1最终方法,selected,wuji,blender,15,20,0.75
+Wuji v1最终方法,selected,wuji,book,9,20,0.45
+Wuji v1最终方法,selected,wuji,bowl,11,20,0.55
+Wuji v1最终方法,selected,wuji,camera,13,20,0.65
+Wuji v1最终方法,selected,wuji,can,14,20,0.7
+Wuji v1最终方法,selected,wuji,canister,18,20,0.9
+Wuji v1最终方法,selected,wuji,cap,4,20,0.2
+Wuji v1最终方法,selected,wuji,cerealbox,17,20,0.85
+Wuji v1最终方法,selected,wuji,clock,18,20,0.9
+Wuji v1最终方法,selected,wuji,cookie,8,20,0.4
+Wuji v1最终方法,selected,wuji,disccase,19,20,0.95
+Wuji v1最终方法,selected,wuji,dog,15,20,0.75
+Wuji v1最终方法,selected,wuji,filecabinet,16,20,0.8
+Wuji v1最终方法,selected,wuji,flashlight,16,20,0.8
+Wuji v1最终方法,selected,wuji,fruit,12,20,0.6
+Wuji v1最终方法,selected,wuji,headphones,14,20,0.7
+Wuji v1最终方法,selected,wuji,horse,12,20,0.6
+Wuji v1最终方法,selected,wuji,ipad,12,20,0.6
+Wuji v1最终方法,selected,wuji,knife,9,20,0.45
+Wuji v1最终方法,selected,wuji,milkcarton,15,20,0.75
+Wuji v1最终方法,selected,wuji,palette,13,20,0.65
+Wuji v1最终方法,selected,wuji,pan,4,20,0.2
+Wuji v1最终方法,selected,wuji,pencil,11,20,0.55
+Wuji v1最终方法,selected,wuji,personstanding,10,20,0.5
+Wuji v1最终方法,selected,wuji,phonebooth,17,20,0.85
+Wuji v1最终方法,selected,wuji,piano,15,20,0.75
+Wuji v1最终方法,selected,wuji,pillow,12,20,0.6
+Wuji v1最终方法,selected,wuji,remote,16,20,0.8
+Wuji v1最终方法,selected,wuji,rubikscube,9,20,0.45
+Wuji v1最终方法,selected,wuji,ship,17,20,0.85
+Wuji v1最终方法,selected,wuji,showerhead,10,20,0.5
+Wuji v1最终方法,selected,wuji,snowman,12,20,0.6
+Wuji v1最终方法,selected,wuji,soapbar,13,20,0.65
+Wuji v1最终方法,selected,wuji,soapbottle,15,20,0.75
+Wuji v1最终方法,selected,wuji,stapler,16,20,0.8
+Wuji v1最终方法,selected,wuji,tapedispenser,17,20,0.85
+Wuji v1最终方法,selected,wuji,thumbtack,16,20,0.8
+Wuji v1最终方法,selected,wuji,tissuebox,14,20,0.7
+Wuji v1最终方法,selected,wuji,toaster,16,20,0.8
+Wuji v1最终方法,selected,wuji,toasteroven,14,20,0.7
+Wuji v1最终方法,selected,wuji,usbstick,13,20,0.65
+Wuji v1最终方法,selected,wuji,vase,11,20,0.55
+Wuji v1最终方法,selected,wuji,videogamecontroller,5,20,0.25
+Wuji v1最终方法,selected,wuji,wallclock,9,20,0.45
+Wuji v1最终方法,selected,wuji,watch,14,20,0.7
+Wuji v1最终方法,selected,wuji,wii,19,20,0.95
+Wuji v1最终方法,selected,wuji,winebottle,14,20,0.7
+XHand官方最终方法,selected,xhand,ball,3,20,0.15
+XHand官方最终方法,selected,xhand,battery,8,20,0.4
+XHand官方最终方法,selected,xhand,beanbag,7,20,0.35
+XHand官方最终方法,selected,xhand,blender,13,20,0.65
+XHand官方最终方法,selected,xhand,book,6,20,0.3
+XHand官方最终方法,selected,xhand,bowl,8,20,0.4
+XHand官方最终方法,selected,xhand,camera,14,20,0.7
+XHand官方最终方法,selected,xhand,can,11,20,0.55
+XHand官方最终方法,selected,xhand,canister,18,20,0.9
+XHand官方最终方法,selected,xhand,cap,0,20,0.0
+XHand官方最终方法,selected,xhand,cerealbox,18,20,0.9
+XHand官方最终方法,selected,xhand,clock,15,20,0.75
+XHand官方最终方法,selected,xhand,cookie,9,20,0.45
+XHand官方最终方法,selected,xhand,disccase,19,20,0.95
+XHand官方最终方法,selected,xhand,dog,15,20,0.75
+XHand官方最终方法,selected,xhand,filecabinet,15,20,0.75
+XHand官方最终方法,selected,xhand,flashlight,19,20,0.95
+XHand官方最终方法,selected,xhand,fruit,12,20,0.6
+XHand官方最终方法,selected,xhand,headphones,10,20,0.5
+XHand官方最终方法,selected,xhand,horse,13,20,0.65
+XHand官方最终方法,selected,xhand,ipad,12,20,0.6
+XHand官方最终方法,selected,xhand,knife,4,20,0.2
+XHand官方最终方法,selected,xhand,milkcarton,14,20,0.7
+XHand官方最终方法,selected,xhand,palette,8,20,0.4
+XHand官方最终方法,selected,xhand,pan,3,20,0.15
+XHand官方最终方法,selected,xhand,pencil,11,20,0.55
+XHand官方最终方法,selected,xhand,personstanding,7,20,0.35
+XHand官方最终方法,selected,xhand,phonebooth,17,20,0.85
+XHand官方最终方法,selected,xhand,piano,15,20,0.75
+XHand官方最终方法,selected,xhand,pillow,15,20,0.75
+XHand官方最终方法,selected,xhand,remote,13,20,0.65
+XHand官方最终方法,selected,xhand,rubikscube,7,20,0.35
+XHand官方最终方法,selected,xhand,ship,14,20,0.7
+XHand官方最终方法,selected,xhand,showerhead,11,20,0.55
+XHand官方最终方法,selected,xhand,snowman,10,20,0.5
+XHand官方最终方法,selected,xhand,soapbar,14,20,0.7
+XHand官方最终方法,selected,xhand,soapbottle,10,20,0.5
+XHand官方最终方法,selected,xhand,stapler,12,20,0.6
+XHand官方最终方法,selected,xhand,tapedispenser,13,20,0.65
+XHand官方最终方法,selected,xhand,thumbtack,12,20,0.6
+XHand官方最终方法,selected,xhand,tissuebox,15,20,0.75
+XHand官方最终方法,selected,xhand,toaster,12,20,0.6
+XHand官方最终方法,selected,xhand,toasteroven,17,20,0.85
+XHand官方最终方法,selected,xhand,usbstick,11,20,0.55
+XHand官方最终方法,selected,xhand,vase,13,20,0.65
+XHand官方最终方法,selected,xhand,videogamecontroller,1,20,0.05
+XHand官方最终方法,selected,xhand,wallclock,6,20,0.3
+XHand官方最终方法,selected,xhand,watch,12,20,0.6
+XHand官方最终方法,selected,xhand,wii,19,20,0.95
+XHand官方最终方法,selected,xhand,winebottle,13,20,0.65
+XHand指腹细化负消融,rejected_ablation,xhand,ball,2,20,0.1
+XHand指腹细化负消融,rejected_ablation,xhand,battery,7,20,0.35
+XHand指腹细化负消融,rejected_ablation,xhand,beanbag,6,20,0.3
+XHand指腹细化负消融,rejected_ablation,xhand,blender,12,20,0.6
+XHand指腹细化负消融,rejected_ablation,xhand,book,7,20,0.35
+XHand指腹细化负消融,rejected_ablation,xhand,bowl,10,20,0.5
+XHand指腹细化负消融,rejected_ablation,xhand,camera,14,20,0.7
+XHand指腹细化负消融,rejected_ablation,xhand,can,8,20,0.4
+XHand指腹细化负消融,rejected_ablation,xhand,canister,17,20,0.85
+XHand指腹细化负消融,rejected_ablation,xhand,cap,0,20,0.0
+XHand指腹细化负消融,rejected_ablation,xhand,cerealbox,17,20,0.85
+XHand指腹细化负消融,rejected_ablation,xhand,clock,15,20,0.75
+XHand指腹细化负消融,rejected_ablation,xhand,cookie,9,20,0.45
+XHand指腹细化负消融,rejected_ablation,xhand,disccase,17,20,0.85
+XHand指腹细化负消融,rejected_ablation,xhand,dog,17,20,0.85
+XHand指腹细化负消融,rejected_ablation,xhand,filecabinet,12,20,0.6
+XHand指腹细化负消融,rejected_ablation,xhand,flashlight,16,20,0.8
+XHand指腹细化负消融,rejected_ablation,xhand,fruit,10,20,0.5
+XHand指腹细化负消融,rejected_ablation,xhand,headphones,8,20,0.4
+XHand指腹细化负消融,rejected_ablation,xhand,horse,13,20,0.65
+XHand指腹细化负消融,rejected_ablation,xhand,ipad,10,20,0.5
+XHand指腹细化负消融,rejected_ablation,xhand,knife,5,20,0.25
+XHand指腹细化负消融,rejected_ablation,xhand,milkcarton,14,20,0.7
+XHand指腹细化负消融,rejected_ablation,xhand,palette,10,20,0.5
+XHand指腹细化负消融,rejected_ablation,xhand,pan,4,20,0.2
+XHand指腹细化负消融,rejected_ablation,xhand,pencil,11,20,0.55
+XHand指腹细化负消融,rejected_ablation,xhand,personstanding,7,20,0.35
+XHand指腹细化负消融,rejected_ablation,xhand,phonebooth,14,20,0.7
+XHand指腹细化负消融,rejected_ablation,xhand,piano,14,20,0.7
+XHand指腹细化负消融,rejected_ablation,xhand,pillow,11,20,0.55
+XHand指腹细化负消融,rejected_ablation,xhand,remote,15,20,0.75
+XHand指腹细化负消融,rejected_ablation,xhand,rubikscube,7,20,0.35
+XHand指腹细化负消融,rejected_ablation,xhand,ship,14,20,0.7
+XHand指腹细化负消融,rejected_ablation,xhand,showerhead,9,20,0.45
+XHand指腹细化负消融,rejected_ablation,xhand,snowman,11,20,0.55
+XHand指腹细化负消融,rejected_ablation,xhand,soapbar,7,20,0.35
+XHand指腹细化负消融,rejected_ablation,xhand,soapbottle,8,20,0.4
+XHand指腹细化负消融,rejected_ablation,xhand,stapler,12,20,0.6
+XHand指腹细化负消融,rejected_ablation,xhand,tapedispenser,13,20,0.65
+XHand指腹细化负消融,rejected_ablation,xhand,thumbtack,12,20,0.6
+XHand指腹细化负消融,rejected_ablation,xhand,tissuebox,15,20,0.75
+XHand指腹细化负消融,rejected_ablation,xhand,toaster,13,20,0.65
+XHand指腹细化负消融,rejected_ablation,xhand,toasteroven,13,20,0.65
+XHand指腹细化负消融,rejected_ablation,xhand,usbstick,13,20,0.65
+XHand指腹细化负消融,rejected_ablation,xhand,vase,12,20,0.6
+XHand指腹细化负消融,rejected_ablation,xhand,videogamecontroller,0,20,0.0
+XHand指腹细化负消融,rejected_ablation,xhand,wallclock,7,20,0.35
+XHand指腹细化负消融,rejected_ablation,xhand,watch,11,20,0.55
+XHand指腹细化负消融,rejected_ablation,xhand,wii,18,20,0.9
+XHand指腹细化负消融,rejected_ablation,xhand,winebottle,14,20,0.7

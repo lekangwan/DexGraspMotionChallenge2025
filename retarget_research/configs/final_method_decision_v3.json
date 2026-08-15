@@ -13,7 +13,18 @@
     "formal_candidate_dir": "retarget_research/outputs/formal_1000/linker_object_centric_3mm_v1",
     "formal_evaluation_summary": "retarget_research/outputs/formal_1000/linker_object_centric_3mm_v1_evaluation/manifest_evaluation_summary.json",
     "policy_trace_dir": "retarget_research/advanced_policy/traces/formal_v2/linker_object_centric_3mm",
-    "formal_1000_status": "candidate_ready; evaluation_and_policy_traces_pending"
+    "formal_1000_status": "complete; 234/1000",
+    "formal_1000_result": {
+      "historical_baseline_success": 231,
+      "selected_method_success": 234,
+      "added_success": 17,
+      "lost_success": 14,
+      "net_success_change": 3,
+      "paired_exact_two_sided_p": 0.720100131817162,
+      "calibration": "38/200 -> 39/200; +2/-1",
+      "heldout": "193/800 -> 195/800; +15/-13",
+      "interpretation": "small positive descriptive gain consistent in both splits, but not statistically significant and not uniformly monotonic per trajectory"
+    }
   },
   "xhand": {
     "selected_method": "xhand_official_reference",
@@ -47,5 +58,5 @@
     "confirmation_E": "frozen before later screens but intentionally unused because no A candidate passed the promotion rule"
   },
   "stop_reason": "geometric alignment, bounded contact correction, normal/opposition/contact-region objectives, temporal execution, PD gains and replay speed have all been tested under a single-method paired protocol. Further meaningful improvement requires a new learned or physics-in-the-loop method rather than more local A-set tuning, so retargeting is frozen and effort moves to the advanced policy task.",
-  "selection_boundary": "formal 1000 is now only for the already-selected Linker 3 mm scale result and policy traces; it cannot be used to retune any of the three methods"
+  "selection_boundary": "formal 1000 was used only to measure the already-selected Linker 3 mm method and collect policy traces; the observed +3 net result cannot be used to retune any of the three methods"
 }

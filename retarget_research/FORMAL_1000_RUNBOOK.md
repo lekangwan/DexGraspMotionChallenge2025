@@ -187,9 +187,9 @@ MPLCONFIGDIR=/tmp/matplotlib-retarget OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 \
   retarget_research/retargeting/evaluate/evaluate_hand_manifest.py \
   --hand linker \
   --manifest retarget_research/manifests/formal_50c_100o_1000t_seed20260808.json \
-  --target-dir retarget_research/outputs/formal_1000/linker_o6_optimized_v2 \
-  --output-dir retarget_research/outputs/formal_1000/linker_o6_optimized_v2_evaluation \
-  --policy-trace-dir retarget_research/advanced_policy/traces/formal_v1/linker \
+  --target-dir retarget_research/outputs/formal_1000/linker_object_centric_3mm_v1 \
+  --output-dir retarget_research/outputs/formal_1000/linker_object_centric_3mm_v1_evaluation \
+  --policy-trace-dir retarget_research/advanced_policy/traces/formal_v2/linker_object_centric_3mm \
   --workers 2 --resume \
   --linker-finger-stiffness 120 --linker-finger-damping 5 \
   --linker-mimic-stiffness 120 --linker-mimic-damping 5
@@ -222,7 +222,7 @@ MPLCONFIGDIR=/tmp/matplotlib-retarget OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 \
   --workers 2 --resume
 ```
 
-三手当前主方法为：Linker无时序渐进夹紧v2+固定PD 120/5，XHand指腹细化v2，Wuji单次v1映射、maxeval50和无时序约束。Wuji 50/100/150均为16/20且成功集合相同，所以选择成本最低的50；时序0/0.1/0.3/1.0倍也均为16/20且没有任何配对新增或回退，非零强度只降低跳变并轻微降低最终抬升，因此正式保持0倍。XHand官方几何方法是必须保留的对照组，它不参与“主方法三选三”，但必须在同一manifest、同一仿真参数和同一成功判据下单独重放。报告时优先给出8条/物体的heldout统计，并把2条/物体的calibration统计分开列出。
+三手最终主方法为：Linker无时序渐进夹紧v2+物体中心3 mm+固定PD 120/5，XHand官方参考方法，Wuji单次v1映射、maxeval50和无时序约束。Wuji 50/100/150均为16/20且成功集合相同，所以选择成本最低的50；时序0/0.1/0.3/1.0倍也均为16/20且没有任何配对新增或回退，非零强度只降低跳变并轻微降低最终抬升，因此正式保持0倍。XHand指腹细化是同协议负消融，不再作为策略专家来源。报告时优先给出8条/物体的heldout统计，并把2条/物体的calibration统计分开列出。
 
 XHand报告表中至少并排给出官方基线和指腹细化的成功轨迹数、轨迹微平均、物体宏平均、类别宏平均及配对成功变化（新增成功/丢失成功）。
 
@@ -240,7 +240,7 @@ XHand报告表中至少并排给出官方基线和指腹细化的成功轨迹数
 
 ## 5. 自动验收候选、评测和策略trace
 
-四套候选完成后检查`candidates`；四套物理评测完成后同时检查`evaluations`和四套`traces`。三套主方法trace用于策略数据，XHand官方trace只用于软件渲染公平对照。以下命令只读取产物，但会完整打开候选和trace，预计可能超过3分钟，仍由用户终端运行：
+这里的旧`formal_experiment_v1.json`及其lock保留首次正式实验的历史审计口径，不应改写来伪装成最终方法。最终三手方法、路径和结果以`configs/final_method_decision_v3.json`、`advanced_policy/configs/hand_data_specs_v4.json`及第11节统一结果表为准。以下旧bundle命令仅用于复核首次冻结实验；最终Linker 3 mm的完整性由其一键脚本和最终策略数据门另行检查：
 
 ```bash
 /home/lekangwan/miniconda3/envs/hand-retarget/bin/python \
@@ -284,10 +284,10 @@ trace固定为每条240个60 Hz物理步：70个源帧×每帧3步，再保持30
   --manifest retarget_research/manifests/formal_50c_100o_1000t_seed20260808.json \
   --policy-split retarget_research/advanced_policy/data/formal_v1/policy_split_seed20260813.json \
   --hand linker \
-  --trace-dir retarget_research/advanced_policy/traces/formal_v1/linker \
-  --evaluation-summary retarget_research/outputs/formal_1000/linker_o6_optimized_v2_evaluation/manifest_evaluation_summary.json \
+  --trace-dir retarget_research/advanced_policy/traces/formal_v2/linker_object_centric_3mm \
+  --evaluation-summary retarget_research/outputs/formal_1000/linker_object_centric_3mm_v1_evaluation/manifest_evaluation_summary.json \
   --output-dir retarget_research/advanced_policy/data/formal_v1/linker \
-  --hand-specs retarget_research/advanced_policy/configs/hand_data_specs_v2.json
+  --hand-specs retarget_research/advanced_policy/configs/hand_data_specs_v4.json
 
 /home/lekangwan/miniconda3/envs/hand-retarget/bin/python \
   retarget_research/advanced_policy/prepare/prepare_policy_dataset.py \
@@ -297,7 +297,7 @@ trace固定为每条240个60 Hz物理步：70个源帧×每帧3步，再保持30
   --trace-dir retarget_research/advanced_policy/traces/formal_v1/xhand_official \
   --evaluation-summary retarget_research/outputs/formal_1000/xhand_official_evaluation/manifest_evaluation_summary.json \
   --output-dir retarget_research/advanced_policy/data/formal_v1/xhand \
-  --hand-specs retarget_research/advanced_policy/configs/hand_data_specs_v2.json
+  --hand-specs retarget_research/advanced_policy/configs/hand_data_specs_v4.json
 
 /home/lekangwan/miniconda3/envs/hand-retarget/bin/python \
   retarget_research/advanced_policy/prepare/prepare_policy_dataset.py \
@@ -307,7 +307,7 @@ trace固定为每条240个60 Hz物理步：70个源帧×每帧3步，再保持30
   --trace-dir retarget_research/advanced_policy/traces/formal_v1/wuji \
   --evaluation-summary retarget_research/outputs/formal_1000/wuji_v1_evaluation/manifest_evaluation_summary.json \
   --output-dir retarget_research/advanced_policy/data/formal_v1/wuji \
-  --hand-specs retarget_research/advanced_policy/configs/hand_data_specs_v2.json
+  --hand-specs retarget_research/advanced_policy/configs/hand_data_specs_v4.json
 ```
 
 先阅读每只手的`dataset_summary.json`。若状态是`ready_with_gaps`，表示成功轨迹过滤后某些类别在train中为0；不要隐瞒，也不要根据test结果重选对象。可以将“成功轨迹不足”作为重定向质量对进阶策略的限制写入报告。随后运行策略数据门：

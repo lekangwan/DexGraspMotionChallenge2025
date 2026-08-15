@@ -897,3 +897,15 @@
 - 从Linker 3 mm经C确认后，又统一筛查39个候选，覆盖掌物中心、PD、闭合重定时、最近表面分指、完整轨迹速度和专家语义表面分指。唯一进入独立确认的是XHand最近表面0.10 rad，但D为+3/-3而淘汰。更早阶段还已覆盖关键点数量、自由度/耦合、夹紧量、法向、穿透、对向/摩擦锥、时序正则和优化迭代数。
 - 继续在相同A组微调局部距离、阈值或残差，获得偶然提升的风险已经高于研究价值；下一类有实质差异的方法应是可学习策略或物理在环优化，属于进阶任务。新增`configs/final_method_decision_v3.json`正式冻结：Linker为渐进夹紧+物体中心3 mm、XHand为官方参考、Wuji为v1单映射无时序，三手统一20 Hz。
 - 进阶合同升级为`advanced_policy/configs/hand_data_specs_v4.json`。XHand和Wuji正式1000结果/trace已经完成；Linker 3 mm正式1000候选已生成但尚未物理重放。下一步只做Linker新方法的1000条规模化评测和策略trace，不再依据其结果回头调重定向参数。
+
+### Linker 3毫米正式1000完成：小幅正向但不显著
+
+- 1000份几何报告、1000份PhysX报告和1000条240步策略trace全部完整。评测墙钟2315秒，固定20 Hz、PD 120/5、末端保持30步；没有续跑混入旧速度或旧候选。
+- 渐进夹紧基线231/1000=23.1%，3 mm最终方法234/1000=23.4%。严格配对为新增17、丢失14、共同成功217、共同失败752，净增3条，双侧精确检验`p=0.7201`。这不是统计显著提升，不能只报“提高0.3个百分点”而隐藏14条回退。
+- calibration为38/200→39/200（+2/-1），heldout为193/800→195/800（+15/-13），两个划分方向一致。平均关键点距离-0.083 mm、最大抬升+0.646 mm、最终抬升+0.925 mm、接触+0.967步，连续变化同样很小。
+- 类别净变化最大的是Camera和Piano各+2；TapeDispenser、Snowman、Ship、MilkCarton、Dog、Blender、Battery各+1。Bowl、Canister、Showerhead、SoapBar、SoapBottle、Stapler、ToasterOven、Wii各-1。统一3 mm平移会在不同接触盆地间产生真实转换，不是单调改善器。
+- 因方法在正式结果之前已由A筛选、C独立确认并冻结，且正式总体/calibration/heldout仍保持正方向，最终保留3 mm；准确结论限定为“小幅正净收益、无显著性证据”。`final_method_decision_v3.json`已补入完整正式边界。
+- Linker策略数据已从新trace物化：train/valid/test为109/23/500条轨迹、26160/5520/120000步，观测66维、动作12维。训练物体中仍有12类没有任何成功专家，状态明确为`ready_with_gaps`，没有拿失败或测试轨迹回填。
+- Linker BC、Temporal3和Diffusion三条CPU限量冒烟均完成，分别只验证数据读取、前反向传播、checkpoint、CSV和loss图链路；其单epoch验证loss不能用于模型排名。至此基本重定向任务的数据和结果链路正式闭环，下一阶段进入三手正式策略训练与闭环评测。
+- 最终策略数据门已通过：三手对象级train/test物体无交叉，全部NPZ、归一化和映射文件齐全。重定向91项、进阶策略16项单元测试均在`hand-retarget`环境通过；统一Markdown/CSV结果表由`evaluate/export_final_retargeting_results.py`从原始JSON重新生成，避免手工抄数。
+- 当前机器`nvidia-smi`无法连接驱动，PyTorch 2.4.1报告`cuda_available=False`。正式9模型配置本身已就绪，但在GPU恢复前不启动长训练；CPU冒烟已经覆盖三种模型和三只手，不把冒烟loss当正式结果。
