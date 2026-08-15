@@ -74,6 +74,157 @@ class MLPBCPolicy(nn.Module):
         return self.actor(torch.cat([observations, self.category(category_id)], dim=-1))
 
 
+class SharedCategoryExpertPolicy(nn.Module):
+    """共享状态理解、但为每个物体类别保留轻量动作修正的类别教师。
+
+    与旧项目“每类一个完整网络”表达的目标相同：不同类别可以形成不同抓取习惯。
+    当前任务有50类且每类最多8条训练轨迹，因此只分开最后的残差动作头，前面的
+    状态特征提取器由所有类别共同训练。某类别没有成功轨迹时，它的残差保持为零，
+    自动退回共享策略，而不会调用一个从未训练过的随机专家。
+    """
+
+    def __init__(
+        self,
+        observation_dim,
+        action_dim,
+        category_count,
+        hidden_dims=(256, 256, 256),
+        dropout=0.0,
+    ):
+        """建立共享主干、共享动作头和50个按类别路由的残差头。
+
+        输入：观测/动作/类别维度、隐藏层宽度和dropout。
+        输出：构造完成的PyTorch模块。
+        内部逻辑：主干只读物理观测；共享头给出通用动作，每个类别再加一个
+        零初始化线性残差。类别头参数用一个三维张量保存，便于混合类别batch并行。
+        作用：在极少的单类数据下保留类别专门化，同时让无数据类别安全回退。
+        """
+        super().__init__()
+        hidden_dims = tuple(int(value) for value in hidden_dims)
+        if not hidden_dims:
+            raise ValueError("类别教师至少需要一个隐藏层")
+        full = make_mlp(
+            observation_dim,
+            action_dim,
+            hidden_dims,
+            dropout,
+        )
+        self.trunk = nn.Sequential(*list(full.children())[:-1])
+        self.shared_head = list(full.children())[-1]
+        feature_dim = hidden_dims[-1]
+        self.category_head_weight = nn.Parameter(
+            torch.zeros(int(category_count), int(action_dim), feature_dim)
+        )
+        self.category_head_bias = nn.Parameter(
+            torch.zeros(int(category_count), int(action_dim))
+        )
+
+    def forward(self, observations, category_id):
+        """输入`(B,O)`观测和`(B,)`类别，输出`(B,A)`标准化教师动作。
+
+        内部逻辑：先算共享动作，再用每个样本的类别ID选出对应残差矩阵做批量乘法。
+        """
+        features = self.trunk(observations)
+        category_id = category_id.long()
+        weights = self.category_head_weight[category_id]
+        residual = torch.bmm(weights, features.unsqueeze(-1)).squeeze(-1)
+        residual = residual + self.category_head_bias[category_id]
+        return self.shared_head(features) + residual
+
+
+def initialize_category_expert_from_bc(expert, bc_state, observation_dim):
+    """用BC Soup初始化共享类别教师，并把类别残差严格置零。
+
+    输入：`SharedCategoryExpertPolicy`、BC的state_dict和观测维度。
+    输出：原地初始化后的expert。
+    内部逻辑：BC首层原本读取“观测+Task-ID embedding”，这里只复制观测列；
+    后续共享层和最终动作头完整复制，类别embedding列被有意丢弃。残差头保持零。
+    作用：让教师从已会基本动作的Soup出发，而缺样本类别不会继承随机embedding。
+    """
+    expert_state = expert.state_dict()
+    actor_indices = sorted(
+        int(key.split(".")[1])
+        for key in bc_state
+        if key.startswith("actor.") and key.endswith(".weight")
+    )
+    if not actor_indices:
+        raise ValueError("BC checkpoint中没有actor线性层")
+    final_actor_index = actor_indices[-1]
+    for key in list(expert_state):
+        if key.startswith("trunk."):
+            source_key = "actor." + key[len("trunk."):]
+            if source_key not in bc_state:
+                raise ValueError(f"BC缺少可初始化参数: {source_key}")
+            source = bc_state[source_key]
+            target = expert_state[key]
+            if key == "trunk.0.weight":
+                if source.shape[0] != target.shape[0] or source.shape[1] < observation_dim:
+                    raise ValueError("BC首层尺寸与类别教师不兼容")
+                source = source[:, :observation_dim]
+            if source.shape != target.shape:
+                raise ValueError(f"初始化尺寸不一致: {source_key} -> {key}")
+            expert_state[key] = source.clone()
+        elif key.startswith("shared_head."):
+            suffix = key.split(".", 1)[1]
+            source_key = f"actor.{final_actor_index}.{suffix}"
+            if source_key not in bc_state or bc_state[source_key].shape != expert_state[key].shape:
+                raise ValueError(f"BC最终动作头与类别教师不兼容: {source_key}")
+            expert_state[key] = bc_state[source_key].clone()
+        elif key in {"category_head_weight", "category_head_bias"}:
+            expert_state[key] = torch.zeros_like(expert_state[key])
+    expert.load_state_dict(expert_state, strict=True)
+    return expert
+
+
+def initialize_temporal_from_single_frame(
+    temporal,
+    single_frame_state,
+    observation_dim,
+    action_dim,
+    history=3,
+):
+    """把单帧学生无损嵌入Temporal3网络的“当前帧”输入位置。
+
+    输入：Temporal3模型、单帧学生state_dict、观测/动作维度和历史长度。
+    输出：原地初始化后的Temporal模型。
+    内部逻辑：复制类别embedding和全部同形隐藏/输出层；首层权重先清零，再把
+    单帧观测列放入最新一帧位置，把Task-ID embedding列放到时序输入末尾。
+    作用：刚初始化时Temporal3的输出等于Online-R1单帧学生，之后再学习历史修正，
+    避免切换结构时丢掉前面所有阶段的能力。
+    """
+    if int(history) != 3:
+        raise ValueError("当前初始化只支持Temporal3")
+    state = temporal.state_dict()
+    for key in list(state):
+        if key.startswith("category."):
+            source_key = key
+            if source_key not in single_frame_state or single_frame_state[source_key].shape != state[key].shape:
+                raise ValueError(f"单帧学生类别参数不兼容: {key}")
+            state[key] = single_frame_state[source_key].clone()
+        elif key.startswith("actor."):
+            if key not in single_frame_state:
+                raise ValueError(f"单帧学生缺少actor参数: {key}")
+            source = single_frame_state[key]
+            target = state[key]
+            if key == "actor.0.weight":
+                expected_source = observation_dim + temporal.category.embedding.embedding_dim
+                if source.shape[1] != expected_source or source.shape[0] != target.shape[0]:
+                    raise ValueError("单帧学生首层与Temporal3不兼容")
+                mapped = torch.zeros_like(target)
+                current_start = (history - 1) * observation_dim
+                mapped[:, current_start:current_start + observation_dim] = source[:, :observation_dim]
+                mapped[:, history * observation_dim + (history - 1) * action_dim:] = source[:, observation_dim:]
+                state[key] = mapped
+            else:
+                if source.shape != target.shape:
+                    raise ValueError(
+                        f"Temporal warm start要求相同隐藏层宽度: {key} {source.shape}!={target.shape}"
+                    )
+                state[key] = source.clone()
+    temporal.load_state_dict(state, strict=True)
+    return temporal
+
+
 class Temporal3BCPolicy(nn.Module):
     """使用当前及前两帧状态和前两步已执行动作的显式短历史策略。"""
 

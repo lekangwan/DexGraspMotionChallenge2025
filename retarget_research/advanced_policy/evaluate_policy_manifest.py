@@ -89,6 +89,11 @@ def run_task(task, args):
     作用：支持数百条长评测中断后安全续跑，同时控制总summary体积。
     """
     output = args.output_dir / task["object_name"] / f"source_{task['source_index']}.json"
+    online_output = (
+        None
+        if args.online_data_dir is None
+        else args.online_data_dir / task["object_name"] / f"source_{task['source_index']}.npz"
+    )
     task_seed = stable_task_seed(args.seed, task)
     reusable = False
     if args.resume and output.is_file():
@@ -102,6 +107,15 @@ def run_task(task, args):
             and int(previous.get("diffusion_execute_steps", -1)) == args.diffusion_execute_steps
             and float(previous.get("normalized_action_clip", -1.0)) == args.normalized_action_clip
             and float(previous.get("action_rate_limit_scale", -1.0)) == args.action_rate_limit_scale
+            and (
+                args.teacher_checkpoint is None
+                or (
+                    Path(previous.get("teacher_checkpoint", "")).resolve()
+                    == args.teacher_checkpoint.resolve()
+                    and online_output is not None
+                    and online_output.is_file()
+                )
+            )
         )
     if not reusable:
         command = [
@@ -116,6 +130,15 @@ def run_task(task, args):
             "--action-rate-limit-scale", str(args.action_rate_limit_scale),
             "--seed", str(task_seed),
         ]
+        if args.teacher_checkpoint is not None:
+            command.extend(
+                [
+                    "--teacher-checkpoint",
+                    str(args.teacher_checkpoint),
+                    "--online-output",
+                    str(online_output),
+                ]
+            )
         process = subprocess.run(command, text=True, capture_output=True, check=False)
         if process.returncode != 0:
             raise RuntimeError(
@@ -155,6 +178,11 @@ def summarize(results):
         "trajectory_micro_success_rate": success_count / len(results),
         "object_macro_success_rate": float(np.mean(list(object_rates.values()))),
         "category_macro_success_rate": float(np.mean(list(category_rates.values()))),
+        "mean_max_lift_m": float(np.mean([item["max_lift_m"] for item in results])),
+        "mean_final_lift_m": float(np.mean([item["final_lift_m"] for item in results])),
+        "mean_hand_object_contact_steps": float(
+            np.mean([item["hand_object_contact_steps"] for item in results])
+        ),
         "per_object_success_rate": object_rates,
         "per_category_success_rate": category_rates,
     }
@@ -170,18 +198,39 @@ def main():
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--data-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--teacher-checkpoint", type=Path)
+    parser.add_argument("--online-data-dir", type=Path)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument("--split", choices=["train", "valid", "test"], default="test")
+    parser.add_argument(
+        "--max-tasks-per-category",
+        type=int,
+        default=0,
+        help="0表示完整split；正数按已排序轨迹对每类取前N条，供均衡Online-R1采集",
+    )
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--diffusion-execute-steps", type=int, default=2)
     parser.add_argument("--normalized-action-clip", type=float, default=5.0)
     parser.add_argument("--action-rate-limit-scale", type=float, default=0.0)
     parser.add_argument("--seed", type=int, default=20260813)
     args = parser.parse_args()
+    if (args.teacher_checkpoint is None) != (args.online_data_dir is None):
+        raise ValueError("在线DAgger采集必须同时提供teacher-checkpoint和online-data-dir")
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
     policy_split = json.loads(args.policy_split.read_text(encoding="utf-8"))
     tasks = build_tasks(manifest, policy_split, args.target_dir, args.split)
+    if args.max_tasks_per_category < 0:
+        raise ValueError("max-tasks-per-category不能为负数")
+    if args.max_tasks_per_category > 0:
+        category_counts = defaultdict(int)
+        selected = []
+        for task in tasks:
+            if category_counts[task["category"]] >= args.max_tasks_per_category:
+                continue
+            selected.append(task)
+            category_counts[task["category"]] += 1
+        tasks = selected
     if not tasks:
         raise ValueError(f"策略split没有{args.split}任务")
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -211,10 +260,21 @@ def main():
         "manifest": str(args.manifest.resolve()),
         "policy_split": str(args.policy_split.resolve()),
         "evaluation_boundary": boundaries[args.split],
+        "max_tasks_per_category": int(args.max_tasks_per_category),
         "evaluation_seed": int(args.seed),
         "diffusion_execute_steps": int(args.diffusion_execute_steps),
         "normalized_action_clip": float(args.normalized_action_clip),
         "action_rate_limit_scale": float(args.action_rate_limit_scale),
+        "teacher_checkpoint": (
+            None
+            if args.teacher_checkpoint is None
+            else str(args.teacher_checkpoint.resolve())
+        ),
+        "online_data_dir": (
+            None
+            if args.online_data_dir is None
+            else str(args.online_data_dir.resolve())
+        ),
         "wall_time_seconds": time.perf_counter() - started,
         **summarize(results),
         "results": results,

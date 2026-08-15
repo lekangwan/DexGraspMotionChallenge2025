@@ -185,7 +185,7 @@ class PolicyRunner:
         normalized = self.normalize_observation(observation)
         self.observation_history.append(normalized.copy())
         category = torch.tensor([self.category_id], dtype=torch.long, device=self.device)
-        if self.model_type == "bc":
+        if self.model_type in {"bc", "category_teacher", "student", "online_student"}:
             tensor = torch.from_numpy(normalized[None]).to(self.device)
             action = self.model(tensor, category)[0].cpu().numpy()
         elif self.model_type == "temporal3":

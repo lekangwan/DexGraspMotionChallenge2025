@@ -160,6 +160,18 @@ def rollout(args):
             args.diffusion_execute_steps, args.normalized_action_clip,
             args.action_rate_limit_scale,
         )
+        teacher = None
+        if args.teacher_checkpoint is not None:
+            teacher = PolicyRunner(
+                args.teacher_checkpoint,
+                args.data_dir,
+                args.device,
+                diffusion_execute_steps=1,
+                normalized_action_clip=args.normalized_action_clip,
+                action_rate_limit_scale=0.0,
+            )
+            if teacher.model_type != "category_teacher":
+                raise ValueError("在线采集的teacher checkpoint必须是category_teacher")
         if runner.mappings.get("policy_action_order") != action_order:
             raise ValueError("策略训练数据的动作名称顺序与当前目标手候选不一致")
         first_dofs, first_object, first_contacts = read_policy_pre_action_state(
@@ -174,9 +186,12 @@ def rollout(args):
             args.lift_threshold,
         )
         runner.reset(args.category, first_observation, initial_action=policy_open)
+        if teacher is not None:
+            teacher.reset(args.category, first_observation)
         lower = np.asarray(dof_properties["lower"], dtype=np.float32)
         upper = np.asarray(dof_properties["upper"], dtype=np.float32)
         positions, object_quaternions, contacts, actions, actual_dof_positions = [], [], [], [], []
+        online_observations, online_teacher_actions = [], []
         body_contacts = {name: [] for name in hand_names}
         horizon = args.policy_steps if args.policy_steps > 0 else 70 * args.steps_per_frame + args.hold_steps
         for physics_step in range(horizon):
@@ -191,6 +206,9 @@ def rollout(args):
                 shape_descriptor,
                 args.lift_threshold,
             )
+            if teacher is not None:
+                online_observations.append(observation.copy())
+                online_teacher_actions.append(teacher.act(observation).copy())
             policy_action = runner.act(observation)
             physics_action = np.asarray(mapper(policy_action), dtype=np.float32)
             physics_action = np.clip(physics_action, lower, upper)
@@ -243,6 +261,11 @@ def rollout(args):
             "dt_s": float(args.dt),
             "physics_dof_names": dof_names,
             "checkpoint": str(args.checkpoint.resolve()),
+            "teacher_checkpoint": (
+                None
+                if args.teacher_checkpoint is None
+                else str(args.teacher_checkpoint.resolve())
+            ),
             **metrics,
             "predicted_policy_actions": np.asarray(actions).tolist(),
             "actual_hand_dof_positions": np.asarray(actual_dof_positions).tolist(),
@@ -250,6 +273,28 @@ def rollout(args):
         }
         if recorder is not None:
             report.update(recorder.close())
+        if teacher is not None:
+            if args.online_output is None:
+                raise ValueError("提供teacher checkpoint时必须同时提供online output")
+            args.online_output.parent.mkdir(parents=True, exist_ok=True)
+            metadata = {
+                "schema_version": 1,
+                "alignment": "student_pre_action_observation_to_category_teacher_action_v1",
+                "hand": args.hand,
+                "category": args.category,
+                "object_name": args.object_name,
+                "source_trajectory_index": int(args.source_index),
+                "student_checkpoint": str(args.checkpoint.resolve()),
+                "teacher_checkpoint": str(args.teacher_checkpoint.resolve()),
+            }
+            np.savez_compressed(
+                args.online_output,
+                observations=np.asarray(online_observations, dtype=np.float32),
+                teacher_actions=np.asarray(online_teacher_actions, dtype=np.float32),
+                executed_actions=np.asarray(actions, dtype=np.float32),
+                metadata_json=np.asarray(json.dumps(metadata, ensure_ascii=False)),
+            )
+            report["online_output"] = str(args.online_output.resolve())
         return report
     finally:
         if recorder is not None and recorder.writer is not None:
@@ -271,6 +316,8 @@ def main():
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--data-dir", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--teacher-checkpoint", type=Path)
+    parser.add_argument("--online-output", type=Path)
     parser.add_argument("--video-output", type=Path, help="可选MP4路径；只为报告案例启用")
     parser.add_argument("--video-width", type=int, default=640)
     parser.add_argument("--video-height", type=int, default=480)

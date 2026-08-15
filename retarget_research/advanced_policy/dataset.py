@@ -25,13 +25,14 @@ class TargetHandPolicyDataset(Dataset):
         mode="bc",
         history=3,
         action_horizon=8,
+        teacher_labels_path=None,
     ):
         """读取数组、标准化观测/动作并预计算每条轨迹边界。
 
-        输入：split路径、归一化路径、模式、历史长度和动作片段长度。
+        输入：split路径、归一化路径、模式、历史长度、动作片段长度和可选教师标签。
         输出：构造完成的数据集对象。
         内部逻辑：按trajectory_id收集全局索引；拒绝非连续重复ID和未知模式。
-        作用：训练循环无需了解NPZ布局即可安全抽样。
+        作用：训练循环无需了解NPZ布局即可安全抽样；统一学生可在同一索引读取教师动作。
         """
         if mode not in {"bc", "temporal3", "diffusion"}:
             raise ValueError(f"未知数据模式: {mode}")
@@ -52,6 +53,26 @@ class TargetHandPolicyDataset(Dataset):
         self.actions = (
             self.data["actions"] - self.normalization["action_mean"]
         ) / self.normalization["action_std"]
+        executed = self.data.get("executed_actions", self.data["actions"])
+        if executed.shape != self.data["actions"].shape:
+            raise ValueError("executed_actions与监督actions尺寸不一致")
+        self.history_actions = (
+            executed - self.normalization["action_mean"]
+        ) / self.normalization["action_std"]
+        self.teacher_actions = None
+        if teacher_labels_path is not None:
+            with np.load(Path(teacher_labels_path), allow_pickle=False) as archive:
+                if "teacher_actions" not in archive.files:
+                    raise ValueError("教师标签文件缺少teacher_actions")
+                labels = archive["teacher_actions"].astype(np.float32)
+                label_trajectory_ids = archive["trajectory_id"].astype(np.int64)
+            if labels.shape != self.actions.shape:
+                raise ValueError(
+                    f"教师标签尺寸{labels.shape}与动作尺寸{self.actions.shape}不一致"
+                )
+            if not np.array_equal(label_trajectory_ids, self.data["trajectory_id"]):
+                raise ValueError("教师标签的轨迹顺序与策略数据不一致")
+            self.teacher_actions = labels
         trajectory_ids = self.data["trajectory_id"].astype(np.int64)
         self.trajectory_indices = {
             int(trajectory_id): np.flatnonzero(trajectory_ids == trajectory_id)
@@ -92,11 +113,16 @@ class TargetHandPolicyDataset(Dataset):
         """
         category = torch.tensor(self.data["category_id"][index], dtype=torch.long)
         if self.mode == "bc":
-            return {
+            sample = {
                 "observations": torch.from_numpy(self.observations[index]).float(),
                 "actions": torch.from_numpy(self.actions[index]).float(),
                 "category_id": category,
             }
+            if self.teacher_actions is not None:
+                sample["teacher_actions"] = torch.from_numpy(
+                    self.teacher_actions[index]
+                ).float()
+            return sample
         history_indices = self._window_indices(index, self.history - 1, 0)
         if self.mode == "temporal3":
             trajectory_id = int(self.data["trajectory_id"][index])
@@ -108,7 +134,7 @@ class TargetHandPolicyDataset(Dataset):
                 previous_actions.append(
                     np.zeros(self.actions.shape[1], dtype=np.float32)
                     if previous_local < 0
-                    else self.actions[indices[previous_local]]
+                    else self.history_actions[indices[previous_local]]
                 )
             return {
                 "observation_history": torch.from_numpy(

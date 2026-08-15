@@ -16,7 +16,16 @@ POLICY_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(POLICY_ROOT))
 
 from dataset import TargetHandPolicyDataset
-from models import ConditionalDiffusionPolicy, MLPBCPolicy, Temporal3BCPolicy, linear_beta_schedule, sample_diffusion
+from models import (
+    ConditionalDiffusionPolicy,
+    MLPBCPolicy,
+    SharedCategoryExpertPolicy,
+    Temporal3BCPolicy,
+    initialize_category_expert_from_bc,
+    initialize_temporal_from_single_frame,
+    linear_beta_schedule,
+    sample_diffusion,
+)
 from observations import build_object_shape_descriptor, build_observation_batch
 from runtime import PolicyRunner
 from train import compute_loss, run_epoch
@@ -131,6 +140,88 @@ class PolicyPipelineTest(unittest.TestCase):
         )
         self.assertEqual(tuple(sampled.shape), (batch, 4, action_dim))
         self.assertTrue(torch.isfinite(sampled).all())
+
+    def test_category_teacher_starts_as_bc_without_embedding_columns(self):
+        """类别教师warm start后共享输出应等于只保留BC观测列的前向，残差为零。
+
+        输入：人工BC和两个类别的共享教师。
+        输出：两类别在同一观测上输出相同，且类别残差参数全零。
+        内部逻辑：专用初始化复制BC主干，但明确丢弃Task-ID embedding输入列。
+        作用：验证无成功样本类别会回退共享动作，而非调用随机类别参数。
+        """
+        torch.manual_seed(4)
+        bc = MLPBCPolicy(5, 3, 2, category_embedding_dim=2, hidden_dims=(8, 6))
+        teacher = SharedCategoryExpertPolicy(5, 3, 2, hidden_dims=(8, 6))
+        initialize_category_expert_from_bc(teacher, bc.state_dict(), observation_dim=5)
+        observation = torch.randn(1, 5).repeat(2, 1)
+        output = teacher(observation, torch.tensor([0, 1]))
+        torch.testing.assert_close(output[0], output[1])
+        torch.testing.assert_close(
+            teacher.category_head_weight,
+            torch.zeros_like(teacher.category_head_weight),
+        )
+
+    def test_student_loss_can_use_pure_or_blended_teacher_target(self):
+        """统一学生应支持100%教师标签及教师/演示混合监督。"""
+        model = MLPBCPolicy(4, 2, 1, hidden_dims=(6,))
+        batch = {
+            "observations": torch.randn(3, 4),
+            "actions": torch.zeros(3, 2),
+            "teacher_actions": torch.ones(3, 2),
+            "category_id": torch.zeros(3, dtype=torch.long),
+        }
+        pure, _ = compute_loss(
+            model, batch, "student", torch.device("cpu"), teacher_weight=1.0
+        )
+        blended, _ = compute_loss(
+            model, batch, "student", torch.device("cpu"), teacher_weight=0.7
+        )
+        self.assertTrue(torch.isfinite(pure))
+        self.assertTrue(torch.isfinite(blended))
+
+    def test_temporal_warm_start_exactly_matches_single_frame_student(self):
+        """历史列清零的Temporal3初始输出应逐元素等于Online-R1学生输出。"""
+        torch.manual_seed(8)
+        student = MLPBCPolicy(5, 3, 2, category_embedding_dim=2, hidden_dims=(8, 6))
+        temporal = Temporal3BCPolicy(
+            5, 3, 2, category_embedding_dim=2, hidden_dims=(8, 6)
+        )
+        initialize_temporal_from_single_frame(
+            temporal, student.state_dict(), observation_dim=5, action_dim=3
+        )
+        current = torch.randn(4, 5)
+        history = torch.randn(4, 3, 5)
+        history[:, -1] = current
+        category = torch.tensor([0, 1, 0, 1])
+        expected = student(current, category)
+        actual = temporal(history, torch.randn(4, 2, 3), category)
+        torch.testing.assert_close(actual, expected, atol=1e-6, rtol=1e-6)
+
+    def test_temporal_online_history_uses_executed_student_actions(self):
+        """在线样本的历史必须是学生实际执行动作，而监督target仍是教师动作。"""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            np.savez_compressed(
+                root / "data.npz",
+                observations=np.zeros((3, 2), dtype=np.float32),
+                actions=np.asarray([[10], [20], [30]], dtype=np.float32),
+                executed_actions=np.asarray([[1], [2], [3]], dtype=np.float32),
+                trajectory_id=np.zeros(3, dtype=np.int64),
+                category_id=np.zeros(3, dtype=np.int64),
+            )
+            np.savez_compressed(
+                root / "normalization.npz",
+                observation_mean=np.zeros(2, dtype=np.float32),
+                observation_std=np.ones(2, dtype=np.float32),
+                action_mean=np.zeros(1, dtype=np.float32),
+                action_std=np.ones(1, dtype=np.float32),
+            )
+            dataset = TargetHandPolicyDataset(
+                root / "data.npz", root / "normalization.npz", "temporal3", 3
+            )
+            sample = dataset[2]
+            np.testing.assert_allclose(sample["previous_actions"].numpy(), [[1], [2]])
+            np.testing.assert_allclose(sample["actions"].numpy(), [30])
 
     def test_policy_runner_loads_checkpoint_and_denormalizes(self):
         """统一推理器应按checkpoint构模并把零标准化输出恢复到动作均值。"""

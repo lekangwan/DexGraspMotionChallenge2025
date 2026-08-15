@@ -2,12 +2,18 @@
 
 本目录记录新考核特有的策略配置、目标手数据适配器和实验结果。可以从旧项目正式的 `custom_tools` 主实现中复用已经验证过的BC、Temporal、数据集和评测组件，但不复用仅用于阅读学习的 `custom_tools/minimal_impl`，也不把基本重定向代码混入 `custom_tools`。
 
-暂定比较顺序：
+当前完整训练顺序已经冻结为：
 
-1. 单帧MLP BC；
-2. 短时历史策略；
-3. state-conditioned Diffusion Policy动作片段；
-4. 仅在时间允许且基线可信时考虑在线数据聚合或残差强化学习。
+1. 两个独立seed的单帧MLP BC和参数Soup；
+2. 每只手一个共享主干、50个轻量类别残差头的类别教师；
+3. 带Task-ID的统一学生蒸馏；
+4. 学生控制、类别教师标注的Online-R1数据聚合；
+5. 从Online-R1无损初始化的Temporal3；
+6. 使用相同聚合数据的state-conditioned Diffusion Policy动作片段对照。
+
+完整设计、数据流、超参数理由和停止规则见`FULL_PIPELINE_PLAN.md`，冻结配置见
+`configs/full_pipeline_v1.json`。旧的BC/Temporal3/Diffusion直接对照保留为失败基线，
+不把其接近零的闭环成功率当作完整pipeline结果。
 
 进阶阶段的数据输入必须来自本项目重定向后经过物理筛选的目标手轨迹，不能直接把未经验证的候选轨迹当专家数据。
 
@@ -16,13 +22,16 @@
 1. `observations.py`：先看一帧策略到底能看到什么，离线和闭环共用同一个拼接函数。
 2. `prepare/build_policy_split.py`：理解为什么按物体而不是按帧随机划分，如何得到同类别未见物体测试集。
 3. `prepare/prepare_policy_dataset.py`：看物理trace如何经过成功过滤、映射和仅train归一化变为NPZ。
-4. `dataset.py`：看单帧、Temporal3和Diffusion动作片段怎样取窗口，以及如何阻止跨轨迹读取历史。
-5. `models.py`：依次看MLP BC、Temporal3和条件动作Diffusion的输入输出。
-6. `train.py`：看监督loss、优化器、验证、best/last checkpoint和loss曲线。
-7. `runtime.py`：看训练模型如何维护历史、反归一化并在每个物理步输出动作。
-8. `evaluate_offline.py`：只检查动作拟合误差，不能当作抓取成功率。
-9. `evaluate_policy_isaac.py`：一条轨迹的真实闭环；除首帧张开手腕初态外不再读取专家未来动作。
-10. `evaluate_policy_manifest.py`：先用`--split valid`在训练物体的留出轨迹上选择模型，再用`--split test`只在对象级未见物体上汇总最终微平均、物体宏平均和类别宏平均。
+4. `prepare/audit_expert_quality.py`：核对成功抬升是否有持续手物接触支撑。
+5. `prepare/make_model_soup.py`：看两个独立BC怎样做严格参数平均。
+6. `models.py`：看MLP、共享类别教师、Temporal3、Diffusion及阶段初始化。
+7. `prepare/generate_teacher_labels.py`：看类别教师如何生成统一学生标签。
+8. `dataset.py`：看时序窗口，以及教师target与学生实际历史动作的区别。
+9. `train.py`：看各阶段监督loss、25/75在线混合、验证和checkpoint。
+10. `runtime.py`：看训练模型如何维护历史、反归一化并逐步输出动作。
+11. `evaluate_policy_isaac.py`：看闭环控制与“学生执行、教师只标注”的Online-R1。
+12. `prepare/aggregate_online_data.py`：看在线查询怎样形成聚合训练集。
+13. `evaluate_policy_manifest.py`：先用valid选择模型，冻结后才用test报告对象级泛化。
 
 ## 三种策略的数据流
 

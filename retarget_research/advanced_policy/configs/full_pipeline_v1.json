@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "purpose": "把旧Shadow完整模仿学习链路迁移到三只目标手；所有模型选择只看valid，test只在最终冻结后运行一次",
+  "hands": ["linker", "xhand", "wuji"],
+  "data_root": "retarget_research/advanced_policy/data/formal_v1",
+  "run_root": "retarget_research/advanced_policy/runs/full_pipeline_v1",
+  "seed_primary": 20260813,
+  "seed_secondary": 20260814,
+  "common": {
+    "device": "cuda",
+    "batch_size": 512,
+    "num_workers": 4,
+    "hidden_dims": [256, 256, 256],
+    "category_embedding_dim": 16,
+    "dropout": 0.05,
+    "weight_decay": 0.0001,
+    "gradient_clip": 1.0,
+    "minimum_improvement": 0.000001
+  },
+  "stages": {
+    "bc_second_seed": {
+      "epochs": 150,
+      "learning_rate": 0.0003,
+      "early_stopping_patience": 20
+    },
+    "bc_soup": {
+      "weights": [0.5, 0.5],
+      "reason": "两个同构独立seed等权平均；不根据test或单轨迹成败调权"
+    },
+    "category_teacher": {
+      "epochs": 100,
+      "learning_rate": 0.0001,
+      "early_stopping_patience": 15,
+      "balance_categories": true,
+      "reason": "Soup已提供通用能力，较小学习率只做类别专门化；反采样平衡成功轨迹数不同的类别"
+    },
+    "student": {
+      "epochs": 80,
+      "learning_rate": 0.0003,
+      "early_stopping_patience": 15,
+      "teacher_weights": [1.0, 0.7],
+      "reason": "复现旧项目纯教师与70%教师+30%演示对照；只用valid冻结一个"
+    },
+    "online_r1": {
+      "rollout_split": "train",
+      "max_tasks_per_category": 1,
+      "online_ratio": 0.25,
+      "epochs": 60,
+      "learning_rate": 0.0001,
+      "early_stopping_patience": 12,
+      "reason": "50类均衡采50条学生访问轨迹；沿用旧项目25%在线/75%离线并用小学习率微调"
+    },
+    "temporal3": {
+      "history": 3,
+      "online_ratio": 0.25,
+      "epochs": 80,
+      "learning_rate": 0.0001,
+      "early_stopping_patience": 15,
+      "reason": "从Online-R1无损嵌入当前帧权重，历史列从零开始学习，避免重新训练丢失前序能力"
+    },
+    "diffusion": {
+      "history": 3,
+      "action_horizon": 8,
+      "diffusion_steps": 50,
+      "time_embedding_dim": 64,
+      "hidden_dims": [512, 512, 384],
+      "online_ratio": 0.25,
+      "epochs": 150,
+      "learning_rate": 0.0003,
+      "early_stopping_patience": 20,
+      "reason": "作为相同聚合数据上的多模态动作片段对照，不与噪声loss数值直接比较"
+    },
+    "selection": {
+      "split": "valid",
+      "max_tasks_per_category": 1,
+      "primary_metric": "category_macro_success_rate",
+      "tie_breakers": ["trajectory_micro_success_rate", "mean_final_lift_m", "mean_hand_object_contact_steps"],
+      "test_rule": "每只手冻结唯一模型后，才在500条对象级未见物体轨迹上评测一次"
+    }
+  }
+}

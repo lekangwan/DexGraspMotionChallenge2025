@@ -21,14 +21,17 @@ import time
 import numpy as np
 import torch
 from torch import nn
-from torch.utils.data import DataLoader
+from torch.utils.data import ConcatDataset, DataLoader, WeightedRandomSampler
 
 try:
     from .dataset import TargetHandPolicyDataset
     from .models import (
         ConditionalDiffusionPolicy,
         MLPBCPolicy,
+        SharedCategoryExpertPolicy,
         Temporal3BCPolicy,
+        initialize_category_expert_from_bc,
+        initialize_temporal_from_single_frame,
         linear_beta_schedule,
     )
 except ImportError:
@@ -36,7 +39,10 @@ except ImportError:
     from models import (
         ConditionalDiffusionPolicy,
         MLPBCPolicy,
+        SharedCategoryExpertPolicy,
         Temporal3BCPolicy,
+        initialize_category_expert_from_bc,
+        initialize_temporal_from_single_frame,
         linear_beta_schedule,
     )
 
@@ -89,8 +95,16 @@ def build_model(config, observation_dim, action_dim, category_count):
         "dropout": config.get("dropout", 0.0),
     }
     model_type = config["model_type"]
-    if model_type == "bc":
+    if model_type in {"bc", "student", "online_student"}:
         return MLPBCPolicy(**common)
+    if model_type == "category_teacher":
+        return SharedCategoryExpertPolicy(
+            observation_dim=observation_dim,
+            action_dim=action_dim,
+            category_count=category_count,
+            hidden_dims=common["hidden_dims"],
+            dropout=common["dropout"],
+        )
     if model_type == "temporal3":
         return Temporal3BCPolicy(**common)
     if model_type == "diffusion":
@@ -103,7 +117,59 @@ def build_model(config, observation_dim, action_dim, category_count):
     raise ValueError(f"未知model_type: {model_type}")
 
 
-def compute_loss(model, batch, model_type, device, betas=None):
+def initialize_model(
+    model,
+    model_type,
+    checkpoint_path,
+    observation_dim,
+    action_dim,
+    device,
+):
+    """从上一阶段checkpoint执行严格、可解释的warm start。
+
+    输入：待训练模型、当前类型、初始化checkpoint、观测维度和设备。
+    输出：初始化来源摘要字典；模型参数被原地更新。
+    内部逻辑：普通BC/学生要求网络参数完全同构；类别教师调用专用转换，复制
+    BC Soup的观测主干和共享动作头，同时把50个类别残差头置零。
+    作用：把`BC Soup -> 类别教师 -> 统一学生`的阶段继承关系写进checkpoint流程。
+    """
+    path = Path(checkpoint_path).expanduser().resolve()
+    if not path.is_file():
+        raise FileNotFoundError(path)
+    payload = load_checkpoint_file(path, device)
+    state = payload.get("model_state", payload.get("state_dict"))
+    if state is None:
+        raise ValueError(f"初始化checkpoint没有模型参数: {path}")
+    if model_type == "category_teacher":
+        initialize_category_expert_from_bc(model, state, observation_dim)
+        method = "bc_observation_trunk_and_shared_head; zero_category_residuals"
+    elif model_type == "temporal3" and payload.get("config", {}).get("model_type") in {
+        "bc",
+        "student",
+        "online_student",
+    }:
+        initialize_temporal_from_single_frame(
+            model,
+            state,
+            observation_dim,
+            action_dim,
+            history=3,
+        )
+        method = "single_frame_current_observation_embedding; zero_history_columns"
+    else:
+        model.load_state_dict(state, strict=True)
+        method = "strict_full_state"
+    return {"checkpoint": str(path), "method": method}
+
+
+def compute_loss(
+    model,
+    batch,
+    model_type,
+    device,
+    betas=None,
+    teacher_weight=1.0,
+):
     """计算一个batch的监督损失。
 
     输入：模型、batch、类型、设备和可选beta表。
@@ -112,9 +178,17 @@ def compute_loss(model, batch, model_type, device, betas=None):
     作用：保持三个实验共享同一训练循环但数学目标清晰分离。
     """
     batch = {name: value.to(device) for name, value in batch.items()}
-    if model_type == "bc":
+    if model_type in {"bc", "category_teacher", "student", "online_student"}:
         prediction = model(batch["observations"], batch["category_id"])
-        target = batch["actions"]
+        if model_type == "student":
+            if "teacher_actions" not in batch:
+                raise ValueError("student训练缺少离线教师标签")
+            weight = float(teacher_weight)
+            if not 0.0 <= weight <= 1.0:
+                raise ValueError("teacher_weight必须位于[0,1]")
+            target = weight * batch["teacher_actions"] + (1.0 - weight) * batch["actions"]
+        else:
+            target = batch["actions"]
     elif model_type == "temporal3":
         prediction = model(
             batch["observation_history"],
@@ -154,6 +228,7 @@ def run_epoch(
     betas=None,
     grad_clip=1.0,
     max_batches=None,
+    teacher_weight=1.0,
 ):
     """训练或验证一个epoch。
 
@@ -175,7 +250,14 @@ def run_epoch(
                 break
             if training:
                 optimizer.zero_grad(set_to_none=True)
-            loss, mae = compute_loss(model, batch, model_type, device, betas)
+            loss, mae = compute_loss(
+                model,
+                batch,
+                model_type,
+                device,
+                betas,
+                teacher_weight,
+            )
             if training:
                 loss.backward()
                 nn.utils.clip_grad_norm_(model.parameters(), float(grad_clip))
@@ -353,13 +435,31 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(args.config, output_dir / "config.json")
     mode = config["model_type"]
+    dataset_mode = (
+        "bc" if mode in {"category_teacher", "student", "online_student"} else mode
+    )
     history = int(config.get("history", 3))
     horizon = int(config.get("action_horizon", 8))
+    teacher_label_dir = (
+        Path(config["teacher_label_dir"]).expanduser().resolve()
+        if mode == "student"
+        else None
+    )
     train_set = TargetHandPolicyDataset(
-        data_dir / "train.npz", data_dir / "normalization.npz", mode, history, horizon
+        data_dir / "train.npz",
+        data_dir / "normalization.npz",
+        dataset_mode,
+        history,
+        horizon,
+        None if teacher_label_dir is None else teacher_label_dir / "train.npz",
     )
     valid_set = TargetHandPolicyDataset(
-        data_dir / "valid.npz", data_dir / "normalization.npz", mode, history, horizon
+        data_dir / "valid.npz",
+        data_dir / "normalization.npz",
+        dataset_mode,
+        history,
+        horizon,
+        None if teacher_label_dir is None else teacher_label_dir / "valid.npz",
     )
     mappings = json.loads((data_dir / "mappings.json").read_text(encoding="utf-8"))
     observation_dim = int(train_set.observations.shape[1])
@@ -371,6 +471,16 @@ def main():
         "category_count": category_count,
     }
     model = build_model(config, observation_dim, action_dim, category_count).to(device)
+    initialization = None
+    if args.resume is None and config.get("init_checkpoint"):
+        initialization = initialize_model(
+            model,
+            mode,
+            config["init_checkpoint"],
+            observation_dim,
+            action_dim,
+            device,
+        )
     optimizer = torch.optim.AdamW(
         model.parameters(),
         lr=float(config.get("learning_rate", 3e-4)),
@@ -390,9 +500,53 @@ def main():
         "pin_memory": device.type == "cuda",
     }
     generator = torch.Generator().manual_seed(int(config.get("seed", 20260813)))
-    train_loader = DataLoader(
-        train_set, shuffle=True, generator=generator, drop_last=False, **loader_args
-    )
+    online_data_path = config.get("online_data_path")
+    if online_data_path:
+        online_set = TargetHandPolicyDataset(
+            Path(online_data_path).expanduser().resolve(),
+            data_dir / "normalization.npz",
+            dataset_mode,
+            history,
+            horizon,
+        )
+        online_ratio = float(config.get("online_ratio", 0.25))
+        if not 0.0 < online_ratio < 1.0:
+            raise ValueError("online_ratio必须位于(0,1)")
+        combined = ConcatDataset([train_set, online_set])
+        weights = np.concatenate(
+            [
+                np.full(len(train_set), (1.0 - online_ratio) / len(train_set)),
+                np.full(len(online_set), online_ratio / len(online_set)),
+            ]
+        ).astype(np.float64)
+        sampler = WeightedRandomSampler(
+            torch.from_numpy(weights),
+            num_samples=len(train_set),
+            replacement=True,
+            generator=generator,
+        )
+        train_loader = DataLoader(
+            combined, sampler=sampler, drop_last=False, **loader_args
+        )
+    elif mode == "category_teacher" and bool(config.get("balance_categories", True)):
+        category_ids = train_set.data["category_id"].astype(np.int64)
+        counts = np.bincount(category_ids, minlength=category_count)
+        sample_weights = np.asarray(
+            [1.0 / counts[value] for value in category_ids], dtype=np.float64
+        )
+        sampler = WeightedRandomSampler(
+            torch.from_numpy(sample_weights),
+            num_samples=len(sample_weights),
+            replacement=True,
+            generator=generator,
+        )
+        train_loader = DataLoader(
+            train_set, sampler=sampler, drop_last=False, **loader_args
+        )
+    else:
+        train_loader = DataLoader(
+            train_set, shuffle=True, generator=generator, drop_last=False, **loader_args
+        )
     valid_loader = DataLoader(valid_set, shuffle=False, drop_last=False, **loader_args)
     start_epoch, best_valid, stale_epochs = 1, float("inf"), 0
     metrics_path = output_dir / "metrics.csv"
@@ -421,6 +575,7 @@ def main():
             betas,
             config.get("gradient_clip", 1.0),
             config.get("max_train_batches"),
+            config.get("teacher_weight", 1.0),
         )
         valid_metrics = run_epoch(
             model,
@@ -430,6 +585,7 @@ def main():
             None,
             betas,
             max_batches=config.get("max_valid_batches"),
+            teacher_weight=config.get("teacher_weight", 1.0),
         )
         scheduler.step()
         improved = valid_metrics["loss"] < best_valid - float(
@@ -488,6 +644,7 @@ def main():
         "last_epoch": int(rows[-1]["epoch"]),
         "wall_time_seconds": time.perf_counter() - started,
         "best_checkpoint": str((output_dir / "best.pt").resolve()),
+        "initialization": initialization,
     }
     (output_dir / "training_summary.json").write_text(
         json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
