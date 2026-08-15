@@ -180,6 +180,14 @@ def load_completed_evaluation(
             return None
         if physics.get("success_protocol") != "stable_30cm_terminal_hold_v2":
             return None
+        if hand == "wuji":
+            target_data = np.load(target_path, allow_pickle=True).item()
+            expected_anatomy_sha = target_data.get("anatomy_config_sha256")
+            if expected_anatomy_sha is not None and (
+                not physics.get("anatomy_limits_enforced", False)
+                or physics.get("anatomy_config_sha256") != expected_anatomy_sha
+            ):
+                return None
         if int(physics["target_dimensions"]) != HAND_SPECS[hand]["dimension"]:
             return None
         expected_physics = {

@@ -28,7 +28,11 @@ try:
         summarize_body_contacts,
         summarize_dof_tracking,
     )
-    from .wuji_replay_utils import WRIST_NAMES, reorder_wuji_frame
+    from .wuji_replay_utils import (
+        WRIST_NAMES,
+        apply_anatomy_dof_limits,
+        reorder_wuji_frame,
+    )
 except ImportError:
     from isaac_replay_common import (
         IsaacCameraRecorder,
@@ -41,7 +45,11 @@ except ImportError:
         summarize_body_contacts,
         summarize_dof_tracking,
     )
-    from wuji_replay_utils import WRIST_NAMES, reorder_wuji_frame
+    from wuji_replay_utils import (
+        WRIST_NAMES,
+        apply_anatomy_dof_limits,
+        reorder_wuji_frame,
+    )
 
 
 RETARGET_ROOT = Path(__file__).resolve().parents[1]
@@ -133,6 +141,9 @@ def replay(args):
             optimizer_joint_names,
             args.finger_stiffness,
             args.finger_damping,
+        )
+        anatomy_metadata = apply_anatomy_dof_limits(
+            dof_properties, dof_names, target_data
         )
         object_asset = load_object_asset(gym, sim, object_dir)
         env = gym.create_env(
@@ -233,6 +244,7 @@ def replay(args):
             "finger_damping": float(args.finger_damping),
             "object_scale": scale,
             "rotated_scaled_mesh_min_z_m": mesh_min_z,
+            **anatomy_metadata,
             **metrics,
         }
         if contact_samples is not None:
@@ -256,6 +268,7 @@ def replay(args):
                     "policy_action_order": WRIST_NAMES + list(optimizer_joint_names),
                     "dt_s": float(args.dt),
                     "steps_per_frame": int(args.steps_per_frame),
+                    **anatomy_metadata,
                 },
             )
             report["policy_trace"] = str(trace_path)

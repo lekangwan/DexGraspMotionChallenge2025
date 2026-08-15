@@ -29,6 +29,16 @@
       "name": "coupled_flexion",
       "anatomy_config": "retarget_research/retargeting/configs/wuji_anatomy_coupled_v1.json",
       "role": "tests hard middle/distal bounds plus a weak PIP-DIP coordination prior"
+    },
+    {
+      "name": "flexion_bounds",
+      "anatomy_config": "retarget_research/retargeting/configs/wuji_anatomy_flexion_bounds_v1.json",
+      "role": "factorial completion: hard middle/distal bounds without coupling"
+    },
+    {
+      "name": "distal_coupled",
+      "anatomy_config": "retarget_research/retargeting/configs/wuji_anatomy_distal_coupled_v1.json",
+      "role": "factorial completion: distal hard bound plus coupling without a hard middle bound"
     }
   ],
   "selection_rule": "first require zero trajectories below the configured anatomical lower bounds; then maximize stable 30 cm terminal success, compare paired gains/losses, and use keypoint loss only as a diagnostic tie-breaker",

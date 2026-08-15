@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "name": "wuji_middle_and_distal_extension_limits_v1",
+  "purpose": "isolate hard PIP and DIP extension limits without a soft coupling prior",
+  "lower_bound_overrides_rad": {
+    "finger2_joint3": -0.08726646,
+    "finger2_joint4": -0.08726646,
+    "finger3_joint3": -0.08726646,
+    "finger3_joint4": -0.08726646,
+    "finger4_joint3": -0.08726646,
+    "finger4_joint4": -0.08726646,
+    "finger5_joint3": -0.08726646,
+    "finger5_joint4": -0.08726646
+  },
+  "upper_bound_overrides_rad": {},
+  "soft_flexion_couplings": [],
+  "interpretation": "factorial ablation: both flexion joints are bounded but remain independently optimized"
+}

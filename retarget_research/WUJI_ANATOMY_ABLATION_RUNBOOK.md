@@ -40,6 +40,48 @@ retarget_research/retargeting/run/run_wuji_manifest.py \
 
 两边都出现`all_successful=True`以后再进入第二阶段。命令支持`--resume`，中断后可原样重跑。
 
+## 第一阶段补充：完成2×2因素消融
+
+首轮物理重放表明：只限制DIP时，末帧仍有27.375%的受检关节反向超过5度；同时限制PIP/DIP并加入协调项后，末帧反弯降为0，但稳定运输由旧基线12/20降至11/20。由于首轮两个候选同时改变了“PIP硬边界”和“PIP-DIP协调项”，还不能判断性能下降由哪个因素造成。
+
+因此固定全部已有参数，只补齐下面两个缺失组合。四种受约束候选由两个二值因素组成：是否限制PIP反弯、是否加入弱协调项。这是封闭的2×2消融，不根据测试结果继续扩展搜索空间。
+
+终端A运行PIP+DIP硬边界，但不加入协调损失：
+
+```bash
+cd /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release
+MPLCONFIGDIR=/tmp/matplotlib-retarget OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 \
+/home/lekangwan/miniconda3/envs/hand-retarget/bin/python \
+retarget_research/retargeting/run/run_wuji_manifest.py \
+--manifest retarget_research/manifests/wuji_anatomy_train20_seed20260817.json \
+--output-dir retarget_research/outputs/wuji_anatomy_ablation_v1/flexion_bounds \
+--workers 1 --resume --maxeval 50 --translation-bound 2.0 \
+--source-z-offset 0.4 \
+--mapping-config retarget_research/retargeting/configs/wuji_keypoint_map.json \
+--joint-temporal-weight 0 --translation-temporal-weight 0 \
+--rotation-temporal-weight 0 \
+--anatomy-config retarget_research/retargeting/configs/wuji_anatomy_flexion_bounds_v1.json
+```
+
+终端B只限制DIP反弯，同时加入弱协调损失：
+
+```bash
+cd /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release
+MPLCONFIGDIR=/tmp/matplotlib-retarget OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 \
+/home/lekangwan/miniconda3/envs/hand-retarget/bin/python \
+retarget_research/retargeting/run/run_wuji_manifest.py \
+--manifest retarget_research/manifests/wuji_anatomy_train20_seed20260817.json \
+--output-dir retarget_research/outputs/wuji_anatomy_ablation_v1/distal_coupled \
+--workers 1 --resume --maxeval 50 --translation-bound 2.0 \
+--source-z-offset 0.4 \
+--mapping-config retarget_research/retargeting/configs/wuji_keypoint_map.json \
+--joint-temporal-weight 0 --translation-temporal-weight 0 \
+--rotation-temporal-weight 0 \
+--anatomy-config retarget_research/retargeting/configs/wuji_anatomy_distal_coupled_v1.json
+```
+
+两条生成命令各需约14分钟，适合在两个终端并行运行。生成完成后的物理重放约1分钟，由分析脚本统一执行和比较即可。
+
 ## 第二阶段：三个终端并行物理重放
 
 旧基线的20条已经从正式1000条候选中秒级切出，不重新执行重定向。下面三条命令分别评测旧基线、远端硬边界和协调屈曲；默认成功标准已是末段稳定30 cm。每条同时保存掌物位姿trace，之后可继续检查滑移。

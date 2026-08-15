@@ -12,6 +12,7 @@ import numpy as np
 
 from retarget_research.retargeting.evaluate.wuji_replay_utils import (
     WRIST_NAMES,
+    apply_anatomy_dof_limits,
     reorder_wuji_frame,
 )
 
@@ -43,6 +44,46 @@ class WujiReplayMappingTest(unittest.TestCase):
             [expected_by_name[name] for name in physics_names], dtype=np.float32
         )
         np.testing.assert_array_equal(actual, expected)
+
+    def test_anatomy_limits_are_applied_only_after_hash_verification(self):
+        """候选配置应同步收紧物理下界，文件变化后必须拒绝。"""
+        import hashlib
+        import json
+        from pathlib import Path
+        import tempfile
+
+        dtype = np.dtype(
+            [("lower", "f4"), ("upper", "f4"), ("hasLimits", "?")]
+        )
+        properties = np.zeros(2, dtype=dtype)
+        properties["lower"] = [-0.5, -0.5]
+        properties["upper"] = [1.6, 1.6]
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "anatomy.json"
+            path.write_text(
+                json.dumps(
+                    {
+                        "lower_bound_overrides_rad": {"finger2_joint4": -0.087},
+                        "upper_bound_overrides_rad": {},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            target = {
+                "anatomy_config": str(path),
+                "anatomy_config_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            }
+            metadata = apply_anatomy_dof_limits(
+                properties, ["finger2_joint3", "finger2_joint4"], target
+            )
+            self.assertTrue(metadata["anatomy_limits_enforced"])
+            self.assertAlmostEqual(float(properties["lower"][1]), -0.087, places=5)
+            self.assertTrue(bool(properties["hasLimits"][1]))
+            path.write_text("{}", encoding="utf-8")
+            with self.assertRaises(ValueError):
+                apply_anatomy_dof_limits(
+                    properties, ["finger2_joint3", "finger2_joint4"], target
+                )
 
 
 if __name__ == "__main__":
