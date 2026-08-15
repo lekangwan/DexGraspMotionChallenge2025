@@ -128,6 +128,8 @@ def summarize_candidate(name, summary_path, protocol):
 
 def add_baseline_differences(summaries):
     """输入全部候选摘要，原地加入相对旧基线的稳定/运输新增与丢失轨迹。"""
+    if "legacy_unconstrained" not in summaries:
+        return
     baseline = summaries["legacy_unconstrained"]
     for item in summaries.values():
         for metric in ("stable", "transport"):
@@ -157,18 +159,20 @@ def write_markdown(path, summaries):
         distal = item["distal_actual"]
         pip = item["pip_actual"]
         lines.append(
-            f"| {item['name']} | {item['stable_success_count']}/20 | "
-            f"{item['transport_success_count']}/20 | {item['mean_optimization_loss']:.5f} | "
+            f"| {item['name']} | {item['stable_success_count']}/{item['trajectory_count']} | "
+            f"{item['transport_success_count']}/{item['trajectory_count']} | "
+            f"{item['mean_optimization_loss']:.5f} | "
             f"{ratio(distal, 'all', True):.2%} | {ratio(distal, 'terminal', True):.2%} | "
             f"{ratio(pip, 'terminal', True):.2%} |"
         )
-    lines.extend(["", "## 相对旧基线的逐轨迹变化", ""])
-    for name, item in summaries.items():
-        if name == "legacy_unconstrained":
-            continue
-        gains = [f"{key[0]}[{key[1]}]" for key in item["transport_gained_vs_legacy"]]
-        losses = [f"{key[0]}[{key[1]}]" for key in item["transport_lost_vs_legacy"]]
-        lines.append(f"- `{name}`：运输新增 {', '.join(gains) or '无'}；丢失 {', '.join(losses) or '无'}。")
+    if "legacy_unconstrained" in summaries:
+        lines.extend(["", "## 相对旧基线的逐轨迹变化", ""])
+        for name, item in summaries.items():
+            if name == "legacy_unconstrained":
+                continue
+            gains = [f"{key[0]}[{key[1]}]" for key in item["transport_gained_vs_legacy"]]
+            losses = [f"{key[0]}[{key[1]}]" for key in item["transport_lost_vs_legacy"]]
+            lines.append(f"- `{name}`：运输新增 {', '.join(gains) or '无'}；丢失 {', '.join(losses) or '无'}。")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -178,16 +182,28 @@ def main():
     parser.add_argument("--study", type=Path, default=DEFAULT_STUDY)
     parser.add_argument("--evaluation-root", type=Path, default=DEFAULT_EVALUATION_ROOT)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_ROOT)
+    parser.add_argument(
+        "--candidate",
+        action="append",
+        help="可重复使用的名称=manifest_evaluation_summary.json；提供后不读取默认消融候选",
+    )
     args = parser.parse_args()
     study = json.loads(args.study.read_text(encoding="utf-8"))
     protocol_path = PROJECT_ROOT / "retarget_research/retargeting/configs/stable_success_protocol_v2.json"
     protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
     summaries = {}
-    for candidate in study["candidates"]:
-        name = candidate["name"]
-        summary_path = args.evaluation_root / name / "manifest_evaluation_summary.json"
-        if summary_path.exists():
-            summaries[name] = summarize_candidate(name, summary_path, protocol)
+    if args.candidate:
+        for value in args.candidate:
+            if "=" not in value:
+                raise ValueError("--candidate必须使用名称=摘要路径")
+            name, raw_path = value.split("=", 1)
+            summaries[name] = summarize_candidate(name, Path(raw_path), protocol)
+    else:
+        for candidate in study["candidates"]:
+            name = candidate["name"]
+            summary_path = args.evaluation_root / name / "manifest_evaluation_summary.json"
+            if summary_path.exists():
+                summaries[name] = summarize_candidate(name, summary_path, protocol)
     add_baseline_differences(summaries)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     output_json = args.output_dir / "wuji_anatomy_ablation_summary.json"
@@ -195,8 +211,8 @@ def main():
     write_markdown(args.output_dir / "WUJI_ANATOMY_ABLATION_RESULTS.md", summaries)
     for item in summaries.values():
         print(
-            f"{item['name']}: stable={item['stable_success_count']}/20 "
-            f"transport={item['transport_success_count']}/20 "
+            f"{item['name']}: stable={item['stable_success_count']}/{item['trajectory_count']} "
+            f"transport={item['transport_success_count']}/{item['trajectory_count']} "
             f"loss={item['mean_optimization_loss']:.5f} "
             f"terminal_distal_severe={ratio(item['distal_actual'], 'terminal', True):.2%}"
         )

@@ -4,7 +4,7 @@
   "screen_manifest": "retarget_research/manifests/wuji_anatomy_train20_seed20260817.json",
   "selected_candidate": "coupled_flexion",
   "selected_anatomy_config": "retarget_research/retargeting/configs/wuji_anatomy_coupled_v1.json",
-  "status": "unique_candidate_for_50_category_train_validation_not_yet_formal_method",
+  "status": "passed_50_category_numeric_gate_pending_video_review",
   "frozen_physics_pd": [120.0, 5.0],
   "screen_results": {
     "stable_success_count": 11,
@@ -16,7 +16,16 @@
     "pip_severe_violation_ratio_all_steps": 0.0079,
     "pip_severe_violation_ratio_terminal_hold": 0.0
   },
+  "train50_results": {
+    "stable_success_count": 29,
+    "transport_success_count": 29,
+    "trajectory_count": 50,
+    "mean_optimization_loss": 0.16623,
+    "successful_trajectory_distal_severe_ratio_all_steps": 0.01634,
+    "successful_trajectory_distal_severe_count_after_step120": 0,
+    "terminal_distal_severe_ratio": 0.0
+  },
   "selection_reason": "ties the best constrained transport score, has lower geometric loss and fewer transient distal violations than hard bounds alone, while avoiding the high PIP hyperextension and lower transport score of distal_coupled",
   "known_limitation": "Isaac PhysX can transiently penetrate the configured lower limits during the first 120 approach steps; no severe distal penetration remains during closure, lift, or terminal hold, but the worst approach cases still require video review",
-  "next_gate": "generate one train trajectory for each of 50 categories, replay with synchronized physical limits, then review stratified successes and worst transient-anatomy cases before replacing the formal Wuji dataset"
+  "next_gate": "review 12 stratified success/failure videos, especially early distal pose and terminal hold, before replacing the formal Wuji dataset and launching the 1000-trajectory replay"
 }
