@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "protocol": "stable_success_protocol_v1.json",
+  "source": "formal 50-category, 100-object, 1000-trajectory PhysX reports and aligned traces",
+  "results": {
+    "linker": {
+      "legacy_success_count": 234,
+      "stable_physics_success_count": 188,
+      "transport_quality_success_count": 146,
+      "training_eligible_count": 146,
+      "train_training_eligible_count": 59,
+      "train_training_eligible_category_count": 30,
+      "decision": "reject current method as final; reopen retargeting and use current trajectories only as initialization"
+    },
+    "xhand": {
+      "legacy_success_count": 574,
+      "stable_physics_success_count": 546,
+      "transport_quality_success_count": 513,
+      "training_eligible_count": 513,
+      "train_training_eligible_count": 226,
+      "train_training_eligible_category_count": 47,
+      "decision": "retain official retargeting method; rebuild policy data from transport-quality trajectories only"
+    },
+    "wuji": {
+      "legacy_success_count": 638,
+      "stable_physics_success_count": 608,
+      "transport_quality_success_count": 575,
+      "training_eligible_count": 0,
+      "train_transport_quality_count_before_anatomy_gate": 248,
+      "train_transport_quality_category_count_before_anatomy_gate": 48,
+      "decision": "quarantine all current trajectories; redo retargeting with anatomical flexion bounds and inter-joint coupling before any policy training"
+    }
+  },
+  "wuji_anatomy_evidence": {
+    "affected_joints": [
+      "finger2_joint4",
+      "finger3_joint4",
+      "finger4_joint4",
+      "finger5_joint4"
+    ],
+    "first_executed_step_median_rad": [-0.1644, -0.1644, -0.1644, -0.0529],
+    "negative_timestep_ratio": [0.9748, 0.9540, 0.9187, 0.9661],
+    "trajectory_reaching_below_minus_0p45_count": [1000, 1000, 1000, 1000],
+    "urdf_lower_limit_rad": -0.4932,
+    "interpretation": "the unconstrained keypoint optimizer exploits distal hyperextension; physical lifting alone does not make these trajectories valid demonstrations"
+  },
+  "pipeline_status": {
+    "advanced_policy": "paused_until_retargeting_data_is_rebuilt",
+    "old_policy_datasets": "historical_diagnostics_only",
+    "old_success_summaries": "legacy_historical_only"
+  }
+}

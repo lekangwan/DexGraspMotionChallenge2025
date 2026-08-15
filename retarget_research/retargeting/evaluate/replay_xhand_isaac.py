@@ -207,6 +207,7 @@ def replay(args):
             args.lift_threshold,
             args.max_xy_drift,
             args.sustain_steps,
+            terminal_hold_steps=args.hold_steps,
         )
         metrics.update(summarize_body_contacts(body_contacts))
         metrics.update(summarize_dof_tracking(actual_dofs, commanded_dofs, dof_names))

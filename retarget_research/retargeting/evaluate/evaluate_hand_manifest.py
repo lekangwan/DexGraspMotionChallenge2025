@@ -178,6 +178,8 @@ def load_completed_evaluation(
                 return None
         if physics["object_name"] != entry["object_name"]:
             return None
+        if physics.get("success_protocol") != "stable_terminal_hold_v1":
+            return None
         if int(physics["target_dimensions"]) != HAND_SPECS[hand]["dimension"]:
             return None
         expected_physics = {

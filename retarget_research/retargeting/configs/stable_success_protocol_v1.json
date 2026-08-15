@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "purpose": "replace transient lift success with stable terminal grasp and training-quality gates",
+  "height_and_hold": {
+    "lift_threshold_m": 0.1,
+    "terminal_hold_steps": 30,
+    "terminal_hold_time_s_at_60hz": 0.5,
+    "max_peak_to_final_drop_m": 0.03,
+    "max_terminal_lift_range_m": 0.01,
+    "min_terminal_contact_ratio": 1.0
+  },
+  "transport_stability": {
+    "start_after_lift_m": 0.05,
+    "max_palm_relative_translation_change_m": 0.03,
+    "max_palm_relative_rotation_change_deg": 30.0
+  },
+  "training_anatomy_gate": {
+    "linker": "pass_pending_case_review",
+    "xhand": "pass_official_method_and_video_review",
+    "wuji": "quarantine_reverse_distal_flexion_observed_in_video_and_joint_audit"
+  },
+  "interpretation": {
+    "legacy_success": "trajectory once stayed above 10 cm for 30 steps",
+    "stable_physics_success": "legacy gate plus the complete final hold remains lifted, contacted, and nearly stationary",
+    "transport_quality_success": "stable physics plus object pose changes little relative to the palm after leaving the table",
+    "training_eligible": "transport quality plus the hand-specific anatomical gate"
+  }
+}

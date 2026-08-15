@@ -620,20 +620,55 @@ def compute_success_metrics(
     lift_threshold,
     max_xy_drift,
     sustain_steps,
+    terminal_hold_steps=None,
+    max_peak_to_final_drop=0.03,
+    max_terminal_lift_range=0.01,
+    min_terminal_contact_ratio=1.0,
 ):
-    """从统一物理曲线计算抓取成功与诊断指标。
+    """从统一物理曲线计算终态稳定抓取与诊断指标。
 
-    输入：位置/接触曲线、初始位置、时间步和三个成功阈值。
-    输出：最大/最终抬升、漂移、持续时间、接触统计和成功标志字典。
-    逻辑：同时满足抬升和漂移条件的最长连续区间达到阈值才成功。
-    作用：让不同手的报告共享完全相同、可解释且较严格的成功定义。
+    输入：位置/接触曲线、初始位置、时间步、抬升/漂移阈值，
+    以及末段保持长度、允许回落、末段波动和接触比例。
+    输出：保留旧“曾持续抬起”标志，并增加末段高度、回落、波动、
+    接触和新的稳定成功标志。
+    逻辑：新成功必须曾达到抬升要求，且最后整个保持窗都在阈值上、
+    未明显从峰值掉落、窗内不继续下滑，并保持手物接触。
+    作用：排除“中途越过10 cm后掉落”的伪成功，统一三手新评测口径。
     """
+    positions = np.asarray(positions, dtype=np.float64)
+    contact_counts = np.asarray(contact_counts)
+    if positions.ndim != 2 or positions.shape[1] != 3 or len(positions) == 0:
+        raise ValueError(f"positions必须为非空(T,3)，实际{positions.shape}")
+    if contact_counts.shape != (len(positions),):
+        raise ValueError("接触曲线必须与位置曲线等长")
+    terminal_steps = int(
+        sustain_steps if terminal_hold_steps is None else terminal_hold_steps
+    )
+    if not 1 <= terminal_steps <= len(positions):
+        raise ValueError("末段保持步数必须在1到曲线长度之间")
+    if max_peak_to_final_drop < 0 or max_terminal_lift_range < 0:
+        raise ValueError("允许回落和末段波动不能为负")
+    if not 0 <= min_terminal_contact_ratio <= 1:
+        raise ValueError("末段接触比例必须在[0,1]")
     lift = positions[:, 2] - initial_position[2]
     xy_drift = np.linalg.norm(
         positions[:, :2] - initial_position[None, :2], axis=1
     )
     valid = (lift >= lift_threshold) & (xy_drift <= max_xy_drift)
     sustained_steps = longest_true_run(valid)
+    terminal_lift = lift[-terminal_steps:]
+    terminal_valid = valid[-terminal_steps:]
+    terminal_contacts = contact_counts[-terminal_steps:] > 0
+    legacy_success = bool(sustained_steps >= sustain_steps)
+    peak_to_final_drop = float(lift.max() - lift[-1])
+    terminal_lift_range = float(np.ptp(terminal_lift))
+    terminal_contact_ratio = float(terminal_contacts.mean())
+    terminal_stable = bool(
+        terminal_valid.all()
+        and peak_to_final_drop <= float(max_peak_to_final_drop)
+        and terminal_lift_range <= float(max_terminal_lift_range)
+        and terminal_contact_ratio >= float(min_terminal_contact_ratio)
+    )
     return {
         "initial_object_position_m": initial_position.tolist(),
         "max_lift_m": float(lift.max()),
@@ -647,7 +682,21 @@ def compute_success_metrics(
         "longest_sustained_lift_time_s": float(sustained_steps * dt),
         "hand_object_contact_steps": int((contact_counts > 0).sum()),
         "max_simultaneous_hand_object_contacts": int(contact_counts.max()),
-        "success": bool(sustained_steps >= sustain_steps),
+        "legacy_sustained_success": legacy_success,
+        "success_protocol": "stable_terminal_hold_v1",
+        "terminal_hold_steps": terminal_steps,
+        "terminal_hold_time_s": float(terminal_steps * dt),
+        "terminal_min_lift_m": float(terminal_lift.min()),
+        "terminal_max_lift_m": float(terminal_lift.max()),
+        "terminal_lift_range_m": terminal_lift_range,
+        "peak_to_final_drop_m": peak_to_final_drop,
+        "terminal_contact_steps": int(terminal_contacts.sum()),
+        "terminal_contact_ratio": terminal_contact_ratio,
+        "max_allowed_peak_to_final_drop_m": float(max_peak_to_final_drop),
+        "max_allowed_terminal_lift_range_m": float(max_terminal_lift_range),
+        "min_required_terminal_contact_ratio": float(min_terminal_contact_ratio),
+        "terminal_stable": terminal_stable,
+        "success": bool(legacy_success and terminal_stable),
         "object_positions_m": positions.tolist(),
         "hand_object_contact_count_per_step": contact_counts.tolist(),
     }

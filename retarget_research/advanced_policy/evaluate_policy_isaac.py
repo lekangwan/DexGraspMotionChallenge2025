@@ -233,6 +233,7 @@ def rollout(args):
         metrics = compute_success_metrics(
             positions, initial_position, contacts, args.dt,
             args.lift_threshold, args.max_xy_drift, args.sustain_steps,
+            terminal_hold_steps=args.hold_steps,
         )
         metrics.update(summarize_body_contacts(body_contacts))
         report = {
