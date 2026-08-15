@@ -206,7 +206,7 @@ class ManifestBatchingTest(unittest.TestCase):
                 "final_lift_m": 0.15,
                 "hand_object_contact_steps": 40,
                 "longest_sustained_lift_time_s": 0.5,
-                "success_protocol": "stable_terminal_hold_v1",
+                "success_protocol": "stable_30cm_terminal_hold_v2",
                 "success": True,
             }
             (item / "source_2_geometry.json").write_text(json.dumps(geometry))

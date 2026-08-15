@@ -22,7 +22,7 @@ from scipy.spatial.transform import Rotation
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_CONFIG = (
     PROJECT_ROOT
-    / "retarget_research/retargeting/configs/stable_success_protocol_v1.json"
+    / "retarget_research/retargeting/configs/stable_success_protocol_v2.json"
 )
 DEFAULT_SPLIT = (
     PROJECT_ROOT
@@ -286,12 +286,15 @@ def audit_hand(hand, source_summary, split_by_key, config):
         else None
     )
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "hand": hand,
         "source_summary": str(source_summary.resolve()),
-        "success_protocol": "stable_terminal_and_palm_relative_transport_v1",
+        "success_protocol": "stable_30cm_terminal_and_palm_relative_transport_v2",
         "anatomy_gate": anatomy_value,
         "trajectory_count": len(rows),
+        "source_10cm_success_count": sum(
+            row["legacy_success_from_source"] for row in rows
+        ),
         "legacy_success_count": sum(row["legacy_success_recomputed"] for row in rows),
         "stable_physics_success_count": sum(row["stable_physics_success"] for row in rows),
         "transport_quality_success_count": sum(row["transport_quality_success"] for row in rows),
@@ -311,18 +314,19 @@ def audit_hand(hand, source_summary, split_by_key, config):
 def write_markdown(path, summaries, config_path):
     """把三手旧/终态/运输/可训练数量写成简明中文表格。"""
     lines = [
-        "# 稳定成功轨迹重审 v1",
+        "# 稳定成功轨迹重审 v2",
         "",
         f"协议：`{config_path.resolve()}`",
         "",
-        "| 手 | 旧成功 | 末段稳定 | 运输不滑移 | 当前可训练 | 运输质量覆盖类别/物体 |",
-        "|---|---:|---:|---:|---:|---:|",
+        "| 手 | 原10 cm旧报告 | 曾连续达到30 cm | 末段稳定30 cm | 运输不滑移 | 当前可训练 | 运输质量覆盖类别/物体 |",
+        "|---|---:|---:|---:|---:|---:|---:|",
     ]
     for hand in ("linker", "xhand", "wuji"):
         item = summaries[hand]
         total = item["trajectory_count"]
         lines.append(
-            f"| {hand} | {item['legacy_success_count']}/{total} | "
+            f"| {hand} | {item['source_10cm_success_count']}/{total} | "
+            f"{item['legacy_success_count']}/{total} | "
             f"{item['stable_physics_success_count']}/{total} | "
             f"{item['transport_quality_success_count']}/{total} | "
             f"{item['training_eligible_count']}/{total} | "
@@ -333,7 +337,7 @@ def write_markdown(path, summaries, config_path):
             "",
             "`Wuji`的物理稳定数不等于可用专家数：当前全部被手型门隔离，直到修复远端关节反向弯曲并重放通过。",
             "",
-            "`Linker`的运输质量数才是当前能进模仿学习的上限；不再使用旧的中途越线成功集。",
+            "`Linker`的运输质量数才是当前能进模仿学习的上限；不再使用旧的10 cm中途越线成功集。",
         ]
     )
     wuji_joints = summaries["wuji"]["anatomy_diagnostics"]["per_joint"]
@@ -392,7 +396,8 @@ def main():
             encoding="utf-8",
         )
         print(
-            f"{hand}: legacy={summary['legacy_success_count']}/1000 "
+            f"{hand}: source10cm={summary['source_10cm_success_count']}/1000 "
+            f"reached30cm={summary['legacy_success_count']}/1000 "
             f"stable={summary['stable_physics_success_count']}/1000 "
             f"transport={summary['transport_quality_success_count']}/1000 "
             f"training={summary['training_eligible_count']}/1000",

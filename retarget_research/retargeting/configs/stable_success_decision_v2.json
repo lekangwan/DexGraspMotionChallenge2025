@@ -1,0 +1,44 @@
+{
+  "schema_version": 2,
+  "supersedes": "stable_success_decision_v1.json",
+  "protocol": "stable_success_protocol_v2.json",
+  "correction": "v1 incorrectly used a temporary 10 cm replay threshold; v2 restores the 30 cm task target and requires a stable terminal hold",
+  "source": "formal 50-category, 100-object, 1000-trajectory PhysX reports and aligned traces",
+  "results": {
+    "linker": {
+      "source_10cm_success_count": 234,
+      "reached_30cm_count": 177,
+      "stable_30cm_success_count": 169,
+      "transport_quality_success_count": 136,
+      "training_eligible_count": 136,
+      "train_training_eligible_count": 56,
+      "train_training_eligible_category_count": 28,
+      "decision": "reject current method as final; reopen retargeting and use current trajectories only as initialization"
+    },
+    "xhand": {
+      "source_10cm_success_count": 574,
+      "reached_30cm_count": 520,
+      "stable_30cm_success_count": 516,
+      "transport_quality_success_count": 501,
+      "training_eligible_count": 501,
+      "train_training_eligible_count": 225,
+      "train_training_eligible_category_count": 47,
+      "decision": "retain official retargeting method; rebuild policy data from transport-quality trajectories only"
+    },
+    "wuji": {
+      "source_10cm_success_count": 638,
+      "reached_30cm_count": 586,
+      "stable_30cm_success_count": 581,
+      "transport_quality_success_count": 557,
+      "training_eligible_count": 0,
+      "train_transport_quality_count_before_anatomy_gate": 244,
+      "train_transport_quality_category_count_before_anatomy_gate": 48,
+      "decision": "quarantine all current trajectories; redo retargeting with anatomical flexion bounds and inter-joint coupling before any policy training"
+    }
+  },
+  "pipeline_status": {
+    "advanced_policy": "paused_until_retargeting_data_is_rebuilt",
+    "old_policy_datasets": "historical_diagnostics_only",
+    "old_10cm_success_summaries": "legacy_historical_only"
+  }
+}

@@ -22,7 +22,7 @@ class StableSuccessTest(unittest.TestCase):
     def test_lift_then_drop_keeps_legacy_but_fails_stable_success(self):
         """前30步越线、末30步掉回桌面必须被新口径拒绝。"""
         positions = np.zeros((60, 3), dtype=np.float64)
-        positions[:30, 2] = 0.12
+        positions[:30, 2] = 0.32
         contacts = np.ones(60, dtype=np.int64)
         report = {
             "object_positions_m": positions.tolist(),
@@ -33,7 +33,7 @@ class StableSuccessTest(unittest.TestCase):
         }
         protocol = {
             "terminal_hold_steps": 30,
-            "lift_threshold_m": 0.10,
+            "lift_threshold_m": 0.30,
             "max_peak_to_final_drop_m": 0.03,
             "max_terminal_lift_range_m": 0.01,
             "min_terminal_contact_ratio": 1.0,
@@ -45,7 +45,7 @@ class StableSuccessTest(unittest.TestCase):
     def test_complete_terminal_hold_is_stable_success(self):
         """全程高于阈值、持续接触且无波动的轨迹应通过。"""
         positions = np.zeros((60, 3), dtype=np.float64)
-        positions[:, 2] = 0.12
+        positions[:, 2] = 0.32
         report = {
             "object_positions_m": positions.tolist(),
             "initial_object_position_m": [0.0, 0.0, 0.0],
@@ -55,7 +55,7 @@ class StableSuccessTest(unittest.TestCase):
         }
         protocol = {
             "terminal_hold_steps": 30,
-            "lift_threshold_m": 0.10,
+            "lift_threshold_m": 0.30,
             "max_peak_to_final_drop_m": 0.03,
             "max_terminal_lift_range_m": 0.01,
             "min_terminal_contact_ratio": 1.0,

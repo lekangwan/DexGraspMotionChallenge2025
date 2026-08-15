@@ -342,7 +342,7 @@ def main():
         help="5个从动IP/DIP轴的位置刚度；降低后允许接触自适应",
     )
     parser.add_argument("--mimic-damping", type=float, default=5.0)
-    parser.add_argument("--lift-threshold", type=float, default=0.10)
+    parser.add_argument("--lift-threshold", type=float, default=0.30)
     parser.add_argument("--max-xy-drift", type=float, default=0.25)
     parser.add_argument("--sustain-steps", type=int, default=30)
     parser.add_argument(

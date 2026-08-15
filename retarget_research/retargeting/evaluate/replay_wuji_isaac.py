@@ -304,7 +304,7 @@ def main():
     parser.add_argument("--object-friction", type=float, default=1.0)
     parser.add_argument("--finger-stiffness", type=float, default=120.0)
     parser.add_argument("--finger-damping", type=float, default=5.0)
-    parser.add_argument("--lift-threshold", type=float, default=0.10)
+    parser.add_argument("--lift-threshold", type=float, default=0.30)
     parser.add_argument("--max-xy-drift", type=float, default=0.25)
     parser.add_argument("--sustain-steps", type=int, default=30)
     parser.add_argument(
