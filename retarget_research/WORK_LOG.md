@@ -948,3 +948,11 @@
 - Diffusion继续作为同一离线+Online-R1聚合数据上的动作片段对照；不把噪声MSE与回归动作MSE横向比较。完整阶段、超参数理由、valid选择和test一次规则写入`advanced_policy/FULL_PIPELINE_PLAN.md`及`configs/full_pipeline_v1.json`。
 - 新增两条可续跑总入口：`run_offline_distillation_stage.py`负责单手第二seed、Soup、类别教师、标签和T100/T70学生；`run_online_r1_temporal_diffusion.py`在valid冻结学生后负责50条在线采集、Online-R1、Temporal3和Diffusion。三手相互独立，可由用户并行运行；超3分钟的PhysX阶段仍不由Codex后台启动。
 - 进阶策略测试现为23项并全部通过，新增覆盖类别教师安全回退、学生混合标签、Temporal无损初始化和在线历史动作语义；所有新增模块/函数均有中文输入、输出、内部逻辑与作用说明。
+
+### 三手离线蒸馏完成与统一学生闭环选择入口
+
+- 用户并行完成三只手离线阶段，全部生成第二seed BC、等权Soup、共享类别教师、train/valid教师标签和T100/T70统一学生，没有Traceback、缺文件或部分阶段残留。第二seed BC验证MSE为Linker 0.02211、XHand 0.03590、Wuji 0.04912，与第一seed处于相同量级。
+- 类别教师自身验证MSE为0.03333/0.04909/0.07514；T100为0.00810/0.01203/0.01696，T70为0.00502/0.00802/0.01122。学生loss更低主要因为教师标签比原多模态演示更平滑；T70和T100的target定义不同，不能直接用两个loss数值选择最终学生。
+- 三手类别教师均在第2–3轮取得最佳并很快早停，说明共享Soup初始化已经接近其离线最优，后续类别残差继续拟合会增加valid误差。这是合理的过拟合信号，不追加epoch或扩大类别头。
+- 新增`run/run_student_valid_selection.py`。对每只手的T100/T70分别在相同50类valid轨迹上闭环；每类按冻结排序只取第一条，严格不访问test。自动排名依次使用类别宏成功率、轨迹成功率、平均最终抬升和平均接触步，并输出唯一`selected_checkpoint`供Online-R1使用。
+- 该轮每只手共100条PhysX，是用户此前接受的上限；三只手可并行，单手内部顺序运行T100/T70并支持单轨迹续跑。只有完成这一选择后才允许开始Online-R1，避免用在线采集结果反选离线学生。
