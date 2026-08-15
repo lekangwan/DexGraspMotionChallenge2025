@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "policy_split": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy/data/formal_v1/policy_split_seed20260813.json",
+  "success_train_counts": {
+    "linker": 109,
+    "xhand": 256,
+    "wuji": 270
+  },
+  "common_success_pool_count": 86,
+  "selected_common_keys": [
+    [
+      "sem-Stapler-988004d506b3b75e5e40cf2ee4f6ead",
+      17
+    ],
+    [
+      "core-can-eac30c41aad2ff27c0ca8d7a07be3be",
+      28
+    ],
+    [
+      "sem-CerealBox-7685495f6e5aac1339a00425b5e3771a",
+      35
+    ],
+    [
+      "sem-FileCabinet-75fe06475f7b7241920de219c00d1c3b",
+      11
+    ],
+    [
+      "sem-TissueBox-13a913b33fb29f7741f9f28bc4fa9522",
+      17
+    ],
+    [
+      "sem-WineBottle-f331ad8d0e6654ef8f992b1fe7075c8f",
+      10
+    ],
+    [
+      "sem-Canister-abeaed132c7266b73e9c38134dedd15c",
+      32
+    ],
+    [
+      "sem-Pan-d9560bfc0c051109f54e1b6f41fdd78a",
+      22
+    ],
+    [
+      "sem-TapeDispenser-4674032e53b9fd37c1935c9110af1bff",
+      39
+    ],
+    [
+      "sem-Watch-3a5351666689a7b2b788559e93c74a0f",
+      37
+    ]
+  ],
+  "per_hand_selected_count": {
+    "linker": 20,
+    "xhand": 20,
+    "wuji": 20
+  },
+  "video_root": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy/videos/expert_success_v1"
+}

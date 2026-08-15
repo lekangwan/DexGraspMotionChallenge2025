@@ -120,6 +120,33 @@ def software_command(group, index, item, manifest_entries, output_dir, summary_k
     return command, video
 
 
+def reusable_video(video, item, renderer):
+    """检查已有视频是否可安全续跑复用。
+
+    输入：MP4路径、选择项和渲染器类型。
+    输出：布尔值。
+    内部逻辑：软件渲染只核对非空视频；Isaac还读取同名JSON，核对物体、源索引、
+    成功标签、视频帧数和文件路径，避免半截MP4被误当完成。
+    作用：60条长录像中断后可以原命令续跑，而不用重录已完成案例。
+    """
+    if not video.is_file() or video.stat().st_size <= 1024:
+        return False
+    if renderer == "software":
+        return True
+    report_path = video.with_suffix(".json")
+    if not report_path.is_file():
+        return False
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    return (
+        report.get("object_name") == item["object_name"]
+        and int(report.get("source_trajectory_index", -1))
+        == int(item["source_trajectory_index"])
+        and bool(report.get("success")) == bool(item.get("success", report.get("success")))
+        and int(report.get("video_frame_count", 0)) > 0
+        and Path(report.get("video", "")).resolve() == video.resolve()
+    )
+
+
 def main():
     """生成渲染计划，可选顺序执行并保存每条退出状态。"""
     parser = argparse.ArgumentParser()
@@ -130,6 +157,7 @@ def main():
     parser.add_argument("--renderer", choices=["auto", "software", "isaac"], default="auto")
     parser.add_argument("--diffusion-execute-steps", type=int, default=2)
     parser.add_argument("--execute", action="store_true")
+    parser.add_argument("--resume", action="store_true")
     args = parser.parse_args()
     selection = json.loads(args.selection.read_text(encoding="utf-8"))
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
@@ -172,14 +200,18 @@ def main():
         }
         print(" ".join(command), flush=True)
         if args.execute:
-            process = subprocess.run(
-                command, check=False, env=render_environment
-            )
-            record["returncode"] = process.returncode
-            record["status"] = "complete" if process.returncode == 0 else "failed"
-            if process.returncode != 0:
-                records.append(record)
-                break
+            if args.resume and reusable_video(video, item, renderer):
+                record["returncode"] = 0
+                record["status"] = "reused"
+            else:
+                process = subprocess.run(
+                    command, check=False, env=render_environment
+                )
+                record["returncode"] = process.returncode
+                record["status"] = "complete" if process.returncode == 0 else "failed"
+                if process.returncode != 0:
+                    records.append(record)
+                    break
         records.append(record)
     plan = {
         "schema_version": 1,
@@ -188,7 +220,8 @@ def main():
         "all_successful": (
             None
             if not args.execute
-            else bool(records) and all(item["status"] == "complete" for item in records)
+            else bool(records)
+            and all(item["status"] in {"complete", "reused"} for item in records)
         ),
         "records": records,
     }

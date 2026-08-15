@@ -21,8 +21,12 @@ from build_embedded_category_map import collect_embedded_records, parse_embedded
 from freeze_formal_experiment import sha256, verify_manifest
 from verify_formal_bundle import verify_lock
 from select_report_cases import choose_cases
+from render_selected_cases import reusable_video
 from render_software_replay import forward_link_positions, parse_urdf_tree, HAND_URDFS
 from export_result_tables import markdown_table, summary_row
+
+sys.path.insert(0, str(RETARGET_ROOT / "advanced_policy" / "prepare"))
+from select_expert_video_audit import build_selections, trajectory_key
 
 
 def make_object_fixture(root, object_id, trajectory_count=2):
@@ -179,6 +183,85 @@ class FormalToolsTest(unittest.TestCase):
             for items in groups.values() for item in items
         ]
         self.assertEqual(len(keys), len(set(keys)))
+
+    def test_expert_video_audit_is_train_only_and_cross_hand_aligned(self):
+        """成功视频审查应每手20条，前10条三手同轨迹且不泄漏test。"""
+        def result(hand, object_name, category, index, quality):
+            """生成具有排序指标的最小成功轨迹记录。"""
+            return {
+                "hand": hand,
+                "object_name": object_name,
+                "category": category,
+                "source_trajectory_index": index,
+                "target_trajectory_index": index,
+                "success": True,
+                "max_lift_m": 0.11 + quality * 0.001,
+                "final_lift_m": quality * 0.001,
+                "max_xy_drift_m": 0.0,
+                "longest_sustained_lift_time_s": 0.5 + quality * 0.01,
+                "hand_object_contact_steps": 30 + quality,
+                "max_simultaneous_hand_object_contacts": 2,
+                "physics_report": f"/{hand}/{object_name}.json",
+            }
+
+        records = []
+        reports = {hand: {"results": []} for hand in ("linker", "xhand", "wuji")}
+        for index in range(12):
+            object_name = f"shared_{index}"
+            records.append(
+                {"object_name": object_name, "source_trajectory_index": index, "split": "train"}
+            )
+            for hand in reports:
+                reports[hand]["results"].append(
+                    result(hand, object_name, f"shared_category_{index}", index, index)
+                )
+        for hand_index, hand in enumerate(reports):
+            for index in range(12):
+                object_name = f"{hand}_only_{index}"
+                records.append(
+                    {"object_name": object_name, "source_trajectory_index": index, "split": "train"}
+                )
+                reports[hand]["results"].append(
+                    result(hand, object_name, f"{hand}_category_{index}", index, index)
+                )
+            test_name = f"{hand}_test_success"
+            records.append(
+                {"object_name": test_name, "source_trajectory_index": 99, "split": "test"}
+            )
+            reports[hand]["results"].append(
+                result(hand, test_name, f"test_category_{hand_index}", 99, 99)
+            )
+
+        selections, common_keys, stats = build_selections({"records": records}, reports)
+        self.assertEqual(stats["common_pool_count"], 12)
+        self.assertEqual(len(common_keys), 10)
+        expected_shared = None
+        for hand, selection in selections.items():
+            self.assertEqual(sum(len(items) for items in selection["groups"].values()), 20)
+            shared = [trajectory_key(item) for item in selection["groups"]["shared_success"]]
+            self.assertEqual(shared, common_keys)
+            self.assertFalse(any("test_success" in item["object_name"] for items in selection["groups"].values() for item in items))
+            expected_shared = shared if expected_shared is None else expected_shared
+            self.assertEqual(shared, expected_shared, hand)
+
+    def test_isaac_video_resume_requires_matching_complete_report(self):
+        """Isaac续跑只能复用非空MP4与完整匹配的同名JSON。"""
+        with tempfile.TemporaryDirectory() as directory:
+            video = Path(directory) / "case.mp4"
+            video.write_bytes(b"0" * 2048)
+            item = {"object_name": "cup", "source_trajectory_index": 7, "success": True}
+            report = {
+                "object_name": "cup",
+                "source_trajectory_index": 7,
+                "success": True,
+                "video_frame_count": 80,
+                "video": str(video.resolve()),
+            }
+            video.with_suffix(".json").write_text(json.dumps(report), encoding="utf-8")
+            self.assertTrue(reusable_video(video, item, "isaac"))
+            report["source_trajectory_index"] = 8
+            video.with_suffix(".json").write_text(json.dumps(report), encoding="utf-8")
+            self.assertFalse(reusable_video(video, item, "isaac"))
 
     def test_software_renderer_forward_kinematics_is_finite(self):
         """三只手6D URDF的零位骨架都应能在纯CPU前向运动学中完整展开。"""
