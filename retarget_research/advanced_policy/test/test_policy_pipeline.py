@@ -20,6 +20,7 @@ from models import ConditionalDiffusionPolicy, MLPBCPolicy, Temporal3BCPolicy, l
 from observations import build_object_shape_descriptor, build_observation_batch
 from runtime import PolicyRunner
 from train import compute_loss, run_epoch
+from evaluate_policy_manifest import build_tasks
 
 
 class PolicyPipelineTest(unittest.TestCase):
@@ -75,6 +76,38 @@ class PolicyPipelineTest(unittest.TestCase):
             sample = dataset[2]
             np.testing.assert_allclose(sample["observation_history"].numpy(), [[9, 9], [9, 9], [9, 9]])
             np.testing.assert_allclose(sample["previous_actions"].numpy(), [[0], [0]])
+
+    def test_closed_loop_tasks_respect_requested_split(self):
+        """valid选择只能读取valid轨迹，最终test也不能混入训练物体轨迹。"""
+        with tempfile.TemporaryDirectory() as directory:
+            target_dir = Path(directory)
+            np.save(
+                target_dir / "object_a.npy",
+                {"source_trajectory_indices": np.asarray([3, 7])},
+                allow_pickle=True,
+            )
+            source = target_dir / "source.npy"
+            object_dir = target_dir / "object_a"
+            manifest = {
+                "entries": [{
+                    "object_name": "object_a",
+                    "category": "cup",
+                    "source_path": str(source),
+                    "object_asset_path": str(object_dir),
+                }]
+            }
+            split = {
+                "records": [
+                    {"split": "valid", "object_name": "object_a", "category": "cup", "source_trajectory_index": 3},
+                    {"split": "test", "object_name": "object_a", "category": "cup", "source_trajectory_index": 7},
+                ]
+            }
+            valid = build_tasks(manifest, split, target_dir, "valid")
+            test = build_tasks(manifest, split, target_dir, "test")
+            self.assertEqual([(item["source_index"], item["target_index"]) for item in valid], [(3, 0)])
+            self.assertEqual([(item["source_index"], item["target_index"]) for item in test], [(7, 1)])
+            with self.assertRaisesRegex(ValueError, "未知策略划分"):
+                build_tasks(manifest, split, target_dir, "unknown")
 
     def test_all_models_preserve_expected_batch_shapes(self):
         """三类策略分别输出一帧动作或固定长度动作片段。"""

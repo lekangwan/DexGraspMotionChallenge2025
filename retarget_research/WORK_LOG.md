@@ -909,3 +909,17 @@
 - Linker BC、Temporal3和Diffusion三条CPU限量冒烟均完成，分别只验证数据读取、前反向传播、checkpoint、CSV和loss图链路；其单epoch验证loss不能用于模型排名。至此基本重定向任务的数据和结果链路正式闭环，下一阶段进入三手正式策略训练与闭环评测。
 - 最终策略数据门已通过：三手对象级train/test物体无交叉，全部NPZ、归一化和映射文件齐全。重定向91项、进阶策略16项单元测试均在`hand-retarget`环境通过；统一Markdown/CSV结果表由`evaluate/export_final_retargeting_results.py`从原始JSON重新生成，避免手工抄数。
 - 当前机器`nvidia-smi`无法连接驱动，PyTorch 2.4.1报告`cuda_available=False`。正式9模型配置本身已就绪，但在GPU恢复前不启动长训练；CPU冒烟已经覆盖三种模型和三只手，不把冒烟loss当正式结果。
+
+### 进阶任务正式单帧BC训练
+
+- 用户终端中的`hand-retarget`环境可使用CUDA，三只手正式BC均完整生成`best.pt`、`last.pt`、逐epoch CSV和loss曲线。Linker/Wuji/XHand墙钟时间分别为42.62/33.47/20.80秒，说明当前策略监督训练的主要时间成本将是闭环物理评测，而不是网络拟合。
+- Linker运行满150轮，最佳为第137轮：train/valid MSE为0.00431/0.02482，valid MAE为0.09857。最后一轮valid MSE为0.02488，与最佳非常接近；当前没有继续延长epoch的证据。
+- Wuji在第49轮取得最佳，train/valid MSE为0.01063/0.04581，valid MAE为0.12179；第69轮由20轮耐心早停。XHand在第25轮最佳，train/valid MSE为0.01079/0.03887，valid MAE为0.11961；第45轮早停。
+- 三手训练loss都明显低于valid loss，已有一定轨迹级泛化差距，因此后续不盲目扩大网络。checkpoint只按valid loss选择；这些标准化空间误差仍不是闭环成功率，必须等对象级未见物体PhysX rollout后才能比较模型好坏。
+
+### Temporal3与Diffusion正式训练完成
+
+- 九组正式训练产物全部齐全且数值有限。Temporal3的Linker/Wuji/XHand最佳轮数为65/45/29，valid动作MSE为0.01125/0.02228/0.01655，相比各自BC的0.02482/0.04581/0.03887分别下降54.7%/51.4%/57.4%。三手均由20轮耐心正常早停，说明短历史对离线动作回归有一致帮助。
+- Diffusion三手都运行满150轮，最佳轮为147/143/142，valid噪声MSE为0.06795/0.10772/0.06821；末轮仍接近最佳且没有发散。该loss的目标是恢复采样噪声，不能与BC/Temporal动作MSE比较，也不能据此宣称Diffusion优于或劣于回归策略。
+- 九个`best.pt`均通过统一`PolicyRunner`实际推理冒烟，包括观测/动作反归一化、Temporal历史缓存和50步Diffusion去噪。后续模型比较必须使用同一物理闭环，而不能比较训练目标不同的loss数值。
+- 为避免在模型选择阶段查看对象级test，`evaluate_policy_manifest.py`新增显式`--split valid/test`。先在训练物体的100条留出轨迹上比较九组闭环结果，每只手冻结唯一模型后，才在50个未见物体的500条test上运行一次最终评测。相关数据边界测试通过，进阶测试总数增至17项。

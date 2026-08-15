@@ -22,7 +22,7 @@
 7. `runtime.py`：看训练模型如何维护历史、反归一化并在每个物理步输出动作。
 8. `evaluate_offline.py`：只检查动作拟合误差，不能当作抓取成功率。
 9. `evaluate_policy_isaac.py`：一条轨迹的真实闭环；除首帧张开手腕初态外不再读取专家未来动作。
-10. `evaluate_policy_manifest.py`：只在对象级test物体上批量汇总微平均、物体宏平均和类别宏平均。
+10. `evaluate_policy_manifest.py`：先用`--split valid`在训练物体的留出轨迹上选择模型，再用`--split test`只在对象级未见物体上汇总最终微平均、物体宏平均和类别宏平均。
 
 ## 三种策略的数据流
 

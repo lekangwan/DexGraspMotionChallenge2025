@@ -24,16 +24,20 @@ import numpy as np
 ROLLOUT_SCRIPT = Path(__file__).resolve().parent / "evaluate_policy_isaac.py"
 
 
-def build_tasks(manifest, policy_split, target_dir):
-    """把test split记录解析为带候选内部索引的闭环任务。
+def build_tasks(manifest, policy_split, target_dir, split_name="test"):
+    """把指定split记录解析为带候选内部索引的闭环任务。
 
-    输入：manifest、策略split和候选目录。
+    输入：manifest、策略split、候选目录和`train/valid/test`名称。
     输出：任务字典列表。
-    内部逻辑：按物体加载一次候选源索引，查找每个test源索引的唯一位置。
-    作用：防止把source trajectory index误当成候选数组内部index。
+    内部逻辑：只保留指定划分，按物体加载一次候选源索引并查找唯一位置。
+    作用：允许先用valid选择策略、最后只用test报告泛化，同时防止索引错配。
     """
+    if split_name not in {"train", "valid", "test"}:
+        raise ValueError(f"未知策略划分: {split_name}")
     entries = {item["object_name"]: item for item in manifest["entries"]}
-    records = [item for item in policy_split["records"] if item["split"] == "test"]
+    records = [
+        item for item in policy_split["records"] if item["split"] == split_name
+    ]
     tasks = []
     cache = {}
     for record in records:
@@ -148,15 +152,16 @@ def main():
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--workers", type=int, default=1)
+    parser.add_argument("--split", choices=["train", "valid", "test"], default="test")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--diffusion-execute-steps", type=int, default=2)
     parser.add_argument("--normalized-action-clip", type=float, default=5.0)
     args = parser.parse_args()
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
     policy_split = json.loads(args.policy_split.read_text(encoding="utf-8"))
-    tasks = build_tasks(manifest, policy_split, args.target_dir)
+    tasks = build_tasks(manifest, policy_split, args.target_dir, args.split)
     if not tasks:
-        raise ValueError("策略split没有test任务")
+        raise ValueError(f"策略split没有{args.split}任务")
     args.output_dir.mkdir(parents=True, exist_ok=True)
     results = []
     started = time.perf_counter()
@@ -171,13 +176,19 @@ def main():
                 flush=True,
             )
     results.sort(key=lambda item: (item["object_name"], item["source_trajectory_index"]))
+    boundaries = {
+        "train": "training trajectories on training objects",
+        "valid": "held-out validation trajectories on training objects",
+        "test": "object-level unseen test objects only",
+    }
     summary = {
         "status": "complete",
         "hand": args.hand,
+        "split": args.split,
         "checkpoint": str(args.checkpoint.resolve()),
         "manifest": str(args.manifest.resolve()),
         "policy_split": str(args.policy_split.resolve()),
-        "evaluation_boundary": "object-level unseen test objects only",
+        "evaluation_boundary": boundaries[args.split],
         "wall_time_seconds": time.perf_counter() - started,
         **summarize(results),
         "results": results,

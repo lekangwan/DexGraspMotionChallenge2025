@@ -351,7 +351,7 @@ trace固定为每条240个60 Hz物理步：70个源帧×每帧3步，再保持30
 
 正式矩阵是三只手各自的单帧BC、Temporal3和条件动作Diffusion，共9个实验。它们使用同一对象split、同一成功专家过滤规则和同一150 epoch上限；以valid loss选`best.pt`，早停耐心20，保留`last.pt`做续训。Diffusion使用3帧状态条件生成8步动作，默认闭环每执行2步重新规划。
 
-## 9. 先离线诊断，再做未见物体闭环评测
+## 9. 先离线诊断和valid闭环选模，再做未见物体闭环评测
 
 离线评估示例（把手和模型名替换为其余8组）：
 
@@ -364,7 +364,16 @@ trace固定为每条240个60 Hz物理步：70个源帧×每帧3步，再保持30
   --device cuda
 ```
 
-离线MAE/RMSE只说明动作拟合，不是抓取成功率。最终闭环示例：
+离线MAE/RMSE只说明动作拟合，不是抓取成功率。九组模型先在训练物体的100条
+留出轨迹上做闭环比较，不能提前根据对象级test选择模型。验证矩阵按单GPU顺序执行，
+支持中断后复用已完成轨迹：
+
+```bash
+bash retarget_research/advanced_policy/run_validation_matrix.sh 2>&1 | \
+  tee retarget_research/advanced_policy/runs/formal_v1/closed_loop_validation.log
+```
+
+每只手根据valid闭环成功率冻结唯一模型后，才运行最终test闭环。示例：
 
 ```bash
 /home/lekangwan/miniconda3/envs/hand-retarget/bin/python \
@@ -372,6 +381,7 @@ trace固定为每条240个60 Hz物理步：70个源帧×每帧3步，再保持30
   --hand xhand \
   --manifest retarget_research/manifests/formal_50c_100o_1000t_seed20260808.json \
   --policy-split retarget_research/advanced_policy/data/formal_v1/policy_split_seed20260813.json \
+  --split test \
   --target-dir retarget_research/outputs/formal_1000/xhand_phase_contact_v2 \
   --checkpoint retarget_research/advanced_policy/runs/formal_v1/xhand_bc_v1/best.pt \
   --data-dir retarget_research/advanced_policy/data/formal_v1/xhand \
