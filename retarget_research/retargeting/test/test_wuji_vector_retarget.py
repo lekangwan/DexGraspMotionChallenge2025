@@ -21,6 +21,8 @@ from retarget_wuji_vectors import (  # noqa: E402
     load_vector_config,
 )
 from run_wuji_vector_manifest import existing_output_matches  # noqa: E402
+sys.path.insert(0, str(RETARGET_ROOT / "evaluate"))
+from evaluate_hand_manifest import geometry_script_for_target  # noqa: E402
 
 
 class WujiVectorRetargetTest(unittest.TestCase):
@@ -64,6 +66,36 @@ class WujiVectorRetargetTest(unittest.TestCase):
                 allow_pickle=True,
             )
             self.assertFalse(existing_output_matches(output, entry, args))
+
+    def test_manifest_selects_vector_geometry_without_affecting_old_wuji(self):
+        """纯向量/接触混合使用向量评估，旧Wuji继续使用15点评估。"""
+        with tempfile.TemporaryDirectory() as directory:
+            vector_path = Path(directory) / "vector.npy"
+            hybrid_path = Path(directory) / "hybrid.npy"
+            legacy_path = Path(directory) / "legacy.npy"
+            np.save(vector_path, {"retarget_method": "dexpilot_style_functional_vectors_v1"}, allow_pickle=True)
+            np.save(
+                hybrid_path,
+                {
+                    "retarget_method": (
+                        "dexpilot_style_functional_vectors_plus_surface_contact_v1"
+                    )
+                },
+                allow_pickle=True,
+            )
+            np.save(legacy_path, {"mapping_semantics": ["palm"]}, allow_pickle=True)
+            self.assertEqual(
+                geometry_script_for_target("wuji", vector_path).name,
+                "evaluate_wuji_vector_geometry.py",
+            )
+            self.assertEqual(
+                geometry_script_for_target("wuji", hybrid_path).name,
+                "evaluate_wuji_vector_geometry.py",
+            )
+            self.assertEqual(
+                geometry_script_for_target("wuji", legacy_path).name,
+                "evaluate_wuji_geometry.py",
+            )
 
 
 if __name__ == "__main__":

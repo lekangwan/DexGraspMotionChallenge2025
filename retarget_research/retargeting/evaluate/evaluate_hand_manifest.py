@@ -45,6 +45,24 @@ HAND_SPECS = {
 }
 
 
+def geometry_script_for_target(hand, target_path):
+    """根据手类型和候选方法选择含义正确的独立几何评估器。
+
+    输入：统一手类型和单个候选npy路径。
+    输出：绝对关键点或功能向量几何脚本路径。
+    内部逻辑：只有明确声明Wuji功能向量v1时切换；其他历史候选保持原入口。
+    作用：避免把新向量语义交给15点评估器，或把两种误差错误混为一谈。
+    """
+    if hand == "wuji":
+        data = np.load(target_path, allow_pickle=True).item()
+        if data.get("retarget_method") in {
+            "dexpilot_style_functional_vectors_v1",
+            "dexpilot_style_functional_vectors_plus_surface_contact_v1",
+        }:
+            return EVALUATE_DIR / "evaluate_wuji_vector_geometry.py"
+    return HAND_SPECS[hand]["geometry"]
+
+
 def verify_target(entry, target_path, hand):
     """核对一个目标手候选与manifest索引、帧数和动作维度。
 
@@ -262,6 +280,9 @@ def load_completed_evaluation(
         "target_trajectory_index": target_index,
         "geometry_report": str(geometry_path.resolve()),
         "physics_report": str(physics_path.resolve()),
+        "geometry_metric_kind": geometry.get(
+            "geometry_metric_kind", "absolute_keypoint_distance_m"
+        ),
         "keypoint_mean_distance_m": geometry["keypoint_mean_distance_m"],
         "keypoint_max_distance_m": geometry["keypoint_max_distance_m"],
         "max_joint_step_l2_rad": geometry["max_joint_step_l2_rad"],
@@ -319,6 +340,7 @@ def evaluate_trajectory(
         if completed is not None:
             return completed
     spec = HAND_SPECS[hand]
+    geometry_script = geometry_script_for_target(hand, target_path)
     source_index = int(entry["trajectory_indices"][target_index])
     item_dir = output_dir / entry["object_name"]
     item_dir.mkdir(parents=True, exist_ok=True)
@@ -336,7 +358,7 @@ def evaluate_trajectory(
     ]
     geometry_command = [
         sys.executable,
-        str(spec["geometry"]),
+        str(geometry_script),
         *common,
         "--output",
         str(geometry_path),
@@ -380,6 +402,9 @@ def evaluate_trajectory(
         "source_trajectory_index": source_index,
         "target_trajectory_index": target_index,
         "geometry_report": str(geometry_path.resolve()),
+        "geometry_metric_kind": geometry.get(
+            "geometry_metric_kind", "absolute_keypoint_distance_m"
+        ),
         "physics_report": str(physics_path.resolve()),
         "keypoint_mean_distance_m": geometry["keypoint_mean_distance_m"],
         "keypoint_max_distance_m": geometry["keypoint_max_distance_m"],
