@@ -23,6 +23,10 @@ from retarget_wuji_vectors import (  # noqa: E402
 from run_wuji_vector_manifest import existing_output_matches  # noqa: E402
 sys.path.insert(0, str(RETARGET_ROOT / "evaluate"))
 from evaluate_hand_manifest import geometry_script_for_target  # noqa: E402
+from analyze_wuji_thumb_nullspace import (  # noqa: E402
+    angle_statistics,
+    displacement_statistics,
+)
 
 
 class WujiVectorRetargetTest(unittest.TestCase):
@@ -96,6 +100,19 @@ class WujiVectorRetargetTest(unittest.TestCase):
                 geometry_script_for_target("wuji", legacy_path).name,
                 "evaluate_wuji_geometry.py",
             )
+
+    def test_thumb_angle_statistics_count_near_ninety(self):
+        """拇指审计应正确统计85–95度区间和92度上界区。"""
+        report = angle_statistics([40.0, 85.0, 90.0, 92.0, 96.0])
+        self.assertAlmostEqual(report["near_85_to_95_ratio"], 3 / 5)
+        self.assertAlmostEqual(report["at_or_above_92_ratio"], 2 / 5)
+        self.assertEqual(report["median_deg"], 90.0)
+
+    def test_thumb_displacement_statistics_convert_to_millimeters(self):
+        """指尖偏移输入为米，报告必须统一转为毫米。"""
+        report = displacement_statistics([0.001, 0.002, 0.003])
+        self.assertAlmostEqual(report["mean_mm"], 2.0)
+        self.assertAlmostEqual(report["maximum_mm"], 3.0)
 
 
 if __name__ == "__main__":

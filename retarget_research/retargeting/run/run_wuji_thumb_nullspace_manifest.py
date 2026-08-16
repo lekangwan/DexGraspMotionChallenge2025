@@ -104,7 +104,7 @@ def main():
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--maxeval", type=int, default=80)
     parser.add_argument("--tip-weight", type=float, default=1.0)
-    parser.add_argument("--neutral-weight", type=float, default=0.02)
+    parser.add_argument("--neutral-weight", type=float, default=0.05)
     parser.add_argument("--temporal-weight", type=float, default=0.01)
     args = parser.parse_args()
     if args.workers < 1:

@@ -1,77 +1,69 @@
 {
-  "purpose": "select_primary_wuji_mapping_after_independent_validation",
-  "selection_manifest": "linker_independent_validation_v1.json",
-  "object_count": 10,
-  "trajectory_count": 20,
-  "development_results": {
-    "mapping_v1_success_count": 6,
-    "mapping_v2_success_count": 7,
-    "trajectory_count": 10
-  },
-  "independent_validation": {
-    "mapping_v1": {
-      "config": "wuji_keypoint_map.json",
-      "success_count": 16,
-      "success_rate": 0.8,
-      "mean_keypoint_distance_m": 0.011821,
-      "mean_max_lift_m": 0.279,
-      "mean_final_lift_m": 0.2724
+  "schema_version": 1,
+  "scope": "Wuji retargeting method selection on frozen train-only 20-category screen",
+  "manifest": "../../manifests/wuji_anatomy_train20_seed20260817.json",
+  "success_protocol": "stable_success_protocol_v2.json",
+  "candidates": {
+    "point_coupled": {
+      "stable_success": 11,
+      "transport_success": 11,
+      "trajectory_count": 20
     },
-    "mapping_v2": {
-      "config": "wuji_keypoint_map_v2.json",
-      "success_count": 12,
-      "success_rate": 0.6,
-      "mean_keypoint_distance_m": 0.001965,
-      "mean_max_lift_m": 0.2122,
-      "mean_final_lift_m": 0.2042
+    "functional_vector": {
+      "stable_success": 7,
+      "transport_success": 6,
+      "trajectory_count": 20
+    },
+    "functional_vector_plus_surface_contact": {
+      "stable_success": 7,
+      "transport_success": 5,
+      "trajectory_count": 20
+    },
+    "point_thumb_tip_nullspace": {
+      "stable_success": 14,
+      "transport_success": 13,
+      "trajectory_count": 20,
+      "thumb_joint4_near_85_to_95_ratio": 0.05714285714285714,
+      "thumb_joint4_at_or_above_92_ratio": 0.0,
+      "thumb_tip_displacement_mean_mm": 0.5402688384056091,
+      "thumb_tip_displacement_p95_mm": 1.2754560351371764,
+      "thumb_tip_displacement_maximum_mm": 1.7704697847366333,
+      "screen_weight": 0.02,
+      "transport_gained_vs_point": [
+        ["sem-Book-c8691c86e110318ef2bc9da1ba799c60", 11],
+        ["sem-SoapBar-351dec75ac0619b1827473663798726a", 15],
+        ["sem-Watch-3a5351666689a7b2b788559e93c74a0f", 37]
+      ],
+      "transport_lost_vs_point": [
+        ["sem-Snowman-def36b8e4538fb74d449cd634c927922", 6]
+      ]
     }
   },
-  "v1_gained_over_v2": [
-    "ddg-kit_ChocSticks2:38",
-    "ddg-kit_CoughDropsLemon:5",
-    "mujoco-Squirt_Strain_Fruit_Basket:32",
-    "sem-Candle-1be58678b919b12bc5fe7f65b41f3b19:2",
-    "sem-Candle-1be58678b919b12bc5fe7f65b41f3b19:26"
-  ],
-  "v1_lost_to_v2": [
-    "mujoco-Canon_Pixma_Ink_Cartridge_Cyan_251:11"
-  ],
-  "selected_primary_mapping": "wuji_keypoint_map.json",
-  "selected_primary_method": "wuji_v1_single_mapping",
-  "optimizer_budget_selection": {
-    "tested_maxeval": [50, 100, 150],
-    "success_counts": [16, 16, 16],
-    "success_sets_identical": true,
-    "mean_keypoint_distance_m": [0.011834188, 0.011821476, 0.011821475],
-    "mean_final_lift_m": [0.27307355, 0.272375392, 0.272455681],
-    "generation_wall_time_seconds": [802.30256, 846.977537, 848.715208],
-    "selected_maxeval": 50,
-    "decision": "三组严格成功数及成功轨迹集合完全相同；50次的0.0127 mm关键点误差差异没有物理意义，且生成时间最低，因此按预先规则选择50。"
+  "selection": "point_thumb_tip_nullspace",
+  "selected_neutral_weight_pending_train20_confirmation": 0.05,
+  "weight_sensitivity_on_worst_train_only_book": {
+    "weight_0.01": {
+      "median_joint4_deg": 87.97,
+      "near_85_to_95_ratio": 0.5571,
+      "maximum_tip_displacement_mm": 0.358
+    },
+    "weight_0.05": {
+      "median_joint4_deg": 84.87,
+      "near_85_to_95_ratio": 0.0,
+      "maximum_tip_displacement_mm": 1.113,
+      "physics_stable_success": true
+    },
+    "weight_0.10": {
+      "median_joint4_deg": 81.38,
+      "near_85_to_95_ratio": 0.0,
+      "maximum_tip_displacement_mm": 1.946,
+      "physics_stable_success": true
+    }
   },
-  "temporal_strength_selection": {
-    "status": "complete",
-    "base_weights": {"joint": 1.0, "translation": 300.0, "rotation": 1.0},
-    "strengths": [0.0, 0.1, 0.3, 1.0],
-    "success_counts": [16, 16, 16, 16],
-    "gained_over_zero": [0, 0, 0, 0],
-    "lost_to_zero": [0, 0, 0, 0],
-    "mean_final_lift_m": [0.27307355, 0.271639577, 0.269697452, 0.267522391],
-    "mean_max_joint_step_l2_rad": [1.966515779, 1.174198949, 0.719218454, 0.582227382],
-    "mean_max_wrist_translation_step_m": [0.011390572, 0.01077705, 0.010695863, 0.010546625],
-    "mean_max_wrist_rotation_step_rad": [0.255945107, 0.15884792, 0.157841027, 0.127746414],
-    "selected_strength": 0.0,
-    "selected_weights": {"joint": 0.0, "translation": 0.0, "rotation": 0.0},
-    "decision": "非零时序约束均明显减小相邻帧跳变，证明约束生效；但四组成功数和成功集合完全相同，且强度增加时平均最终抬升由273.1 mm逐步降至267.5 mm。按成功优先、并列选更弱约束的预定规则，选择0倍。"
-  },
-  "final_parameters": {
-    "mapping_config": "wuji_keypoint_map.json",
-    "maxeval": 50,
-    "translation_bound": 2.0,
-    "source_z_offset": 0.4,
-    "joint_temporal_weight": 0.0,
-    "translation_temporal_weight": 0.0,
-    "rotation_temporal_weight": 0.0
-  },
-  "decision": "Wuji正式方法冻结为单次v1映射、maxeval50和无时序约束。v1在独立20条上相对v2净增4条成功；更高优化预算和非零时序约束都没有增加任何成功轨迹，因此不为更低几何误差或更平滑轨迹支付额外成本。",
-  "statistical_boundary": "该20条已用于方法选择；最终泛化结论等待正式100物体/1000轨迹heldout。"
+  "decision": "rerun the frozen train20 with neutral weight 0.05; promote it to 50 categories only if it preserves the paired physics gain and improves the worst-object thumb audit",
+  "notes": [
+    "No per-trajectory union or physics-result fallback is allowed.",
+    "Optimization losses across point, vector, contact and nullspace objectives are not comparable.",
+    "The 50-category screen must verify both strict transport success and thumb-shape statistics before formal 1000-trajectory generation."
+  ]
 }

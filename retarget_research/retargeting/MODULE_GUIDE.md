@@ -244,6 +244,13 @@ test：检查自由度、索引、维度、梯度和文档完整性
 
 ## Evaluate
 
+### `evaluate/analyze_wuji_thumb_nullspace.py`
+
+- 输入：冻结manifest、拇指零空间候选目录和报告目录。
+- 输出：全局/逐轨迹`finger1_joint4`角度分位、85–95度比例、末10帧统计和指尖偏移JSON/Markdown。
+- 内部逻辑：按manifest核对每个候选的方法名、源索引和形状，再从标准保存列读取拇指末节，指尖偏移使用生成阶段独立正向运动学结果。
+- 作用：把视频中“拇指是否长期折成90度”与物理成功率分开定量，防止只看整体平均掩盖单物体异常。
+
 ### `evaluate/evaluate_candidate_sweep.py`
 
 - 输入：记录hand、manifest、候选目录、评测目录、参数和选择规则的搜索JSON。
