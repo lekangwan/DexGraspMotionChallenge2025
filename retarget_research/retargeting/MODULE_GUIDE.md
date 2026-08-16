@@ -16,6 +16,13 @@ test：检查自由度、索引、维度、梯度和文档完整性
 
 ## Prepare
 
+### `prepare/select_wuji_thumb_video_audit.py`
+
+- 输入：Wuji新旧train50配对比较、0.05物理评测摘要和拇指手型审计。
+- 输出：渲染器可读的12条选择JSON和中文观看索引。
+- 内部逻辑：全选5条新增严格运输成功和3条严格退化；再按近90度比例/中位角选3条不重复最坏接近段，最后从剩余运输成功中选1条零近90度案例。
+- 作用：在正式1000条前同时暴露新方法收益、滑移代价和剩余手型风险，不只展示好看案例。
+
 ### `prepare/visualize_xhand_mapping.py`
 
 - 输入：XHand语义映射JSON、Shadow MJCF、XHand URDF和两只手mesh。

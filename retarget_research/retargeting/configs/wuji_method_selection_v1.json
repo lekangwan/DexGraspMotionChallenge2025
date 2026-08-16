@@ -78,6 +78,23 @@
     ]
   },
   "decision": "freeze neutral weight 0.05 and promote only this deterministic thumb-nullspace method to the frozen 50-category train screen",
+  "train50_confirmation": {
+    "point_coupled_stable_success": 29,
+    "point_coupled_transport_success": 29,
+    "thumb_nullspace_stable_success": 34,
+    "thumb_nullspace_transport_success": 31,
+    "trajectory_count": 50,
+    "thumb_joint4_median_deg": 66.519,
+    "thumb_joint4_near_85_to_95_ratio": 0.025714285714285714,
+    "terminal_10_frame_near_85_to_95_ratio": 0.0,
+    "thumb_tip_displacement_mean_mm": 0.901,
+    "thumb_tip_displacement_p95_mm": 2.172,
+    "thumb_tip_displacement_maximum_mm": 2.994,
+    "transport_gained_vs_point_count": 5,
+    "transport_lost_vs_point_count": 3,
+    "net_transport_gain": 2
+  },
+  "formal_1000_status": "pending targeted 12-video human review of gains, transport regressions and worst remaining thumb approach cases",
   "notes": [
     "No per-trajectory union or physics-result fallback is allowed.",
     "Optimization losses across point, vector, contact and nullspace objectives are not comparable.",
