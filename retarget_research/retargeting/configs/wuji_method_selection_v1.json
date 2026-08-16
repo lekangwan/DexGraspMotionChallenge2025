@@ -40,7 +40,7 @@
     }
   },
   "selection": "point_thumb_tip_nullspace",
-  "selected_neutral_weight_pending_train20_confirmation": 0.05,
+  "selected_neutral_weight": 0.05,
   "weight_sensitivity_on_worst_train_only_book": {
     "weight_0.01": {
       "median_joint4_deg": 87.97,
@@ -60,7 +60,24 @@
       "physics_stable_success": true
     }
   },
-  "decision": "rerun the frozen train20 with neutral weight 0.05; promote it to 50 categories only if it preserves the paired physics gain and improves the worst-object thumb audit",
+  "weight_0.05_train20_confirmation": {
+    "stable_success": 13,
+    "transport_success": 13,
+    "trajectory_count": 20,
+    "thumb_joint4_median_deg": 66.777,
+    "thumb_joint4_near_85_to_95_ratio": 0.009285714285714286,
+    "terminal_10_frame_near_85_to_95_ratio": 0.0,
+    "thumb_tip_displacement_mean_mm": 1.017,
+    "thumb_tip_displacement_p95_mm": 2.173,
+    "thumb_tip_displacement_maximum_mm": 2.949,
+    "transport_gained_vs_weight_0.02": [
+      ["sem-Snowman-def36b8e4538fb74d449cd634c927922", 6]
+    ],
+    "transport_lost_vs_weight_0.02": [
+      ["sem-Watch-3a5351666689a7b2b788559e93c74a0f", 37]
+    ]
+  },
+  "decision": "freeze neutral weight 0.05 and promote only this deterministic thumb-nullspace method to the frozen 50-category train screen",
   "notes": [
     "No per-trajectory union or physics-result fallback is allowed.",
     "Optimization losses across point, vector, contact and nullspace objectives are not comparable.",
