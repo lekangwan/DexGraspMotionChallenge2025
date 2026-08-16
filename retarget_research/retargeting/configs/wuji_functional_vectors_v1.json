@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "name": "wuji_dexpilot_style_functional_vectors_v1",
+  "description": "只使用掌心/指尖功能关系，不对应两只手的内部骨节；每个向量按零姿态长度比自动缩放。",
+  "huber_delta_m": 0.02,
+  "neutral_joint_weight": 0.0025,
+  "previous_joint_weight": 0.01,
+  "pairs": [
+    {"semantic": "palm_to_thumb", "shadow_origin": 0, "shadow_task": 20, "wuji_origin": 0, "wuji_task": 5, "weight": 1.0},
+    {"semantic": "palm_to_index", "shadow_origin": 0, "shadow_task": 4, "wuji_origin": 0, "wuji_task": 10, "weight": 1.0},
+    {"semantic": "palm_to_middle", "shadow_origin": 0, "shadow_task": 8, "wuji_origin": 0, "wuji_task": 15, "weight": 1.0},
+    {"semantic": "palm_to_ring", "shadow_origin": 0, "shadow_task": 12, "wuji_origin": 0, "wuji_task": 20, "weight": 1.0},
+    {"semantic": "palm_to_little", "shadow_origin": 0, "shadow_task": 16, "wuji_origin": 0, "wuji_task": 25, "weight": 1.0},
+    {"semantic": "thumb_to_index", "shadow_origin": 20, "shadow_task": 4, "wuji_origin": 5, "wuji_task": 10, "weight": 1.0},
+    {"semantic": "thumb_to_middle", "shadow_origin": 20, "shadow_task": 8, "wuji_origin": 5, "wuji_task": 15, "weight": 1.0},
+    {"semantic": "thumb_to_ring", "shadow_origin": 20, "shadow_task": 12, "wuji_origin": 5, "wuji_task": 20, "weight": 1.0},
+    {"semantic": "thumb_to_little", "shadow_origin": 20, "shadow_task": 16, "wuji_origin": 5, "wuji_task": 25, "weight": 1.0},
+    {"semantic": "index_to_middle", "shadow_origin": 4, "shadow_task": 8, "wuji_origin": 10, "wuji_task": 15, "weight": 0.5},
+    {"semantic": "middle_to_ring", "shadow_origin": 8, "shadow_task": 12, "wuji_origin": 15, "wuji_task": 20, "weight": 0.5},
+    {"semantic": "ring_to_little", "shadow_origin": 12, "shadow_task": 16, "wuji_origin": 20, "wuji_task": 25, "weight": 0.5}
+  ]
+}
