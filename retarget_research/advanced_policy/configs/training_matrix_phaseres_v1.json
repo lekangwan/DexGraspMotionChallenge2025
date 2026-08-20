@@ -1,0 +1,35 @@
+{
+  "schema_version": 2,
+  "seed": 20260813,
+  "device": "cuda",
+  "common": {
+    "epochs": 150,
+    "batch_size": 512,
+    "num_workers": 4,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "gradient_clip": 1.0,
+    "early_stopping_patience": 20,
+    "minimum_improvement": 1e-06,
+    "category_embedding_dim": 16,
+    "dropout": 0.05
+  },
+  "models": {
+    "phase_residual": {
+      "history": 3,
+      "hidden_dims": [
+        384,
+        384,
+        256
+      ]
+    }
+  },
+  "hands": [
+    "linker",
+    "xhand_official",
+    "wuji_old",
+    "wuji_n005"
+  ],
+  "data_root": "retarget_research/advanced_policy/data/formal_final",
+  "output_root": "retarget_research/advanced_policy/runs/formal_final"
+}

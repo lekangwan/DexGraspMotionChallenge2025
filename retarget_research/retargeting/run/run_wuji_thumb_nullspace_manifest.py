@@ -21,7 +21,7 @@ import time
 import numpy as np
 
 from refine_wuji_thumb_nullspace import METHOD
-from run_wuji_manifest import run_streaming_command
+from run_wuji_manifest import run_streaming_command, verify_entry
 
 
 RUN_DIR = Path(__file__).resolve().parent
@@ -33,7 +33,7 @@ def sha256(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def output_matches(path, initial, indices, args):
+def output_matches(path, initial, source, object_dir, indices, args):
     """检查旧输出是否与本轮输入、索引和参数完全相同。"""
     if not path.is_file():
         return False
@@ -41,6 +41,9 @@ def output_matches(path, initial, indices, args):
         data = np.load(path, allow_pickle=True).item()
         return bool(
             data.get("retarget_method") == METHOD
+            and Path(str(data["source"])).resolve() == source.resolve()
+            and data.get("source_sha256") == sha256(source)
+            and Path(str(data["object_dir"])).resolve() == object_dir.resolve()
             and Path(str(data["initial_target"])).resolve() == initial.resolve()
             and data.get("initial_target_sha256") == sha256(initial)
             and np.array_equal(data["source_trajectory_indices"], indices)
@@ -49,6 +52,13 @@ def output_matches(path, initial, indices, args):
             and float(data["tip_weight"]) == args.tip_weight
             and float(data["neutral_weight"]) == args.neutral_weight
             and float(data["temporal_weight"]) == args.temporal_weight
+            and float(data["source_z_offset"]) == args.source_z_offset
+            and float(data["contact_threshold"]) == args.contact_threshold
+            and int(data["min_contact_tips"]) == args.min_contact_tips
+            and float(data["lift_delta"]) == args.lift_delta
+            and float(data["object_clearance"]) == args.object_clearance
+            and int(data["close_lead_frames"]) == args.close_lead_frames
+            and int(data["grasp_settle_frames"]) == args.grasp_settle_frames
         )
     except (KeyError, OSError, TypeError, ValueError):
         return False
@@ -56,6 +66,10 @@ def output_matches(path, initial, indices, args):
 
 def run_entry(entry, args):
     """对一个物体验证点法基线并生成拇指零空间候选。"""
+    source = verify_entry(entry).resolve()
+    object_dir = Path(entry["object_asset_path"]).resolve()
+    if not object_dir.is_dir():
+        raise FileNotFoundError(f"缺少物体网格目录: {object_dir}")
     indices = np.asarray(entry["trajectory_indices"], dtype=np.int64)
     initial = (args.initial_dir / f"{entry['object_name']}.npy").resolve()
     if not initial.is_file():
@@ -67,14 +81,23 @@ def run_entry(entry, args):
     command = [
         sys.executable, str(REFINE_SCRIPT),
         "--initial-target", str(initial),
+        "--source", str(source),
+        "--object-dir", str(object_dir),
         "--output", str(output),
         "--trajectory-indices", *[str(value) for value in indices],
         "--maxeval", str(args.maxeval),
         "--tip-weight", str(args.tip_weight),
         "--neutral-weight", str(args.neutral_weight),
         "--temporal-weight", str(args.temporal_weight),
+        "--source-z-offset", str(args.source_z_offset),
+        "--contact-threshold", str(args.contact_threshold),
+        "--min-contact-tips", str(args.min_contact_tips),
+        "--lift-delta", str(args.lift_delta),
+        "--object-clearance", str(args.object_clearance),
+        "--close-lead-frames", str(args.close_lead_frames),
+        "--grasp-settle-frames", str(args.grasp_settle_frames),
     ]
-    if args.resume and output_matches(output, initial, indices, args):
+    if args.resume and output_matches(output, initial, source, object_dir, indices, args):
         return {
             "object_name": entry["object_name"], "trajectory_indices": indices.tolist(),
             "trajectory_count": len(indices), "output": str(output.resolve()),
@@ -106,6 +129,13 @@ def main():
     parser.add_argument("--tip-weight", type=float, default=1.0)
     parser.add_argument("--neutral-weight", type=float, default=0.05)
     parser.add_argument("--temporal-weight", type=float, default=0.01)
+    parser.add_argument("--source-z-offset", type=float, default=0.4)
+    parser.add_argument("--contact-threshold", type=float, default=0.02)
+    parser.add_argument("--min-contact-tips", type=int, default=2)
+    parser.add_argument("--lift-delta", type=float, default=0.03)
+    parser.add_argument("--object-clearance", type=float, default=0.005)
+    parser.add_argument("--close-lead-frames", type=int, default=6)
+    parser.add_argument("--grasp-settle-frames", type=int, default=3)
     args = parser.parse_args()
     if args.workers < 1:
         parser.error("--workers必须为正整数")
@@ -135,6 +165,13 @@ def main():
         "parameters": {
             "maxeval": args.maxeval, "tip_weight": args.tip_weight,
             "neutral_weight": args.neutral_weight, "temporal_weight": args.temporal_weight,
+            "source_z_offset": args.source_z_offset,
+            "contact_threshold": args.contact_threshold,
+            "min_contact_tips": args.min_contact_tips,
+            "lift_delta": args.lift_delta,
+            "object_clearance": args.object_clearance,
+            "close_lead_frames": args.close_lead_frames,
+            "grasp_settle_frames": args.grasp_settle_frames,
         },
         "results": results,
     }

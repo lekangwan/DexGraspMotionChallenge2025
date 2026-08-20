@@ -55,7 +55,7 @@ class IsaacCameraRecorder:
         properties = gymapi.CameraProperties()
         properties.width = self.width
         properties.height = self.height
-        properties.horizontal_fov = 65.0
+        properties.horizontal_fov = 50.0
         properties.enable_tensors = False
         self.camera = gym.create_camera_sensor(env, properties)
         if int(self.camera) < 0:
@@ -66,8 +66,8 @@ class IsaacCameraRecorder:
         gym.set_camera_location(
             self.camera,
             env,
-            gymapi.Vec3(0.75, -0.75, 0.55),
-            gymapi.Vec3(0.0, 0.0, 0.20),
+            gymapi.Vec3(0.38, -0.38, 0.30),
+            gymapi.Vec3(0.0, 0.0, 0.16),
         )
         self.output = Path(output_path).resolve()
         self.output.parent.mkdir(parents=True, exist_ok=True)

@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "summary_kind": "policy",
+  "selection_rule": "one terminal-stable success and one lift-then-slip failure per final hand; selected deterministically from the 500-task unseen-object evaluation",
+  "runtime_by_hand": {
+    "linker": {
+      "expert_wrist": true,
+      "residual_rl_checkpoint": "retarget_research/advanced_policy/runs/residual_rl_general/linker/residual_ppo_0300.pt"
+    },
+    "xhand": {
+      "expert_wrist": true,
+      "residual_rl_checkpoint": "retarget_research/advanced_policy/runs/residual_rl_general/xhand_official/residual_ppo_0300.pt"
+    },
+    "wuji": {
+      "expert_wrist": true,
+      "residual_rl_checkpoint": "retarget_research/advanced_policy/runs/residual_rl_general/wuji_old/residual_ppo_0300.pt"
+    }
+  },
+  "groups": {
+    "stable_success": [
+      {
+        "hand": "linker",
+        "object_name": "sem-Headphones-aa87f1cb1632a08f2764cfba57a5de73",
+        "source_trajectory_index": 13,
+        "success": true,
+        "max_lift_m": 0.330,
+        "final_lift_m": 0.330,
+        "selection_reason": "lowest terminal lift range among Linker successes",
+        "report": "retarget_research/advanced_policy/runs/residual_rl_general/linker_policy_eval_test/sem-Headphones-aa87f1cb1632a08f2764cfba57a5de73/source_13.json"
+      },
+      {
+        "hand": "xhand",
+        "object_name": "sem-Piano-ce4945cde785aecb478fa0ab37c461c6",
+        "source_trajectory_index": 35,
+        "success": true,
+        "max_lift_m": 0.339,
+        "final_lift_m": 0.339,
+        "selection_reason": "lowest terminal lift range among XHand successes",
+        "report": "retarget_research/advanced_policy/runs/residual_rl_general/xhand_official_policy_eval_test/sem-Piano-ce4945cde785aecb478fa0ab37c461c6/source_35.json"
+      },
+      {
+        "hand": "wuji",
+        "object_name": "sem-Blender-dd06add5426f69ddc9c603cb0476780f",
+        "source_trajectory_index": 7,
+        "success": true,
+        "max_lift_m": 0.329,
+        "final_lift_m": 0.329,
+        "selection_reason": "lowest terminal lift range among Wuji successes",
+        "report": "retarget_research/advanced_policy/runs/residual_rl_general/wuji_old_policy_eval_test/sem-Blender-dd06add5426f69ddc9c603cb0476780f/source_7.json"
+      }
+    ],
+    "lift_then_slip_failure": [
+      {
+        "hand": "linker",
+        "object_name": "sem-CerealBox-2ee85d45fe615a734322eb6f7ad3b3a2",
+        "source_trajectory_index": 30,
+        "success": false,
+        "max_lift_m": 0.370,
+        "final_lift_m": -0.028,
+        "selection_reason": "largest peak-to-final drop among Linker failures that crossed 30 cm",
+        "report": "retarget_research/advanced_policy/runs/residual_rl_general/linker_policy_eval_test/sem-CerealBox-2ee85d45fe615a734322eb6f7ad3b3a2/source_30.json"
+      },
+      {
+        "hand": "xhand",
+        "object_name": "sem-Fruit-473758ca6cb0506ee7697d561711bd2b",
+        "source_trajectory_index": 16,
+        "success": false,
+        "max_lift_m": 0.383,
+        "final_lift_m": -0.019,
+        "selection_reason": "representative XHand lift-then-slip failure without launch-like outlier motion",
+        "report": "retarget_research/advanced_policy/runs/residual_rl_general/xhand_official_policy_eval_test/sem-Fruit-473758ca6cb0506ee7697d561711bd2b/source_16.json"
+      },
+      {
+        "hand": "wuji",
+        "object_name": "sem-Clock-cca5dddf86affe9a23522985f649a9ae",
+        "source_trajectory_index": 13,
+        "success": false,
+        "max_lift_m": 0.394,
+        "final_lift_m": 0.019,
+        "selection_reason": "largest peak-to-final drop among Wuji failures that crossed 30 cm",
+        "report": "retarget_research/advanced_policy/runs/residual_rl_general/wuji_old_policy_eval_test/sem-Clock-cca5dddf86affe9a23522985f649a9ae/source_13.json"
+      }
+    ]
+  }
+}

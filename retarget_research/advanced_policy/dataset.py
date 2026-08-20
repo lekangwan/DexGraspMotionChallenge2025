@@ -34,7 +34,7 @@ class TargetHandPolicyDataset(Dataset):
         内部逻辑：按trajectory_id收集全局索引；拒绝非连续重复ID和未知模式。
         作用：训练循环无需了解NPZ布局即可安全抽样；统一学生可在同一索引读取教师动作。
         """
-        if mode not in {"bc", "phase_residual", "temporal3", "diffusion"}:
+        if mode not in {"bc", "phase_residual", "phase_residual_temporal", "temporal3", "diffusion"}:
             raise ValueError(f"未知数据模式: {mode}")
         if mode == "temporal3" and int(history) != 3:
             raise ValueError("Temporal3的history必须严格等于3")
@@ -86,24 +86,31 @@ class TargetHandPolicyDataset(Dataset):
         self.previous_commands = None
         self.action_deltas = None
         self.phase = None
-        if self.mode == "phase_residual":
+        if self.mode in ("phase_residual", "phase_residual_temporal"):
             required = {"action_delta_mean", "action_delta_std"}
             missing = required - set(self.normalization)
             if missing:
                 raise ValueError(f"残差策略缺少训练增量统计: {sorted(missing)}")
-            previous_raw = np.empty_like(self.data["actions"], dtype=np.float32)
+            if "previous_commands" in self.data:
+                previous_raw = self.data["previous_commands"].astype(np.float32)
+                if previous_raw.shape != self.data["actions"].shape:
+                    raise ValueError("previous_commands与actions形状不一致")
+            else:
+                previous_raw = np.empty_like(self.data["actions"], dtype=np.float32)
             phase = np.empty((len(self.actions), 1), dtype=np.float32)
             is_hold = self.data.get(
                 "is_hold", np.zeros(len(self.actions), dtype=bool)
             ).astype(bool)
+            if "previous_commands" not in self.data:
+                for indices in self.trajectory_indices.values():
+                    if len(indices) < 2:
+                        raise ValueError("残差策略每条轨迹至少需要两个动作")
+                    raw = self.data["actions"][indices]
+                    # 专家trace首步是张开初态到第0帧的1/3线性插值，故由前两步
+                    # `open = 2*a0-a1`精确恢复episode真正的上一命令。
+                    previous_raw[indices[0]] = 2.0 * raw[0] - raw[1]
+                    previous_raw[indices[1:]] = raw[:-1]
             for indices in self.trajectory_indices.values():
-                if len(indices) < 2:
-                    raise ValueError("残差策略每条轨迹至少需要两个动作")
-                raw = self.data["actions"][indices]
-                # 专家trace首步是张开初态到第0帧的1/3线性插值，故由前两步
-                # `open = 2*a0-a1`精确恢复episode真正的上一命令。
-                previous_raw[indices[0]] = 2.0 * raw[0] - raw[1]
-                previous_raw[indices[1:]] = raw[:-1]
                 non_hold = int(np.count_nonzero(~is_hold[indices]))
                 motion_denominator = max(non_hold - 1, 1)
                 phase[indices, 0] = np.minimum(
@@ -147,7 +154,7 @@ class TargetHandPolicyDataset(Dataset):
         作用：让训练脚本只根据model_type选择loss，而不重复窗口逻辑。
         """
         category = torch.tensor(self.data["category_id"][index], dtype=torch.long)
-        if self.mode == "phase_residual":
+        if self.mode in ("phase_residual",):
             return {
                 "observations": torch.from_numpy(self.observations[index]).float(),
                 "previous_actions": torch.from_numpy(
@@ -169,6 +176,29 @@ class TargetHandPolicyDataset(Dataset):
                 ).float()
             return sample
         history_indices = self._window_indices(index, self.history - 1, 0)
+        if self.mode == "phase_residual_temporal":
+            trajectory_id = int(self.data["trajectory_id"][index])
+            indices = self.trajectory_indices[trajectory_id]
+            local = int(self.local_position[index])
+            previous_actions = []
+            for offset in range(-(self.history - 1), 0):
+                previous_local = local + offset
+                previous_actions.append(
+                    np.zeros(self.actions.shape[1], dtype=np.float32)
+                    if previous_local < 0
+                    else self.previous_commands[indices[previous_local]]
+                )
+            return {
+                "observation_history": torch.from_numpy(
+                    self.observations[history_indices]
+                ).float(),
+                "previous_actions": torch.from_numpy(
+                    np.stack(previous_actions)
+                ).float(),
+                "phase": torch.from_numpy(self.phase[index]).float(),
+                "action_deltas": torch.from_numpy(self.action_deltas[index]).float(),
+                "category_id": category,
+            }
         if self.mode == "temporal3":
             trajectory_id = int(self.data["trajectory_id"][index])
             indices = self.trajectory_indices[trajectory_id]

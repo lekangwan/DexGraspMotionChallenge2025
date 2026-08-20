@@ -12,9 +12,11 @@ conda activate hand-retarget
 
 从参考数据中只取一个物体的一条轨迹，XHand SLSQP运行70帧并成功保存 `(1,70,18)` 输出。正式测试将 `iter_num` 从2恢复到100，并使用冻结manifest。
 
-## 当前未通过项
+## 最终验证状态
 
-`nvidia-smi`无法连接驱动，`torch.cuda.is_available()`为False，因此Isaac Gym物理重放尚未验证。系统存在CUDA 12.1 Conda工具链，但shell没有系统级 `nvcc`；TorchSDF和PyTorch3D在克隆环境中已有预编译包，若后续出现符号错误，不应直接覆盖安装，而应先记录torch/CUDA/扩展版本再统一重建。
+用户终端中的NVIDIA RTX 4060 Laptop GPU可用，PyTorch网络训练使用CUDA；Residual PPO三手各300轮训练已经完成。Isaac Gym接触仿真统一使用CPU PhysX，以避免把网络训练设备和物理设备混为一谈；GPU图形设备只用于报告视频的Isaac相机渲染。
+
+正式机器CPU为Intel Core i7-14650HX。最终软件与checkpoint哈希见`reports/FINAL_EXPERIMENT_METADATA.json`。Codex沙箱有时无法访问NVIDIA驱动，这只影响沙箱内探测，不代表用户终端或正式实验没有使用GPU。
 
 ## 正式预检
 
@@ -27,10 +29,9 @@ python retarget_research/scripts/preflight.py \
   --output retarget_research/logs/preflight.json
 ```
 
-GPU恢复后还要单独执行：
+需要重新部署时可执行：
 
 ```bash
 python -c "import isaacgym; from isaacgym import gymapi; import torch; print(torch.cuda.is_available(), torch.cuda.device_count())"
 python /home/lekangwan/isaacgym/python/examples/joint_monkey.py
 ```
-

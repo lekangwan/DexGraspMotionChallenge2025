@@ -19,7 +19,7 @@
   "training_anatomy_gate": {
     "linker": "pass_pending_case_review",
     "xhand": "pass_official_method_and_video_review",
-    "wuji": "quarantine_reverse_distal_flexion_observed_in_video_and_joint_audit"
+    "wuji": "pass_empirical_training_validation"
   },
   "timing_contract": {
     "source_trajectory_frames": 70,

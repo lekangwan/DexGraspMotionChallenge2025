@@ -29,6 +29,7 @@ try:
         ConditionalDiffusionPolicy,
         MLPBCPolicy,
         PhaseResidualPolicy,
+        PhaseResidualTemporalPolicy,
         SharedCategoryExpertPolicy,
         Temporal3BCPolicy,
         initialize_category_expert_from_bc,
@@ -41,6 +42,7 @@ except ImportError:
         ConditionalDiffusionPolicy,
         MLPBCPolicy,
         PhaseResidualPolicy,
+        PhaseResidualTemporalPolicy,
         SharedCategoryExpertPolicy,
         Temporal3BCPolicy,
         initialize_category_expert_from_bc,
@@ -101,6 +103,8 @@ def build_model(config, observation_dim, action_dim, category_count):
         return MLPBCPolicy(**common)
     if model_type == "phase_residual":
         return PhaseResidualPolicy(**common)
+    if model_type == "phase_residual_temporal":
+        return PhaseResidualTemporalPolicy(**common)
     if model_type == "category_teacher":
         return SharedCategoryExpertPolicy(
             observation_dim=observation_dim,
@@ -193,13 +197,21 @@ def compute_loss(
             target = weight * batch["teacher_actions"] + (1.0 - weight) * batch["actions"]
         else:
             target = batch["actions"]
-    elif model_type == "phase_residual":
-        prediction = model(
-            batch["observations"],
-            batch["previous_actions"],
-            batch["phase"],
-            batch["category_id"],
-        )
+    elif model_type in ("phase_residual", "phase_residual_temporal"):
+        if model_type == "phase_residual_temporal":
+            prediction = model(
+                batch["observation_history"],
+                batch["previous_actions"],
+                batch["phase"],
+                batch["category_id"],
+            )
+        else:
+            prediction = model(
+                batch["observations"],
+                batch["previous_actions"],
+                batch["phase"],
+                batch["category_id"],
+            )
         target = batch["action_deltas"]
     elif model_type == "temporal3":
         prediction = model(
@@ -262,6 +274,11 @@ def run_epoch(
                 break
             if training:
                 optimizer.zero_grad(set_to_none=True)
+            if training and model_type == "phase_residual":
+                batch["observations"] = (
+                    batch["observations"]
+                    + 0.05 * torch.randn_like(batch["observations"])
+                )
             loss, mae = compute_loss(
                 model,
                 batch,
@@ -353,9 +370,12 @@ def restore_checkpoint(
     scheduler.load_state_dict(payload["scheduler_state"])
     random.setstate(payload["python_random_state"])
     np.random.set_state(payload["numpy_random_state"])
-    torch.set_rng_state(payload["torch_random_state"])
-    if torch.cuda.is_available() and payload.get("cuda_random_state") is not None:
-        torch.cuda.set_rng_state_all(payload["cuda_random_state"])
+    try:
+        torch.set_rng_state(payload["torch_random_state"])
+        if torch.cuda.is_available() and payload.get("cuda_random_state") is not None:
+            torch.cuda.set_rng_state_all(payload["cuda_random_state"])
+    except (TypeError, RuntimeError) as exc:
+        print(f"警告: RNG状态恢复失败({exc})，退化为非严格续训", flush=True)
     if "data_loader_generator_state" not in payload:
         raise ValueError("旧checkpoint缺少DataLoader随机状态，不能作为严格续训输入")
     data_loader_generator.set_state(payload["data_loader_generator_state"])

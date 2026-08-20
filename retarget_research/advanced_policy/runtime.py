@@ -186,7 +186,7 @@ class PolicyRunner:
             raise ValueError(f"初始动作维度错误: {self.previous_command.shape}")
         if self.action_rate_limit_scale > 0.0 and self.previous_command is None:
             raise ValueError("启用动作限速时必须提供initial_action")
-        if self.model_type == "phase_residual" and self.previous_command is None:
+        if self.model_type in ("phase_residual", "phase_residual_temporal") and self.previous_command is None:
             raise ValueError("phase_residual必须提供episode初始动作")
         for _ in range(self.history):
             self.observation_history.append(normalized.copy())
@@ -212,6 +212,8 @@ class PolicyRunner:
             action = self.model(tensor, category)[0].cpu().numpy()
         elif self.model_type == "phase_residual":
             tensor = torch.from_numpy(normalized[None]).to(self.device)
+            if self.previous_command is None:
+                self.previous_command = self.normalization["action_mean"].copy()
             previous = torch.from_numpy(
                 self.normalize_action(self.previous_command)[None]
             ).to(self.device)
@@ -222,9 +224,56 @@ class PolicyRunner:
                 [[phase_value]], dtype=torch.float32, device=self.device
             )
             delta = self.model(tensor, previous, phase, category)[0].cpu().numpy()
-            command = self.previous_command + self.denormalize_action_delta(delta)
+            raw_delta = self.denormalize_action_delta(delta)
+            if "action_phase_delta_limits" in self.normalization:
+                limits = self.normalization["action_phase_delta_limits"]
+                bin_count = len(limits) - 1
+                bin_index = min(
+                    int(phase_value * bin_count), bin_count
+                )
+                raw_delta = np.clip(raw_delta, -limits[bin_index], limits[bin_index])
+            command = self.previous_command + raw_delta
+            if "action_phase_position_envelope" in self.normalization:
+                envelope = self.normalization["action_phase_position_envelope"]
+                bin_count = len(envelope) - 1
+                bin_index = min(int(phase_value * bin_count), bin_count)
+                command = command.copy()
+                command[:3] = np.clip(
+                    command[:3], envelope[bin_index, 0], envelope[bin_index, 1])
             self.previous_command = command.copy()
             self.phase_step += 1
+            if self.model_type == "phase_residual_temporal":
+                self.previous_actions.append(self.normalize_action(command))
+            return command
+        elif self.model_type == "phase_residual_temporal":
+            tensor = torch.from_numpy(
+                np.stack(self.observation_history)[None]).to(self.device)
+            previous = torch.from_numpy(
+                np.stack(self.previous_actions)[None]).to(self.device)
+            phase_value = min(
+                self.phase_step / float(self.motion_steps - 1), 1.0
+            )
+            phase = torch.tensor(
+                [[phase_value]], dtype=torch.float32, device=self.device
+            )
+            delta = self.model(tensor, previous, phase, category)[0].cpu().numpy()
+            raw_delta = self.denormalize_action_delta(delta)
+            if "action_phase_delta_limits" in self.normalization:
+                limits = self.normalization["action_phase_delta_limits"]
+                bin_count = len(limits) - 1
+                bin_index = min(int(phase_value * bin_count), bin_count)
+                raw_delta = np.clip(raw_delta, -limits[bin_index], limits[bin_index])
+            command = self.previous_command + raw_delta
+            if "action_phase_position_envelope" in self.normalization:
+                envelope = self.normalization["action_phase_position_envelope"]
+                bin_count = len(envelope) - 1
+                bin_index = min(int(phase_value * bin_count), bin_count)
+                command = command.copy()
+                command[:3] = np.clip(
+                    command[:3], envelope[bin_index, 0], envelope[bin_index, 1])
+            self.previous_command = command.copy()
+            self.phase_step += 1
+            self.previous_actions.append(self.normalize_action(command))
             return command
         elif self.model_type == "temporal3":
             observations = torch.from_numpy(np.stack(self.observation_history)[None]).to(self.device)

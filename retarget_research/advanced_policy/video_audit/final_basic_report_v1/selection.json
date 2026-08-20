@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "summary_kind": "expert_replay",
+  "selection_rule": "formal retargeting traces; one stable success and one strict-30cm failure per hand",
+  "groups": {
+    "stable_success": [
+      {
+        "hand": "linker",
+        "object_name": "sem-Dog-35f73ca2716aefcfbeccafa1b3b5f850",
+        "source_trajectory_index": 33,
+        "success": true,
+        "policy_trace": "retarget_research/advanced_policy/traces/formal_v3/linker_vector_v2alpha_c3g8/sem-Dog-35f73ca2716aefcfbeccafa1b3b5f850/source_33_trace.npz"
+      },
+      {
+        "hand": "xhand",
+        "object_name": "sem-Cookie-ccfa74e5574678325cde8c99e4b182f9",
+        "source_trajectory_index": 19,
+        "success": true,
+        "policy_trace": "retarget_research/advanced_policy/traces/formal_v1/xhand_official/sem-Cookie-ccfa74e5574678325cde8c99e4b182f9/source_19_trace.npz"
+      },
+      {
+        "hand": "wuji",
+        "object_name": "sem-Thumbtack-17aa537d3f70e0998c5d696f6e844329",
+        "source_trajectory_index": 1,
+        "success": true,
+        "policy_trace": "retarget_research/advanced_policy/traces/formal_v1/wuji/sem-Thumbtack-17aa537d3f70e0998c5d696f6e844329/source_1_trace.npz"
+      }
+    ],
+    "strict_failure": [
+      {
+        "hand": "linker",
+        "object_name": "sem-Camera-5838f13cd253038ae94020dcb05ab335",
+        "source_trajectory_index": 16,
+        "success": false,
+        "policy_trace": "retarget_research/advanced_policy/traces/formal_v3/linker_vector_v2alpha_c3g8/sem-Camera-5838f13cd253038ae94020dcb05ab335/source_16_trace.npz"
+      },
+      {
+        "hand": "xhand",
+        "object_name": "sem-Camera-5838f13cd253038ae94020dcb05ab335",
+        "source_trajectory_index": 34,
+        "success": false,
+        "policy_trace": "retarget_research/advanced_policy/traces/formal_v1/xhand_official/sem-Camera-5838f13cd253038ae94020dcb05ab335/source_34_trace.npz"
+      },
+      {
+        "hand": "wuji",
+        "object_name": "sem-Vase-1a8f9295b44b48895e8c5748ca5ef3ea",
+        "source_trajectory_index": 37,
+        "success": false,
+        "policy_trace": "retarget_research/advanced_policy/traces/formal_v1/wuji/sem-Vase-1a8f9295b44b48895e8c5748ca5ef3ea/source_37_trace.npz"
+      }
+    ]
+  }
+}

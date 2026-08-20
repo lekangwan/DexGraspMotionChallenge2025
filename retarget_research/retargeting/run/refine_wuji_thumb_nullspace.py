@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""在不移动手腕和四根普通指的前提下，消除Wuji拇指冗余折叠解。
+"""分阶段消除Wuji拇指在接近物体时过早折叠的问题。
 
 输入：已通过率较高的15点Wuji候选、源索引和解剖配置。
-输出：同形状26维候选、拇指尖位置误差及关节自然度审计。
-内部逻辑：逐帧固定腕部与普通16关节，只优化4个拇指关节；保持基线拇指尖
-世界位置，同时以归一化中性姿态和上一帧连续项在冗余逆运动学解中消歧。
-作用：保留旧点法已经建立的夹持位置和普通指成功率，去掉导致拇指末节长期
-顶到约90度的错误`thumb_middle`一一对应，不做事后角度裁剪。
+输出：同形状26维候选、运动阶段、拇指尖偏移及关节自然度审计。
+内部逻辑：先用零空间逆解得到抓取姿态；接近阶段固定为首帧自然拇指，闭合
+阶段平滑过渡到逆解，抬升阶段完全保留逆解和接触位置。
+作用：不靠角度裁剪，直接取消“尚未接触却必须追随旧指尖”的错误目标。
 """
 
 from __future__ import annotations
@@ -24,18 +23,30 @@ import torch
 
 RUN_DIR = Path(__file__).resolve().parent
 RETARGET_ROOT = RUN_DIR.parent
+PREPARE_DIR = RETARGET_ROOT / "prepare"
 if str(RUN_DIR) not in sys.path:
     sys.path.insert(0, str(RUN_DIR))
+if str(PREPARE_DIR) not in sys.path:
+    sys.path.insert(0, str(PREPARE_DIR))
 
-from refine_wuji_pad_contacts import internal_to_saved, saved_to_internal, wuji_model_q  # noqa: E402
+from object_geometry import transformed_object_vertices  # noqa: E402
+from phase_contact import infer_motion_phases  # noqa: E402
+from refine_wuji_pad_contacts import (  # noqa: E402
+    SOURCE_TIP_INDICES,
+    internal_to_saved,
+    saved_to_internal,
+    wuji_model_q,
+)
 from retarget_wuji_keypoints import (  # noqa: E402
     apply_anatomy_profile,
+    build_shadow_model,
     build_wuji_model,
     load_anatomy_profile,
+    shadow_keypoints,
 )
 
 
-METHOD = "point_baseline_thumb_tip_nullspace_v1"
+METHOD = "point_baseline_thumb_tip_nullspace_phase_open_v2"
 THUMB_DOF_COUNT = 4
 THUMB_TIP_INDEX = 5
 
@@ -169,8 +180,94 @@ def refine_trajectory(frames_saved, model, lower, upper, args):
     )
 
 
+def phase_aware_thumb_schedule(optimized_internal, close_start, lift_start):
+    """让拇指只在真正闭合阶段弯曲。
+
+    输入：零空间优化后的`(T,26)`内部轨迹，以及闭合/抬升起始帧。
+    输出：分阶段轨迹和每帧0到1的混合比例。
+    内部逻辑：闭合前复用自然首帧；闭合到抬升间用smoothstep平滑插值；
+    抬升后原样使用优化解。
+    作用：去掉第1帧突然折到约90度的假动作，同时不修改真正承力阶段。
+    """
+    optimized = np.asarray(optimized_internal, dtype=np.float32)
+    if optimized.ndim != 2 or optimized.shape[1] != 26:
+        raise ValueError(f"内部轨迹应为(T,26)，实际为{optimized.shape}")
+    if not 0 <= int(close_start) < int(lift_start) < len(optimized):
+        raise ValueError(
+            f"阶段必须满足0<=close<lift<T，实际为{close_start}, {lift_start}, {len(optimized)}"
+        )
+    alpha = np.zeros(len(optimized), dtype=np.float32)
+    width = float(lift_start - close_start)
+    linear = (
+        np.arange(close_start, lift_start + 1, dtype=np.float32) - close_start
+    ) / width
+    alpha[close_start : lift_start + 1] = linear * linear * (3.0 - 2.0 * linear)
+    alpha[lift_start:] = 1.0
+    result = optimized.copy()
+    open_thumb = optimized[0, :THUMB_DOF_COUNT].copy()
+    result[:, :THUMB_DOF_COUNT] = (
+        (1.0 - alpha[:, None]) * open_thumb[None, :]
+        + alpha[:, None] * optimized[:, :THUMB_DOF_COUNT]
+    )
+    return result, alpha
+
+
+def thumb_transition_frames(contact_close, lift_start, frame_count, lead_frames, settle_frames):
+    """把检测到的接触阶段转换成拇指实际闭合时间窗。
+
+    输入：源手接触帧、抬升帧、轨迹长度，以及提前闭合和夹稳帧数。
+    输出：满足`0<=start<end<T`的拇指过渡起止帧。
+    内部逻辑：在接触前提前若干帧开始，并在抬升前若干帧结束；极短时间窗
+    自动收缩但不越界。
+    作用：让PD控制下的拇指在抬升前真正到位，而非抬升同时才发出闭合目标。
+    """
+    if frame_count < 2 or min(lead_frames, settle_frames) < 0:
+        raise ValueError("轨迹至少2帧，提前量和稳定量不能为负")
+    start = max(0, int(contact_close) - int(lead_frames))
+    end = min(int(frame_count) - 1, int(lift_start) - int(settle_frames))
+    if end <= start:
+        end = min(int(frame_count) - 1, start + 1)
+    if end <= start:
+        start, end = max(0, end - 1), end
+    return start, end
+
+
+def infer_source_phase(source_frames, source_data, source_index, object_dir, shadow_model, args):
+    """从Shadow专家与物体距离推断接近、闭合和抬升阶段。
+
+    输入：一条源轨迹、物体姿态/网格、Shadow模型和距离阈值。
+    输出：含close/lift帧、逐指距离和接触数量的阶段字典。
+    内部逻辑：至少两根源指尖进入物体表面阈值时开始闭合，随后腕部上升
+    到指定高度时进入抬升；没有严格入阈值时使用多指最近帧。
+    作用：按每条轨迹自身动作分段，避免硬编码统一的第28或第35帧。
+    """
+    frames = np.asarray(source_frames, dtype=np.float32).copy()
+    frames[:, 2] += float(args.source_z_offset)
+    points = shadow_keypoints(frames, shadow_model)
+    source_tips = {
+        semantic: points[:, point_index]
+        for semantic, point_index in SOURCE_TIP_INDICES.items()
+    }
+    vertices = transformed_object_vertices(
+        object_dir,
+        np.asarray(source_data["obj_scale"])[source_index],
+        np.asarray(source_data["obj_rotmat"])[source_index],
+        args.object_clearance,
+    )
+    return infer_motion_phases(
+        frames,
+        source_tips,
+        vertices,
+        args.contact_threshold,
+        args.min_contact_tips,
+        args.lift_delta,
+        contact_fallback="nearest",
+    )
+
+
 def refine_file(args):
     """读取基线中指定轨迹，执行拇指消歧并保存完整追溯元数据。"""
+    source_data = np.load(args.source, allow_pickle=True).item()
     data = np.load(args.initial_target, allow_pickle=True).item()
     indices = [int(value) for value in (args.trajectory_indices or data["source_trajectory_indices"])]
     source_indices = np.asarray(data["source_trajectory_indices"], dtype=np.int64)
@@ -195,15 +292,60 @@ def refine_file(args):
         joint_names, urdf_lower, urdf_upper, profile
     )
     lower, upper = all_lower[:THUMB_DOF_COUNT], all_upper[:THUMB_DOF_COUNT]
+    shadow_model = build_shadow_model()
     outputs, all_losses, all_components, all_errors = [], [], [], []
+    all_nullspace_errors, all_phases, all_alpha = [], [], []
     for source_index in indices:
-        result, losses, components, errors = refine_trajectory(
+        nullspace_saved, losses, components, nullspace_errors = refine_trajectory(
             by_index[source_index], model, lower, upper, args
         )
-        outputs.append(result)
+        phase = infer_source_phase(
+            source_data["grasp_seqs"][source_index],
+            source_data,
+            source_index,
+            args.object_dir,
+            shadow_model,
+            args,
+        )
+        nullspace_internal = saved_to_internal(nullspace_saved)
+        transition_start, transition_end = thumb_transition_frames(
+            phase["close_start_frame"],
+            phase["lift_start_frame"],
+            len(nullspace_internal),
+            args.close_lead_frames,
+            args.grasp_settle_frames,
+        )
+        result_internal, alpha = phase_aware_thumb_schedule(
+            nullspace_internal,
+            transition_start,
+            transition_end,
+        )
+        baseline_internal = saved_to_internal(by_index[source_index])
+        baseline_tips = np.stack(
+            [full_points(model, frame)[THUMB_TIP_INDEX] for frame in baseline_internal]
+        )
+        result_tips = np.stack(
+            [full_points(model, frame)[THUMB_TIP_INDEX] for frame in result_internal]
+        )
+        errors = np.linalg.norm(result_tips - baseline_tips, axis=1)
+        outputs.append(internal_to_saved(result_internal))
         all_losses.append(losses)
         all_components.append(components)
         all_errors.append(errors)
+        all_nullspace_errors.append(nullspace_errors)
+        all_alpha.append(alpha)
+        all_phases.append({
+            "close_start_frame": int(phase["close_start_frame"]),
+            "lift_start_frame": int(phase["lift_start_frame"]),
+            "thumb_transition_start_frame": int(transition_start),
+            "thumb_transition_end_frame": int(transition_end),
+            "grasp_frame": int(phase["grasp_frame"]),
+            "close_detection": phase["close_detection"],
+            "contact_fallback_used": bool(phase["contact_fallback_used"]),
+            "close_contact_order_distance_m": float(
+                phase["close_contact_order_distance_m"]
+            ),
+        })
     positions = [int(np.flatnonzero(source_indices == index)[0]) for index in indices]
     output = {
         "grasp_seqs": np.stack(outputs).astype(np.float32),
@@ -217,15 +359,27 @@ def refine_file(args):
         "anatomy_config_sha256": anatomy_sha,
         "source_z_offset": float(data.get("source_z_offset", 0.4)),
         "retarget_method": METHOD,
+        "source": str(args.source.resolve()),
+        "source_sha256": hashlib.sha256(args.source.read_bytes()).hexdigest(),
+        "object_dir": str(args.object_dir.resolve()),
         "initial_target": str(args.initial_target.resolve()),
         "initial_target_sha256": hashlib.sha256(args.initial_target.read_bytes()).hexdigest(),
         "optimization_loss_per_frame": np.stack(all_losses),
         "optimization_loss_components_per_frame": all_components,
         "thumb_tip_displacement_m_per_frame": np.stack(all_errors),
+        "nullspace_thumb_tip_displacement_m_per_frame": np.stack(all_nullspace_errors),
+        "thumb_blend_alpha_per_frame": np.stack(all_alpha),
+        "motion_phases": all_phases,
         "maxeval": int(args.maxeval),
         "tip_weight": float(args.tip_weight),
         "neutral_weight": float(args.neutral_weight),
         "temporal_weight": float(args.temporal_weight),
+        "contact_threshold": float(args.contact_threshold),
+        "min_contact_tips": int(args.min_contact_tips),
+        "lift_delta": float(args.lift_delta),
+        "object_clearance": float(args.object_clearance),
+        "close_lead_frames": int(args.close_lead_frames),
+        "grasp_settle_frames": int(args.grasp_settle_frames),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     np.save(args.output, output, allow_pickle=True)
@@ -241,17 +395,32 @@ def main():
     """解析拇指零空间修正的输入、权重和SLSQP预算并执行。"""
     parser = argparse.ArgumentParser()
     parser.add_argument("--initial-target", type=Path, required=True)
+    parser.add_argument("--source", type=Path, required=True)
+    parser.add_argument("--object-dir", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--trajectory-indices", type=int, nargs="*")
     parser.add_argument("--maxeval", type=int, default=80)
     parser.add_argument("--tip-weight", type=float, default=1.0)
     parser.add_argument("--neutral-weight", type=float, default=0.05)
     parser.add_argument("--temporal-weight", type=float, default=0.01)
+    parser.add_argument("--source-z-offset", type=float, default=0.4)
+    parser.add_argument("--contact-threshold", type=float, default=0.02)
+    parser.add_argument("--min-contact-tips", type=int, default=2)
+    parser.add_argument("--lift-delta", type=float, default=0.03)
+    parser.add_argument("--object-clearance", type=float, default=0.005)
+    parser.add_argument("--close-lead-frames", type=int, default=6)
+    parser.add_argument("--grasp-settle-frames", type=int, default=3)
     args = parser.parse_args()
     if args.maxeval < 1:
         parser.error("--maxeval必须为正整数")
     if min(args.tip_weight, args.neutral_weight, args.temporal_weight) < 0:
         parser.error("所有权重必须非负")
+    if args.contact_threshold <= 0 or args.lift_delta <= 0:
+        parser.error("接触距离和抬升量必须为正")
+    if not 1 <= args.min_contact_tips <= 5:
+        parser.error("--min-contact-tips必须在1到5之间")
+    if min(args.close_lead_frames, args.grasp_settle_frames) < 0:
+        parser.error("闭合提前量和抬升前稳定量不能为负")
     refine_file(args)
 
 

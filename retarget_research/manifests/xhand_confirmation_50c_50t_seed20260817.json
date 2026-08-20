@@ -1,0 +1,917 @@
+{
+  "schema_version": 1,
+  "purpose": "xhand_method_confirmation_train_only_screen",
+  "selection_seed": 20260817,
+  "selection_rule": "SHA-256 category and within-category ranking; no physics outcomes",
+  "source_manifest": "formal_50_category_100_object_1000_trajectory_evaluation",
+  "source_split": "target_hand_policy_object_level_split",
+  "allowed_split": "train",
+  "category_count": 50,
+  "object_count": 50,
+  "trajectory_count": 50,
+  "categories": [
+    "flashlight",
+    "book",
+    "piano",
+    "stapler",
+    "bowl",
+    "canister",
+    "watch",
+    "vase",
+    "beanbag",
+    "soapbar",
+    "ship",
+    "cerealbox",
+    "palette",
+    "filecabinet",
+    "pencil",
+    "toasteroven",
+    "pan",
+    "snowman",
+    "camera",
+    "fruit",
+    "usbstick",
+    "rubikscube",
+    "phonebooth",
+    "remote",
+    "showerhead",
+    "milkcarton",
+    "cookie",
+    "wallclock",
+    "disccase",
+    "blender",
+    "tissuebox",
+    "headphones",
+    "battery",
+    "toaster",
+    "can",
+    "pillow",
+    "knife",
+    "ipad",
+    "tapedispenser",
+    "videogamecontroller",
+    "personstanding",
+    "clock",
+    "wii",
+    "thumbtack",
+    "ball",
+    "dog",
+    "horse",
+    "winebottle",
+    "cap",
+    "soapbottle"
+  ],
+  "entries": [
+    {
+      "object_name": "sem-Flashlight-614c2672926d86d96b84415a3f1393b",
+      "category": "flashlight",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Flashlight-614c2672926d86d96b84415a3f1393b.npy",
+      "source_sha256": "e9cb25af1f8453286bd74d2a9ef53bbb637f4232d9eac660f8f5a1620f0fe103",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Flashlight-614c2672926d86d96b84415a3f1393b",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        36
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        36
+      ]
+    },
+    {
+      "object_name": "sem-Book-c8691c86e110318ef2bc9da1ba799c60",
+      "category": "book",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Book-c8691c86e110318ef2bc9da1ba799c60.npy",
+      "source_sha256": "4e2d684dfaefa04470f1492ea868c59aca6642f626737653dce81c58bdf7492a",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Book-c8691c86e110318ef2bc9da1ba799c60",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        11
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        11
+      ]
+    },
+    {
+      "object_name": "sem-Piano-518952ec821e3e60781551ea381688bd",
+      "category": "piano",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Piano-518952ec821e3e60781551ea381688bd.npy",
+      "source_sha256": "fe4817bab286b7fd341e34f19e5ef858a14fbad76518badfd044858c60c97aa0",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Piano-518952ec821e3e60781551ea381688bd",
+      "available_trajectory_count": 36,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        17
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        17
+      ]
+    },
+    {
+      "object_name": "sem-Stapler-988004d506b3b75e5e40cf2ee4f6ead",
+      "category": "stapler",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Stapler-988004d506b3b75e5e40cf2ee4f6ead.npy",
+      "source_sha256": "021efc2f4dc1bd744c5aa2822f914a555297bfba8b082a2d9cb8cf637dfdbfe4",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Stapler-988004d506b3b75e5e40cf2ee4f6ead",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        0
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        0
+      ]
+    },
+    {
+      "object_name": "core-bowl-45603bffc6a2866b5d1ac0d5489f7d84",
+      "category": "bowl",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/core-bowl-45603bffc6a2866b5d1ac0d5489f7d84.npy",
+      "source_sha256": "bd58ecc666961b01f48c7ca5be8ff05a5ccb21558d93e03430ac7f1f6cd1a6db",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/core-bowl-45603bffc6a2866b5d1ac0d5489f7d84",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        0
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        0
+      ]
+    },
+    {
+      "object_name": "sem-Canister-abeaed132c7266b73e9c38134dedd15c",
+      "category": "canister",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Canister-abeaed132c7266b73e9c38134dedd15c.npy",
+      "source_sha256": "a4a6f2161d71c5bc08f6af25ce35637d67c32127f0b465a56928002a77054dd5",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Canister-abeaed132c7266b73e9c38134dedd15c",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        39
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        39
+      ]
+    },
+    {
+      "object_name": "sem-Watch-3a5351666689a7b2b788559e93c74a0f",
+      "category": "watch",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Watch-3a5351666689a7b2b788559e93c74a0f.npy",
+      "source_sha256": "2f47b5cd4cad38f7557961319430d8081e6a86adc4b02d9b2c161917eeaac619",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Watch-3a5351666689a7b2b788559e93c74a0f",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        37
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        37
+      ]
+    },
+    {
+      "object_name": "sem-Vase-1a8f9295b44b48895e8c5748ca5ef3ea",
+      "category": "vase",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Vase-1a8f9295b44b48895e8c5748ca5ef3ea.npy",
+      "source_sha256": "4f6c9a5cf048f39f05ee402103eab7a2f35f877e1e3e6c84d60f23e3d1e3e8f8",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Vase-1a8f9295b44b48895e8c5748ca5ef3ea",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        2
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        2
+      ]
+    },
+    {
+      "object_name": "sem-BeanBag-b5a0c927213ba01dc39a00da16746b95",
+      "category": "beanbag",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-BeanBag-b5a0c927213ba01dc39a00da16746b95.npy",
+      "source_sha256": "5b13a561c4f895b3d4f7715b28bb5e1ade318bada1c2257dbed126fff8642a01",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-BeanBag-b5a0c927213ba01dc39a00da16746b95",
+      "available_trajectory_count": 26,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        10
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        10
+      ]
+    },
+    {
+      "object_name": "sem-SoapBar-351dec75ac0619b1827473663798726a",
+      "category": "soapbar",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-SoapBar-351dec75ac0619b1827473663798726a.npy",
+      "source_sha256": "0e6af1498f7c4d3360b36a3690472b1d073f6fa79094d8d11329c0453be3c79d",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-SoapBar-351dec75ac0619b1827473663798726a",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        15
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        15
+      ]
+    },
+    {
+      "object_name": "sem-Ship-3f31208bf7adf03610aa1fb812b74966",
+      "category": "ship",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Ship-3f31208bf7adf03610aa1fb812b74966.npy",
+      "source_sha256": "4053479555ee90c135db0446e7e81fc9b8339fe45b69385ac09d24d12973b2b3",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Ship-3f31208bf7adf03610aa1fb812b74966",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        25
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        25
+      ]
+    },
+    {
+      "object_name": "sem-CerealBox-7685495f6e5aac1339a00425b5e3771a",
+      "category": "cerealbox",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-CerealBox-7685495f6e5aac1339a00425b5e3771a.npy",
+      "source_sha256": "0d172ece0506e2a88e62a5d41eff36f46730aa29774fbc77f0d173764711599a",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-CerealBox-7685495f6e5aac1339a00425b5e3771a",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        21
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        21
+      ]
+    },
+    {
+      "object_name": "sem-Palette-992b09034e11bba395d70476ddcdc14",
+      "category": "palette",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Palette-992b09034e11bba395d70476ddcdc14.npy",
+      "source_sha256": "c05711e039442fba1e3ae59f4a19ec708ee7134986adb6d7329abf9198d7069d",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Palette-992b09034e11bba395d70476ddcdc14",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        4
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        4
+      ]
+    },
+    {
+      "object_name": "sem-FileCabinet-75fe06475f7b7241920de219c00d1c3b",
+      "category": "filecabinet",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-FileCabinet-75fe06475f7b7241920de219c00d1c3b.npy",
+      "source_sha256": "517f0e914b40154fb811ec947e341f5d36b3c79d521e1e70a5f3a1c556801fda",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-FileCabinet-75fe06475f7b7241920de219c00d1c3b",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        37
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        37
+      ]
+    },
+    {
+      "object_name": "sem-Pencil-a7787ba523465ea1ef2e227a41551d79",
+      "category": "pencil",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Pencil-a7787ba523465ea1ef2e227a41551d79.npy",
+      "source_sha256": "670a6062ff76003e18858a320b60a22395c10327939026612d17ce62af9bb26a",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Pencil-a7787ba523465ea1ef2e227a41551d79",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        1
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        1
+      ]
+    },
+    {
+      "object_name": "sem-ToasterOven-95b4eee44e668dfb87a77620548f66e9",
+      "category": "toasteroven",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-ToasterOven-95b4eee44e668dfb87a77620548f66e9.npy",
+      "source_sha256": "fb88421adb10de8cc9c72f405136b2a1626f5cb40bc8b477637c615396004d86",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-ToasterOven-95b4eee44e668dfb87a77620548f66e9",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        32
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        32
+      ]
+    },
+    {
+      "object_name": "sem-Pan-d9560bfc0c051109f54e1b6f41fdd78a",
+      "category": "pan",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Pan-d9560bfc0c051109f54e1b6f41fdd78a.npy",
+      "source_sha256": "fc64929841b2f1ce76da31b9e6eea52c76059af3877f6fad77016b0722ed7022",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Pan-d9560bfc0c051109f54e1b6f41fdd78a",
+      "available_trajectory_count": 25,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        3
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        3
+      ]
+    },
+    {
+      "object_name": "sem-Snowman-def36b8e4538fb74d449cd634c927922",
+      "category": "snowman",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Snowman-def36b8e4538fb74d449cd634c927922.npy",
+      "source_sha256": "1246973cfc70f76e4388f57eb96a6e1e453c86b0065b235f66f6bfa00fa9b67d",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Snowman-def36b8e4538fb74d449cd634c927922",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        6
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        6
+      ]
+    },
+    {
+      "object_name": "sem-Camera-5838f13cd253038ae94020dcb05ab335",
+      "category": "camera",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Camera-5838f13cd253038ae94020dcb05ab335.npy",
+      "source_sha256": "9e25a6966f105d9926af291cdfb57cfe608f1845a84cf12c594f6eeb06cd4c5b",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Camera-5838f13cd253038ae94020dcb05ab335",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        34
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        34
+      ]
+    },
+    {
+      "object_name": "sem-Fruit-f6e6117261dca163713c042b393cc65b",
+      "category": "fruit",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Fruit-f6e6117261dca163713c042b393cc65b.npy",
+      "source_sha256": "8652fdceb664f9234295a3f27e615839fb917b69cc7786f94acc519a20b8aeab",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Fruit-f6e6117261dca163713c042b393cc65b",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        15
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        15
+      ]
+    },
+    {
+      "object_name": "sem-USBStick-a432dacac26ad0f7ef90d4b0a8f1b812",
+      "category": "usbstick",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-USBStick-a432dacac26ad0f7ef90d4b0a8f1b812.npy",
+      "source_sha256": "db8aa35620ce7d6533cfefd18cfbc057ca3d5c16884dd98956861ccd21470fa8",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-USBStick-a432dacac26ad0f7ef90d4b0a8f1b812",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        0
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        0
+      ]
+    },
+    {
+      "object_name": "sem-RubiksCube-cdda3ea70d829d5baa9ba8e71ae84fd3",
+      "category": "rubikscube",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-RubiksCube-cdda3ea70d829d5baa9ba8e71ae84fd3.npy",
+      "source_sha256": "6080a06c89aa3fff3ee2749808e1939489098adb1637bcb7d2f82d6c0c51137e",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-RubiksCube-cdda3ea70d829d5baa9ba8e71ae84fd3",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        34
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        34
+      ]
+    },
+    {
+      "object_name": "sem-Phonebooth-5f600251394fabe6808ca88aece2e3dc",
+      "category": "phonebooth",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Phonebooth-5f600251394fabe6808ca88aece2e3dc.npy",
+      "source_sha256": "2e47bf42cf8cc262589f168be72467db910e069c0b828948dcc151b8264cc51b",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Phonebooth-5f600251394fabe6808ca88aece2e3dc",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        12
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        12
+      ]
+    },
+    {
+      "object_name": "core-remote-8f14d5b24d2b798b16a077c4c0fc1181",
+      "category": "remote",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/core-remote-8f14d5b24d2b798b16a077c4c0fc1181.npy",
+      "source_sha256": "b0d587954386bfaeed9a8d9ac08c6674504c88c253e11a32761f1eb8ead08f9d",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/core-remote-8f14d5b24d2b798b16a077c4c0fc1181",
+      "available_trajectory_count": 35,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        28
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        28
+      ]
+    },
+    {
+      "object_name": "sem-Showerhead-6b940f85e82457d28a1b73194a8a176f",
+      "category": "showerhead",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Showerhead-6b940f85e82457d28a1b73194a8a176f.npy",
+      "source_sha256": "d50d455a0fc6629c8a7ff8cc9bf052f8674de35b1778a9b64f3d0c3410bb5f38",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Showerhead-6b940f85e82457d28a1b73194a8a176f",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        1
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        1
+      ]
+    },
+    {
+      "object_name": "sem-MilkCarton-3c426552b9df786b3f7f3ed2c3c690fe",
+      "category": "milkcarton",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-MilkCarton-3c426552b9df786b3f7f3ed2c3c690fe.npy",
+      "source_sha256": "fa8541dbef850532f7dfe4fad2c1524684b2860d124a0658192a8a31f48510d9",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-MilkCarton-3c426552b9df786b3f7f3ed2c3c690fe",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        30
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        30
+      ]
+    },
+    {
+      "object_name": "sem-Cookie-ccfa74e5574678325cde8c99e4b182f9",
+      "category": "cookie",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Cookie-ccfa74e5574678325cde8c99e4b182f9.npy",
+      "source_sha256": "6c6359e6fd4cf563528868239038ea4f7eb659f8467c1a6e8392778df9b0d8b1",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Cookie-ccfa74e5574678325cde8c99e4b182f9",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        17
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        17
+      ]
+    },
+    {
+      "object_name": "sem-WallClock-fc51a35ac0399c457dc65f24011042f1",
+      "category": "wallclock",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-WallClock-fc51a35ac0399c457dc65f24011042f1.npy",
+      "source_sha256": "52b6538cf309a91c1c707418959413a3a7ff22e98dd4abdb27773533fab07385",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-WallClock-fc51a35ac0399c457dc65f24011042f1",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        17
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        17
+      ]
+    },
+    {
+      "object_name": "sem-DiscCase-6268862d43393bdfab0b172d4dea80cd",
+      "category": "disccase",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-DiscCase-6268862d43393bdfab0b172d4dea80cd.npy",
+      "source_sha256": "f655873fd4e412c51895ceae4066008daf40cfb56bbf30a265192c6701d7e7f3",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-DiscCase-6268862d43393bdfab0b172d4dea80cd",
+      "available_trajectory_count": 33,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        32
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        32
+      ]
+    },
+    {
+      "object_name": "sem-Blender-48bddfc383e475583f36fda0f70067c5",
+      "category": "blender",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Blender-48bddfc383e475583f36fda0f70067c5.npy",
+      "source_sha256": "07b5e7c1e2ef3bad271429c42c203fd99017592a555cd859fbb12629dbc7b923",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Blender-48bddfc383e475583f36fda0f70067c5",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        36
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        36
+      ]
+    },
+    {
+      "object_name": "sem-TissueBox-13a913b33fb29f7741f9f28bc4fa9522",
+      "category": "tissuebox",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-TissueBox-13a913b33fb29f7741f9f28bc4fa9522.npy",
+      "source_sha256": "a4f8afb2fa8157262f9202096cc18a5726826282d6e411ed4c21a4cad65f2db2",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-TissueBox-13a913b33fb29f7741f9f28bc4fa9522",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        32
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        32
+      ]
+    },
+    {
+      "object_name": "sem-Headphones-98eb96633935d994c38ed9bce4ed5d0f",
+      "category": "headphones",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Headphones-98eb96633935d994c38ed9bce4ed5d0f.npy",
+      "source_sha256": "9a6b9eb3ebe1de1f0930af26109abe195f2cbbff052b87e937953f2e97408df5",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Headphones-98eb96633935d994c38ed9bce4ed5d0f",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        3
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        3
+      ]
+    },
+    {
+      "object_name": "sem-Battery-f8a093851f146122dd4616bdfbd70670",
+      "category": "battery",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Battery-f8a093851f146122dd4616bdfbd70670.npy",
+      "source_sha256": "88ac8282e713d8a05a72339986a6efffd42b4916269f57e4953af4da843a8d7c",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Battery-f8a093851f146122dd4616bdfbd70670",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        17
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        17
+      ]
+    },
+    {
+      "object_name": "sem-Toaster-3ffbb0ab0f8da32f86271197b958e3d5",
+      "category": "toaster",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Toaster-3ffbb0ab0f8da32f86271197b958e3d5.npy",
+      "source_sha256": "a72b56adfed6af88b2ba5c7b1e5d0d3870943e50e53560813f463fb161d55408",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Toaster-3ffbb0ab0f8da32f86271197b958e3d5",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        38
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        38
+      ]
+    },
+    {
+      "object_name": "core-can-eac30c41aad2ff27c0ca8d7a07be3be",
+      "category": "can",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/core-can-eac30c41aad2ff27c0ca8d7a07be3be.npy",
+      "source_sha256": "971e1fb194a9b99a25b1b2af80e4d369497a501d82f8a058fd0172b76246b1f7",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/core-can-eac30c41aad2ff27c0ca8d7a07be3be",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        28
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        28
+      ]
+    },
+    {
+      "object_name": "core-pillow-1399af537cd5f80723a295070ca176a0",
+      "category": "pillow",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/core-pillow-1399af537cd5f80723a295070ca176a0.npy",
+      "source_sha256": "119009dbc5762c4b597620d1de0aac3d418dd9eac0eb20ff65251b52e1228fe1",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/core-pillow-1399af537cd5f80723a295070ca176a0",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        0
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        0
+      ]
+    },
+    {
+      "object_name": "sem-Knife-8d6ea5f31ad77a5581fbe2a60fd5a955",
+      "category": "knife",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Knife-8d6ea5f31ad77a5581fbe2a60fd5a955.npy",
+      "source_sha256": "10270e9475459f735ec2f63649a420a2844c3cef0ddadacd2b7a15aa5eff257b",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Knife-8d6ea5f31ad77a5581fbe2a60fd5a955",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        17
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        17
+      ]
+    },
+    {
+      "object_name": "sem-Ipad-d6a512373ed0cab27298d33994ff64ac",
+      "category": "ipad",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Ipad-d6a512373ed0cab27298d33994ff64ac.npy",
+      "source_sha256": "55e7b8a4490d1b8e9267005678c1936057044a13014879074791c932a2421471",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Ipad-d6a512373ed0cab27298d33994ff64ac",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        9
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        9
+      ]
+    },
+    {
+      "object_name": "sem-TapeDispenser-4674032e53b9fd37c1935c9110af1bff",
+      "category": "tapedispenser",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-TapeDispenser-4674032e53b9fd37c1935c9110af1bff.npy",
+      "source_sha256": "7b6d6c2e404493b3734638b99db72852b2eaaedd897108ffb2d6c9dd971dc0ed",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-TapeDispenser-4674032e53b9fd37c1935c9110af1bff",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        5
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        5
+      ]
+    },
+    {
+      "object_name": "sem-VideoGameController-2581265a7c81684b9141c153bb8dff6e",
+      "category": "videogamecontroller",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-VideoGameController-2581265a7c81684b9141c153bb8dff6e.npy",
+      "source_sha256": "aef8ce513d0697741bb50f3929067528eefa57517d93bc4e52b337df2bb41975",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-VideoGameController-2581265a7c81684b9141c153bb8dff6e",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        25
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        25
+      ]
+    },
+    {
+      "object_name": "sem-PersonStanding-a0dfc28cdafc3be913497dd48d9d7c76",
+      "category": "personstanding",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-PersonStanding-a0dfc28cdafc3be913497dd48d9d7c76.npy",
+      "source_sha256": "3c728caac4f7bafa680d868f9ff0cabbc4d7ca424cb1c5b5aa00dcab01f38fe9",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-PersonStanding-a0dfc28cdafc3be913497dd48d9d7c76",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        19
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        19
+      ]
+    },
+    {
+      "object_name": "sem-Clock-b6d7c946f14d345f7c9f6c5864df1a57",
+      "category": "clock",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Clock-b6d7c946f14d345f7c9f6c5864df1a57.npy",
+      "source_sha256": "90081b1fde51e1707ddb1fb47e810db717f2d6fbd41a22b1d95423b082441226",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Clock-b6d7c946f14d345f7c9f6c5864df1a57",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        21
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        21
+      ]
+    },
+    {
+      "object_name": "sem-Wii-84f45a5c3f9de48ae1c30bc7caf261be",
+      "category": "wii",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Wii-84f45a5c3f9de48ae1c30bc7caf261be.npy",
+      "source_sha256": "bba72036ac0227398d492b55f5e3074573eddc600fbf8f2120c453b703a32c1e",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Wii-84f45a5c3f9de48ae1c30bc7caf261be",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        8
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        8
+      ]
+    },
+    {
+      "object_name": "sem-Thumbtack-17aa537d3f70e0998c5d696f6e844329",
+      "category": "thumbtack",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Thumbtack-17aa537d3f70e0998c5d696f6e844329.npy",
+      "source_sha256": "e87f34929acb76217386f658f2a665b55ac664372e4437bdfec413bd0a1abcb2",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Thumbtack-17aa537d3f70e0998c5d696f6e844329",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        2
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        2
+      ]
+    },
+    {
+      "object_name": "sem-Ball-7b30c2aba7782fd93c4691e221dfcd0",
+      "category": "ball",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Ball-7b30c2aba7782fd93c4691e221dfcd0.npy",
+      "source_sha256": "a4ece382312189c2a7752fe7863239a0f22600c8501d9ea5d1171f317913e1a1",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Ball-7b30c2aba7782fd93c4691e221dfcd0",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        14
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        14
+      ]
+    },
+    {
+      "object_name": "sem-Dog-e5cf3055d4dbe35c6cee5c93a7be9401",
+      "category": "dog",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Dog-e5cf3055d4dbe35c6cee5c93a7be9401.npy",
+      "source_sha256": "bc9d1a9637399cfa0f287a060de1d1bd9e3eda45d8da5d49ad6803299d5512ee",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Dog-e5cf3055d4dbe35c6cee5c93a7be9401",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        26
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        26
+      ]
+    },
+    {
+      "object_name": "sem-Horse-85f535b5ff34d58e452f233142155aa6",
+      "category": "horse",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Horse-85f535b5ff34d58e452f233142155aa6.npy",
+      "source_sha256": "0d3a2dcd8d85b231ac03d28495ccc923e26050e4247387bc25ea63664bf51509",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Horse-85f535b5ff34d58e452f233142155aa6",
+      "available_trajectory_count": 33,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        4
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        4
+      ]
+    },
+    {
+      "object_name": "sem-WineBottle-f331ad8d0e6654ef8f992b1fe7075c8f",
+      "category": "winebottle",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-WineBottle-f331ad8d0e6654ef8f992b1fe7075c8f.npy",
+      "source_sha256": "9a55784fee2bd9ce4105416ebc8c4f2e36c82649033c9315734fe7e478b64fd6",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-WineBottle-f331ad8d0e6654ef8f992b1fe7075c8f",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        10
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        10
+      ]
+    },
+    {
+      "object_name": "sem-Cap-60104a0945f83b063f30fadefd6911f2",
+      "category": "cap",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Cap-60104a0945f83b063f30fadefd6911f2.npy",
+      "source_sha256": "a9cb3a783590027ad92505921f364c94a965df0ef6d263cd2a8dd312d53eef70",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Cap-60104a0945f83b063f30fadefd6911f2",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        14
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        14
+      ]
+    },
+    {
+      "object_name": "sem-SoapBottle-a5912dff7ed43650cf6ede117dc51e3d",
+      "category": "soapbottle",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-SoapBottle-a5912dff7ed43650cf6ede117dc51e3d.npy",
+      "source_sha256": "abfa6f5febc93eff5e78ed79f50ede2291bb6cab934cdc62654b879645c9765f",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-SoapBottle-a5912dff7ed43650cf6ede117dc51e3d",
+      "available_trajectory_count": 40,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        22
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        22
+      ]
+    }
+  ],
+  "description": "与wuji_anatomy_train50_seed20260817完全相同的50条冻结train轨迹（SHA-256排序、无物理标签），用于XHand方法50类确认"
+}

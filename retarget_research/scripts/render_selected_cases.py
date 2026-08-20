@@ -26,6 +26,7 @@ EXPERT_SCRIPTS = {
 }
 POLICY_SCRIPT = PROJECT_ROOT / "retarget_research/advanced_policy/evaluate_policy_isaac.py"
 SOFTWARE_SCRIPT = PROJECT_ROOT / "retarget_research/scripts/render_software_replay.py"
+ISAAC_STATE_SCRIPT = PROJECT_ROOT / "retarget_research/scripts/render_isaac_state_replay.py"
 
 
 def safe_name(value):
@@ -71,7 +72,7 @@ def expert_command(group, index, item, manifest_entries, output_dir):
     return command, output_dir / f"{stem}.mp4"
 
 
-def policy_command(group, index, item, output_dir, device, diffusion_execute_steps):
+def policy_command(group, index, item, output_dir, device, diffusion_execute_steps, runtime):
     """根据原闭环报告构造同checkpoint策略录像命令。"""
     report_path = Path(item["report"])
     report = json.loads(report_path.read_text(encoding="utf-8"))
@@ -92,7 +93,14 @@ def policy_command(group, index, item, output_dir, device, diffusion_execute_ste
         "--video-output", str(output_dir / f"{stem}.mp4"),
         "--device", device,
         "--diffusion-execute-steps", str(diffusion_execute_steps),
+        "--seed", str(report.get("evaluation_seed", 20260813)),
+        "--policy-steps", str(report.get("policy_steps", 240)),
     ]
+    if runtime.get("expert_wrist", False):
+        command.append("--expert-wrist")
+    residual_checkpoint = runtime.get("residual_rl_checkpoint")
+    if residual_checkpoint:
+        command.extend(["--residual-rl-checkpoint", str(residual_checkpoint)])
     return command, output_dir / f"{stem}.mp4"
 
 
@@ -120,6 +128,27 @@ def software_command(group, index, item, manifest_entries, output_dir, summary_k
     return command, video
 
 
+def isaac_state_command(group, index, item, manifest_entries, output_dir, summary_kind):
+    """用正式报告保存的物理状态在Isaac Gym中逐帧渲染。"""
+    if summary_kind == "policy":
+        state_path = Path(item["report"])
+        report = json.loads(state_path.read_text(encoding="utf-8"))
+        object_dir = report.get("object_dir")
+    else:
+        state_value = item.get("policy_trace")
+        if not state_value:
+            raise ValueError("专家案例缺少可供Isaac状态回放的策略trace")
+        state_path = Path(state_value)
+        object_dir = manifest_entries[item["object_name"]]["object_asset_path"]
+    stem = f"{group}_{index}_{safe_name(item['object_name'])}_source{item['source_trajectory_index']}"
+    video = output_dir / f"{stem}.mp4"
+    command = [
+        sys.executable, str(ISAAC_STATE_SCRIPT), "--state", str(state_path),
+        "--object-dir", str(object_dir), "--output", str(video),
+    ]
+    return command, video
+
+
 def reusable_video(video, item, renderer):
     """检查已有视频是否可安全续跑复用。
 
@@ -137,6 +166,15 @@ def reusable_video(video, item, renderer):
     if not report_path.is_file():
         return False
     report = json.loads(report_path.read_text(encoding="utf-8"))
+    if renderer == "isaac-state":
+        return (
+            report.get("renderer") == "isaac_state_replay"
+            and report.get("object_name") == item["object_name"]
+            and int(report.get("source_trajectory_index", -1))
+            == int(item["source_trajectory_index"])
+            and int(report.get("video_frame_count", 0)) > 0
+            and Path(report.get("video", "")).resolve() == video.resolve()
+        )
     return (
         report.get("object_name") == item["object_name"]
         and int(report.get("source_trajectory_index", -1))
@@ -154,7 +192,10 @@ def main():
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--device", default="cuda")
-    parser.add_argument("--renderer", choices=["auto", "software", "isaac"], default="auto")
+    parser.add_argument(
+        "--renderer", choices=["auto", "software", "isaac", "isaac-state"],
+        default="auto",
+    )
     parser.add_argument("--diffusion-execute-steps", type=int, default=2)
     parser.add_argument("--execute", action="store_true")
     parser.add_argument("--resume", action="store_true")
@@ -175,15 +216,21 @@ def main():
             args.renderer == "auto"
             and (selection["summary_kind"] == "policy" or bool(item.get("policy_trace")))
         )
-        if use_software:
+        if args.renderer == "isaac-state":
+            command, video = isaac_state_command(
+                group, index, item, entries, args.output_dir, selection["summary_kind"]
+            )
+            renderer = "isaac-state"
+        elif use_software:
             command, video = software_command(
                 group, index, item, entries, args.output_dir, selection["summary_kind"]
             )
             renderer = "software"
         elif selection["summary_kind"] == "policy":
+            runtime = selection.get("runtime_by_hand", {}).get(item.get("hand", ""), {})
             command, video = policy_command(
                 group, index, item, args.output_dir, args.device,
-                args.diffusion_execute_steps,
+                args.diffusion_execute_steps, runtime,
             )
             renderer = "isaac"
         else:

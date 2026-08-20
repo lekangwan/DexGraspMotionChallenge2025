@@ -300,6 +300,36 @@ class Temporal3BCPolicy(nn.Module):
         return self.actor(features)
 
 
+class PhaseResidualTemporalPolicy(nn.Module):
+    """三帧观测、两帧历史动作、执行阶段和类别共同预测动作增量。"""
+
+    def __init__(
+        self,
+        observation_dim,
+        action_dim,
+        category_count,
+        category_embedding_dim=16,
+        hidden_dims=(384, 384, 256),
+        dropout=0.0,
+    ):
+        super().__init__()
+        self.category = CategoryConditioner(category_count, category_embedding_dim)
+        input_dim = observation_dim * 3 + action_dim * 2 + 1 + category_embedding_dim
+        self.actor = make_mlp(input_dim, action_dim, hidden_dims, dropout)
+
+    def forward(self, observation_history, previous_actions, phase, category_id):
+        features = torch.cat(
+            [
+                observation_history.flatten(1),
+                previous_actions.flatten(1),
+                phase,
+                self.category(category_id),
+            ],
+            dim=-1,
+        )
+        return self.actor(features)
+
+
 def sinusoidal_time_embedding(timesteps, dimension):
     """把DDPM离散时间步编码为正余弦向量。
 

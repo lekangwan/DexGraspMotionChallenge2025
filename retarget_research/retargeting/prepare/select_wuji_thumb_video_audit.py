@@ -119,6 +119,7 @@ def select_cases(comparison, physics, thumb):
     clean = take_unique(clean_ranked, 1, used)
 
     def build(keys_or_rows, reason):
+        """把轨迹键或统计行转换成带物理与拇指指标的视频选择项。"""
         chosen_keys = [
             value if isinstance(value, tuple) else key(value)
             for value in keys_or_rows

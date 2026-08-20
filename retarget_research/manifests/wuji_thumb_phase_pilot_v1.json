@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "purpose": "Wuji分阶段拇指视觉与物理先导验证；选择旧版接近阶段折叠最明显的三条轨迹。",
+  "source_manifest": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/manifests/wuji_anatomy_train50_seed20260817.json",
+  "selection_rule": "旧版接近阶段finger1_joint4近85-95度比例最高的三条代表轨迹",
+  "category_count": 3,
+  "object_count": 3,
+  "trajectory_count": 3,
+  "entries": [
+    {
+      "object_name": "sem-WallClock-fc51a35ac0399c457dc65f24011042f1",
+      "category": "wallclock",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-WallClock-fc51a35ac0399c457dc65f24011042f1.npy",
+      "source_sha256": "52b6538cf309a91c1c707418959413a3a7ff22e98dd4abdb27773533fab07385",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-WallClock-fc51a35ac0399c457dc65f24011042f1",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        17
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        17
+      ]
+    },
+    {
+      "object_name": "sem-Thumbtack-17aa537d3f70e0998c5d696f6e844329",
+      "category": "thumbtack",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Thumbtack-17aa537d3f70e0998c5d696f6e844329.npy",
+      "source_sha256": "e87f34929acb76217386f658f2a665b55ac664372e4437bdfec413bd0a1abcb2",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-Thumbtack-17aa537d3f70e0998c5d696f6e844329",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        2
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        2
+      ]
+    },
+    {
+      "object_name": "sem-WineBottle-f331ad8d0e6654ef8f992b1fe7075c8f",
+      "category": "winebottle",
+      "source_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-WineBottle-f331ad8d0e6654ef8f992b1fe7075c8f.npy",
+      "source_sha256": "9a55784fee2bd9ce4105416ebc8c4f2e36c82649033c9315734fe7e478b64fd6",
+      "object_asset_path": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata/sem-WineBottle-f331ad8d0e6654ef8f992b1fe7075c8f",
+      "available_trajectory_count": 20,
+      "frame_count": 70,
+      "action_dimension": 28,
+      "trajectory_indices": [
+        10
+      ],
+      "calibration_indices": [],
+      "heldout_indices": [
+        10
+      ]
+    }
+  ]
+}

@@ -129,6 +129,12 @@ def run_task(task, args):
             and int(previous.get("diffusion_execute_steps", -1)) == args.diffusion_execute_steps
             and float(previous.get("normalized_action_clip", -1.0)) == args.normalized_action_clip
             and float(previous.get("action_rate_limit_scale", -1.0)) == args.action_rate_limit_scale
+            and bool(previous.get("expert_wrist", False)) == bool(args.expert_wrist)
+            and (
+                args.residual_rl_checkpoint is None
+                or Path(previous.get("residual_rl_checkpoint", "")).resolve()
+                == args.residual_rl_checkpoint.resolve()
+            )
             and (
                 args.teacher_checkpoint is None
                 or (
@@ -161,6 +167,10 @@ def run_task(task, args):
                     str(online_output),
                 ]
             )
+        if args.expert_wrist:
+            command.append("--expert-wrist")
+        if args.residual_rl_checkpoint is not None:
+            command.extend(["--residual-rl-checkpoint", str(args.residual_rl_checkpoint)])
         process = subprocess.run(command, text=True, capture_output=True, check=False)
         if process.returncode != 0:
             raise RuntimeError(
@@ -236,6 +246,8 @@ def main():
         action="store_true",
         help="仅用于诊断：只评测已进入该split策略NPZ的成功专家轨迹",
     )
+    parser.add_argument("--expert-wrist", action="store_true")
+    parser.add_argument("--residual-rl-checkpoint", type=Path)
     parser.add_argument(
         "--max-tasks",
         type=int,
@@ -311,6 +323,12 @@ def main():
         "diffusion_execute_steps": int(args.diffusion_execute_steps),
         "normalized_action_clip": float(args.normalized_action_clip),
         "action_rate_limit_scale": float(args.action_rate_limit_scale),
+        "expert_wrist": bool(args.expert_wrist),
+        "residual_rl_checkpoint": (
+            None
+            if args.residual_rl_checkpoint is None
+            else str(args.residual_rl_checkpoint.resolve())
+        ),
         "teacher_checkpoint": (
             None
             if args.teacher_checkpoint is None

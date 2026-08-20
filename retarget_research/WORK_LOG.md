@@ -1041,3 +1041,166 @@
 - 冻结0.05已完成train50，50/50数值生成成功，2 workers用时539.34秒。拇指joint4中位角66.52度，近90度2.57%，末10帧0%，指尖偏移平均/P95/最大0.901/2.172/2.994 mm；WineBottle/WallClock/Thumbtack的近90度主要发生在早期帧，整条中位角为40–62度，需视频审查而不直接否定。
 - train50 PhysX稳定成功34/50、严格运输31/50，相对原点法29/29分别+5/+2。配对新增Blender/Book/Cookie/Ipad/SoapBar，丢失Remote/Toaster/WallClock；丢失的3条仍满足末段30 cm高度，但掌物相对滑移超阈值，所以不等于完全抓取失败。
 - 新增`select_wuji_thumb_video_audit.py`并冻结12条视频门：全部5条新增运输成功、全部3条滑移退化、3条去重后最坏拇指接近段、1条干净运输成功；全部来自train50且路径唯一，渲染干跑已通过。用户观看后才解禁正式1000条。
+
+### Wuji拇指视觉复核后的分阶段闭合修正
+
+- 用户观看12条视频后指出：虽然末端90度比例已下降，Wuji拇指仍在物体尚远时过早弯成近90度，而其他手通常先展开、抓取时才闭合。逐帧复核证实问题不是首帧：WineBottle/WallClock/Thumbtack第0帧joint4仅15–17度，但第1帧立即跳至81–87度，并持续到约第28帧源手真正接触物体。
+- 根因是零空间v1逐帧保持旧15点法的拇指尖世界位置；源轨迹第0帧之后的无接触指尖位置对物理抓取没有意义，却迫使Wuji提前折叠。新增`point_baseline_thumb_tip_nullspace_phase_open_v2`：先保留v1承力姿态，接近阶段固定首帧自然拇指，闭合阶段用smoothstep过渡，完成闭合后完全恢复v1逆解。
+- 阶段不是固定帧号：用Shadow专家指尖到真实物体表面的距离推断接触帧，用腕部上升3 cm推断抬升帧。初版在接触帧才开始、抬升帧才闭合，WineBottle成功但WallClock失败，说明PD来不及形成夹持；据此固定为接触前6帧启动、抬升前3帧完成，给物理手留下闭合和夹稳时间。
+- 在旧版视觉最差的三条冻结train轨迹上，新版接近期joint4均保持15–17度，三条全程85–95度比例均为0；完成闭合后的拇指尖最大偏移仅0.358 mm。PhysX结果为WineBottle成功33.8 cm、WallClock成功34.1 cm、Thumbtack仍失败；Thumbtack旧版本就失败，当前未发现成功回退。
+- 新增`wuji_thumb_phase_pilot_v1.json`、阶段调度单元测试和分阶段审计口径。接近期主动展开造成的9–13 cm指尖改变是设计目标，不再与承力期指尖保真误差混在一起报告。
+- WineBottle与Thumbtack新版视频已生成；WallClock并行渲染触发Vulkan上下文冲突，单独补跑时当前沙箱无可用CUDA图形上下文，留下的48字节文件无效。数值物理报告已独立成功，后续需在用户CUDA终端串行补渲染，不能把该损坏文件列入报告。
+
+### 按交接路线启动Linker O6向量接触方法
+
+- 按`HANDOFF_METHODS_PLAN.md`的最高优先级，给Linker向量+接触锚+抓握偏置补充夹紧候选首帧warm start，并将抓握目标剖面从通用值`[1.0,0.5,0.9,1.1,1.3,1.4]`调整为夹紧候选闭合剖面`[1.16,0.58,0.94,1.26,1.46,1.54]`，形成`anydex_style_segment_vectors_grip_contact_v2`。
+- 新增`configs/linker_anydex_vectors_v2.json`；单条Pliers对照显示抓握权重5在无warm/warm下均成功，权重8失败，说明抓握偏置过强会破坏可达解。接触权重3和8在该轨迹均成功，下一轮只在开发集比较contact=3/8、grip=5，暂不扩展正式1000。
+- 开发集20条完成两组物理评测：contact=3/grip=5与contact=8/grip=5均为稳定5/20、运输5/20，配对比较为+0/-0（p=1.0），成功轨迹集合一致。由于较低接触权重对物体施加的额外约束更弱，冻结候选建议选contact=3/grip=5；是否扩展到50类确认集需用户确认。
+
+## 2026-08-16：phase_open v2 train20 完整性与配对物理评估（追加）
+
+- 批处理入口检查通过；phase_open v2 train20 20/20 生成成功，2 workers 用时 226.17 秒；方法名、源索引、形状 (1,70,26) 全部核对通过。三条 pilot 视频（WineBottle/WallClock/Thumbtack）均已生成，WallClock 渲染阻塞已解除。
+- 手型审计：全帧 joint4 中位角 47.83°，全帧/接近期/末10帧 85–95° 比例全部 0.00%（v1 为 0.93%）；接近期中位角 14.7°–24.1°（CerealBox 38.75° 除外），过早闭合消失；承力期指尖偏移平均/P95/最大 1.162/2.254/2.284 mm（v1 为 0.901/2.172/2.994）。
+- 配对物理（同一 train20、PD 120/5、稳定30cm协议）：v1_n005 13/20（65.0%）→ phase_open_v2 11/20（55.0%），配对新增1、丢失3，净 -2，exact p=0.625。
+- 不一致4条：新增 Flashlight[36]（31.1cm 稳定）；丢失 Book[11]（接触步157→45、末态-3.1cm）、Pencil[1]（接触步144→78、最高17.6cm后滑落）、Camera[34]（最高34.1cm、末段波动2.91cm超1.0cm门，近失）。
+- 根因方向：两版接触起始帧几乎相同，但接近期拇指张开使薄小物体在闭合过渡期接触维持不足；lead=6/settle=3 的闭合时机对 Book/Pencil 偏晚。下一步待用户决策：接受 v2／提前闭合时机重跑／保留 v1。
+
+## 2026-08-16：lead10 提前闭合时机重跑（追加）
+
+- 用户选择提前闭合时机重跑：`close_lead_frames=10`、`grasp_settle_frames=5`，其余参数不变。20/20 生成成功，2 workers 用时 219.9 秒。
+- 手型保持完美：全帧 joint4 中位角 47.90°，85–95° 比例全帧/接近期/末10帧均为 0.00%；承力期指尖偏移平均/P95/最大 1.162/2.254/2.284 mm，与 lead6 相同。
+- 配对物理：v1 13/20 → lead6 11/20 → lead10 12/20。lead10 vs v1 配对新增 Watch[37]（35.6cm），丢失 Vase[2]（27.0cm）与 Camera[34]（29.9cm），净 -1，exact p=1.0。
+- lead6 丢失的 Book[11]（34.5cm）与 Pencil[1]（33.8cm）在 lead10 全部追回，印证闭合太晚扰动物体的根因；但 lead6 新增的 Flashlight[36] 在 lead10 回退（最高仅 9.5cm），Vase 也从成功退到 27cm。不同物体偏好不同闭合时机，无单一全局时机同时覆盖。
+- 下一步：待用户决策是否再试中间时机 lead=8/settle=4，或直接冻结 lead10 进 train50。
+
+## 2026-08-16：中间时机 lead8 完成（追加）
+
+- 用户选择再试中间时机：`close_lead_frames=8`、`grasp_settle_frames=4`。20/20 生成成功，2 workers 用时 220.0 秒。
+- 手型保持完美：全帧 joint4 中位角 47.88°，85–95° 比例全帧/接近期/末10帧均为 0.00%；承力期指尖偏移与 lead6/lead10 相同（最大 2.284 mm）。
+- 配对物理：lead8 12/20（60.0%），与 v1 相比唯一不一致是 Camera[34] 丢失——最高抬升 34.65 cm、末段保持 33.62 cm、接触全满，但末段波动 1.04 cm 仅超 1.0 cm 门 0.4 mm，属近失。Book/Pencil/Vase 全部保持成功。
+- 四方对比：v1 13/20、lead6 11/20、lead8 12/20、lead10 12/20。薄小物体需要早闭合、Flashlight 需要晚闭合（仅 lead6 成功），闭合时机偏好互斥，lead8 是兼顾性最好的全局时机。
+- 下一步：待用户确认是否冻结 lead8（12/20、手型完美、与 v1 仅差 Camera 近失 0.4mm）进 train50。
+
+## 2026-08-16：用户确认冻结 lead8 进 train50（追加）
+
+- 用户确认冻结 lead8（`close_lead_frames=8`、`grasp_settle_frames=4`）为唯一 50 类晋级候选，其余参数与 train20 相同。train50 复用 `wuji_anatomy_train50_seed20260817.json`（50 类各 1 条，与 train20 同口径抽样），参考 v1 train50 的 539 秒全部重新生成 50/50。
+- 比较基线：v1 n005 train50 稳定 34/50、严格运输 31/50。lead8 train50 完成后按同一口径做手型审计、物理重放与配对比较。
+
+## 2026-08-16：lead8 train50 完成与配对比较（追加）
+
+- 首次运行因 `--initial-dir` 误用 train20 消融目录（缺 USBStick）中止；纠正为 v1 train50 使用的 `wuji_anatomy_train50_coupled_v1` 后 50/50 生成成功，2 workers 用时 553.3 秒。
+- 手型审计：全帧 joint4 中位角 47.81°，85–95° 比例全帧/接近期/末10帧均为 0.00%；承力期指尖偏移平均/P95/最大 1.14/2.24/2.49 mm。手型目标完全达成。
+- 配对物理：v1 34/50（68.0%）→ lead8 30/50（60.0%），配对新增 0、丢失 4，净 -4，exact p=0.125。
+- 丢失 4 条：Camera[34]（末段波动 1.04cm 仅超 1.0cm 门 0.4mm，近失）、Cookie[17]（最高 34.8cm 但末段掉落至 9.7cm）、DiscCase[32]（末态 -8.8cm，闭合拇指把物体推入桌面）、Horse[4]（接触仅 21 步，未形成抓取）。
+- 结论：任何 phase_open 时机都以牺牲部分 v1 成功为代价换取手型自然；v1 在所有时机对比中成功率最高，其拇指过早闭合不触发正式手型门（只限四普通指反弯）。下一步待用户决策：成功率优先回退 v1／手型优先接受 lead8。
+
+## 2026-08-16：Wuji 最终方法冻结为 v1 n005，准备正式 1000（追加）
+
+- 用户确认：成功率优先，冻结 v1 n005（`point_baseline_thumb_tip_nullspace_v1`，maxeval 80 / tip 1.0 / neutral 0.05 / temporal 0.01）为 Wuji 正式方法；phase_open 系列（lead6/8/10，手型完美但 11–12/20、30/50）保留为报告消融，证明手型自然性与成功率不可兼得的权衡。
+- lead8 train50 补充审计：稳定 30/50、运输 29/50；`training=0` 源于协议配置中 Wuji 手型门的 quarantine 开关（历史遗留），四普通指反弯诊断已达标（最低 -5.0°、无明显反弯轨迹），解禁事项留待进阶策略重启时处理。
+- 正式 1000 链路由两阶段生成组成：先以 `wuji_anatomy_coupled_v1.json` + maxeval 50 生成 coupled_flexion 点法初始候选（尚无 1000 条），再用 v1 零空间细化。工作区的 refine/runner 已是 phase 版，为不改动未提交的 phase 工作，在 `outputs/formal_1000/v1runner/`（gitignore 内）放置 HEAD 版 v1 脚本副本 + prepare/reference 软链，单轨迹冒烟通过。
+- 三阶段命令：A 解剖初始候选（约 60–120 分钟）、B v1 零空间细化（约 30–60 分钟）、C 物理重放 + trace（约 10 分钟），全部 6 workers、--resume 安全续跑，由用户在终端执行。
+
+## 2026-08-16 深夜：Linker/XHand 替代重定向方法调研与新方法实现（追加）
+
+- 用户要求跳出绝对关键点法的小修小补，调研其他重定向方法并尝试。调研结论：2025 年主流转向接触中心（contact-centric）与形态感知方法；AnyDexRetarget（MIT，fce83d1）审计给出可落地借鉴定单：腕系分指段向量 + 每指缩放 + DIP→tip 方向项 + Huber + 捏合自适应混合；Lakshmipathy TOG 2025 接触转移的核心假设是"物体上的接触点跨手不变"，只优化目标手指尖到达转移后的接触锚点。
+- 实现两个新方法族，各配 Linker/XHand 两个入口与 manifest runner：
+  1. AnyDex 风格分指段向量（`retarget_xhand_vectors.py`/`retarget_linker_vectors.py` + `*_anydex_vectors_v1.json`）：掌心→指尖/中段位置向量按零姿态长度比缩放 + 中段→指尖方向项 + Huber + 中性/时序正则，替代绝对关键点匹配；Linker 用 6 主动自由度 + mimic 展开。
+  2. 物体接触锚（同脚本 `--contact-weight` 开关）：闭合阶段把源 Shadow 五指接触位置（接触掩膜内）作为世界锚点约束目标手指尖，实现"物体上接触点跨手不变"的最小版本；阶段来自既有 build_phase_contact_plan。
+- 冒烟：XHand 两变体在 Pliers[2] 上物理成功（33 cm 量级），Linker 两变体失败；单条不作结论。docstring 强制测试按新工作风格退役。
+- 开发集首筛脚本 `run_vector_methods_dev_screen.sh`：`linker_independent_validation_v1.json`（20 条，方法选择用开发集）上生成四个新候选 + 重放 Linker 夹紧 v1/XHand 指腹细化 v1 基线（30cm 协议）+ 三方配对比较，已在后台 nice 运行，与正式 1000 任务共享机器。
+- 待评估的深入方向：若接触锚/向量法在 6 DOF Linker 上显著超过夹紧 v1（7/20），则值得做物理在环残差 RL；若持平，接受"6 DOF 强欠驱动是本质瓶颈"并把 Linker 结果作为低自由度对照写进报告。
+
+## 2026-08-17：XHand 50类确认、Linker 向量法归因与批量入口修复（追加）
+
+- XHand 50类确认（`xhand_confirmation_50c_50t_seed20260817.json`，与Wuji train50同轨迹）：官方 27/50（54.0%）→ 纯向量 30/50（60.0%），配对 +6/-3，净 +3，p=0.508。开发集20条（14 vs 12）与50类方向一致，向量法确认优于官方基线。
+- Linker 向量法失败归因：向量目标忠实复现源 Shadow 屈曲量，但 Linker 手指几何不同，低屈曲精密抓在 Linker 上接触不足（失败轨迹接触步 33–50 vs 夹紧法 147–160）；唯一赢的 Pliers[18] 恰好是源屈曲大的轨迹。修复方向：闭合/抬升期加单侧抓握屈曲偏置（grip-flexion-weight，只向上拉屈曲）。冒烟：0.5 太弱，5.0 使 Pliers[2] 从失败翻转为成功（关节 0.58–1.06 rad、持续38步）。
+- 发现并修复批量入口根本性错误：两个 vector manifest runner 的 `build_command` 以 `return [` 直接返回，contact/grip 追加代码为死代码——所有批量"接触"变体实际从未携带 contact-weight（接触锚结论作废），grip 轮批处理同样未生效（其数字作废）。修复为 `command = [`，单物体验证 grip 元数据/关节与手动冒烟一致。已删除无效产物并重跑完整首筛（纯向量与基线部分 resume 复用，结果有效）。
+- Wuji 手型门待用户决策：撤销 quarantine 回退旧方法（581稳定/557运输、0专家→557专家、视觉缺陷如实披露）或保留 n005（431/421）。用户倾向按成功率优先回退旧方法并披露缺陷。
+
+## 2026-08-17：Linker 向量v2确认集首次生成
+
+- `contact=3, grip=5`在50类确认集首次生成44/50；6条因严格2 cm多指接触检测无解而中止，并非优化器异常。新方法入口已接入`contact_fallback=nearest`，按最近多指帧回退补齐。
+- 补齐后的50条物理评测为稳定4/50；46条主要表现为接触步数仅13–60、最大抬升不足3 cm，少数轨迹虽曾抬高但末端滑落。失败主因是闭合夹持不足，不是末端运输门。第一轮优化固定向量、接触权重3和fallback规则，仅把抓握偏置权重5提高到8。
+
+## 2026-08-17：Linker 关节归一化方法完成两轮确认
+
+- 新增 `run/retarget_linker_joint_normalized.py` 与 `run/run_linker_joint_normalized_manifest.py`。方法不做NLopt优化：按Shadow关节物理上下限归一化，普通四指压缩到Linker四个主动屈曲轴，拇指映射到yaw/pitch，手腕沿原有对齐变换。输出仍为`(N,70,12)`，保留统一关键点评估语义。
+- 确认集第一轮“屈曲均值”生成50/50，统一物理评测为0/50。几何平均误差2.492 cm，接近原方法2.370 cm，但普通四指后半程主动关节均值仅0.43–0.54 rad，原方法约0.68–1.01 rad，表现为欠闭合、几乎不能抬升。
+- 第二轮将每指聚合由均值改为最大屈曲关节，避免平均造成欠闭合；物理结果2/50，仍低于原官方两阶段7/50。配对为新增2、丢失7、净-5（exact p=0.1797）。该方法作为“非优化自然映射”下限保留，不进入正式候选。
+- 评测中曾误调用只支持仓库内`object_41`的Linker专用入口，导致外部确认集资产缺失而中止；已改用统一`evaluate_hand_manifest.py`读取manifest中的`object_asset_path`，最终结果均按同一30 cm协议有效完成。
+
+## 2026-08-17：Linker 接触重合成方法开发集筛选
+
+- 新增 `run/retarget_linker_contact_resynthesis.py` 与批量入口。接近阶段复制夹紧候选；闭合/抬升阶段将关键点权重降至`1e-5`，主优化项改为目标指腹—物体表面距离、法向、防穿透、关节先验和时序项，抬升冻结重合成抓形。
+- 单轨迹冒烟的几何误差为1.87 cm，但Can仍未抬升，说明几何接触不等于动力学承力。
+- 开发集20条纯接触版本为3/20，原夹紧候选为7/20；无新增、丢失4条。两种折中版本（关键点权重0.01/0.001，接触权重1/3，增加先验）分别为1/20和2/20，均无新增且显著低于原方法。结论：该实现不能作为Linker方法，不扩展50类确认集。
+- 已完成的“夹紧初始化+向量细化”就是前一轮Linker向量warm-start确认（5/50，对原两阶段7/50为净-2），因此不重复生成。剩余路线只剩高成本物理在环Residual RL；在进入该阶段前需要确认是否接受其1–3天成本，或冻结Linker原方法并转入进阶策略训练。
+
+## 2026-08-17：Linker Residual PPO 物理在环入口与冒烟
+
+- 用户确认进入剩余的高成本路线。新增 `advanced_policy/train_linker_residual_ppo.py`：以冻结的12维Linker候选为基线，策略每个物理步输出12维小残差（腕平移±4 mm、腕旋转±0.04 rad、主动指关节±0.10 rad），经mimic展开、关节限位后送入Isaac Gym CPU PhysX；观测包含基线命令、17维实际DOF、物体相对位姿/速度、接触、阶段、上一残差和14维形状描述。
+- PPO复用 `custom_tools/residual_ppo.py` 的Actor-Critic、GAE和剪裁更新；奖励由抬升增量、接触、残差代价和最终稳定30 cm成功奖励组成。训练环境是一条轨迹一个env，可用20条独立开发轨迹批量更新；训练入口支持保存checkpoint和确定性`--eval-only`。
+- 冒烟已通过：2 env、1 iteration能够完整创建场景、执行240个物理步、保存checkpoint并加载评估；观测固定为71维、动作固定为12维。开发时用v2候选做过5轮试跑，固定单线程口径下零残差5/20、PPO第5轮3/20，尚未出现提升，因此不能把冒烟结果宣称为方法提升。
+- 由于多环境PhysX与旧的逐条评估存在数值差异，Residual PPO将`physx_threads=1`固定为自身可复现实验口径；最终必须用统一 `evaluate_hand_manifest.py` 对训练后候选/策略trace重新评估，不能直接把训练日志当正式成功率。
+- 正式训练基线仍选原始 `linker_independent_validation_v1_squeeze`：旧统一评测为7/20，高于v2的6/20；v2只作为残差实现的冒烟输入，不作为最终结论。
+- 复核设备后发现：当前Codex执行环境中 `nvidia-smi` 无法连接驱动，`torch.cuda.is_available()` 为False；此前“Isaac CUDA设备不可用”的判断只针对当前运行环境，不能据此断言用户本机4060不可用。按用户要求，训练入口默认明确使用`--device cuda`；若用户终端能识别CUDA，PPO网络直接上GPU。Isaac物理仿真仍需另行启用GPU PhysX，不能仅靠该参数切换。
+
+## 2026-08-17 晚：三手方法队列启动与 RL 学习回路修复（追加）
+
+- 用户确立方法探索流程：按队列实现新方法 → 各自50集评估 → 归因 → 优化1–2轮 → 与现任比 → 接近/超过则暂留并进下一方法 → 全部完成后横向选优 → 深入优化胜者 → 最后才碰正式1000。
+- 三手队列：①关节归一化（Wuji首试、XHand待试）②AnyDex分指段向量+α混合（三手）③抓握偏置（XHand/Wuji移植）④接触锚（Wuji首试）⑤轨迹级平滑 ⑥指腹级接触 ⑦eigengrasp学习式映射。
+- **Residual PPO 学习回路 bug 已定位并修复**：`custom_tools/residual_ppo.py` 的 KL 早停在"下一批更新前"测量，导致每轮迭代只做1次更新（设计16次）、报告指标全部采自更新前（clip_fraction恒0、approx_kl≈0的假象）。修复：本地副本 `advanced_policy/residual_ppo.py`（旧项目不动），KL早停改为更新后测量，target_kl 0.03→0.5，训练入口改import本地副本。修复后10轮验证：ppo_updates=16、clip_fraction 0.33–0.44、value_loss 6.2→1.0收敛、entropy上升。300轮GPU训练（--device cuda 在用户4060上验证通过，~2.8s/轮，20env规模GPU与CPU持平）：成功5/20 vs 零残差4/20，无实质提升——归因为残差空间太小（±0.10rad手指 vs 夹紧需要1.2–1.5rad）+20条样本太少，规模化才值得GPU。RL路线当前规模下暂停。
+- Wuji关节归一化两轮：1:1映射 9/50（mean max lift 0.079）→ 最大屈曲聚合 10/50（0.108），vs n005 34/50，判负保留为下限数据点。归因：源Shadow远端关节屈曲量小（近端主导），直接映射致Wuji DIP不闭合；点法按指尖位置匹配不受此限。
+- XHand α混合已实现（源拇指尖-各指尖距离→每指在姿态/指尖精度间切换权重，d1=2.5cm/d2=5cm，开放期指尖权重×0.3、方向×0.2），Pliers[2]冒烟成功且loss略降；50集生成命令已交用户。
+- Linker现任基线脚本 `run_linker_incumbent_confirm_e.sh`（无时序关键点→动态夹紧→3mm校准，confirm_e 50集）已交用户终端。
+
+## 2026-08-17 深夜：三手方法队列全量执行与深入优化（追加）
+
+- 队列执行完毕（50集口径，全部30cm稳定协议）：
+  - 关节归一化：Wuji 9→10/50、XHand 19/50、Linker 2/50，全部判负作下限。
+  - AnyDex向量+α：XHand 30→**32/50**（vs 官方27，+5）；Linker v2 4→**11/50**（+α，vs 现任8，+3）；Wuji 30/50。
+  - 抓握偏置：Wuji grip2 32/50（grip5 25判负）；XHand grip2 28判负；Linker grip8 **13/50**（grip5 11，接触5回落到12）。
+  - 接触锚：Linker +2有效；XHand 8判负、Wuji 28判负——规律：只在6 DOF低自由度手上有效。
+  - 轨迹平滑：三手各-1，判负。
+  - 学习式映射（eigengrasp式MLP蒸馏，对象级40/10划分）：v1 XHand 2/Linker 2/Wuji 7，v2加14维物体形状 XHand 4/Linker 3(追平标签)/Wuji 6——独立方法判负，保留为加速替代。
+  - XHand warm start（官方初值）：31/50，判负一轮。
+  - Wuji anydex+grip2+n005 warm start：33/50 vs n005 34，p=1.0，统计平手。
+- 各手胜者：XHand 向量+α r1 32/50；Linker 向量v2+α+接触3+抓握8 13/50；Wuji n005 34/50 保持（anydex+grip2+warm 33/50 平手备选）。
+- 待用户决策：①Wuji手型门（旧无约束581/557 vs 约束n005 431/421）②三手正式1000重跑方案。
+
+## 2026-08-18/19：进阶策略重启——从0/500到19%复现率的完整修复链（追加）
+
+- 12个绝对动作模型（BC/Temporal3/Diffusion × 4专家池）闭环全部0/500：动作跳变为专家31倍，手不接触物体。复现历史T100/T70诊断：绝对动作回归在闭环分布偏移下剧烈振荡。
+- 修复链（每步有归因）：①增量动作+相位输入（PhaseResidual，组件早已存在）→ 跳变降至0.026；②相位感知增量钳位（按专家相位bin的P95限幅）→ 手指提前闭合消失、接触步28–170；③训练损失迭代（尖峰降权/收缩项均误伤小增量，最终普通MSE+钳位）；④修正版DAgger（学生访问状态+相位专家oracle标注；关键bug：在线数据的上一条命令必须存学生真实执行命令，不能从教师标签推导）→ 抬腕恢复；⑤腕部横向漂移 → 专家腕部开环（层级分解：腕部确定性由专家轨迹驱动，策略只学手指）；⑥评测口径 → 专家成功子集（此前调试的ball[0]专家自己仅抬1.3cm）。
+- 最终结果（专家腕部开环+专家成功子集复现率）：XHand 49/257（19.1%）、wuji_old 38/295（12.9%）、wuji_n005 22/190（11.6%）、linker 3/81（3.7%）。Wuji两池实证：旧无约束专家略优于n005——用户"训练实证优于视觉标准"的判断被支持。
+- 用户规划（6天）：继续DAgger轮次 + Temporal3消融（回答"历史记忆为何只在最后阶段有效"）+ Residual RL（PPO学习回路已修复、泛化到三手）+ 跳出框架的替代思路；后3天PPT/报告/消融/参数搜索。
+
+## 2026-08-19：DAgger轮次、时序消融与Residual RL泛化的最终结果（追加）
+
+- DAgger第二轮：Linker 3.7%→12.3%，XHand 19.1%→8.6%（轮次振荡，每池保留最优轮次）。
+- Temporal3消融（phase_residual+三帧历史）：XHand 13.2%（无历史19.1%）、wuji_old 13.2%（12.9%）、wuji_n005 10.5%（11.6%）、linker 6.2%（3.7%）——相位输入已提供时序信息，历史冗余；仅6 DOF Linker受益。结合旧项目"历史只在最后阶段有效"，完整结论：历史记忆只在策略基本正确、需要平滑抗噪时有效。
+- Residual RL泛化（`train_residual_ppo_general.py`，复用prepare_hand三手支持+已修复PPO回路；修复链：import顺序/物体旋转/open命令mimic展开维度）：统一口径测试集（专家成功子集复现率）XHand **54.1%**、wuji_old **45.4%**、wuji_n005 **36.3%**（BC式PhaseResidual分别为19.1%/12.9%/11.6%，提升2.8–3.5倍）；全量500条口径 xhand 28.8%、wuji_old 30.2%、wuji_n005 16.6%。Linker评测进行中。
+- 口径边界（报告必写）：RL输入含专家基线命令+专家腕部开环，非从零抓取；与旧项目Final8 26.15%可比但设定更有利。Wuji两池RL口径下 wuji_old 45.4% > wuji_n005 36.3%，再次支持旧无约束专家数据可用。
+- 指标记录：`export_tensorboard.py` 已把全部训练日志（CSV/JSON）转为tensorboard事件（runs/tensorboard/），`runs/policy_eval_summary.json` 汇总26组闭环评测。
+- Linker RL（修复命令/张开布局的mimic维度混淆后）：训练集20%→40%，统一测试集专家成功子集 **54.3%**（BC式12.3%）、全量60/500。
+- **四手最终RL表（统一测试集口径，专家成功子集复现率）**：xhand 54.1%（19.1%）、linker 54.3%（12.3%）、wuji_old 45.4%（12.9%）、wuji_n005 36.3%（11.6%），提升3.1–4.4倍。Residual RL为进阶任务最终方法，转入报告阶段。
+
+## 2026-08-20：实验报告首稿与正式图表
+
+- 新增 `reports/BASIC_RETARGETING_REPORT.md` 与 `reports/ADVANCED_POLICY_REPORT.md`，分别按考核基本要求和进阶要求压缩为1–2页结构；统一采用正式30cm稳定审计和按物体隔离的500条测试口径。
+- 新增 `reports/build_report_figures.py`，从正式结果与训练日志生成基础成功率、策略对比、监督/PPO训练曲线三张图；明确区分专家成功子集复现率与全量测试成功率。
+- 报告如实披露两项边界：Wuji无约束方法存在远端关节反弯；Residual PPO依赖每条测试任务的专家基线及专家腕部轨迹，不属于从零自主抓取。
+- 新增 `reports/REPORT_ASSET_CHECKLIST.md`。当前缺口是最终Linker方法视频及Residual PPO成功/失败视频；已有早期视频只能用于说明物理现象，不能冒充最终方法结果。
+- 根据用户反馈重写两份报告：先用直观语言解释任务和失败原因，再给算法名与参数；补充了单条轨迹如何优化、为何三手方法不同、开环重放与闭环策略的区别、BC→PhaseResidual/DAgger→Residual PPO的完整演进。
+- 新增 `reports/build_report_pdfs.py`，使用固定分页点、中文字体、A4表格和图注生成两份正式PDF；`pdfinfo`实测基础与进阶报告均恰好2页，而非按字数推测页数。
+- 从Residual PPO正式500条测试JSON中确定性选择三手各1条稳定成功和1条抬升后滑落失败：Linker Headphones/CerealBox、XHand Piano/Fruit、Wuji Blender/Clock。使用保存的真实DOF和物体状态生成6条软件渲染MP4，每条20 FPS×80帧=4秒，避免重新rollout改变正式结果。
+- 进阶报告已替换全部视频占位符，并同时写入成功案例末态保持和失败案例峰值→末值的定量解释；视频选择规则、指标和链接记录在 `advanced_policy/video_audit/final_residual_ppo_report_v1/VIDEO_REVIEW_INDEX.md`。
+- 用户指出软件骨架视频不符合“Isaac Gym仿真环境画面”的交付预期。新增 `scripts/render_isaac_state_replay.py`：加载正式评测JSON保存的实际DOF和物体位姿，在Isaac Gym中逐帧设置状态并由相机直接渲染；不重新执行闭环策略，避免启用图形后微小物理差异改变残差动作和成功标签。
+- 拉近共用相机并将视场角由65°缩至50°，保证手和物体成为画面主体。三手各1条稳定成功和1条滑落失败共6段已生成到 `advanced_policy/videos/final_residual_ppo_isaac_state_v1/`，均为20 FPS、80帧、4秒；进阶报告与视频索引已切换到这批Isaac视频，PDF重新生成并保持A4恰好2页。
+- 基础报告原先仍引用早期远景视频，因此新增NPZ专家trace的Isaac状态回放支持，并从正式重定向轨迹生成三手各1条稳定成功、1条严格30 cm失败，共6段近景视频到 `advanced_policy/videos/final_basic_isaac_state_v1/`。基础报告和独立视频索引已换成新素材；三条失败均展示旧10 cm峰值规则会误判、最终30 cm末段稳定规则会正确排除的案例。
+- 提交前一致性审计修正了基础报告“200步”的错误：实际为70帧×3物理步+30步末态保持=240步、4秒。基础Linker示例也由旧3 mm轨迹替换为最终功能向量方法的Dog[33]稳定成功与Camera[16]抬升后滑落。
+- 两份报告补入署名、日期、CPU/GPU和代码分支链接；README与ENVIRONMENT从旧GPU阻塞状态更新到最终实验状态。新增`reports/FINAL_EXPERIMENT_METADATA.json`记录manifest、评测种子、三手Residual PPO第300轮checkpoint及SHA256；评测器今后也会把`expert_wrist`和`residual_rl_checkpoint`写入单条与汇总报告并纳入resume一致性检查。
+- 新增`build_submission_bundle.py`，只读取当前两个render plan列出的12段最终视频，与两份PDF和元数据组成4.9 MB本地ZIP；`unzip -t`全部通过。未上传、未推送、未发送邮件。
+- 文档检查测试仍执行早期“每个函数必须写docstring”的旧要求，与用户后来明确的简洁代码原则冲突；现与重定向侧一致退役该风格门。最终本地测试为重定向109/109、进阶27/27全部通过，`git diff --check`通过。
+- 按用户确认将作者姓名纠正为“宛乐康”，两份报告标题下删除日期、设备和代码链接，仅保留姓名；详细复现信息继续放在独立元数据中。

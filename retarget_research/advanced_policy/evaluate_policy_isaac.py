@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 
 from isaacgym import gymapi
@@ -155,13 +156,37 @@ def rollout(args):
         shape_descriptor = build_object_shape_descriptor(
             object_dir / "coacd" / "decomposed.obj", scale
         )
+        residual_rl = None
+        rl_action_dim = 0
+        if args.residual_rl_checkpoint is not None:
+            from residual_ppo import ResidualActorCritic
+            payload = torch.load(args.residual_rl_checkpoint, map_location=args.device)
+            rl_obs_dim = int(payload.get("obs_dim", 0)) or None
+            rl_action_dim = int(payload.get("action_dim", 0)) or None
+            if rl_obs_dim is None or rl_action_dim is None:
+                state = payload["model"]
+                actor_weight = state["actor.1.weight"]
+                rl_obs_dim = int(actor_weight.shape[1])
+                actor_head = state["actor.5.weight"]
+                rl_action_dim = int(actor_head.shape[0])
+            residual_rl = ResidualActorCritic(
+                rl_obs_dim, rl_obs_dim, action_dim=rl_action_dim,
+                hidden_dims=(128, 128), init_std=0.05,
+            ).to(args.device)
+            residual_rl.load_state_dict(payload["model"])
+            residual_rl.eval()
+            previous_residual = np.zeros(rl_action_dim, dtype=np.float32)
         runner = PolicyRunner(
             args.checkpoint, args.data_dir, args.device,
             args.diffusion_execute_steps, args.normalized_action_clip,
             args.action_rate_limit_scale,
         )
+        phase_expert_teacher = (
+            args.teacher_checkpoint is not None
+            and str(args.teacher_checkpoint) == "phase_expert"
+        )
         teacher = None
-        if args.teacher_checkpoint is not None:
+        if args.teacher_checkpoint is not None and not phase_expert_teacher:
             teacher = PolicyRunner(
                 args.teacher_checkpoint,
                 args.data_dir,
@@ -170,8 +195,8 @@ def rollout(args):
                 normalized_action_clip=args.normalized_action_clip,
                 action_rate_limit_scale=0.0,
             )
-            if teacher.model_type != "category_teacher":
-                raise ValueError("在线采集的teacher checkpoint必须是category_teacher")
+            if teacher.model_type not in ("category_teacher", "phase_residual"):
+                raise ValueError("在线采集的teacher checkpoint必须是category_teacher或phase_residual")
         if runner.mappings.get("policy_action_order") != action_order:
             raise ValueError("策略训练数据的动作名称顺序与当前目标手候选不一致")
         first_dofs, first_object, first_contacts = read_policy_pre_action_state(
@@ -187,7 +212,7 @@ def rollout(args):
         )
         runner.reset(args.category, first_observation, initial_action=policy_open)
         if teacher is not None:
-            teacher.reset(args.category, first_observation)
+            teacher.reset(args.category, first_observation, initial_action=policy_open)
         lower = np.asarray(dof_properties["lower"], dtype=np.float32)
         upper = np.asarray(dof_properties["upper"], dtype=np.float32)
         positions, object_quaternions, contacts, actions, actual_dof_positions = [], [], [], [], []
@@ -209,7 +234,42 @@ def rollout(args):
             if teacher is not None:
                 online_observations.append(observation.copy())
                 online_teacher_actions.append(teacher.act(observation).copy())
+            elif phase_expert_teacher:
+                online_observations.append(observation.copy())
+                phase_index = min(int(round(physics_step / 209.0 * 69)), 69)
+                online_teacher_actions.append(policy_frames[phase_index].copy())
             policy_action = runner.act(observation)
+            if residual_rl is not None:
+                phase_index = min(physics_step // 3, len(policy_frames) - 1)
+                baseline = policy_frames[phase_index]
+                dof_pos = np.asarray(dof_states["pos"], dtype=np.float32)
+                dof_vel = np.asarray(dof_states["vel"], dtype=np.float32)
+                relative = (object_state["object_position"]
+                            - initial_position).astype(np.float32)
+                rl_obs = np.concatenate([
+                    baseline,
+                    dof_pos, dof_vel,
+                    relative,
+                    object_state["object_quaternion_xyzw"],
+                    object_state["object_linear_velocity"],
+                    object_state["object_angular_velocity"],
+                    np.asarray([math.log1p(contact_count),
+                                physics_step / max(1, 239.0), relative[2]],
+                               dtype=np.float32),
+                    previous_residual,
+                    shape_descriptor,
+                ]).astype(np.float32)
+                rl_tensor = torch.from_numpy(rl_obs[None]).to(args.device)
+                with torch.no_grad():
+                    residual = torch.tanh(
+                        residual_rl.distribution(rl_tensor).mean)[0].cpu().numpy()
+                policy_action = baseline.copy()
+                policy_action[6:] = policy_action[6:] + residual
+                previous_residual = residual
+            if args.expert_wrist:
+                phase_index = min(int(round(physics_step / 209.0 * 69)), 69)
+                policy_action = policy_action.copy()
+                policy_action[:6] = policy_frames[phase_index][:6]
             physics_action = np.asarray(mapper(policy_action), dtype=np.float32)
             physics_action = np.clip(physics_action, lower, upper)
             gym.set_actor_dof_position_targets(env, hand_actor, physics_action)
@@ -262,6 +322,12 @@ def rollout(args):
             "dt_s": float(args.dt),
             "physics_dof_names": dof_names,
             "checkpoint": str(args.checkpoint.resolve()),
+            "expert_wrist": bool(args.expert_wrist),
+            "residual_rl_checkpoint": (
+                None
+                if args.residual_rl_checkpoint is None
+                else str(args.residual_rl_checkpoint.resolve())
+            ),
             "teacher_checkpoint": (
                 None
                 if args.teacher_checkpoint is None
@@ -274,7 +340,7 @@ def rollout(args):
         }
         if recorder is not None:
             report.update(recorder.close())
-        if teacher is not None:
+        if teacher is not None or phase_expert_teacher:
             if args.online_output is None:
                 raise ValueError("提供teacher checkpoint时必须同时提供online output")
             args.online_output.parent.mkdir(parents=True, exist_ok=True)
@@ -312,6 +378,8 @@ def main():
     parser.add_argument("--object-dir", type=Path, required=True)
     parser.add_argument("--object-name", required=True)
     parser.add_argument("--category", required=True)
+    parser.add_argument("--expert-wrist", action="store_true")
+    parser.add_argument("--residual-rl-checkpoint", type=Path)
     parser.add_argument("--source-index", type=int, required=True)
     parser.add_argument("--target-index", type=int, required=True)
     parser.add_argument("--checkpoint", type=Path, required=True)
