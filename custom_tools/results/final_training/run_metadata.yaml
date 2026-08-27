@@ -1,0 +1,9 @@
+started_at: '2026-08-24T20:28:34'
+hostname: lekangwan-OMEN-Gaming-Laptop-16-ae0xxx
+python: 3.8.20
+command: custom_tools/train_bc.py --config custom_tools/configs/unified_student_temporal_chunk8_demo80_v1.yaml
+  --init-checkpoint /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_temporal3_seed2025_e4_v1/epoch=003-step=5152.ckpt
+  --run-name restart_shadow_chunk8_demo80_v1 --min-free-vram-mb 4500
+resume_checkpoint: null
+init_checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_temporal3_seed2025_e4_v1/epoch=003-step=5152.ckpt
+init_checkpoint_sha256: aecf421b76f8e2a8e669cdd01117ae64b8c275b658ea4766fdf9c6bb705d8b04

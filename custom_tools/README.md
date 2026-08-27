@@ -1,26 +1,37 @@
-# 自定义主线代码
+# ShadowHand 当前主线
 
-本目录只保留最终串行主线、必要仿真支持、冻结配置和少量回归测试。官方仓库文件仍在 `ActionDiffusion/`、`dexgrasp/` 和 `assets/`，没有直接改写成自定义实现。
+本目录只面向已经冻结的 ShadowHand 抓取策略：
 
-建议从 [`PIPELINE.md`](PIPELINE.md) 开始阅读，不要按文件名字母顺序阅读。
+```text
+DexRep + 4维类别ID + 前两步本体/动作历史
+→ MLP预测未来8步动作
+→ 重叠动作块等权平均
+→ 第40步后增加腕部z抬升量
+```
 
-## 六个推荐入口
+最终 checkpoint：`checkpoints/shadow_chunk8_final.ckpt`
 
-| 阶段 | 入口 |
-|---|---|
-| 数据准备 | `preprocess_graspm3_isolated.py`、`prepare_bc_dataset.py` |
-| 类别教师 | `run_scaled_category_expert_training.py` |
-| 离线统一学生 | `run_taskid_offline_stage.py` |
-| 在线模仿 | `collect_taskid_online_scaled20_isolated.py`、`run_taskid_online_r1_stage.py` |
-| 三帧学生 | `run_taskid_temporal3_stage.py` |
-| 统一评测 | `run_comprehensive_five_model_evaluation.py` |
+唯一配置：`configs/shadow_chunk8_mainline.yaml`
 
-## 目录约定
+最终结果：`results/final_ablation/summary.yaml`
 
-- `configs/`：只保留最终主线、对照和评测所需配置；
-- `results/`：只保留报告引用的轻量汇总和图片；
-- `runs/`：训练权重，受 `.gitignore` 排除；
-- `data/distillation/`：教师标签和在线聚合数据，受 `.gitignore` 排除；
-- 其他Python文件：上述入口的算法或仿真依赖。
+独立教学实现：`minimal_impl/`
 
-最终结果和案例视频见 `FINAL_SUBMISSION/`。完整开发历史位于 `lekang_baseline` 分支。
+零基础阅读文档：[`LEARNING_GUIDE.md`](LEARNING_GUIDE.md)
+
+建议阅读顺序：
+
+1. `LEARNING_GUIDE.md`：先理解任务、数据流、训练和评测；
+2. `minimal_impl/model.py`：理解DexRep、Temporal3、Chunk8和时间集成；
+3. `minimal_impl/data.py`：理解训练样本怎样构造；
+4. `minimal_impl/train.py`：理解监督学习；
+5. `minimal_impl/simulate.py`：理解动作怎样真正进入Isaac Gym；
+6. `results/final_ablation/`：核对结果和消融。
+
+CPU快速检查：
+
+```bash
+PYTHONPATH=. python3 custom_tools/minimal_impl/test_minimal.py
+```
+
+工作过程和失败候选不再拆成大量文档，统一保存在仓库根目录的 `PROJECT.md`。

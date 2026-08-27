@@ -175,6 +175,27 @@ def load_model(cli):
     bc_config_path = Path(cli.bc_config).expanduser().resolve()
     env_config_path = Path(cli.env_config).expanduser().resolve()
     bc_args = OmegaConf.load(str(bc_config_path))
+    ensemble_decay = getattr(cli, "temporal_ensemble_decay", None)
+    if ensemble_decay is not None:
+        OmegaConf.update(
+            bc_args, "action_chunk_execution.temporal_ensemble_decay",
+            float(ensemble_decay))
+    diffusion_scale = getattr(cli, "diffusion_residual_scale", None)
+    if diffusion_scale is not None:
+        OmegaConf.update(
+            bc_args, "action_diffusion.residual_scale",
+            float(diffusion_scale))
+    full_history_scale = getattr(
+        cli, "full_observation_residual_scale", None)
+    if full_history_scale is not None:
+        OmegaConf.update(
+            bc_args, "full_observation_transformer.residual_scale",
+            float(full_history_scale))
+    if getattr(cli, "dynamic_candidate_routing", False):
+        OmegaConf.update(
+            bc_args,
+            "multi_candidate_action_chunk.lock_candidate_per_episode",
+            False)
     env_args = OmegaConf.load(str(env_config_path))
     model_name = bc_args.policy.actor_critic
 

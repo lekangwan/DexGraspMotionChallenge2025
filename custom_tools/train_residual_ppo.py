@@ -156,6 +156,9 @@ def build_task(cli, config, official_args, base_cfg, cfg_train, trajectory_data)
     cfg["env"]["capture_width"] = int(getattr(cli, "capture_width", 640))
     cfg["env"]["capture_height"] = int(getattr(cli, "capture_height", 480))
     cfg["env"]["capture_stride"] = int(getattr(cli, "capture_stride", 1))
+    if config.get("meshdata_root"):
+        cfg["env"]["meshdata_root"] = str(
+            Path(config["meshdata_root"]).expanduser().resolve())
     cfg["env"].setdefault("seq_start_rot_uniform", False)
     sim_params = evaluation_support.parse_sim_params(
         official_args, cfg, cfg_train)

@@ -1,0 +1,12 @@
+status: fixed_development_screen
+selection_rule: first_object_in_each_category_from_scaled_development_all12
+object_ids:
+  - core-bottle-25b8ed5b02f07b6cbcfad79fc308fa6d
+  - core-mug-f626192a5930d6c712f0124e8fa3930b
+  - core-bowl-3f56833e91054d2518e800f0d88f9019
+  - core-camera-7077395b60bf4aeb3cb44973ec1ffcf8
+reference_results:
+  trajectories: 118
+  old_temporal3_stable_transport: 8
+  chunk8_equal_stable_transport: 23
+source: custom_tools/configs/scaled_development_all12.yaml

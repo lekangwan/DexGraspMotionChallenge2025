@@ -1,0 +1,502 @@
+status: reporting_only_no_further_model_selection
+primary_metric: object_macro_official_peak_success_rate
+secondary_metric: overall_stable_official_success_rate
+rows:
+- method: released_official_bc
+  seed: 2025
+  official_count: 6
+  trajectory_count: 216
+  official_overall_rate: 0.027777777777777776
+  official_macro_rate: 0.026208513708513705
+  stable_official_rate: 0.013888888888888888
+  category_official_rates:
+    bottle: 0.027777777777777776
+    bowl: 0.03333333333333333
+    camera: 0.015151515151515152
+    mug: 0.02857142857142857
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_ablation_v1/released_official_bc_seed2025.yaml
+- method: released_official_bc
+  seed: 2026
+  official_count: 6
+  trajectory_count: 216
+  official_overall_rate: 0.027777777777777776
+  official_macro_rate: 0.021446608946608946
+  stable_official_rate: 0.013888888888888888
+  category_official_rates:
+    bottle: 0.027777777777777776
+    bowl: 0.0
+    camera: 0.015151515151515152
+    mug: 0.04285714285714286
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_ablation_v1/released_official_bc_seed2026.yaml
+- method: released_official_bc
+  seed: 2027
+  official_count: 6
+  trajectory_count: 216
+  official_overall_rate: 0.027777777777777776
+  official_macro_rate: 0.026208513708513705
+  stable_official_rate: 0.013888888888888888
+  category_official_rates:
+    bottle: 0.027777777777777776
+    bowl: 0.03333333333333333
+    camera: 0.015151515151515152
+    mug: 0.02857142857142857
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_ablation_v1/released_official_bc_seed2027.yaml
+- method: matched_official_bc
+  seed: 2025
+  official_count: 16
+  trajectory_count: 216
+  official_overall_rate: 0.07407407407407407
+  official_macro_rate: 0.07240686944634313
+  stable_official_rate: 0.05092592592592592
+  category_official_rates:
+    bottle: 0.0402046783625731
+    bowl: 0.0
+    camera: 0.07323232323232323
+    mug: 0.17619047619047618
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_ablation_v1/matched_official_bc_seed2025.yaml
+- method: matched_official_bc
+  seed: 2026
+  official_count: 14
+  trajectory_count: 216
+  official_overall_rate: 0.06481481481481481
+  official_macro_rate: 0.0650812637654743
+  stable_official_rate: 0.037037037037037035
+  category_official_rates:
+    bottle: 0.039473684210526314
+    bowl: 0.0
+    camera: 0.07323232323232323
+    mug: 0.14761904761904762
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_ablation_v1/matched_official_bc_seed2026.yaml
+- method: matched_official_bc
+  seed: 2027
+  official_count: 14
+  trajectory_count: 216
+  official_overall_rate: 0.06481481481481481
+  official_macro_rate: 0.065264012303486
+  stable_official_rate: 0.037037037037037035
+  category_official_rates:
+    bottle: 0.0402046783625731
+    bowl: 0.0
+    camera: 0.07323232323232323
+    mug: 0.14761904761904762
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_ablation_v1/matched_official_bc_seed2027.yaml
+- method: temporal3
+  seed: 2025
+  official_count: 30
+  trajectory_count: 216
+  official_overall_rate: 0.1388888888888889
+  official_macro_rate: 0.12083475734791524
+  stable_official_rate: 0.125
+  category_official_rates:
+    bottle: 0.18932748538011696
+    bowl: 0.06666666666666667
+    camera: 0.10353535353535354
+    mug: 0.12380952380952381
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_v1/temporal3_seed2025.yaml
+- method: temporal3
+  seed: 2026
+  official_count: 30
+  trajectory_count: 216
+  official_overall_rate: 0.1388888888888889
+  official_macro_rate: 0.12430697957013745
+  stable_official_rate: 0.11574074074074074
+  category_official_rates:
+    bottle: 0.17543859649122806
+    bowl: 0.06666666666666667
+    camera: 0.13131313131313133
+    mug: 0.12380952380952381
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_v1/temporal3_seed2026.yaml
+- method: temporal3
+  seed: 2027
+  official_count: 29
+  trajectory_count: 216
+  official_overall_rate: 0.13425925925925927
+  official_macro_rate: 0.11628930280246069
+  stable_official_rate: 0.12037037037037036
+  category_official_rates:
+    bottle: 0.16154970760233917
+    bowl: 0.03333333333333333
+    camera: 0.14646464646464646
+    mug: 0.12380952380952381
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_v1/temporal3_seed2027.yaml
+- method: temporal3_demo80
+  seed: 2025
+  official_count: 25
+  trajectory_count: 216
+  official_overall_rate: 0.11574074074074074
+  official_macro_rate: 0.11493459026353763
+  stable_official_rate: 0.08796296296296297
+  category_official_rates:
+    bottle: 0.12207602339181287
+    bowl: 0.1
+    camera: 0.07575757575757576
+    mug: 0.16190476190476188
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_ablation_v1/temporal3_demo80_seed2025.yaml
+- method: temporal3_demo80
+  seed: 2026
+  official_count: 24
+  trajectory_count: 216
+  official_overall_rate: 0.1111111111111111
+  official_macro_rate: 0.11146236804131542
+  stable_official_rate: 0.08796296296296297
+  category_official_rates:
+    bottle: 0.10818713450292397
+    bowl: 0.1
+    camera: 0.07575757575757576
+    mug: 0.16190476190476188
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_ablation_v1/temporal3_demo80_seed2026.yaml
+- method: temporal3_demo80
+  seed: 2027
+  official_count: 27
+  trajectory_count: 216
+  official_overall_rate: 0.125
+  official_macro_rate: 0.12169628616997037
+  stable_official_rate: 0.09722222222222222
+  category_official_rates:
+    bottle: 0.14912280701754385
+    bowl: 0.1
+    camera: 0.07575757575757576
+    mug: 0.16190476190476188
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_ablation_v1/temporal3_demo80_seed2027.yaml
+- method: chunk8_no_ensemble
+  seed: 2025
+  official_count: 32
+  trajectory_count: 216
+  official_overall_rate: 0.14814814814814814
+  official_macro_rate: 0.14941093263461683
+  stable_official_rate: 0.09259259259259259
+  category_official_rates:
+    bottle: 0.0935672514619883
+    bowl: 0.14166666666666666
+    camera: 0.13383838383838384
+    mug: 0.22857142857142856
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_ablation_v1/chunk8_no_ensemble_seed2025.yaml
+- method: chunk8_no_ensemble
+  seed: 2026
+  official_count: 33
+  trajectory_count: 216
+  official_overall_rate: 0.1527777777777778
+  official_macro_rate: 0.15270040631882736
+  stable_official_rate: 0.09722222222222222
+  category_official_rates:
+    bottle: 0.1067251461988304
+    bowl: 0.14166666666666666
+    camera: 0.13383838383838384
+    mug: 0.22857142857142856
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_ablation_v1/chunk8_no_ensemble_seed2026.yaml
+- method: chunk8_no_ensemble
+  seed: 2027
+  official_count: 33
+  trajectory_count: 216
+  official_overall_rate: 0.1527777777777778
+  official_macro_rate: 0.15270040631882736
+  stable_official_rate: 0.09722222222222222
+  category_official_rates:
+    bottle: 0.1067251461988304
+    bowl: 0.14166666666666666
+    camera: 0.13383838383838384
+    mug: 0.22857142857142856
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_ablation_v1/chunk8_no_ensemble_seed2027.yaml
+- method: chunk8_equal
+  seed: 2025
+  official_count: 83
+  trajectory_count: 216
+  official_overall_rate: 0.38425925925925924
+  official_macro_rate: 0.35863712311080725
+  stable_official_rate: 0.36574074074074076
+  category_official_rates:
+    bottle: 0.4269005847953216
+    bowl: 0.35
+    camera: 0.3005050505050505
+    mug: 0.3571428571428571
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_ablation_v1/chunk8_equal_seed2025.yaml
+- method: chunk8_equal
+  seed: 2026
+  official_count: 82
+  trajectory_count: 216
+  official_overall_rate: 0.37962962962962965
+  official_macro_rate: 0.3573294030530872
+  stable_official_rate: 0.35648148148148145
+  category_official_rates:
+    bottle: 0.4130116959064327
+    bowl: 0.35
+    camera: 0.28535353535353536
+    mug: 0.38095238095238093
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_ablation_v1/chunk8_equal_seed2026.yaml
+- method: chunk8_equal
+  seed: 2027
+  official_count: 84
+  trajectory_count: 216
+  official_overall_rate: 0.3888888888888889
+  official_macro_rate: 0.3646887104123946
+  stable_official_rate: 0.35185185185185186
+  category_official_rates:
+    bottle: 0.4130116959064327
+    bowl: 0.35
+    camera: 0.3005050505050505
+    mug: 0.3952380952380952
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_ablation_v1/chunk8_equal_seed2027.yaml
+- method: chunk8_equal_lift
+  seed: 2025
+  official_count: 93
+  trajectory_count: 216
+  official_overall_rate: 0.4305555555555556
+  official_macro_rate: 0.39806666286929443
+  stable_official_rate: 0.39814814814814814
+  category_official_rates:
+    bottle: 0.47953216374269003
+    bowl: 0.375
+    camera: 0.28535353535353536
+    mug: 0.45238095238095233
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_v1/chunk8_equal_seed2025.yaml
+- method: chunk8_equal_lift
+  seed: 2026
+  official_count: 91
+  trajectory_count: 216
+  official_overall_rate: 0.4212962962962963
+  official_macro_rate: 0.39080656185919344
+  stable_official_rate: 0.37962962962962965
+  category_official_rates:
+    bottle: 0.46564327485380114
+    bowl: 0.375
+    camera: 0.2702020202020202
+    mug: 0.45238095238095233
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_v1/chunk8_equal_seed2026.yaml
+- method: chunk8_equal_lift
+  seed: 2027
+  official_count: 93
+  trajectory_count: 216
+  official_overall_rate: 0.4305555555555556
+  official_macro_rate: 0.39806666286929443
+  stable_official_rate: 0.39351851851851855
+  category_official_rates:
+    bottle: 0.47953216374269003
+    bowl: 0.375
+    camera: 0.28535353535353536
+    mug: 0.45238095238095233
+  source: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/restart_shadow_final_v1/chunk8_equal_seed2027.yaml
+methods:
+  released_official_bc:
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/ActionDiffusion/bc/saved_models/1obj_seq2000_DexRep_pro100_start_uniform_vis_action_dsam_mod/last.ckpt
+    official_counts:
+    - 6
+    - 6
+    - 6
+    official_macro_rate:
+      mean: 0.02462121212121212
+      std: 0.002244783432338245
+      values:
+      - 0.026208513708513705
+      - 0.021446608946608946
+      - 0.026208513708513705
+    official_overall_rate:
+      mean: 0.027777777777777776
+      std: 0.0
+      values:
+      - 0.027777777777777776
+      - 0.027777777777777776
+      - 0.027777777777777776
+    stable_official_rate:
+      mean: 0.013888888888888888
+      std: 0.0
+      values:
+      - 0.013888888888888888
+      - 0.013888888888888888
+      - 0.013888888888888888
+    category_official_rate_mean:
+      bottle: 0.027777777777777776
+      mug: 0.03333333333333333
+      bowl: 0.022222222222222223
+      camera: 0.015151515151515152
+  matched_official_bc:
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=079-step=75440.ckpt
+    official_counts:
+    - 16
+    - 14
+    - 14
+    official_macro_rate:
+      mean: 0.06758404850510114
+      std: 0.003411065388848284
+      values:
+      - 0.07240686944634313
+      - 0.0650812637654743
+      - 0.065264012303486
+    official_overall_rate:
+      mean: 0.06790123456790123
+      std: 0.004364856673991033
+      values:
+      - 0.07407407407407407
+      - 0.06481481481481481
+      - 0.06481481481481481
+    stable_official_rate:
+      mean: 0.041666666666666664
+      std: 0.006547285010986551
+      values:
+      - 0.05092592592592592
+      - 0.037037037037037035
+      - 0.037037037037037035
+    category_official_rate_mean:
+      bottle: 0.03996101364522417
+      mug: 0.15714285714285714
+      bowl: 0.0
+      camera: 0.07323232323232323
+  temporal3:
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_temporal3_seed2025_e4_v1/epoch=003-step=5152.ckpt
+    official_counts:
+    - 30
+    - 30
+    - 29
+    official_macro_rate:
+      mean: 0.12047701324017113
+      std: 0.0032829631760250906
+      values:
+      - 0.12083475734791524
+      - 0.12430697957013745
+      - 0.11628930280246069
+    official_overall_rate:
+      mean: 0.13734567901234568
+      std: 0.0021824283369955137
+      values:
+      - 0.1388888888888889
+      - 0.1388888888888889
+      - 0.13425925925925927
+    stable_official_rate:
+      mean: 0.12037037037037036
+      std: 0.0037800767635542873
+      values:
+      - 0.125
+      - 0.11574074074074074
+      - 0.12037037037037036
+    category_official_rate_mean:
+      bottle: 0.17543859649122806
+      mug: 0.12380952380952381
+      bowl: 0.05555555555555555
+      camera: 0.1271043771043771
+  temporal3_demo80:
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/restart_shadow_temporal3_demo80_v1/epoch=000-step=1288.ckpt
+    official_counts:
+    - 25
+    - 24
+    - 27
+    official_macro_rate:
+      mean: 0.1160310814916078
+      std: 0.004249312871977404
+      values:
+      - 0.11493459026353763
+      - 0.11146236804131542
+      - 0.12169628616997037
+    official_overall_rate:
+      mean: 0.11728395061728394
+      std: 0.005774162633910405
+      values:
+      - 0.11574074074074074
+      - 0.1111111111111111
+      - 0.125
+    stable_official_rate:
+      mean: 0.09104938271604938
+      std: 0.004364856673991033
+      values:
+      - 0.08796296296296297
+      - 0.08796296296296297
+      - 0.09722222222222222
+    category_official_rate_mean:
+      bottle: 0.12646198830409355
+      mug: 0.16190476190476188
+      bowl: 0.1
+      camera: 0.07575757575757576
+  chunk8_no_ensemble:
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/restart_shadow_chunk8_demo80_v1/epoch=001-step=2576.ckpt
+    official_counts:
+    - 32
+    - 33
+    - 33
+    official_macro_rate:
+      mean: 0.15160391509075719
+      std: 0.0015506727657599775
+      values:
+      - 0.14941093263461683
+      - 0.15270040631882736
+      - 0.15270040631882736
+    official_overall_rate:
+      mean: 0.15123456790123457
+      std: 0.0021824283369955267
+      values:
+      - 0.14814814814814814
+      - 0.1527777777777778
+      - 0.1527777777777778
+    stable_official_rate:
+      mean: 0.09567901234567901
+      std: 0.00218242833699552
+      values:
+      - 0.09259259259259259
+      - 0.09722222222222222
+      - 0.09722222222222222
+    category_official_rate_mean:
+      bottle: 0.1023391812865497
+      mug: 0.22857142857142856
+      bowl: 0.14166666666666666
+      camera: 0.13383838383838384
+  chunk8_equal:
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/restart_shadow_chunk8_demo80_v1/epoch=001-step=2576.ckpt
+    official_counts:
+    - 83
+    - 82
+    - 84
+    official_macro_rate:
+      mean: 0.3602184121920963
+      std: 0.003205745630493483
+      values:
+      - 0.35863712311080725
+      - 0.3573294030530872
+      - 0.3646887104123946
+    official_overall_rate:
+      mean: 0.38425925925925924
+      std: 0.0037800767635542813
+      values:
+      - 0.38425925925925924
+      - 0.37962962962962965
+      - 0.3888888888888889
+    stable_official_rate:
+      mean: 0.35802469135802467
+      std: 0.005774162633910409
+      values:
+      - 0.36574074074074076
+      - 0.35648148148148145
+      - 0.35185185185185186
+    category_official_rate_mean:
+      bottle: 0.41764132553606237
+      mug: 0.37777777777777777
+      bowl: 0.35
+      camera: 0.29545454545454547
+  chunk8_equal_lift:
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/restart_shadow_chunk8_demo80_v1/epoch=001-step=2576.ckpt
+    official_counts:
+    - 93
+    - 91
+    - 93
+    official_macro_rate:
+      mean: 0.39564662919926075
+      std: 0.0034224444375611446
+      values:
+      - 0.39806666286929443
+      - 0.39080656185919344
+      - 0.39806666286929443
+    official_overall_rate:
+      mean: 0.42746913580246915
+      std: 0.004364856673991053
+      values:
+      - 0.4305555555555556
+      - 0.4212962962962963
+      - 0.4305555555555556
+    stable_official_rate:
+      mean: 0.3904320987654321
+      std: 0.00786885727406293
+      values:
+      - 0.39814814814814814
+      - 0.37962962962962965
+      - 0.39351851851851855
+    category_official_rate_mean:
+      bottle: 0.4749025341130604
+      mug: 0.45238095238095233
+      bowl: 0.375
+      camera: 0.28030303030303033

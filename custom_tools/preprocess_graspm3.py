@@ -190,6 +190,12 @@ def process_batch(
             maximum_z[:] = torch.maximum(maximum_z, task.object_pos[:, 2])
             ever_success |= task.successes > 0
 
+        # There is no frame 70 target after obs[69].  Use the final expert
+        # target as a hold command instead of leaving the allocated slot at
+        # physical zero, which becomes an extreme normalized hand pose.
+        gt_all_actions[:, -1, :] = sequence[:, -1, :]
+        sim_all_actions[:, -1, :] = task.shadow_hand_dof_pos
+
         final_success = task.successes > 0
         maximum_lift = maximum_z - initial_z
         selected = selection_mask(

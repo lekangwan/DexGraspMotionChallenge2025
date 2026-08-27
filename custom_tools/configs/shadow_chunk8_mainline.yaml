@@ -1,0 +1,48 @@
+# 当前唯一主线：DexRep + Task-ID + Temporal3 + Chunk8 + 等权时间集成
+method: shadow_dexrep_temporal3_chunk8
+seed: 2025
+
+data:
+  train_trajectories: 1726
+  validation_trajectories: 434
+  frames_per_trajectory: 70
+  categories: [bottle, mug, bowl, camera]
+  batch_size: 128
+  offline_sample_fraction: 0.75
+  online_sample_fraction: 0.25
+  demo_loss_weight: 0.80
+  teacher_loss_weight: 0.20
+  proprioception_noise: 0.05
+
+model:
+  raw_observation_dim: 2582
+  filtered_observation_dim: 2460
+  dexrep_encoded_dim: 384
+  task_id_dim: 4
+  history_steps: 2
+  history_feature_dim: 256
+  actor_input_dim: 644
+  actor_hidden_dims: [1024, 1024, 512, 512]
+  action_dim: 28
+  action_chunk_horizon: 8
+  activation: elu
+
+training:
+  optimizer: adam
+  learning_rate: 2.0e-5
+  epochs: 4
+  loss: 2*wrist_translation_mse + wrist_rotation_mse + finger_mse + action_l1
+  future_loss_weight: 1.0
+
+inference:
+  policy_steps: 70
+  terminal_hold_steps: 52
+  temporal_ensemble_decay: 0.0
+  late_lift_start_step: 40
+  late_lift_z_boost_normalized: 0.20
+  late_lift_schedule: linear_ramp_to_step_69
+  action_clip: [-1.0, 1.0]
+
+frozen_checkpoint: custom_tools/checkpoints/shadow_chunk8_final.ckpt
+checkpoint_sha256: 2dc437f5d73267b3c4e9d1e8735557162d8e9bd41a038b621b6f53a5739b7abd
+final_results: custom_tools/results/final_ablation/summary.yaml

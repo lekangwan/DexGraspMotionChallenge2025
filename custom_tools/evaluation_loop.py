@@ -35,6 +35,14 @@ def obs_process(observation,pro_dim=128):
     filter_observation = observation[...,mask]
     return filter_observation
 
+
+def reset_policy_inference_state(model):
+    """每次开始评测一个新物体时，清空Temporal/Phase策略保存的跨步历史。"""
+    policy = getattr(model, "model", model)
+    reset_history = getattr(policy, "reset_inference_history", None)
+    if reset_history is not None:
+        reset_history()
+
 @torch.no_grad()
 def test_env(args, task, env, model, bc_model_name,obj_id, global_feat=None,use_gt=False, use_part_gt=False):
     if use_gt or use_part_gt:
@@ -42,6 +50,7 @@ def test_env(args, task, env, model, bc_model_name,obj_id, global_feat=None,use_
     # traj_obs = torch.tensor(task.obj_trajs_info['obs']).to('cuda')
 
     model.eval()
+    reset_policy_inference_state(model)
     pro_dim = task.cfg['env']['obs_dim']['prop']
     maxlen = 50000
     cur_reward_sum = torch.zeros(task.num_envs, dtype=torch.float, device=args.rl_device)

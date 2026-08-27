@@ -44,6 +44,31 @@ def obs_process_numpy(observation, pro_dim=128):
     return filtered_observation
 
 
+def add_observation_noise(observation, args, pro_dim):
+    """Apply either the legacy uniform noise or unit-aware proprioceptive noise."""
+    structured = args.get("structured_observation_noise", {})
+    if not bool(structured.get("enabled", False)):
+        noise = np.random.uniform(
+            -args.noise_val, args.noise_val, size=pro_dim)
+        observation[..., :pro_dim] += noise
+        return observation
+
+    groups = (
+        (0, 28, float(structured.get("joint_position", 0.02))),
+        (63, 66, float(structured.get("hand_position_m", 0.002))),
+        (66, 69, float(structured.get("hand_euler_rad", 0.01))),
+        (69, 93, float(structured.get("previous_action", 0.01))),
+        (93, 96, float(structured.get("object_position_m", 0.002))),
+    )
+    for start, end, magnitude in groups:
+        if start >= pro_dim or magnitude <= 0:
+            continue
+        stop = min(end, pro_dim)
+        observation[..., start:stop] += np.random.uniform(
+            -magnitude, magnitude, size=stop - start)
+    return observation
+
+
 class GraspM3DexRepDataset(Dataset):
     def __init__(self,args, ds_name='test'):
         self.args = args
@@ -123,6 +148,12 @@ class GraspM3DexRepDataset(Dataset):
         self.is_pad = self.args.start_frame_pad
 
         self.data = self.data_load(obj_id_list)
+        sequence_categories = np.asarray([
+            category_from_object_id(self.obj_code_name_list[int(index)])
+            for index in self.data['obj_code_idx']])
+        self.sample_categories = (
+            np.repeat(sequence_categories, self.num_frame)
+            if self.is_flat else sequence_categories)
         self.teacher_actions = None
         distillation = args.get('distillation')
         if (ds_name == 'train' and distillation is not None
@@ -131,11 +162,18 @@ class GraspM3DexRepDataset(Dataset):
                 distillation.teacher_action_file))
             teacher_data = np.load(teacher_path, allow_pickle=False)
             self.teacher_actions = teacher_data['teacher_actions'].astype(
-                np.float32, copy=False)
+                np.float32, copy=True)
             if len(self.teacher_actions) != len(self.data['obs']):
                 raise ValueError(
                     'Teacher labels have {} samples but dataset has {}'.format(
                         len(self.teacher_actions), len(self.data['obs'])))
+            # Historical teacher files were generated while the final sample
+            # of every trajectory was redirected to frame 30.  At the real
+            # final observation the only exact label available is therefore
+            # the demonstration hold target repaired in ``data_load``.
+            self.teacher_actions[self.num_frame - 1::self.num_frame] = (
+                self.data['vis_unscale_actions'][
+                    self.num_frame - 1::self.num_frame])
 
         self.keys = self.data.keys()
         print("{} dataset seq_num={}".format(ds_name,len(self.data['obj_code_idx'])))
@@ -292,6 +330,15 @@ class GraspM3DexRepDataset(Dataset):
             val = np.concatenate(val, axis=0)
             if target_seq_num > 0:
                 val = val[:target_seq_num]
+            # Preprocessing records transitions obs[t] -> grasp_seqs[t+1]
+            # only through t=68.  Its allocated frame-69 action was never
+            # written and encodes the normalized physical zero pose.  The
+            # correct target after the final observation is to hold the last
+            # valid PD target, i.e. repeat frame 68.
+            if (key == 'vis_unscale_actions' and val.ndim == 3
+                    and val.shape[1] >= 2):
+                val = val.copy()
+                val[:, -1] = val[:, -2]
             if key != 'obj_code_idx' and self.is_flat:
                 N, T = val.shape[:2]
                 val = val.reshape(N * T, *val.shape[2:])  # (N*T, ...)
@@ -346,11 +393,6 @@ class GraspM3DexRepDataset(Dataset):
 
         if self.is_flat:
             seq_id = math.floor(idx/self.num_frame)
-            frame_id = idx % self.num_frame
-
-            if frame_id==self.num_frame-1:
-                idx-=39
-
             obj_code_idx = self.data['obj_code_idx'][seq_id]
             # data_out['obj_emb'] = self.obj_glob_feats_all[obj_code_idx]
 
@@ -375,8 +417,8 @@ class GraspM3DexRepDataset(Dataset):
                 data_out['obs'] = self.data['obs'][idx].copy()  #(2488) if is_flat else (T, 2488)
 
             if self.args.add_noise and self.ds_name!='test':
-                noise = np.random.uniform(-self.args.noise_val, self.args.noise_val, size=self.pro_dim)
-                data_out['obs'][..., :self.pro_dim]+=noise
+                add_observation_noise(
+                    data_out['obs'], self.args, self.pro_dim)
 
                 # data_out['obs'][:207]+=noise
                 # noise0_3 = np.random.uniform(-0.05, 0.05, size=3)

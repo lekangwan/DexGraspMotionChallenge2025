@@ -1,0 +1,6 @@
+elapsed_seconds: 81.16829611999856
+global_step: 5152
+peak_allocated_mib: 84.033203125
+peak_reserved_mib: 100.0
+free_vram_after_mib: 6985.125
+total_vram_mib: 7794.125

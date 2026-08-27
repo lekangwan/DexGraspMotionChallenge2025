@@ -28,27 +28,36 @@ for import_root in (str(REPO_ROOT), str(DEXGRASP_ROOT)):
 
 import isaacgym  # Isaac Gym must be imported before torch.  # noqa: E402,F401
 import torch  # noqa: E402
+import torch.nn.functional as F  # noqa: E402
 
 
 import pytorch_lightning as pl
 from ActionDiffusion.bc.model.policy.lhm_policy import LitBCModel
 from pytorch_lightning.callbacks import ModelCheckpoint, Callback, LearningRateMonitor
 from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
-from custom_tools.graspm3_dexrep_dataset import GraspM3DexRepDataset
+from custom_tools.graspm3_dexrep_dataset import (
+    GraspM3DexRepDataset, add_observation_noise)
 from custom_tools.task_conditioning import (
     TASK_CATEGORIES,
+    action_diffusion_enabled,
     action_chunk_aux_enabled,
     action_chunk_aux_parameters,
     enable_task_conditioning,
     expand_standard_state_dict_for_task_model,
     full_observation_gru_enabled,
+    full_observation_gru_freeze_base,
+    full_observation_transformer_enabled,
+    full_observation_transformer_freeze_base,
+    multi_candidate_chunk_enabled,
     phase_conditioning_enabled,
     phase_conditioning_parameters,
+    relative_action_chunk_enabled,
     task_conditioning_enabled,
     temporal_attention_freeze_base,
     temporal_history_dimensions,
     temporal_history_enabled,
     temporal_history_lags,
+    wrist_residual_chunk_enabled,
 )
 
 
@@ -268,11 +277,8 @@ class OnlineAugmentedDataset(Dataset):
         online_index = index - len(self.offline)
         observation = self.online_observations[online_index].copy()
         if self.offline.args.add_noise:
-            noise = np.random.uniform(
-                -self.offline.args.noise_val,
-                self.offline.args.noise_val,
-                size=self.offline.pro_dim).astype(np.float32)
-            observation[..., :self.offline.pro_dim] += noise
+            add_observation_noise(
+                observation, self.offline.args, self.offline.pro_dim)
         action = self.online_actions[online_index]
         return {
             'obs': observation,
@@ -285,6 +291,29 @@ class OnlineAugmentedDataset(Dataset):
                 len(TASK_CATEGORIES), dtype=np.float32)[
                     self.online_category_indices[online_index]],
         }
+
+
+class CategorySubset(Dataset):
+    """Select one semantic category after all labels have been aligned."""
+
+    def __init__(self, dataset, category):
+        categories = np.asarray(dataset.sample_categories)
+        self.indices = np.flatnonzero(categories == category)
+        if len(self.indices) == 0:
+            raise ValueError('No samples for category {}'.format(category))
+        self.dataset = dataset
+        self.sample_categories = categories[self.indices]
+        sources = getattr(dataset, 'sample_sources', None)
+        self.sample_sources = (
+            None if sources is None else np.asarray(sources)[self.indices])
+        print('Category subset {}: {} samples'.format(
+            category, len(self.indices)))
+
+    def __len__(self):
+        return len(self.indices)
+
+    def __getitem__(self, index):
+        return self.dataset[int(self.indices[index])]
 
 
 class TemporalHistoryDataset(Dataset):
@@ -300,7 +329,8 @@ class TemporalHistoryDataset(Dataset):
             action_chunk_aux_parameters(args)[0]
             if action_chunk_aux_enabled(args) else 1)
         self.include_full_observation_history = (
-            full_observation_gru_enabled(args))
+            full_observation_gru_enabled(args)
+            or full_observation_transformer_enabled(args))
         self.include_phase_feature = phase_conditioning_enabled(args)
         self.phase_max_frame_index = (
             phase_conditioning_parameters(args)["phase_max_frame_index"]
@@ -454,10 +484,7 @@ class TemporalHistoryDataset(Dataset):
                 [normalized_phase], dtype=np.float32)
         if self.include_full_observation_history:
             item["full_history_observations"] = full_history
-        if (
-            self.action_chunk_horizon > 1
-            and self.offline.teacher_actions is not None
-        ):
+        if self.action_chunk_horizon > 1:
             if index < self.offline_length:
                 teacher_chunk, demo_chunk, chunk_mask = (
                     self._offline_action_chunk(index))
@@ -480,12 +507,16 @@ class TemporalHistoryDataset(Dataset):
             target_frame = min(
                 frame + offset, self.offline.num_frame - 1)
             target_index = sequence_start + target_frame
-            teacher.append(
-                self.offline.teacher_actions[target_index].astype(
+            demo_action = self.offline.data[
+                "vis_unscale_actions"][target_index].astype(
+                    np.float32, copy=True)
+            teacher_action = (
+                demo_action
+                if self.offline.teacher_actions is None
+                else self.offline.teacher_actions[target_index].astype(
                     np.float32, copy=True))
-            demo.append(
-                self.offline.data["vis_unscale_actions"][target_index].astype(
-                    np.float32, copy=True))
+            teacher.append(teacher_action)
+            demo.append(demo_action)
             mask.append(valid)
         return (
             np.stack(teacher),
@@ -531,13 +562,27 @@ class DistillationBCModel(LitBCModel):
             raise ValueError('Distillation weights must be non-negative')
         if abs(self.teacher_weight + self.demo_weight - 1.0) > 1e-6:
             raise ValueError('Distillation weights must sum to one')
+        self.shadow_keypoint_kinematics = None
+
+    def _keypoint_geometry_loss(self, prediction, target, mask):
+        config = self.args.get("keypoint_geometry_loss", {})
+        if not bool(config.get("enabled", False)):
+            return prediction.sum() * 0.0
+        if self.shadow_keypoint_kinematics is None:
+            from custom_tools.shadow_keypoint_loss import (
+                ShadowKeypointKinematics)
+            self.shadow_keypoint_kinematics = ShadowKeypointKinematics(
+                prediction.device)
+        return self.shadow_keypoint_kinematics.mean_distance_loss(
+            prediction, target, mask)
 
     def forward(self, batch):
         if phase_conditioning_enabled(self.args):
             return self.model(
                 batch['obs'], batch['task_onehot'],
                 batch['history_features'], batch['phase_feature'])
-        if full_observation_gru_enabled(self.args):
+        if (full_observation_gru_enabled(self.args)
+                or full_observation_transformer_enabled(self.args)):
             return self.model(
                 batch['obs'], batch['task_onehot'],
                 batch['history_features'],
@@ -551,6 +596,8 @@ class DistillationBCModel(LitBCModel):
         return super().forward(batch)
 
     def training_step(self, batch, batch_idx):
+        if action_diffusion_enabled(self.args):
+            return self._diffusion_chunk_step(batch, "train")
         if action_chunk_aux_enabled(self.args):
             return self._action_chunk_training_step(batch)
         prediction = self.forward(batch)
@@ -568,6 +615,48 @@ class DistillationBCModel(LitBCModel):
         }, prog_bar=True, on_epoch=True)
         return loss
 
+    def validation_step(self, batch, batch_idx):
+        if action_diffusion_enabled(self.args):
+            return self._diffusion_chunk_step(batch, "val")
+        return super().validation_step(batch, batch_idx)
+
+    def _diffusion_chunk_step(self, batch, prefix):
+        choose_demo = (
+            torch.rand(
+                batch["demo_action_chunk"].shape[0], 1, 1,
+                device=batch["demo_action_chunk"].device)
+            < self.demo_weight)
+        target = torch.where(
+            choose_demo, batch["demo_action_chunk"],
+            batch["teacher_action_chunk"])
+        with torch.no_grad():
+            base = self.model.base_action_chunk(
+                batch["obs"], batch["task_onehot"],
+                batch["history_features"])
+        residual_target = (target - base).clamp(-2.0, 2.0)
+        timesteps = torch.randint(
+            0, self.model.diffusion_steps,
+            (target.shape[0],), device=target.device)
+        alpha_bar = self.model.diffusion_alpha_bars[
+            timesteps].reshape(-1, 1, 1)
+        noise = torch.randn_like(residual_target)
+        noisy = (
+            torch.sqrt(alpha_bar) * residual_target
+            + torch.sqrt(1.0 - alpha_bar) * noise)
+        predicted = self.model.predict_diffusion_noise(
+            noisy, batch["obs"], batch["task_onehot"],
+            batch["history_features"], timesteps)
+        mask = batch["action_chunk_mask"].unsqueeze(-1).to(predicted.dtype)
+        loss = ((predicted - noise).square() * mask).sum() / (
+            mask.sum() * predicted.shape[-1])
+        residual_l1 = (residual_target.abs() * mask).sum() / (
+            mask.sum() * residual_target.shape[-1])
+        self.log_dict({
+            "{}_diffusion_loss".format(prefix): loss,
+            "{}_residual_l1".format(prefix): residual_l1,
+        }, prog_bar=True, on_epoch=True)
+        return loss
+
     def _masked_future_loss(self, prediction, target, mask):
         losses = []
         for step in range(1, prediction.shape[1]):
@@ -581,9 +670,19 @@ class DistillationBCModel(LitBCModel):
         return torch.stack(losses).mean()
 
     def _action_chunk_training_step(self, batch):
+        chunk_kwargs = {}
+        if phase_conditioning_enabled(self.args):
+            chunk_kwargs["phase_feature"] = batch["phase_feature"]
+        if (full_observation_gru_enabled(self.args)
+                or full_observation_transformer_enabled(self.args)):
+            chunk_kwargs["full_history_observations"] = (
+                batch["full_history_observations"])
+        if multi_candidate_chunk_enabled(self.args):
+            return self._multi_candidate_chunk_training_step(
+                batch, chunk_kwargs)
         prediction = self.model.forward_action_chunk(
             batch["obs"], batch["task_onehot"],
-            batch["history_features"])
+            batch["history_features"], **chunk_kwargs)
         teacher_main = self.cal_loss(
             prediction[:, 0], batch["teacher_action_chunk"][:, 0])
         demo_main = self.cal_loss(
@@ -603,8 +702,15 @@ class DistillationBCModel(LitBCModel):
         loss = (
             self.teacher_weight * teacher_loss
             + self.demo_weight * demo_loss)
+        geometry_loss = self._keypoint_geometry_loss(
+            prediction, batch["demo_action_chunk"],
+            batch["action_chunk_mask"])
+        geometry_weight = float(self.args.get(
+            "keypoint_geometry_loss", {}).get("weight", 0.0))
+        loss = loss + geometry_weight * geometry_loss
         self.log_dict({
             "train_loss": loss,
+            "keypoint_geometry_loss_m": geometry_loss,
             "teacher_loss": teacher_main["loss"],
             "demo_loss": demo_main["loss"],
             "teacher_future_loss": teacher_future,
@@ -612,6 +718,37 @@ class DistillationBCModel(LitBCModel):
             "teacher_wrist_loss": teacher_main["wrist_loss"],
             "teacher_ori_loss": teacher_main["ori_loss"],
             "teacher_finger_loss": teacher_main["finger_loss"],
+        }, prog_bar=True, on_epoch=True)
+        return loss
+
+    def _multi_candidate_chunk_training_step(self, batch, chunk_kwargs):
+        candidates, gate_logits = self.model.forward_action_candidates(
+            batch["obs"], batch["task_onehot"],
+            batch["history_features"], **chunk_kwargs)
+        mask = batch["action_chunk_mask"][:, None, :, None].to(
+            candidates.dtype)
+
+        def per_candidate(target):
+            expanded_target = target[:, None].expand_as(candidates)
+            error = F.smooth_l1_loss(
+                candidates, expanded_target, reduction="none")
+            return (error * mask).sum(dim=(2, 3)) / (
+                mask.sum(dim=(2, 3)) * candidates.shape[-1]).clamp_min(1.0)
+
+        combined = (
+            self.teacher_weight * per_candidate(batch["teacher_action_chunk"])
+            + self.demo_weight * per_candidate(batch["demo_action_chunk"]))
+        winner = combined.detach().argmin(dim=1)
+        regression = combined.gather(1, winner[:, None]).mean()
+        gate = F.cross_entropy(gate_logits, winner)
+        gate_weight = float(
+            self.args.multi_candidate_action_chunk.get(
+                "gate_loss_weight", 0.1))
+        loss = regression + gate_weight * gate
+        self.log_dict({
+            "train_loss": loss,
+            "candidate_regression_loss": regression,
+            "candidate_gate_loss": gate,
         }, prog_bar=True, on_epoch=True)
         return loss
 
@@ -642,7 +779,50 @@ class BCTrainer:
                 .format(
                     init_checkpoint, checkpoint.get('epoch', 'unknown'),
                     expanded))
+        if relative_action_chunk_enabled(args) and bool(
+                args.relative_action_chunk.get("reset_correction_heads", True)):
+            if init_checkpoint is None:
+                raise ValueError(
+                    "Resetting relative-action heads requires --init-checkpoint")
+            self.bc_model.model.reset_correction_heads()
+            print(
+                "Reset current/future action heads; training corrections "
+                "relative to the current normalized joint state")
         self.frozen_mode_modules = []
+        if action_diffusion_enabled(args) and bool(
+                args.action_diffusion.get("freeze_chunk_base", True)):
+            self.frozen_mode_modules.extend(
+                self.bc_model.model.freeze_chunk_base())
+            print("Frozen deterministic Chunk8 base; training diffusion denoiser only")
+        if multi_candidate_chunk_enabled(args) and bool(
+                args.multi_candidate_action_chunk.get(
+                    "freeze_chunk_base", True)):
+            self.frozen_mode_modules.extend(
+                self.bc_model.model.freeze_chunk_base())
+            print(
+                "Frozen deterministic Chunk8 base; training candidates and gate only")
+        if wrist_residual_chunk_enabled(args) and bool(
+                args.wrist_residual_chunk.get("freeze_chunk_base", True)):
+            if init_checkpoint is None:
+                raise ValueError(
+                    "Freezing the Chunk8 base requires --init-checkpoint")
+            self.frozen_mode_modules.extend(
+                self.bc_model.model.freeze_chunk_base())
+            print("Frozen Chunk8 base; training wrist residual only")
+        if full_observation_gru_freeze_base(args):
+            if init_checkpoint is None:
+                raise ValueError(
+                    "Freezing the Chunk8 base requires --init-checkpoint")
+            self.frozen_mode_modules.extend(
+                self.bc_model.model.freeze_chunk_base())
+            print("Frozen Chunk8 base; training full-observation GRU only")
+        if full_observation_transformer_freeze_base(args):
+            if init_checkpoint is None:
+                raise ValueError(
+                    "Freezing the Chunk8 base requires --init-checkpoint")
+            self.frozen_mode_modules.extend(
+                self.bc_model.model.freeze_chunk_base())
+            print("Frozen Chunk8 base; training full-observation Transformer only")
         if temporal_attention_freeze_base(args):
             if init_checkpoint is None:
                 raise ValueError(
@@ -799,6 +979,10 @@ def main(args, env_args, resume_checkpoint=None, init_checkpoint=None,
     if temporal_history_enabled(args):
         ds_train = TemporalHistoryDataset(ds_train, args)
         ds_test = TemporalHistoryDataset(ds_test, args)
+    sample_category = args.get('sample_category')
+    if sample_category:
+        ds_train = CategorySubset(ds_train, str(sample_category))
+        ds_test = CategorySubset(ds_test, str(sample_category))
 
     sampler = None
     category_balanced = args.get('category_balanced_sampling', False)
@@ -840,10 +1024,16 @@ def parse_cli():
     parser.add_argument('--noise-value', type=float, default=None)
     parser.add_argument('--seq-num', type=int, default=None)
     parser.add_argument('--val-seq-num', type=int, default=None)
+    parser.add_argument('--action-chunk-horizon', type=int, default=None)
     parser.add_argument(
         '--train-category', choices=('bottle', 'mug', 'bowl', 'camera'),
         default=None,
         help='Train and validate only on one category from the frozen manifest.')
+    parser.add_argument(
+        '--sample-category', choices=('bottle', 'mug', 'bowl', 'camera'),
+        default=None,
+        help=('Filter the fully aligned offline/teacher/online dataset to one '
+              'category; use this for category-specialist fine-tuning.'))
     parser.add_argument(
         '--category-train-size', type=int, choices=(4, 10, 20), default=None,
         help='Use a nested per-category object count from the category manifest.')
@@ -899,6 +1089,11 @@ if __name__ == "__main__":
             raise ValueError('--teacher-weight must be in [0, 1]')
         OmegaConf.update(args, 'distillation.teacher_weight', cli.teacher_weight)
         OmegaConf.update(args, 'distillation.demo_weight', 1.0 - cli.teacher_weight)
+    if cli.action_chunk_horizon is not None:
+        if cli.action_chunk_horizon < 2:
+            raise ValueError('--action-chunk-horizon must be at least two')
+        OmegaConf.update(
+            args, 'action_chunk_aux.horizon', cli.action_chunk_horizon)
     if cli.teacher_action_file is not None:
         teacher_action_file = str(
             Path(cli.teacher_action_file).expanduser().resolve())
@@ -910,6 +1105,8 @@ if __name__ == "__main__":
         OmegaConf.update(args, 'freeze_feature_encoder', True)
     if cli.object_balanced_sampling:
         OmegaConf.update(args, 'object_balanced_sampling', True)
+    if cli.sample_category is not None:
+        OmegaConf.update(args, 'sample_category', cli.sample_category)
 
     if cli.train_category is not None:
         manifest_path = Path(cli.category_manifest).expanduser().resolve()

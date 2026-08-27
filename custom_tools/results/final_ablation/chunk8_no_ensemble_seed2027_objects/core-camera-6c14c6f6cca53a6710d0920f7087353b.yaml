@@ -1,0 +1,541 @@
+created_at: '2026-08-26T21:45:44'
+evaluation_mode: single_sim_multi_object_multi_checkpoint
+success_metric: stable_official_success
+official_peak_metric_retained: true
+official_success_definition_changed: false
+seed: 2027
+trajectory_root: /home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_final_v1_preprocessed
+object_ids:
+- core-camera-6c14c6f6cca53a6710d0920f7087353b
+checkpoint_results:
+- checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/restart_shadow_chunk8_demo80_v1/epoch=001-step=2576.ckpt
+  checkpoint_epoch: 1
+  total_success_count: 7
+  total_trajectory_count: 33
+  total_strict_terminal_success_count: 2
+  total_stable_official_success_count: 2
+  total_goal_center_30cm_success_count: 0
+  macro_official_peak_success_rate: 0.21212121212121213
+  macro_mean_maximum_lift_m: 0.08769527077674866
+  macro_failure_rate: 0.06060606241226196
+  objects:
+  - object_id: core-camera-6c14c6f6cca53a6710d0920f7087353b
+    category: camera
+    trajectory_count: 33
+    official_peak_success_count: 7
+    official_peak_success_rate: 0.21212121212121213
+    strict_terminal_success_count: 2
+    strict_terminal_success_rate: 0.06060606241226196
+    stable_official_success_count: 2
+    stable_official_success_rate: 0.06060606241226196
+    goal_center_30cm_success_count: 0
+    goal_center_30cm_success_rate: 0.0
+    terminal_height_hold_counts:
+      '0.18': 2
+      '0.2': 2
+      '0.25': 1
+      '0.3': 0
+    terminal_contact_hold_count: 0
+    terminal_low_drop_count: 24
+    terminal_stable_transport_count: 2
+    mean_final_lift_m: -0.01913437619805336
+    mean_terminal_height_range_m: 0.00023185304598882794
+    official_peak_success_local_indices:
+    - 6
+    - 8
+    - 15
+    - 17
+    - 22
+    - 25
+    - 29
+    mean_maximum_lift_m: 0.08769527077674866
+    failure_rate: 0.06060606241226196
+    trajectory_diagnostics:
+    - local_trajectory_index: 0
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.006249725818634033
+      final_lift_m: -0.018580615520477295
+      peak_to_final_drop_m: 0.024830341339111328
+      final_goal_distance_m: 0.2822515070438385
+      minimum_palm_object_distance_m: 0.4523690640926361
+      minimum_mean_fingertip_object_distance_m: 0.05273066833615303
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.13440415263175964
+      applied_action_to_expert_action_mse: 0.13440415263175964
+    - local_trajectory_index: 1
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.004649937152862549
+      final_lift_m: -0.013929903507232666
+      peak_to_final_drop_m: 0.018579840660095215
+      final_goal_distance_m: 0.2856457829475403
+      minimum_palm_object_distance_m: 0.4406324028968811
+      minimum_mean_fingertip_object_distance_m: 0.04958219826221466
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.05254333093762398
+      applied_action_to_expert_action_mse: 0.05254333093762398
+    - local_trajectory_index: 2
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.005142271518707275
+      final_lift_m: -0.013961255550384521
+      peak_to_final_drop_m: 0.019103527069091797
+      final_goal_distance_m: 0.2847907543182373
+      minimum_palm_object_distance_m: 0.4455724060535431
+      minimum_mean_fingertip_object_distance_m: 0.047624003142118454
+      maximum_fingertip_contact_count: 1
+      first_fingertip_contact_step: 30
+      raw_policy_to_expert_action_mse: 0.07649779319763184
+      applied_action_to_expert_action_mse: 0.07649779319763184
+    - local_trajectory_index: 3
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.00013685226440429688
+      final_lift_m: 2.5272369384765625e-05
+      peak_to_final_drop_m: 0.00011157989501953125
+      final_goal_distance_m: 0.2536717653274536
+      minimum_palm_object_distance_m: 0.43657925724983215
+      minimum_mean_fingertip_object_distance_m: 0.08927859365940094
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.25270017981529236
+      applied_action_to_expert_action_mse: 0.25270017981529236
+    - local_trajectory_index: 4
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.004625558853149414
+      final_lift_m: -7.569789886474609e-06
+      peak_to_final_drop_m: 0.004633128643035889
+      final_goal_distance_m: 0.25447431206703186
+      minimum_palm_object_distance_m: 0.4396817982196808
+      minimum_mean_fingertip_object_distance_m: 0.046567048877477646
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.13388141989707947
+      applied_action_to_expert_action_mse: 0.13388141989707947
+    - local_trajectory_index: 5
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.008475303649902344
+      final_lift_m: -0.010696232318878174
+      peak_to_final_drop_m: 0.019171535968780518
+      final_goal_distance_m: 0.2879619300365448
+      minimum_palm_object_distance_m: 0.44136738777160645
+      minimum_mean_fingertip_object_distance_m: 0.0737309604883194
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.051449619233608246
+      applied_action_to_expert_action_mse: 0.051449619233608246
+    - local_trajectory_index: 6
+      official_peak_success: true
+      stable_official_success: false
+      first_official_step: 35
+      maximum_lift_m: 0.5160579085350037
+      final_lift_m: -0.010673224925994873
+      peak_to_final_drop_m: 0.5267311334609985
+      final_goal_distance_m: 0.3325757384300232
+      minimum_palm_object_distance_m: 0.029861237853765488
+      minimum_mean_fingertip_object_distance_m: 0.04556351527571678
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.11296595633029938
+      applied_action_to_expert_action_mse: 0.11296595633029938
+    - local_trajectory_index: 7
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.008362948894500732
+      final_lift_m: 0.008362889289855957
+      peak_to_final_drop_m: 5.960464477539063e-08
+      final_goal_distance_m: 0.2494809329509735
+      minimum_palm_object_distance_m: 0.42884865403175354
+      minimum_mean_fingertip_object_distance_m: 0.1001209020614624
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.1805926263332367
+      applied_action_to_expert_action_mse: 0.1805926263332367
+    - local_trajectory_index: 8
+      official_peak_success: true
+      stable_official_success: false
+      first_official_step: 42
+      maximum_lift_m: 0.18743503093719482
+      final_lift_m: -0.010636746883392334
+      peak_to_final_drop_m: 0.19807177782058716
+      final_goal_distance_m: 0.27226585149765015
+      minimum_palm_object_distance_m: 0.2521604001522064
+      minimum_mean_fingertip_object_distance_m: 0.038052428513765335
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.20902833342552185
+      applied_action_to_expert_action_mse: 0.20902833342552185
+    - local_trajectory_index: 9
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.000919044017791748
+      final_lift_m: 8.07642936706543e-05
+      peak_to_final_drop_m: 0.0008382797241210938
+      final_goal_distance_m: 0.24889111518859863
+      minimum_palm_object_distance_m: 0.42736169695854187
+      minimum_mean_fingertip_object_distance_m: 0.14378206431865692
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.3096798062324524
+      applied_action_to_expert_action_mse: 0.3096798062324524
+    - local_trajectory_index: 10
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.018944263458251953
+      final_lift_m: 9.5367431640625e-07
+      peak_to_final_drop_m: 0.018943309783935547
+      final_goal_distance_m: 0.2741740345954895
+      minimum_palm_object_distance_m: 0.4348228871822357
+      minimum_mean_fingertip_object_distance_m: 0.08146841078996658
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.21801018714904785
+      applied_action_to_expert_action_mse: 0.21801018714904785
+    - local_trajectory_index: 11
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.002838611602783203
+      final_lift_m: 1.6093254089355469e-06
+      peak_to_final_drop_m: 0.0028370022773742676
+      final_goal_distance_m: 0.2723245918750763
+      minimum_palm_object_distance_m: 0.4545930325984955
+      minimum_mean_fingertip_object_distance_m: 0.05884319543838501
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.14556415379047394
+      applied_action_to_expert_action_mse: 0.14556415379047394
+    - local_trajectory_index: 12
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.02169036865234375
+      final_lift_m: 0.0010516047477722168
+      peak_to_final_drop_m: 0.020638763904571533
+      final_goal_distance_m: 0.24749821424484253
+      minimum_palm_object_distance_m: 0.4334988296031952
+      minimum_mean_fingertip_object_distance_m: 0.08944138139486313
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.07249815762042999
+      applied_action_to_expert_action_mse: 0.07249815762042999
+    - local_trajectory_index: 13
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.005637168884277344
+      final_lift_m: -1.1324882507324219e-06
+      peak_to_final_drop_m: 0.005638301372528076
+      final_goal_distance_m: 0.258725106716156
+      minimum_palm_object_distance_m: 0.43861663341522217
+      minimum_mean_fingertip_object_distance_m: 0.07335975021123886
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.13556240499019623
+      applied_action_to_expert_action_mse: 0.13556240499019623
+    - local_trajectory_index: 14
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.0004916191101074219
+      final_lift_m: -3.874301910400391e-06
+      peak_to_final_drop_m: 0.0004954934120178223
+      final_goal_distance_m: 0.2482205033302307
+      minimum_palm_object_distance_m: 0.4397164583206177
+      minimum_mean_fingertip_object_distance_m: 0.14001572132110596
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.18644237518310547
+      applied_action_to_expert_action_mse: 0.18644237518310547
+    - local_trajectory_index: 15
+      official_peak_success: true
+      stable_official_success: false
+      first_official_step: 47
+      maximum_lift_m: 0.2207689881324768
+      final_lift_m: 0.013250768184661865
+      peak_to_final_drop_m: 0.20751821994781494
+      final_goal_distance_m: 0.2659575045108795
+      minimum_palm_object_distance_m: 0.26749008893966675
+      minimum_mean_fingertip_object_distance_m: 0.05510944873094559
+      maximum_fingertip_contact_count: 4
+      first_fingertip_contact_step: 18
+      raw_policy_to_expert_action_mse: 0.10473804920911789
+      applied_action_to_expert_action_mse: 0.10473804920911789
+    - local_trajectory_index: 16
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.010841727256774902
+      final_lift_m: -3.2186508178710938e-06
+      peak_to_final_drop_m: 0.010844945907592773
+      final_goal_distance_m: 0.2793327569961548
+      minimum_palm_object_distance_m: 0.4528614580631256
+      minimum_mean_fingertip_object_distance_m: 0.04527423903346062
+      maximum_fingertip_contact_count: 5
+      first_fingertip_contact_step: 31
+      raw_policy_to_expert_action_mse: 0.06237934157252312
+      applied_action_to_expert_action_mse: 0.06237934157252312
+    - local_trajectory_index: 17
+      official_peak_success: true
+      stable_official_success: false
+      first_official_step: 62
+      maximum_lift_m: 0.5129987001419067
+      final_lift_m: -0.5999758243560791
+      peak_to_final_drop_m: 1.1129745244979858
+      final_goal_distance_m: 2.0606131553649902
+      minimum_palm_object_distance_m: 0.26739081740379333
+      minimum_mean_fingertip_object_distance_m: 0.06682169437408447
+      maximum_fingertip_contact_count: 2
+      first_fingertip_contact_step: 57
+      raw_policy_to_expert_action_mse: 0.24777327477931976
+      applied_action_to_expert_action_mse: 0.24777327477931976
+    - local_trajectory_index: 18
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.004060804843902588
+      final_lift_m: -2.2649765014648438e-06
+      peak_to_final_drop_m: 0.004063069820404053
+      final_goal_distance_m: 0.27489331364631653
+      minimum_palm_object_distance_m: 0.45543405413627625
+      minimum_mean_fingertip_object_distance_m: 0.07749897986650467
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.16946344077587128
+      applied_action_to_expert_action_mse: 0.16946344077587128
+    - local_trajectory_index: 19
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.14411962032318115
+      final_lift_m: 0.013936281204223633
+      peak_to_final_drop_m: 0.13018333911895752
+      final_goal_distance_m: 0.26777318120002747
+      minimum_palm_object_distance_m: 0.3175138235092163
+      minimum_mean_fingertip_object_distance_m: 0.04652148857712746
+      maximum_fingertip_contact_count: 1
+      first_fingertip_contact_step: 36
+      raw_policy_to_expert_action_mse: 0.21202412247657776
+      applied_action_to_expert_action_mse: 0.21202412247657776
+    - local_trajectory_index: 20
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.04466855525970459
+      final_lift_m: 4.76837158203125e-07
+      peak_to_final_drop_m: 0.04466807842254639
+      final_goal_distance_m: 0.2912972867488861
+      minimum_palm_object_distance_m: 0.4352854788303375
+      minimum_mean_fingertip_object_distance_m: 0.04746823012828827
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.12363521009683609
+      applied_action_to_expert_action_mse: 0.12363521009683609
+    - local_trajectory_index: 21
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 6.0617923736572266e-05
+      final_lift_m: 6.556510925292969e-07
+      peak_to_final_drop_m: 5.996227264404297e-05
+      final_goal_distance_m: 0.272860586643219
+      minimum_palm_object_distance_m: 0.45373478531837463
+      minimum_mean_fingertip_object_distance_m: 0.06249777227640152
+      maximum_fingertip_contact_count: 1
+      first_fingertip_contact_step: 14
+      raw_policy_to_expert_action_mse: 0.21426251530647278
+      applied_action_to_expert_action_mse: 0.21426251530647278
+    - local_trajectory_index: 22
+      official_peak_success: true
+      stable_official_success: false
+      first_official_step: 36
+      maximum_lift_m: 0.3898029327392578
+      final_lift_m: 4.708766937255859e-06
+      peak_to_final_drop_m: 0.38979822397232056
+      final_goal_distance_m: 0.28968918323516846
+      minimum_palm_object_distance_m: 0.14873424172401428
+      minimum_mean_fingertip_object_distance_m: 0.051174044609069824
+      maximum_fingertip_contact_count: 1
+      first_fingertip_contact_step: 17
+      raw_policy_to_expert_action_mse: 0.24353303015232086
+      applied_action_to_expert_action_mse: 0.24353303015232086
+    - local_trajectory_index: 23
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.010470390319824219
+      final_lift_m: -5.960464477539063e-08
+      peak_to_final_drop_m: 0.010470449924468994
+      final_goal_distance_m: 0.2737438380718231
+      minimum_palm_object_distance_m: 0.4482405483722687
+      minimum_mean_fingertip_object_distance_m: 0.07464498281478882
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.1827164590358734
+      applied_action_to_expert_action_mse: 0.1827164590358734
+    - local_trajectory_index: 24
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.10879772901535034
+      final_lift_m: 0.10848838090896606
+      peak_to_final_drop_m: 0.00030934810638427734
+      final_goal_distance_m: 0.141034796833992
+      minimum_palm_object_distance_m: 0.3308018743991852
+      minimum_mean_fingertip_object_distance_m: 0.11718904227018356
+      maximum_fingertip_contact_count: 2
+      first_fingertip_contact_step: 50
+      raw_policy_to_expert_action_mse: 0.17692825198173523
+      applied_action_to_expert_action_mse: 0.17692825198173523
+    - local_trajectory_index: 25
+      official_peak_success: true
+      stable_official_success: true
+      first_official_step: 61
+      maximum_lift_m: 0.2946651577949524
+      final_lift_m: 0.29466140270233154
+      peak_to_final_drop_m: 3.7550926208496094e-06
+      final_goal_distance_m: 0.06458041071891785
+      minimum_palm_object_distance_m: 0.19101904332637787
+      minimum_mean_fingertip_object_distance_m: 0.05866199731826782
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.05400945246219635
+      applied_action_to_expert_action_mse: 0.05400945246219635
+    - local_trajectory_index: 26
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.008975088596343994
+      final_lift_m: -2.205371856689453e-06
+      peak_to_final_drop_m: 0.008977293968200684
+      final_goal_distance_m: 0.2583426237106323
+      minimum_palm_object_distance_m: 0.42372891306877136
+      minimum_mean_fingertip_object_distance_m: 0.11561781167984009
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.1972089558839798
+      applied_action_to_expert_action_mse: 0.1972089558839798
+    - local_trajectory_index: 27
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.004560410976409912
+      final_lift_m: 2.384185791015625e-06
+      peak_to_final_drop_m: 0.0045580267906188965
+      final_goal_distance_m: 0.27284911274909973
+      minimum_palm_object_distance_m: 0.45246046781539917
+      minimum_mean_fingertip_object_distance_m: 0.06653916090726852
+      maximum_fingertip_contact_count: 1
+      first_fingertip_contact_step: 16
+      raw_policy_to_expert_action_mse: 0.13906258344650269
+      applied_action_to_expert_action_mse: 0.13906258344650269
+    - local_trajectory_index: 28
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.02640610933303833
+      final_lift_m: 3.4749507904052734e-05
+      peak_to_final_drop_m: 0.026371359825134277
+      final_goal_distance_m: 0.30643850564956665
+      minimum_palm_object_distance_m: 0.4273309111595154
+      minimum_mean_fingertip_object_distance_m: 0.049609094858169556
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.19584615528583527
+      applied_action_to_expert_action_mse: 0.19584615528583527
+    - local_trajectory_index: 29
+      official_peak_success: true
+      stable_official_success: true
+      first_official_step: 67
+      maximum_lift_m: 0.2070954442024231
+      final_lift_m: 0.20708060264587402
+      peak_to_final_drop_m: 1.4841556549072266e-05
+      final_goal_distance_m: 0.07370566576719284
+      minimum_palm_object_distance_m: 0.2705346941947937
+      minimum_mean_fingertip_object_distance_m: 0.05246623978018761
+      maximum_fingertip_contact_count: 2
+      first_fingertip_contact_step: 28
+      raw_policy_to_expert_action_mse: 0.049940094351768494
+      applied_action_to_expert_action_mse: 0.049940094351768494
+    - local_trajectory_index: 30
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.06295830011367798
+      final_lift_m: -0.5999702215194702
+      peak_to_final_drop_m: 0.6629285216331482
+      final_goal_distance_m: 1.8825798034667969
+      minimum_palm_object_distance_m: 0.44307294487953186
+      minimum_mean_fingertip_object_distance_m: 0.06470057368278503
+      maximum_fingertip_contact_count: 3
+      first_fingertip_contact_step: 17
+      raw_policy_to_expert_action_mse: 0.15843574702739716
+      applied_action_to_expert_action_mse: 0.15843574702739716
+    - local_trajectory_index: 31
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.002531886100769043
+      final_lift_m: 1.7881393432617188e-07
+      peak_to_final_drop_m: 0.002531707286834717
+      final_goal_distance_m: 0.2584274411201477
+      minimum_palm_object_distance_m: 0.4388977885246277
+      minimum_mean_fingertip_object_distance_m: 0.0669306069612503
+      maximum_fingertip_contact_count: 1
+      first_fingertip_contact_step: 26
+      raw_policy_to_expert_action_mse: 0.17073149979114532
+      applied_action_to_expert_action_mse: 0.17073149979114532
+    - local_trajectory_index: 32
+      official_peak_success: false
+      stable_official_success: false
+      first_official_step: -1
+      maximum_lift_m: 0.04850459098815918
+      final_lift_m: 2.6285648345947266e-05
+      peak_to_final_drop_m: 0.04847830533981323
+      final_goal_distance_m: 0.28337427973747253
+      minimum_palm_object_distance_m: 0.4286641478538513
+      minimum_mean_fingertip_object_distance_m: 0.05070866271853447
+      maximum_fingertip_contact_count: 0
+      first_fingertip_contact_step: -1
+      raw_policy_to_expert_action_mse: 0.13626514375209808
+      applied_action_to_expert_action_mse: 0.13626514375209808
+  overall_official_peak_success_rate: 0.21212121212121213
+  overall_strict_terminal_success_rate: 0.06060606060606061
+  overall_stable_official_success_rate: 0.06060606060606061
+  overall_goal_center_30cm_success_rate: 0.0
+  macro_strict_terminal_success_rate: 0.06060606241226196
+  strict_terminal_definition:
+    metric_name: stable_official_success
+    official_instantaneous_rule: goal_distance<=0.12m OR object_z>=goal_z, within
+      workspace
+    terminal_hold_policy_steps: 20
+    policy_motion_steps: 70
+    minimum_contact_count: 2
+    maximum_peak_to_terminal_drop_m: 0.03
+    contact_is_diagnostic_only: true
+    height_rule: official instantaneous rule holds for every terminal step
+    late_lift_z_boost_normalized: 0.0
+    late_lift_start_step: 40
+    late_lift_contact_gate: 0
+    hold_grip_scale: 0.0
+    hold_grip_reference_step: 40
+  goal_center_30cm_diagnostic:
+    lift_threshold_m: 0.3
+    terminal_hold_policy_steps: 20
+    maximum_peak_to_terminal_drop_m: 0.03
+    primary_metric: false
+  action_source: checkpoint_policy

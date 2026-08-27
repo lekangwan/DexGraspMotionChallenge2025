@@ -20,8 +20,9 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEXGRASP_ROOT = REPO_ROOT / "dexgrasp"
 for root in (str(REPO_ROOT), str(DEXGRASP_ROOT)):
-    if root not in sys.path:
-        sys.path.insert(0, root)
+    if root in sys.path:
+        sys.path.remove(root)
+    sys.path.insert(0, root)
 
 from custom_tools import evaluate_bc as evaluation_support  # noqa: E402
 from custom_tools.diagnose_bc_closed_loop import (  # noqa: E402
@@ -74,6 +75,8 @@ def parse_cli():
     parser.add_argument("--rl-device", default="cuda:0")
     parser.add_argument("--show-viewer", action="store_true")
     parser.add_argument("--num-envs", type=int, default=0)
+    parser.add_argument("--meshdata-root", default="")
+    parser.add_argument("--temporal-ensemble-decay", type=float, default=None)
     return parser.parse_args()
 
 
@@ -162,6 +165,8 @@ def main():
     cli.bc_config = str(absolute(cli.bc_config))
     cli.env_config = str(absolute(cli.env_config))
     cli.train_config = str(absolute(cli.train_config))
+    cli.meshdata_root = (
+        str(absolute(cli.meshdata_root)) if cli.meshdata_root else "")
     teachers = parse_teachers(cli.teacher)
 
     with open(cli.manifest, encoding="utf-8") as handle:
@@ -226,8 +231,11 @@ def main():
                 if cli.trajectory_split_root else None,
                 cli.trajectory_start_offset)
             cli.num_envs = count
+            task_config = {"seed": cli.seed}
+            if cli.meshdata_root:
+                task_config["meshdata_root"] = cli.meshdata_root
             task = build_task(
-                cli, {"seed": cli.seed}, official_args, base_cfg, cfg_train, [data])
+                cli, task_config, official_args, base_cfg, cfg_train, [data])
             raw_obs = reset_task(task, torch)
             active = torch.ones(count, dtype=torch.bool, device=task.device)
             collected_before = len(category_indices)

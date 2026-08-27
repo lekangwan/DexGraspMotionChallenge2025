@@ -487,7 +487,10 @@ class CustomShadowHandGraspDexRepIjrr(BaseTask):
         self.obj_sample_points_list = []
         for obj_code in self.object_code_list:
             # dexrep_load = self.asset_root + self.cfg["env"]["asset"]["assetFileNameObj_raw"] + obj_code + "/coacd" + f'/decomposed.obj'
-            dexrep_load = '../assets/meshdata/' + obj_code + "/coacd" + f'/decomposed.obj'
+            meshdata_root = self.cfg["env"].get(
+                "meshdata_root", "../assets/meshdata")
+            dexrep_load = osp.join(
+                meshdata_root, obj_code, "coacd", "decomposed.obj")
             obj_mesh = trimesh.load_mesh(dexrep_load)
             if isinstance(obj_mesh, trimesh.Scene):
                 obj_mesh = trimesh.util.concatenate([geometry for geometry in obj_mesh.geometry.values()])
@@ -498,7 +501,8 @@ class CustomShadowHandGraspDexRepIjrr(BaseTask):
 
         if len(self.object_code_list)==1:
             # dexrep_load = self.asset_root + self.cfg["env"]["asset"]["assetFileNameObj_raw"] + self.object_code_list[0] + "/coacd" + f'/decomposed.obj'
-            dexrep_load = '../assets/meshdata/' + obj_code + "/coacd" + f'/decomposed.obj'
+            dexrep_load = osp.join(
+                meshdata_root, obj_code, "coacd", "decomposed.obj")
             obj_mesh = trimesh.load_mesh(dexrep_load)
             self.obj_mesh = obj_mesh
             self.obj_sample_points = self.get_object_sample_points(obj_mesh)
@@ -1191,7 +1195,10 @@ class CustomShadowHandGraspDexRepIjrr(BaseTask):
             object_asset_file = "coacd_1.urdf"
             if self.cfg['env']['obj_type'] in ('seen', 'one'):
                 # object_asset = self.gym.load_asset(self.sim, self.obj_asset_root + f'{object_code}' + "/coacd", object_asset_file, object_asset_options)
-                object_asset = self.gym.load_asset(self.sim, '../assets/meshdata/' + f'{object_code}' + "/coacd",
+                meshdata_root = self.cfg["env"].get(
+                    "meshdata_root", "../assets/meshdata")
+                object_asset = self.gym.load_asset(self.sim, osp.join(
+                    meshdata_root, object_code, "coacd"),
                                                    object_asset_file, object_asset_options)
             if object_asset is None:
                 print(object_code)

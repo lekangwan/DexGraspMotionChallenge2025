@@ -1,0 +1,43 @@
+status: final_shadow_development_lock
+locked_at: "2026-08-26"
+selection_set: custom_tools/configs/scaled_development_screen4.yaml
+selection_metric: stable_official_success
+selection_rule: official_condition_holds_for_last20_steps_and_peak_to_final_drop_at_most_3cm
+policy_motion_steps: 70
+terminal_action_hold_steps: 52
+
+checkpoint: custom_tools/runs/bc/restart_shadow_chunk8_demo80_v1/epoch=001-step=2576.ckpt
+checkpoint_sha256: 2dc437f5d73267b3c4e9d1e8735557162d8e9bd41a038b621b6f53a5739b7abd
+base_config: custom_tools/configs/unified_student_temporal_chunk8_demo80_v1.yaml
+base_config_sha256: 7323f6a85ce5713996e0605790a4adb5b6d43a1ec4f095a207825f7ce856debc
+inference_overrides:
+  action_chunk_execution.temporal_ensemble_decay: 0.0
+  late_lift_z_boost_normalized: 0.20
+  late_lift_start_step: 40
+
+development_result:
+  trajectories: 118
+  official_peak_success: 51
+  stable_official_success: 46
+  stable_official_success_rate: 0.3898305085
+  category_stable_success:
+    bottle: 10
+    mug: 6
+    bowl: 21
+    camera: 9
+  expert_stable_official_success: 102
+
+final_report_set: custom_tools/configs/scaled_final_holdout_all8.yaml
+final_report_seeds: [2025, 2026, 2027]
+final_report_evaluation_was_run: true
+final_report_primary_metric: object_macro_official_peak_success_rate
+final_report_result:
+  official_macro_success_mean: 0.3956466292
+  official_macro_success_std: 0.0034224444
+  official_overall_success_mean: 0.4274691358
+  stable_official_success_mean: 0.3904320988
+  official_success_counts: [93, 91, 93]
+  trajectories_per_seed: 216
+  matched_official_bc_macro_success_mean: 0.0675840485
+  released_official_bc_macro_success_mean: 0.0246212121
+development_is_closed: true

@@ -72,3 +72,14 @@ wandb/
 # Learning materials
 /custom_tools/minimal_impl/
 INTERVIEW_QA.md
+
+# Frozen ShadowHand mainline: intentionally versioned learning code and evidence
+!/custom_tools/minimal_impl/
+!/custom_tools/minimal_impl/**
+!/custom_tools/checkpoints/shadow_chunk8_final.ckpt
+!/custom_tools/results/
+/custom_tools/results/*
+!/custom_tools/results/final_ablation/
+!/custom_tools/results/final_ablation/**
+!/custom_tools/results/final_training/
+!/custom_tools/results/final_training/**
