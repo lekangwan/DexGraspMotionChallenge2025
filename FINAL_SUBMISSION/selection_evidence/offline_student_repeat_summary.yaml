@@ -1,14 +1,14 @@
 status: complete
 formal_final_holdout_result: false
 final_holdout_accessed: false
-selection: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/configs/scaled_development_all12.yaml
+selection: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/configs/scaled_development_all12.yaml
 seeds:
 - 2025
 - 2026
 - 2027
 ranking:
 - label: t100_epoch15
-  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_scaled20_t100_seed2025_e20_v1/epoch=014-step=14145.ckpt
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_taskid_scaled20_t100_seed2025_e20_v1/epoch=014-step=14145.ckpt
   seeds:
   - 2025
   - 2026
@@ -56,7 +56,7 @@ ranking:
       - 0.12194380615433247
       - 0.12148180569233201
 - label: t70_demo30_epoch15
-  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_scaled20_t70_demo30_seed2025_e20_v1/epoch=014-step=14145.ckpt
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_taskid_scaled20_t70_demo30_seed2025_e20_v1/epoch=014-step=14145.ckpt
   seeds:
   - 2025
   - 2026
@@ -104,7 +104,7 @@ ranking:
       - 0.1404116667274562
       - 0.14895867527446474
 - label: t70_demo30_epoch20
-  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_scaled20_t70_demo30_seed2025_e20_v1/epoch=019-step=18860.ckpt
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_taskid_scaled20_t70_demo30_seed2025_e20_v1/epoch=019-step=18860.ckpt
   seeds:
   - 2025
   - 2026

@@ -1,7 +1,7 @@
 {
   "hand": "linker_o6",
   "joint_mode": "coupled6",
-  "source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-TissueBox-5128910785490905c58e834f0b160845.npy",
+  "source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/external_data/dataset/sem-TissueBox-5128910785490905c58e834f0b160845.npy",
   "target": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-TissueBox-5128910785490905c58e834f0b160845.npy",
   "object_name": "sem-TissueBox-5128910785490905c58e834f0b160845",
   "source_trajectory_index": 30,

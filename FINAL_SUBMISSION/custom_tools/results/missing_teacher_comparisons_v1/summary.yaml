@@ -6,29 +6,29 @@ matched_official_bc:
     80-object training data; no custom enhancements
   screening:
   - epoch: 20
-    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=019-step=18860.ckpt
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=019-step=18860.ckpt
     macro_success_rate: 0.011940673705379587
     mean_maximum_lift_m: 0.00803091698010879
   - epoch: 40
-    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=039-step=37720.ckpt
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=039-step=37720.ckpt
     macro_success_rate: 0.032268099547511316
     mean_maximum_lift_m: 0.024105593057659764
   - epoch: 60
-    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=059-step=56580.ckpt
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=059-step=56580.ckpt
     macro_success_rate: 0.05769441744673943
     mean_maximum_lift_m: 0.044662468562213085
   - epoch: 80
-    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=079-step=75440.ckpt
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=079-step=75440.ckpt
     macro_success_rate: 0.16294353626493718
     mean_maximum_lift_m: 0.10907952262399097
   - epoch: 100
-    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=099-step=94300.ckpt
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=099-step=94300.ckpt
     macro_success_rate: 0.06262650991753159
     mean_maximum_lift_m: 0.03669165821823602
   selected_epoch: 80
   development_three_seed:
     label: matched_official_bc
-    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=079-step=75440.ckpt
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=079-step=75440.ckpt
     success_counts:
     - 42
     - 42
@@ -71,7 +71,7 @@ matched_official_bc:
         - 0.0436468857521489
   final_three_seed:
     label: matched_official_bc
-    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=079-step=75440.ckpt
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=079-step=75440.ckpt
     success_counts:
     - 21
     - 21
@@ -118,25 +118,25 @@ taskid_ablation:
     one-hot differs
   no_taskid_screening:
   - epoch: 5
-    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_notask_scaled20_t100_seed2025_e20_v1/epoch=004-step=4715.ckpt
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_notask_scaled20_t100_seed2025_e20_v1/epoch=004-step=4715.ckpt
     macro_success_rate: 0.22544443765902744
     mean_maximum_lift_m: 0.10259766348948081
   - epoch: 10
-    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_notask_scaled20_t100_seed2025_e20_v1/epoch=009-step=9430.ckpt
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_notask_scaled20_t100_seed2025_e20_v1/epoch=009-step=9430.ckpt
     macro_success_rate: 0.15485678065012431
     mean_maximum_lift_m: 0.09390958134705822
   - epoch: 15
-    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_notask_scaled20_t100_seed2025_e20_v1/epoch=014-step=14145.ckpt
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_notask_scaled20_t100_seed2025_e20_v1/epoch=014-step=14145.ckpt
     macro_success_rate: 0.1920969872546885
     mean_maximum_lift_m: 0.0885501376663645
   - epoch: 20
-    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_notask_scaled20_t100_seed2025_e20_v1/epoch=019-step=18860.ckpt
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_notask_scaled20_t100_seed2025_e20_v1/epoch=019-step=18860.ckpt
     macro_success_rate: 0.1599411277478228
     mean_maximum_lift_m: 0.08124366371581952
   selected_no_taskid_epoch: 5
   without_taskid_three_seed:
     label: offline_student_no_taskid
-    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_notask_scaled20_t100_seed2025_e20_v1/epoch=004-step=4715.ckpt
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_notask_scaled20_t100_seed2025_e20_v1/epoch=004-step=4715.ckpt
     success_counts:
     - 69
     - 67
@@ -179,7 +179,7 @@ taskid_ablation:
         - 0.13996182417235048
   with_taskid_three_seed:
     label: offline_student_with_taskid
-    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_scaled20_t100_seed2025_e20_v1/epoch=014-step=14145.ckpt
+    checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_taskid_scaled20_t100_seed2025_e20_v1/epoch=014-step=14145.ckpt
     success_counts:
     - 66
     - 69

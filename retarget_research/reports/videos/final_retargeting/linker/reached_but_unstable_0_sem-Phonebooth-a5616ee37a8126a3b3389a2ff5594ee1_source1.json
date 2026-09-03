@@ -1,7 +1,7 @@
 {
   "hand": "linker_o6",
   "joint_mode": "coupled6",
-  "source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Phonebooth-a5616ee37a8126a3b3389a2ff5594ee1.npy",
+  "source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/external_data/dataset/sem-Phonebooth-a5616ee37a8126a3b3389a2ff5594ee1.npy",
   "target": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Phonebooth-a5616ee37a8126a3b3389a2ff5594ee1.npy",
   "object_name": "sem-Phonebooth-a5616ee37a8126a3b3389a2ff5594ee1",
   "source_trajectory_index": 1,

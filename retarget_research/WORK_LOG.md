@@ -689,7 +689,7 @@
 
 ### 数据来源纠正与完整预检
 
-- 此前只审计新工作区和参考仓库，因而只看到参考方法随附的41个物体；继续扫描本机旧项目后，在只读目录`/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data`找到完整数据。旧目录不做任何修改，新项目只通过绝对路径读取。
+- 此前只审计新工作区和参考仓库，因而只看到参考方法随附的41个物体；继续扫描本机旧项目后，在只读目录`/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/external_data`找到完整数据。旧目录不做任何修改，新项目只通过绝对路径读取。
 - `dataset`中有5048个对象级npy，`meshdata`中有5751套对象资产。完整预检逐一读取全部5048文件，没有缺字段或错误形状，共160495条`(70,28)` Shadow轨迹；`hand-retarget`环境的Isaac Gym和全部依赖可用，Linker/XHand/Wuji主动自由度仍核对为6/12/20。CPU PhysX可用，CUDA不可用但不阻塞基本重定向。
 
 ### 可审计类别规则

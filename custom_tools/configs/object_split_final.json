@@ -1,7 +1,7 @@
 {
   "status": "frozen_preflight_passed",
-  "source_candidate_manifest": "/home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/configs/object_split_candidates.json",
-  "source_preprocess_summary": "/home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/object_split_preprocess_summary.json",
+  "source_candidate_manifest": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/configs/object_split_candidates.json",
+  "source_preprocess_summary": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/object_split_preprocess_summary.json",
   "selection_rule": "Keep the fixed test set. Replace only training objects with fewer than the minimum retained trajectories, using the first passing backup from the same geometry group.",
   "min_retained_for_bc": 12,
   "counts": {

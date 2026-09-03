@@ -1,5 +1,5 @@
 status: complete
-protocol: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/configs/comprehensive_five_model_evaluation_v1.yaml
+protocol: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/configs/comprehensive_five_model_evaluation_v1.yaml
 primary_metric: object_macro_official_peak_success_rate
 simulation_seeds:
 - 2025
@@ -19,7 +19,7 @@ splits:
     models:
     - label: official_bc
       display_name: Official BC
-      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=079-step=75440.ckpt
+      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=079-step=75440.ckpt
       checkpoint_sha256: b84b8817c927a722a7a6647fd5882b1ecabc214b4c60dcd3f8ebfced261bfe01
       success_counts:
       - 45
@@ -67,12 +67,12 @@ splits:
           - 0.05982142857142857
           - 0.05982142857142857
       sources:
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2025/official_bc.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2026/official_bc.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2027/official_bc.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2025/official_bc.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2026/official_bc.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2027/official_bc.yaml
     - label: bc_soup
       display_name: BC Soup
-      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/model_soups/noise005_s2025_s2026_weighted2to1.ckpt
+      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/model_soups/noise005_s2025_s2026_weighted2to1.ckpt
       checkpoint_sha256: 3a27f07a3829632046ad9cd472944fb589473a186862fb3fc847f4629d79d61a
       success_counts:
       - 73
@@ -120,12 +120,12 @@ splits:
           - 0.14541666666666664
           - 0.1475
       sources:
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2025/bc_soup.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2026/bc_soup.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2027/bc_soup.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2025/bc_soup.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2026/bc_soup.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2027/bc_soup.yaml
     - label: offline_student
       display_name: Offline Task-ID
-      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_scaled20_t100_seed2025_e20_v1/epoch=014-step=14145.ckpt
+      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_taskid_scaled20_t100_seed2025_e20_v1/epoch=014-step=14145.ckpt
       checkpoint_sha256: 5bc79c8fbba39eebca8f868da6aa3029767e7f23621daa80c4ad7eb1c6788e5c
       success_counts:
       - 101
@@ -173,12 +173,12 @@ splits:
           - 0.14136904761904762
           - 0.15851190476190474
       sources:
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2025/offline_student.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2026/offline_student.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2027/offline_student.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2025/offline_student.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2026/offline_student.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2027/offline_student.yaml
     - label: online_r1
       display_name: Online-R1
-      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_online_r1_frac025_seed2025_e10_v1/epoch=001-step=2232.ckpt
+      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_taskid_online_r1_frac025_seed2025_e10_v1/epoch=001-step=2232.ckpt
       checkpoint_sha256: 81bbf8bc70cb24960200bf574d26da9526b976f9944a13619323f64e57b4a7ef
       success_counts:
       - 103
@@ -226,12 +226,12 @@ splits:
           - 0.22815476190476192
           - 0.22696428571428573
       sources:
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2025/online_r1.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2026/online_r1.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2027/online_r1.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2025/online_r1.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2026/online_r1.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2027/online_r1.yaml
     - label: temporal3
       display_name: Temporal3
-      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_temporal3_seed2025_e4_v1/epoch=003-step=5152.ckpt
+      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_taskid_temporal3_seed2025_e4_v1/epoch=003-step=5152.ckpt
       checkpoint_sha256: aecf421b76f8e2a8e669cdd01117ae64b8c275b658ea4766fdf9c6bb705d8b04
       success_counts:
       - 119
@@ -279,9 +279,9 @@ splits:
           - 0.19005952380952382
           - 0.20255952380952383
       sources:
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_locked_seen80_validation_v1/seed2025/temporal3.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2026/temporal3.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2027/temporal3.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_locked_seen80_validation_v1/seed2025/temporal3.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2026/temporal3.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/seen80/seed2027/temporal3.yaml
   development12:
     role: checkpoint selection history
     object_count: 12
@@ -289,7 +289,7 @@ splits:
     models:
     - label: official_bc
       display_name: Official BC
-      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=079-step=75440.ckpt
+      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=079-step=75440.ckpt
       checkpoint_sha256: b84b8817c927a722a7a6647fd5882b1ecabc214b4c60dcd3f8ebfced261bfe01
       success_counts:
       - 42
@@ -337,12 +337,12 @@ splits:
           - 0.060740902846166005
           - 0.0436468857521489
       sources:
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/missing_teacher_comparisons_v1/development/matched_official_epoch080_seed2025.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/missing_teacher_comparisons_v1/development_repeats/matched_official_bc_seed2026.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/missing_teacher_comparisons_v1/development_repeats/matched_official_bc_seed2027.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/missing_teacher_comparisons_v1/development/matched_official_epoch080_seed2025.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/missing_teacher_comparisons_v1/development_repeats/matched_official_bc_seed2026.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/missing_teacher_comparisons_v1/development_repeats/matched_official_bc_seed2027.yaml
     - label: bc_soup
       display_name: BC Soup
-      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/model_soups/noise005_s2025_s2026_weighted2to1.ckpt
+      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/model_soups/noise005_s2025_s2026_weighted2to1.ckpt
       checkpoint_sha256: 3a27f07a3829632046ad9cd472944fb589473a186862fb3fc847f4629d79d61a
       success_counts:
       - 48
@@ -390,12 +390,12 @@ splits:
           - 0.12236933289564868
           - 0.12236933289564868
       sources:
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/development12/seed2025/bc_soup.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/development12/seed2026/bc_soup.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/development12/seed2027/bc_soup.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/development12/seed2025/bc_soup.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/development12/seed2026/bc_soup.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/development12/seed2027/bc_soup.yaml
     - label: offline_student
       display_name: Offline Task-ID
-      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_scaled20_t100_seed2025_e20_v1/epoch=014-step=14145.ckpt
+      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_taskid_scaled20_t100_seed2025_e20_v1/epoch=014-step=14145.ckpt
       checkpoint_sha256: 5bc79c8fbba39eebca8f868da6aa3029767e7f23621daa80c4ad7eb1c6788e5c
       success_counts:
       - 66
@@ -443,12 +443,12 @@ splits:
           - 0.12194380615433247
           - 0.12148180569233201
       sources:
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_offline_development_v1/seed2025/t100_epoch15.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_offline_development_v1/seed2026/t100_epoch15.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_offline_development_v1/seed2027/t100_epoch15.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_offline_development_v1/seed2025/t100_epoch15.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_offline_development_v1/seed2026/t100_epoch15.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_offline_development_v1/seed2027/t100_epoch15.yaml
     - label: online_r1
       display_name: Online-R1
-      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_online_r1_frac025_seed2025_e10_v1/epoch=001-step=2232.ckpt
+      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_taskid_online_r1_frac025_seed2025_e10_v1/epoch=001-step=2232.ckpt
       checkpoint_sha256: 81bbf8bc70cb24960200bf574d26da9526b976f9944a13619323f64e57b4a7ef
       success_counts:
       - 95
@@ -496,12 +496,12 @@ splits:
           - 0.20159025422183316
           - 0.18449623712781607
       sources:
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_online_r1_development_v1/online_25pct_epoch02.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_online_r1_repeats_v1/seed2026/online_25pct_epoch02.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_online_r1_repeats_v1/seed2027/online_25pct_epoch02.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_online_r1_development_v1/online_25pct_epoch02.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_online_r1_repeats_v1/seed2026/online_25pct_epoch02.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_online_r1_repeats_v1/seed2027/online_25pct_epoch02.yaml
     - label: temporal3
       display_name: Temporal3
-      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_temporal3_seed2025_e4_v1/epoch=003-step=5152.ckpt
+      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_taskid_temporal3_seed2025_e4_v1/epoch=003-step=5152.ckpt
       checkpoint_sha256: aecf421b76f8e2a8e669cdd01117ae64b8c275b658ea4766fdf9c6bb705d8b04
       success_counts:
       - 107
@@ -549,9 +549,9 @@ splits:
           - 0.2623554728817887
           - 0.209687420213736
       sources:
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_temporal3_development_v1/temporal3_epoch04.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_temporal3_repeats_v1/seed2026/temporal3_epoch04.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_temporal3_repeats_v1/seed2027/temporal3_epoch04.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_temporal3_development_v1/temporal3_epoch04.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_temporal3_repeats_v1/seed2026/temporal3_epoch04.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_temporal3_repeats_v1/seed2027/temporal3_epoch04.yaml
   final8:
     role: final unseen-object generalization
     object_count: 8
@@ -559,7 +559,7 @@ splits:
     models:
     - label: official_bc
       display_name: Official BC
-      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=079-step=75440.ckpt
+      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/official_bc_scaled20_matched_seed2025_e100_v1/epoch=079-step=75440.ckpt
       checkpoint_sha256: b84b8817c927a722a7a6647fd5882b1ecabc214b4c60dcd3f8ebfced261bfe01
       success_counts:
       - 21
@@ -607,12 +607,12 @@ splits:
           - 0.08838383838383838
           - 0.08838383838383838
       sources:
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/missing_teacher_comparisons_v1/final_reporting/matched_official_bc_seed2025.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/missing_teacher_comparisons_v1/final_reporting/matched_official_bc_seed2026.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/missing_teacher_comparisons_v1/final_reporting/matched_official_bc_seed2027.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/missing_teacher_comparisons_v1/final_reporting/matched_official_bc_seed2025.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/missing_teacher_comparisons_v1/final_reporting/matched_official_bc_seed2026.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/missing_teacher_comparisons_v1/final_reporting/matched_official_bc_seed2027.yaml
     - label: bc_soup
       display_name: BC Soup
-      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/model_soups/noise005_s2025_s2026_weighted2to1.ckpt
+      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/model_soups/noise005_s2025_s2026_weighted2to1.ckpt
       checkpoint_sha256: 3a27f07a3829632046ad9cd472944fb589473a186862fb3fc847f4629d79d61a
       success_counts:
       - 42
@@ -660,12 +660,12 @@ splits:
           - 0.06060606060606061
           - 0.06060606060606061
       sources:
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/final8/seed2025/bc_soup.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/final8/seed2026/bc_soup.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/final8/seed2027/bc_soup.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/final8/seed2025/bc_soup.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/final8/seed2026/bc_soup.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/final8/seed2027/bc_soup.yaml
     - label: offline_student
       display_name: Offline Task-ID
-      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_scaled20_t100_seed2025_e20_v1/epoch=014-step=14145.ckpt
+      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_taskid_scaled20_t100_seed2025_e20_v1/epoch=014-step=14145.ckpt
       checkpoint_sha256: 5bc79c8fbba39eebca8f868da6aa3029767e7f23621daa80c4ad7eb1c6788e5c
       success_counts:
       - 32
@@ -713,12 +713,12 @@ splits:
           - 0.08838383838383838
           - 0.11868686868686869
       sources:
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/final8/seed2025/offline_student.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/final8/seed2026/offline_student.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/final8/seed2027/offline_student.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/final8/seed2025/offline_student.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/final8/seed2026/offline_student.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/comprehensive_five_model_evaluation_v1/raw/final8/seed2027/offline_student.yaml
     - label: online_r1
       display_name: Online-R1
-      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_online_r1_frac025_seed2025_e10_v1/epoch=001-step=2232.ckpt
+      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_taskid_online_r1_frac025_seed2025_e10_v1/epoch=001-step=2232.ckpt
       checkpoint_sha256: 81bbf8bc70cb24960200bf574d26da9526b976f9944a13619323f64e57b4a7ef
       success_counts:
       - 45
@@ -766,12 +766,12 @@ splits:
           - 0.1893939393939394
           - 0.17929292929292928
       sources:
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_locked_final_holdout_v1/seed2025/online_r1.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_locked_final_holdout_v1/seed2026/online_r1.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_locked_final_holdout_v1/seed2027/online_r1.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_locked_final_holdout_v1/seed2025/online_r1.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_locked_final_holdout_v1/seed2026/online_r1.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_locked_final_holdout_v1/seed2027/online_r1.yaml
     - label: temporal3
       display_name: Temporal3
-      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_temporal3_seed2025_e4_v1/epoch=003-step=5152.ckpt
+      checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_taskid_temporal3_seed2025_e4_v1/epoch=003-step=5152.ckpt
       checkpoint_sha256: aecf421b76f8e2a8e669cdd01117ae64b8c275b658ea4766fdf9c6bb705d8b04
       success_counts:
       - 59
@@ -819,6 +819,6 @@ splits:
           - 0.25
           - 0.25
       sources:
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_locked_final_holdout_v1/seed2025/temporal3.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_locked_final_holdout_v1/seed2026/temporal3.yaml
-      - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_locked_final_holdout_v1/seed2027/temporal3.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_locked_final_holdout_v1/seed2025/temporal3.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_locked_final_holdout_v1/seed2026/temporal3.yaml
+      - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_locked_final_holdout_v1/seed2027/temporal3.yaml

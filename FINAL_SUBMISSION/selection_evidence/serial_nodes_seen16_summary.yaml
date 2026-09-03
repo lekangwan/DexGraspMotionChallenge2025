@@ -1,6 +1,6 @@
 status: complete
 stage: three_seed_serial_mainline_training_set_audit
-selection: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/configs/temporal3_residual_audit16_objects.yaml
+selection: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/configs/temporal3_residual_audit16_objects.yaml
 training_objects: 16
 trajectories_per_seed: 495
 seeds:

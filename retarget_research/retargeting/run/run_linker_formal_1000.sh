@@ -13,7 +13,7 @@ CANDIDATE_DIR="$OUTPUT_ROOT/linker_vector_v2alpha_c3g8_v1"
 EVAL_DIR_OUT="$OUTPUT_ROOT/linker_vector_v2alpha_c3g8_v1_evaluation"
 TRACE_DIR="$PROJECT_ROOT/retarget_research/advanced_policy/traces/formal_v3/linker_vector_v2alpha_c3g8"
 WARM_DIR="$OUTPUT_ROOT/linker_o6_optimized_v2"
-MESH_ROOT="/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata"
+MESH_ROOT="/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/external_data/meshdata"
 
 mkdir -p "$TRACE_DIR"
 cd "$PROJECT_ROOT"

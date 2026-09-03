@@ -1,6 +1,6 @@
 {
   "hand": "xhand",
-  "source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-DiscCase-6268862d43393bdfab0b172d4dea80cd.npy",
+  "source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/external_data/dataset/sem-DiscCase-6268862d43393bdfab0b172d4dea80cd.npy",
   "target": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-DiscCase-6268862d43393bdfab0b172d4dea80cd.npy",
   "object_name": "sem-DiscCase-6268862d43393bdfab0b172d4dea80cd",
   "source_trajectory_index": 3,

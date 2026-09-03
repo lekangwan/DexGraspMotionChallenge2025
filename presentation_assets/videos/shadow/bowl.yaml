@@ -4,7 +4,7 @@ success_metric: stable_official_success
 official_peak_metric_retained: true
 official_success_definition_changed: false
 seed: 2025
-trajectory_root: /home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_final_v1_preprocessed
+trajectory_root: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_final_v1_preprocessed
 object_ids:
 - core-bowl-fa23aa60ec51c8e4c40fe5637f0a27e1
 checkpoint_results:

@@ -3,7 +3,7 @@ evaluation_mode: fresh_process_per_object_multi_checkpoint
 success_metric: official_peak_per_object
 official_success_definition_changed: false
 seed: 2025
-trajectory_root: /home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_final_v1_preprocessed
+trajectory_root: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_final_v1_preprocessed
 object_ids:
 - core-bottle-c3767df815e0e43e4c3a35cee92bb95b
 - core-bottle-70172e6afe6aff7847f90c1ac631b97f
@@ -14,7 +14,7 @@ object_ids:
 - core-camera-6c14c6f6cca53a6710d0920f7087353b
 - core-camera-147183af1ba4e97b8a94168388287ad5
 checkpoint_results:
-- checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/ActionDiffusion/bc/saved_models/1obj_seq2000_DexRep_pro100_start_uniform_vis_action_dsam_mod/last.ckpt
+- checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/ActionDiffusion/bc/saved_models/1obj_seq2000_DexRep_pro100_start_uniform_vis_action_dsam_mod/last.ckpt
   checkpoint_epoch: 1999
   total_success_count: 9
   total_trajectory_count: 216

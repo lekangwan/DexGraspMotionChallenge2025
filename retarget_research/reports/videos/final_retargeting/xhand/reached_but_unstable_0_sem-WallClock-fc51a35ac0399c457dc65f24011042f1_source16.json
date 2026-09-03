@@ -1,6 +1,6 @@
 {
   "hand": "xhand",
-  "source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-WallClock-fc51a35ac0399c457dc65f24011042f1.npy",
+  "source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/external_data/dataset/sem-WallClock-fc51a35ac0399c457dc65f24011042f1.npy",
   "target": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-WallClock-fc51a35ac0399c457dc65f24011042f1.npy",
   "object_name": "sem-WallClock-fc51a35ac0399c457dc65f24011042f1",
   "source_trajectory_index": 16,

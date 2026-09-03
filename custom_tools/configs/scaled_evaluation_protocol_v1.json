@@ -1,6 +1,6 @@
 {
   "status": "frozen_before_scaled_training",
-  "source_manifest": "/home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/configs/scaled_category_split_final_v1.json",
+  "source_manifest": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/configs/scaled_category_split_final_v1.json",
   "selection_rule": "Within each policy-blind five-object test list, reserve the first geometry-center/farthest pair as final holdout and use the remaining three for development. No scaled policy existed at freeze time.",
   "categories": {
     "bottle": {

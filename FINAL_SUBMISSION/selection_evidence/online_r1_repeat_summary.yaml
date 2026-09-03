@@ -2,7 +2,7 @@ status: complete
 stage: serial Task-ID mainline comparison after online round 1
 formal_final_holdout_result: false
 final_holdout_accessed: false
-selection: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/configs/scaled_development_all12.yaml
+selection: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/configs/scaled_development_all12.yaml
 seeds:
 - 2025
 - 2026
@@ -60,21 +60,21 @@ serial_nodes:
       - 0.1579798421903685
       - 0.14088582509635142
   outputs:
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/scaled_category_development_v1/seed2025/bottle/scale20_epoch30.yaml
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/scaled_category_development_v1/seed2025/mug/scale20_epoch10.yaml
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/scaled_category_development_v1/seed2025/bowl/scale20_epoch40.yaml
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/scaled_category_development_v1/seed2025/camera/scale20_epoch40.yaml
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/scaled_category_development_v1/seed2026/bottle/scale20_epoch30.yaml
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/scaled_category_development_v1/seed2026/mug/scale20_epoch10.yaml
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/scaled_category_development_v1/seed2026/bowl/scale20_epoch40.yaml
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/scaled_category_development_v1/seed2026/camera/scale20_epoch40.yaml
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/scaled_category_development_v1/seed2027/bottle/scale20_epoch30.yaml
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/scaled_category_development_v1/seed2027/mug/scale20_epoch10.yaml
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/scaled_category_development_v1/seed2027/bowl/scale20_epoch40.yaml
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/scaled_category_development_v1/seed2027/camera/scale20_epoch40.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/scaled_category_development_v1/seed2025/bottle/scale20_epoch30.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/scaled_category_development_v1/seed2025/mug/scale20_epoch10.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/scaled_category_development_v1/seed2025/bowl/scale20_epoch40.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/scaled_category_development_v1/seed2025/camera/scale20_epoch40.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/scaled_category_development_v1/seed2026/bottle/scale20_epoch30.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/scaled_category_development_v1/seed2026/mug/scale20_epoch10.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/scaled_category_development_v1/seed2026/bowl/scale20_epoch40.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/scaled_category_development_v1/seed2026/camera/scale20_epoch40.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/scaled_category_development_v1/seed2027/bottle/scale20_epoch30.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/scaled_category_development_v1/seed2027/mug/scale20_epoch10.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/scaled_category_development_v1/seed2027/bowl/scale20_epoch40.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/scaled_category_development_v1/seed2027/camera/scale20_epoch40.yaml
 - label: offline_taskid_student
   policy_count: 1
-  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_scaled20_t100_seed2025_e20_v1/epoch=014-step=14145.ckpt
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_taskid_scaled20_t100_seed2025_e20_v1/epoch=014-step=14145.ckpt
   success_counts:
   - 66
   - 69
@@ -118,12 +118,12 @@ serial_nodes:
       - 0.12194380615433247
       - 0.12148180569233201
   outputs:
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_offline_development_v1/seed2025/t100_epoch15.yaml
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_offline_development_v1/seed2026/t100_epoch15.yaml
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_offline_development_v1/seed2027/t100_epoch15.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_offline_development_v1/seed2025/t100_epoch15.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_offline_development_v1/seed2026/t100_epoch15.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_offline_development_v1/seed2027/t100_epoch15.yaml
 - label: online_r1_25pct_epoch02
   policy_count: 1
-  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/runs/bc/unified_student_taskid_online_r1_frac025_seed2025_e10_v1/epoch=001-step=2232.ckpt
+  checkpoint: /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/runs/bc/unified_student_taskid_online_r1_frac025_seed2025_e10_v1/epoch=001-step=2232.ckpt
   success_counts:
   - 95
   - 95
@@ -167,8 +167,8 @@ serial_nodes:
       - 0.20159025422183316
       - 0.18449623712781607
   outputs:
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_online_r1_development_v1/online_25pct_epoch02.yaml
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_online_r1_repeats_v1/seed2026/online_25pct_epoch02.yaml
-  - /home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/taskid_online_r1_repeats_v1/seed2027/online_25pct_epoch02.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_online_r1_development_v1/online_25pct_epoch02.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_online_r1_repeats_v1/seed2026/online_25pct_epoch02.yaml
+  - /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/taskid_online_r1_repeats_v1/seed2027/online_25pct_epoch02.yaml
 online_minus_offline_macro: 0.10741295872391074
 online_minus_teacher_macro: 0.09316451063742082

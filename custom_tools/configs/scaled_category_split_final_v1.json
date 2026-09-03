@@ -408,7 +408,7 @@
       "raw_count": 40,
       "retained_count": 31,
       "retention_rate": 0.775,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/object_split_candidates_preprocessed/core-bottle-714320da4aafcb4a47be2353d2b2403b.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/object_split_candidates_preprocessed/core-bottle-714320da4aafcb4a47be2353d2b2403b.npy",
       "uses_frozen_base_preprocessing": true
     },
     "core-bottle-dc005c019fbfb32c90071898148dca0e": {
@@ -438,7 +438,7 @@
       "raw_count": 40,
       "retained_count": 40,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/object_split_candidates_preprocessed/core-bottle-dc005c019fbfb32c90071898148dca0e.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/object_split_candidates_preprocessed/core-bottle-dc005c019fbfb32c90071898148dca0e.npy",
       "uses_frozen_base_preprocessing": true
     },
     "core-bottle-d3eea69d9d58401c76c2a9de5c96f76": {
@@ -468,7 +468,7 @@
       "raw_count": 40,
       "retained_count": 39,
       "retention_rate": 0.975,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/object_split_candidates_preprocessed/core-bottle-d3eea69d9d58401c76c2a9de5c96f76.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/object_split_candidates_preprocessed/core-bottle-d3eea69d9d58401c76c2a9de5c96f76.npy",
       "uses_frozen_base_preprocessing": true
     },
     "core-bottle-ba4b48d76eb79f7cf54e1b6f41fdd78a": {
@@ -498,7 +498,7 @@
       "raw_count": 40,
       "retained_count": 38,
       "retention_rate": 0.95,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/object_split_candidates_preprocessed/core-bottle-ba4b48d76eb79f7cf54e1b6f41fdd78a.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/object_split_candidates_preprocessed/core-bottle-ba4b48d76eb79f7cf54e1b6f41fdd78a.npy",
       "uses_frozen_base_preprocessing": true
     },
     "core-bottle-c5032e4be091aabb36fe7a88df793982": {
@@ -528,7 +528,7 @@
       "raw_count": 20,
       "retained_count": 14,
       "retention_rate": 0.7,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-c5032e4be091aabb36fe7a88df793982.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-c5032e4be091aabb36fe7a88df793982.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-24feb92770933b1663995fb119e59971": {
@@ -561,7 +561,7 @@
       "retained_count": 20,
       "retention_rate": 1.0,
       "rank": 6,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-24feb92770933b1663995fb119e59971.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-24feb92770933b1663995fb119e59971.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-c82bbd1b1a929c7ce8ed8cf0a077ddf7": {
@@ -591,7 +591,7 @@
       "raw_count": 38,
       "retained_count": 33,
       "retention_rate": 0.868421052631579,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-c82bbd1b1a929c7ce8ed8cf0a077ddf7.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-c82bbd1b1a929c7ce8ed8cf0a077ddf7.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-77699e08e3824eab47765668cf4023ed": {
@@ -621,7 +621,7 @@
       "raw_count": 40,
       "retained_count": 39,
       "retention_rate": 0.975,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-77699e08e3824eab47765668cf4023ed.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-77699e08e3824eab47765668cf4023ed.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-1ae823260851f7d9ea600d1a6d9f6e07": {
@@ -651,7 +651,7 @@
       "raw_count": 24,
       "retained_count": 21,
       "retention_rate": 0.875,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-1ae823260851f7d9ea600d1a6d9f6e07.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-1ae823260851f7d9ea600d1a6d9f6e07.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-bd28b6cd2fdb691b8d8eca78e5e16d9d": {
@@ -681,7 +681,7 @@
       "raw_count": 40,
       "retained_count": 40,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-bd28b6cd2fdb691b8d8eca78e5e16d9d.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-bd28b6cd2fdb691b8d8eca78e5e16d9d.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-d30623112e58b893eee7d6dab02eb061": {
@@ -711,7 +711,7 @@
       "raw_count": 20,
       "retained_count": 14,
       "retention_rate": 0.7,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-d30623112e58b893eee7d6dab02eb061.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-d30623112e58b893eee7d6dab02eb061.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-b198ccb35182e73ffd2866d52d2e8042": {
@@ -741,7 +741,7 @@
       "raw_count": 40,
       "retained_count": 38,
       "retention_rate": 0.95,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-b198ccb35182e73ffd2866d52d2e8042.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-b198ccb35182e73ffd2866d52d2e8042.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-41a2005b595ae783be1868124d5ddbcb": {
@@ -771,7 +771,7 @@
       "raw_count": 40,
       "retained_count": 38,
       "retention_rate": 0.95,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-41a2005b595ae783be1868124d5ddbcb.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-41a2005b595ae783be1868124d5ddbcb.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-3ae3a9b74f96fef28fe15648f042f0d9": {
@@ -801,7 +801,7 @@
       "raw_count": 40,
       "retained_count": 34,
       "retention_rate": 0.85,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-3ae3a9b74f96fef28fe15648f042f0d9.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-3ae3a9b74f96fef28fe15648f042f0d9.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-e4ada697d05ac7acf9907e8bdd53291e": {
@@ -831,7 +831,7 @@
       "raw_count": 40,
       "retained_count": 40,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-e4ada697d05ac7acf9907e8bdd53291e.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-e4ada697d05ac7acf9907e8bdd53291e.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-3de5abb596766c5380dd154b5d9c087": {
@@ -861,7 +861,7 @@
       "raw_count": 40,
       "retained_count": 38,
       "retention_rate": 0.95,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-3de5abb596766c5380dd154b5d9c087.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-3de5abb596766c5380dd154b5d9c087.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-e119bf2041459392601bea3dca268229": {
@@ -891,7 +891,7 @@
       "raw_count": 40,
       "retained_count": 40,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-e119bf2041459392601bea3dca268229.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-e119bf2041459392601bea3dca268229.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-74690ddde9c0182696c2e7960a15c619": {
@@ -921,7 +921,7 @@
       "raw_count": 40,
       "retained_count": 40,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-74690ddde9c0182696c2e7960a15c619.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-74690ddde9c0182696c2e7960a15c619.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-42f85b0eb5e9fd508f9c4ecc067067e9": {
@@ -951,7 +951,7 @@
       "raw_count": 40,
       "retained_count": 36,
       "retention_rate": 0.9,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-42f85b0eb5e9fd508f9c4ecc067067e9.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-42f85b0eb5e9fd508f9c4ecc067067e9.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-29cad22b0fc6c9985f16c469ffeb982e": {
@@ -981,7 +981,7 @@
       "raw_count": 40,
       "retained_count": 40,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-29cad22b0fc6c9985f16c469ffeb982e.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-29cad22b0fc6c9985f16c469ffeb982e.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-c3767df815e0e43e4c3a35cee92bb95b": {
@@ -1011,7 +1011,7 @@
       "raw_count": 40,
       "retained_count": 38,
       "retention_rate": 0.95,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-c3767df815e0e43e4c3a35cee92bb95b.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-c3767df815e0e43e4c3a35cee92bb95b.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-70172e6afe6aff7847f90c1ac631b97f": {
@@ -1041,7 +1041,7 @@
       "raw_count": 40,
       "retained_count": 36,
       "retention_rate": 0.9,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-70172e6afe6aff7847f90c1ac631b97f.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-70172e6afe6aff7847f90c1ac631b97f.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-25b8ed5b02f07b6cbcfad79fc308fa6d": {
@@ -1071,7 +1071,7 @@
       "raw_count": 40,
       "retained_count": 22,
       "retention_rate": 0.55,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-25b8ed5b02f07b6cbcfad79fc308fa6d.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-25b8ed5b02f07b6cbcfad79fc308fa6d.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-6444875e3217bf891f5f48a891d827bd": {
@@ -1101,7 +1101,7 @@
       "raw_count": 40,
       "retained_count": 35,
       "retention_rate": 0.875,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-6444875e3217bf891f5f48a891d827bd.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-6444875e3217bf891f5f48a891d827bd.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bottle-dd280525cf000bc3a608634464309a70": {
@@ -1131,7 +1131,7 @@
       "raw_count": 20,
       "retained_count": 19,
       "retention_rate": 0.95,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-dd280525cf000bc3a608634464309a70.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bottle-dd280525cf000bc3a608634464309a70.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-4227b58665eadcefc0dc3ed657ab97f0": {
@@ -1161,7 +1161,7 @@
       "raw_count": 35,
       "retained_count": 33,
       "retention_rate": 0.9428571428571428,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/object_split_candidates_preprocessed/core-bowl-4227b58665eadcefc0dc3ed657ab97f0.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/object_split_candidates_preprocessed/core-bowl-4227b58665eadcefc0dc3ed657ab97f0.npy",
       "uses_frozen_base_preprocessing": true
     },
     "core-bowl-e3095ecacc36080cb398a1cfd1079875": {
@@ -1191,7 +1191,7 @@
       "raw_count": 40,
       "retained_count": 32,
       "retention_rate": 0.8,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/object_split_candidates_preprocessed/core-bowl-e3095ecacc36080cb398a1cfd1079875.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/object_split_candidates_preprocessed/core-bowl-e3095ecacc36080cb398a1cfd1079875.npy",
       "uses_frozen_base_preprocessing": true
     },
     "core-bowl-b65cbede8f483d51f7de4d28691515e1": {
@@ -1221,7 +1221,7 @@
       "raw_count": 20,
       "retained_count": 19,
       "retention_rate": 0.95,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/object_split_candidates_preprocessed/core-bowl-b65cbede8f483d51f7de4d28691515e1.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/object_split_candidates_preprocessed/core-bowl-b65cbede8f483d51f7de4d28691515e1.npy",
       "uses_frozen_base_preprocessing": true
     },
     "core-bowl-817221e45b63cef62f74bdafe5239fba": {
@@ -1251,7 +1251,7 @@
       "raw_count": 20,
       "retained_count": 14,
       "retention_rate": 0.7,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/object_split_candidates_preprocessed/core-bowl-817221e45b63cef62f74bdafe5239fba.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/object_split_candidates_preprocessed/core-bowl-817221e45b63cef62f74bdafe5239fba.npy",
       "uses_frozen_base_preprocessing": true
     },
     "core-bowl-754634abeb7bffc32977b68653eb2e1e": {
@@ -1289,7 +1289,7 @@
       "retained_count": 14,
       "retention_rate": 0.7,
       "rank": 5,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-754634abeb7bffc32977b68653eb2e1e.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-754634abeb7bffc32977b68653eb2e1e.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-dd15ee7374954827c5be64abd4416cc9": {
@@ -1319,7 +1319,7 @@
       "raw_count": 20,
       "retained_count": 20,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-dd15ee7374954827c5be64abd4416cc9.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-dd15ee7374954827c5be64abd4416cc9.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-80608e58db79d4d83b722c86abee0751": {
@@ -1349,7 +1349,7 @@
       "raw_count": 20,
       "retained_count": 18,
       "retention_rate": 0.9,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-80608e58db79d4d83b722c86abee0751.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-80608e58db79d4d83b722c86abee0751.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-faa200741fa93abb47ec7417da5d353d": {
@@ -1379,7 +1379,7 @@
       "raw_count": 20,
       "retained_count": 16,
       "retention_rate": 0.8,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-faa200741fa93abb47ec7417da5d353d.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-faa200741fa93abb47ec7417da5d353d.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-1b4d7803a3298f8477bdcb8816a3fac9": {
@@ -1417,7 +1417,7 @@
       "retained_count": 14,
       "retention_rate": 0.7,
       "rank": 9,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-1b4d7803a3298f8477bdcb8816a3fac9.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-1b4d7803a3298f8477bdcb8816a3fac9.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-709778e5ebb67e32b396efafc0d0d8ac": {
@@ -1447,7 +1447,7 @@
       "raw_count": 40,
       "retained_count": 40,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-709778e5ebb67e32b396efafc0d0d8ac.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-709778e5ebb67e32b396efafc0d0d8ac.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-b195dbe537993945e4e346ee2650d150": {
@@ -1477,7 +1477,7 @@
       "raw_count": 40,
       "retained_count": 40,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-b195dbe537993945e4e346ee2650d150.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-b195dbe537993945e4e346ee2650d150.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-1f910faf81555f8e664b3b9b23ddfcbc": {
@@ -1507,7 +1507,7 @@
       "raw_count": 20,
       "retained_count": 15,
       "retention_rate": 0.75,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-1f910faf81555f8e664b3b9b23ddfcbc.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-1f910faf81555f8e664b3b9b23ddfcbc.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-56803af65db53307467ca2ad6571afff": {
@@ -1545,7 +1545,7 @@
       "retained_count": 17,
       "retention_rate": 0.85,
       "rank": 13,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-56803af65db53307467ca2ad6571afff.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-56803af65db53307467ca2ad6571afff.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-db180e4f9a75ae717ba6f8f10959534c": {
@@ -1575,7 +1575,7 @@
       "raw_count": 20,
       "retained_count": 20,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-db180e4f9a75ae717ba6f8f10959534c.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-db180e4f9a75ae717ba6f8f10959534c.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-24907349b2323824664b3b9b23ddfcbc": {
@@ -1605,7 +1605,7 @@
       "raw_count": 20,
       "retained_count": 17,
       "retention_rate": 0.85,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-24907349b2323824664b3b9b23ddfcbc.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-24907349b2323824664b3b9b23ddfcbc.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-879a5c740b25ef5c7a88a2ad67bfd073": {
@@ -1643,7 +1643,7 @@
       "retained_count": 18,
       "retention_rate": 0.9,
       "rank": 16,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-879a5c740b25ef5c7a88a2ad67bfd073.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-879a5c740b25ef5c7a88a2ad67bfd073.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-519f07b4ecb0b82ed82a7d8f544ae151": {
@@ -1673,7 +1673,7 @@
       "raw_count": 20,
       "retained_count": 17,
       "retention_rate": 0.85,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-519f07b4ecb0b82ed82a7d8f544ae151.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-519f07b4ecb0b82ed82a7d8f544ae151.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-9ea66797afeb86196ea1c514a0de6d2d": {
@@ -1711,7 +1711,7 @@
       "retained_count": 19,
       "retention_rate": 0.95,
       "rank": 18,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-9ea66797afeb86196ea1c514a0de6d2d.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-9ea66797afeb86196ea1c514a0de6d2d.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-9a6cec1cfca7e8b5ebc583f22bd58b85": {
@@ -1749,7 +1749,7 @@
       "retained_count": 27,
       "retention_rate": 0.675,
       "rank": 19,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-9a6cec1cfca7e8b5ebc583f22bd58b85.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-9a6cec1cfca7e8b5ebc583f22bd58b85.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-a73d531b90965199e5f6d587dbc348b5": {
@@ -1779,7 +1779,7 @@
       "raw_count": 20,
       "retained_count": 16,
       "retention_rate": 0.8,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-a73d531b90965199e5f6d587dbc348b5.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-a73d531b90965199e5f6d587dbc348b5.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-fa23aa60ec51c8e4c40fe5637f0a27e1": {
@@ -1809,7 +1809,7 @@
       "raw_count": 20,
       "retained_count": 15,
       "retention_rate": 0.75,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-fa23aa60ec51c8e4c40fe5637f0a27e1.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-fa23aa60ec51c8e4c40fe5637f0a27e1.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-ce48ffb418b99996912a38ce5826ebb8": {
@@ -1839,7 +1839,7 @@
       "raw_count": 20,
       "retained_count": 20,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-ce48ffb418b99996912a38ce5826ebb8.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-ce48ffb418b99996912a38ce5826ebb8.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-3f56833e91054d2518e800f0d88f9019": {
@@ -1869,7 +1869,7 @@
       "raw_count": 40,
       "retained_count": 40,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-3f56833e91054d2518e800f0d88f9019.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-3f56833e91054d2518e800f0d88f9019.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-45603bffc6a2866b5d1ac0d5489f7d84": {
@@ -1899,7 +1899,7 @@
       "raw_count": 20,
       "retained_count": 16,
       "retention_rate": 0.8,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-45603bffc6a2866b5d1ac0d5489f7d84.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-45603bffc6a2866b5d1ac0d5489f7d84.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-bowl-e16e27d3670853b12d4e6b2984840098": {
@@ -1929,7 +1929,7 @@
       "raw_count": 20,
       "retained_count": 17,
       "retention_rate": 0.85,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-e16e27d3670853b12d4e6b2984840098.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-bowl-e16e27d3670853b12d4e6b2984840098.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-82819e1201d2dc583a3e53900c6cbba": {
@@ -1959,7 +1959,7 @@
       "raw_count": 40,
       "retained_count": 38,
       "retention_rate": 0.95,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/object_split_candidates_preprocessed/core-camera-82819e1201d2dc583a3e53900c6cbba.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/object_split_candidates_preprocessed/core-camera-82819e1201d2dc583a3e53900c6cbba.npy",
       "uses_frozen_base_preprocessing": true
     },
     "core-camera-a3c9dcaada9e04d09061da204e7c463c": {
@@ -1989,7 +1989,7 @@
       "raw_count": 28,
       "retained_count": 26,
       "retention_rate": 0.9285714285714286,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/object_split_candidates_preprocessed/core-camera-a3c9dcaada9e04d09061da204e7c463c.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/object_split_candidates_preprocessed/core-camera-a3c9dcaada9e04d09061da204e7c463c.npy",
       "uses_frozen_base_preprocessing": true
     },
     "core-camera-9d79c246317bbbe87f72d6c7f2024896": {
@@ -2019,7 +2019,7 @@
       "raw_count": 37,
       "retained_count": 36,
       "retention_rate": 0.972972972972973,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/object_split_candidates_preprocessed/core-camera-9d79c246317bbbe87f72d6c7f2024896.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/object_split_candidates_preprocessed/core-camera-9d79c246317bbbe87f72d6c7f2024896.npy",
       "uses_frozen_base_preprocessing": true
     },
     "core-camera-a59cbd50ecf38a1be2dc67b821479cc4": {
@@ -2049,7 +2049,7 @@
       "raw_count": 20,
       "retained_count": 16,
       "retention_rate": 0.8,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/object_split_candidates_preprocessed/core-camera-a59cbd50ecf38a1be2dc67b821479cc4.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/object_split_candidates_preprocessed/core-camera-a59cbd50ecf38a1be2dc67b821479cc4.npy",
       "uses_frozen_base_preprocessing": true
     },
     "core-camera-b27815a2bde54ad3ab3dfa44f5fab01": {
@@ -2079,7 +2079,7 @@
       "raw_count": 22,
       "retained_count": 17,
       "retention_rate": 0.7727272727272727,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-b27815a2bde54ad3ab3dfa44f5fab01.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-b27815a2bde54ad3ab3dfa44f5fab01.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-74ebdf5a3cdf33ebc6966f67e1bb9e90": {
@@ -2109,7 +2109,7 @@
       "raw_count": 20,
       "retained_count": 12,
       "retention_rate": 0.6,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-74ebdf5a3cdf33ebc6966f67e1bb9e90.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-74ebdf5a3cdf33ebc6966f67e1bb9e90.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-63c10cfd6f0ce09a241d076ab53023c1": {
@@ -2139,7 +2139,7 @@
       "raw_count": 20,
       "retained_count": 19,
       "retention_rate": 0.95,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-63c10cfd6f0ce09a241d076ab53023c1.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-63c10cfd6f0ce09a241d076ab53023c1.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-a9408583f2c4d6acad8a06dbee1d115": {
@@ -2169,7 +2169,7 @@
       "raw_count": 40,
       "retained_count": 40,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-a9408583f2c4d6acad8a06dbee1d115.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-a9408583f2c4d6acad8a06dbee1d115.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-2c0b4e318766e01723cd81bf29b64a1": {
@@ -2199,7 +2199,7 @@
       "raw_count": 40,
       "retained_count": 35,
       "retention_rate": 0.875,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-2c0b4e318766e01723cd81bf29b64a1.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-2c0b4e318766e01723cd81bf29b64a1.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-e85debbd554525d198494085d68ad6a0": {
@@ -2229,7 +2229,7 @@
       "raw_count": 20,
       "retained_count": 17,
       "retention_rate": 0.85,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-e85debbd554525d198494085d68ad6a0.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-e85debbd554525d198494085d68ad6a0.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-fb3b5fae94f7b02a3b269928487f8a4c": {
@@ -2259,7 +2259,7 @@
       "raw_count": 21,
       "retained_count": 20,
       "retention_rate": 0.9523809523809523,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-fb3b5fae94f7b02a3b269928487f8a4c.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-fb3b5fae94f7b02a3b269928487f8a4c.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-ee58b922bd93d01be4f112f1b3124b84": {
@@ -2289,7 +2289,7 @@
       "raw_count": 20,
       "retained_count": 15,
       "retention_rate": 0.75,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-ee58b922bd93d01be4f112f1b3124b84.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-ee58b922bd93d01be4f112f1b3124b84.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-4852ee95e7bd8556c60396a717ba6c7e": {
@@ -2319,7 +2319,7 @@
       "raw_count": 40,
       "retained_count": 39,
       "retention_rate": 0.975,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-4852ee95e7bd8556c60396a717ba6c7e.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-4852ee95e7bd8556c60396a717ba6c7e.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-cda4fc24b2a602b5b5328fde615e4a0c": {
@@ -2349,7 +2349,7 @@
       "raw_count": 20,
       "retained_count": 18,
       "retention_rate": 0.9,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-cda4fc24b2a602b5b5328fde615e4a0c.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-cda4fc24b2a602b5b5328fde615e4a0c.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-2fc6168fba3ef6953ada8db96f6d95a3": {
@@ -2379,7 +2379,7 @@
       "raw_count": 32,
       "retained_count": 29,
       "retention_rate": 0.90625,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-2fc6168fba3ef6953ada8db96f6d95a3.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-2fc6168fba3ef6953ada8db96f6d95a3.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-b22e56fdf18e2eb8968b65a7871de463": {
@@ -2409,7 +2409,7 @@
       "raw_count": 20,
       "retained_count": 19,
       "retention_rate": 0.95,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-b22e56fdf18e2eb8968b65a7871de463.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-b22e56fdf18e2eb8968b65a7871de463.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-46c09085e451de8fc3c192db90697d8c": {
@@ -2439,7 +2439,7 @@
       "raw_count": 39,
       "retained_count": 39,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-46c09085e451de8fc3c192db90697d8c.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-46c09085e451de8fc3c192db90697d8c.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-4cd861035c740db5a33f3afcb8763f26": {
@@ -2469,7 +2469,7 @@
       "raw_count": 40,
       "retained_count": 39,
       "retention_rate": 0.975,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-4cd861035c740db5a33f3afcb8763f26.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-4cd861035c740db5a33f3afcb8763f26.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-58e9faa223142b7fd5af42f3e1f05e3f": {
@@ -2499,7 +2499,7 @@
       "raw_count": 35,
       "retained_count": 32,
       "retention_rate": 0.9142857142857143,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-58e9faa223142b7fd5af42f3e1f05e3f.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-58e9faa223142b7fd5af42f3e1f05e3f.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-ec28a64bdf9501161bfbba8a5defb02": {
@@ -2529,7 +2529,7 @@
       "raw_count": 40,
       "retained_count": 40,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-ec28a64bdf9501161bfbba8a5defb02.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-ec28a64bdf9501161bfbba8a5defb02.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-6c14c6f6cca53a6710d0920f7087353b": {
@@ -2559,7 +2559,7 @@
       "raw_count": 36,
       "retained_count": 33,
       "retention_rate": 0.9166666666666666,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-6c14c6f6cca53a6710d0920f7087353b.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-6c14c6f6cca53a6710d0920f7087353b.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-147183af1ba4e97b8a94168388287ad5": {
@@ -2592,7 +2592,7 @@
       "retained_count": 18,
       "retention_rate": 0.75,
       "rank": 2,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-147183af1ba4e97b8a94168388287ad5.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-147183af1ba4e97b8a94168388287ad5.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-7077395b60bf4aeb3cb44973ec1ffcf8": {
@@ -2622,7 +2622,7 @@
       "raw_count": 40,
       "retained_count": 37,
       "retention_rate": 0.925,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-7077395b60bf4aeb3cb44973ec1ffcf8.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-7077395b60bf4aeb3cb44973ec1ffcf8.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-73b02fe7b4b2e45f74cd541b34c6124": {
@@ -2652,7 +2652,7 @@
       "raw_count": 20,
       "retained_count": 19,
       "retention_rate": 0.95,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-73b02fe7b4b2e45f74cd541b34c6124.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-73b02fe7b4b2e45f74cd541b34c6124.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-camera-1cc93f96ad5e16a85d3f270c1c35f1c7": {
@@ -2682,7 +2682,7 @@
       "raw_count": 40,
       "retained_count": 39,
       "retention_rate": 0.975,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-1cc93f96ad5e16a85d3f270c1c35f1c7.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-camera-1cc93f96ad5e16a85d3f270c1c35f1c7.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-1a97f3c83016abca21d0de04f408950f": {
@@ -2712,7 +2712,7 @@
       "raw_count": 40,
       "retained_count": 36,
       "retention_rate": 0.9,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/object_split_candidates_preprocessed/core-mug-1a97f3c83016abca21d0de04f408950f.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/object_split_candidates_preprocessed/core-mug-1a97f3c83016abca21d0de04f408950f.npy",
       "uses_frozen_base_preprocessing": true
     },
     "core-mug-b4ae56d6638d5338de671f28c83d2dcb": {
@@ -2742,7 +2742,7 @@
       "raw_count": 40,
       "retained_count": 39,
       "retention_rate": 0.975,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/object_split_candidates_preprocessed/core-mug-b4ae56d6638d5338de671f28c83d2dcb.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/object_split_candidates_preprocessed/core-mug-b4ae56d6638d5338de671f28c83d2dcb.npy",
       "uses_frozen_base_preprocessing": true
     },
     "core-mug-35ce7ede92198be2b759f7fb0032e59": {
@@ -2772,7 +2772,7 @@
       "raw_count": 40,
       "retained_count": 38,
       "retention_rate": 0.95,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/object_split_candidates_preprocessed/core-mug-35ce7ede92198be2b759f7fb0032e59.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/object_split_candidates_preprocessed/core-mug-35ce7ede92198be2b759f7fb0032e59.npy",
       "uses_frozen_base_preprocessing": true
     },
     "core-mug-c51b79493419eccdc1584fff35347dc6": {
@@ -2802,7 +2802,7 @@
       "raw_count": 20,
       "retained_count": 20,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/object_split_candidates_preprocessed/core-mug-c51b79493419eccdc1584fff35347dc6.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/object_split_candidates_preprocessed/core-mug-c51b79493419eccdc1584fff35347dc6.npy",
       "uses_frozen_base_preprocessing": true
     },
     "core-mug-85d5e7be548357baee0fa456543b8166": {
@@ -2832,7 +2832,7 @@
       "raw_count": 20,
       "retained_count": 20,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-85d5e7be548357baee0fa456543b8166.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-85d5e7be548357baee0fa456543b8166.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-a637500654ca8d16c97cfc3e8a6b1d16": {
@@ -2862,7 +2862,7 @@
       "raw_count": 20,
       "retained_count": 14,
       "retention_rate": 0.7,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-a637500654ca8d16c97cfc3e8a6b1d16.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-a637500654ca8d16c97cfc3e8a6b1d16.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-fd1f9e8add1fcbd123c841f9d5051936": {
@@ -2892,7 +2892,7 @@
       "raw_count": 20,
       "retained_count": 16,
       "retention_rate": 0.8,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-fd1f9e8add1fcbd123c841f9d5051936.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-fd1f9e8add1fcbd123c841f9d5051936.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-345d3e7252156db8d44ee24d6b5498e1": {
@@ -2922,7 +2922,7 @@
       "raw_count": 22,
       "retained_count": 22,
       "retention_rate": 1.0,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-345d3e7252156db8d44ee24d6b5498e1.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-345d3e7252156db8d44ee24d6b5498e1.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-5c7c4cb503a757147dbda56eabff0c47": {
@@ -2952,7 +2952,7 @@
       "raw_count": 20,
       "retained_count": 18,
       "retention_rate": 0.9,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-5c7c4cb503a757147dbda56eabff0c47.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-5c7c4cb503a757147dbda56eabff0c47.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-127944b6dabee1c9e20e92c5b8147e4a": {
@@ -2982,7 +2982,7 @@
       "raw_count": 40,
       "retained_count": 35,
       "retention_rate": 0.875,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-127944b6dabee1c9e20e92c5b8147e4a.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-127944b6dabee1c9e20e92c5b8147e4a.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-9737c77d3263062b8ca7a0a01bcd55b6": {
@@ -3012,7 +3012,7 @@
       "raw_count": 40,
       "retained_count": 38,
       "retention_rate": 0.95,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-9737c77d3263062b8ca7a0a01bcd55b6.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-9737c77d3263062b8ca7a0a01bcd55b6.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-f1e439307b834015770a0ff1161fa15a": {
@@ -3042,7 +3042,7 @@
       "raw_count": 35,
       "retained_count": 30,
       "retention_rate": 0.8571428571428571,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-f1e439307b834015770a0ff1161fa15a.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-f1e439307b834015770a0ff1161fa15a.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-c7ddd93b15e30faae180a52fd2be32": {
@@ -3072,7 +3072,7 @@
       "raw_count": 22,
       "retained_count": 20,
       "retention_rate": 0.9090909090909091,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-c7ddd93b15e30faae180a52fd2be32.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-c7ddd93b15e30faae180a52fd2be32.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-1ea9ea99ac8ed233bf355ac8109b9988": {
@@ -3102,7 +3102,7 @@
       "raw_count": 34,
       "retained_count": 32,
       "retention_rate": 0.9411764705882353,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-1ea9ea99ac8ed233bf355ac8109b9988.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-1ea9ea99ac8ed233bf355ac8109b9988.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-6e884701bfddd1f71e1138649f4c219": {
@@ -3132,7 +3132,7 @@
       "raw_count": 32,
       "retained_count": 27,
       "retention_rate": 0.84375,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-6e884701bfddd1f71e1138649f4c219.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-6e884701bfddd1f71e1138649f4c219.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-d75af64aa166c24eacbe2257d0988c9c": {
@@ -3162,7 +3162,7 @@
       "raw_count": 23,
       "retained_count": 17,
       "retention_rate": 0.7391304347826086,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-d75af64aa166c24eacbe2257d0988c9c.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-d75af64aa166c24eacbe2257d0988c9c.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-c60f62684618cb52a4136492f17b9a59": {
@@ -3192,7 +3192,7 @@
       "raw_count": 40,
       "retained_count": 34,
       "retention_rate": 0.85,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-c60f62684618cb52a4136492f17b9a59.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-c60f62684618cb52a4136492f17b9a59.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-83827973c79ca7631c9ec1e03e401f54": {
@@ -3222,7 +3222,7 @@
       "raw_count": 24,
       "retained_count": 21,
       "retention_rate": 0.875,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-83827973c79ca7631c9ec1e03e401f54.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-83827973c79ca7631c9ec1e03e401f54.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-187859d3c3a2fd23f54e1b6f41fdd78a": {
@@ -3252,7 +3252,7 @@
       "raw_count": 20,
       "retained_count": 18,
       "retention_rate": 0.9,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-187859d3c3a2fd23f54e1b6f41fdd78a.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-187859d3c3a2fd23f54e1b6f41fdd78a.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-bcb6be8f0ff4a51872e526c4f21dfca4": {
@@ -3282,7 +3282,7 @@
       "raw_count": 22,
       "retained_count": 20,
       "retention_rate": 0.9090909090909091,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-bcb6be8f0ff4a51872e526c4f21dfca4.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-bcb6be8f0ff4a51872e526c4f21dfca4.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-15bd6225c209a8e3654b0ce7754570c8": {
@@ -3312,7 +3312,7 @@
       "raw_count": 26,
       "retained_count": 21,
       "retention_rate": 0.8076923076923077,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-15bd6225c209a8e3654b0ce7754570c8.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-15bd6225c209a8e3654b0ce7754570c8.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-d32cd77c6630b77de47c0353c18d58e": {
@@ -3342,7 +3342,7 @@
       "raw_count": 37,
       "retained_count": 35,
       "retention_rate": 0.9459459459459459,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-d32cd77c6630b77de47c0353c18d58e.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-d32cd77c6630b77de47c0353c18d58e.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-f626192a5930d6c712f0124e8fa3930b": {
@@ -3372,7 +3372,7 @@
       "raw_count": 20,
       "retained_count": 19,
       "retention_rate": 0.95,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-f626192a5930d6c712f0124e8fa3930b.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-f626192a5930d6c712f0124e8fa3930b.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-9ff8400080c77feac2ad6fd1941624c3": {
@@ -3402,7 +3402,7 @@
       "raw_count": 20,
       "retained_count": 18,
       "retention_rate": 0.9,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-9ff8400080c77feac2ad6fd1941624c3.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-9ff8400080c77feac2ad6fd1941624c3.npy",
       "uses_frozen_base_preprocessing": false
     },
     "core-mug-4b8b10d03552e0891898dfa8eb8eefff": {
@@ -3432,7 +3432,7 @@
       "raw_count": 40,
       "retained_count": 32,
       "retention_rate": 0.8,
-      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-4b8b10d03552e0891898dfa8eb8eefff.npy",
+      "preprocessed_source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/dexgrasp/dataset/scaled_category_candidates_v1_preprocessed/core-mug-4b8b10d03552e0891898dfa8eb8eefff.npy",
       "uses_frozen_base_preprocessing": false
     }
   },
@@ -3571,11 +3571,11 @@
     }
   },
   "source_files": {
-    "candidate_manifest": "/home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/configs/scaled_category_split_candidates_v1.json",
-    "candidate_summary": "/home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/scaled_category_preprocess_summary_v1.json",
-    "replacement_manifest": "/home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/configs/scaled_replacement_candidates_v1.json",
-    "replacement_summary": "/home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/results/scaled_replacement_preprocess_summary_v1.json",
-    "base_manifest": "/home/lekangwan/projects/DexGraspMotionChallenge2025/custom_tools/configs/object_split_final.json"
+    "candidate_manifest": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/configs/scaled_category_split_candidates_v1.json",
+    "candidate_summary": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/scaled_category_preprocess_summary_v1.json",
+    "replacement_manifest": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/configs/scaled_replacement_candidates_v1.json",
+    "replacement_summary": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/results/scaled_replacement_preprocess_summary_v1.json",
+    "base_manifest": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/custom_tools/configs/object_split_final.json"
   },
   "leakage_note": "Replacement selection used official demonstration replay retention and geometry only; no learned-policy score was read."
 }

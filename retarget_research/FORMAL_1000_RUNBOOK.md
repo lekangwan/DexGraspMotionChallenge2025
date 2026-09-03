@@ -10,8 +10,8 @@ CPU PhysX是基本重定向的合法正式路径；只有准备在GPU上训练�
 /home/lekangwan/miniconda3/envs/hand-retarget/bin/python \
   retarget_research/scripts/preflight.py \
   --reference-root retarget_research/reference/HandRetargetTask2026 \
-  --dataset-root /home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset \
-  --asset-root /home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata \
+  --dataset-root /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/external_data/dataset \
+  --asset-root /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/external_data/meshdata \
   --output retarget_research/outputs/formal_1000/preflight.json
 ```
 
@@ -24,8 +24,8 @@ CPU PhysX是基本重定向的合法正式路径；只有准备在GPU上训练�
 ```bash
 /home/lekangwan/miniconda3/envs/hand-retarget/bin/python \
   retarget_research/scripts/build_embedded_category_map.py \
-  --trajectory-root /home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset \
-  --asset-root /home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata \
+  --trajectory-root /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/external_data/dataset \
+  --asset-root /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/external_data/meshdata \
   --output retarget_research/manifests/category_map.csv \
   --audit-output retarget_research/manifests/category_map_audit.json \
   --minimum-trajectories 10 --minimum-objects-per-category 2
@@ -37,8 +37,8 @@ CPU PhysX是基本重定向的合法正式路径；只有准备在GPU上训练�
 /home/lekangwan/miniconda3/envs/hand-retarget/bin/python \
   retarget_research/scripts/build_inventory.py \
   --category-map retarget_research/manifests/category_map.csv \
-  --trajectory-root /home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset \
-  --asset-root /home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/meshdata \
+  --trajectory-root /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/external_data/dataset \
+  --asset-root /home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/external_data/meshdata \
   --output retarget_research/manifests/inventory.csv \
   --audit-output retarget_research/manifests/inventory_audit.json
 ```

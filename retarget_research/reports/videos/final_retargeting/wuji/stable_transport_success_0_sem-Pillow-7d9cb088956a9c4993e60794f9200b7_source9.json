@@ -1,6 +1,6 @@
 {
   "hand": "wuji",
-  "source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Pillow-7d9cb088956a9c4993e60794f9200b7.npy",
+  "source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/external_data/dataset/sem-Pillow-7d9cb088956a9c4993e60794f9200b7.npy",
   "target": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Pillow-7d9cb088956a9c4993e60794f9200b7.npy",
   "object_name": "sem-Pillow-7d9cb088956a9c4993e60794f9200b7",
   "source_trajectory_index": 9,

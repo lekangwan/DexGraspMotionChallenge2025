@@ -1,6 +1,6 @@
 {
   "hand": "wuji",
-  "source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Battery-62733b55e76a3b718c9d9ab13336021b.npy",
+  "source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/external_data/dataset/sem-Battery-62733b55e76a3b718c9d9ab13336021b.npy",
   "target": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Battery-62733b55e76a3b718c9d9ab13336021b.npy",
   "object_name": "sem-Battery-62733b55e76a3b718c9d9ab13336021b",
   "source_trajectory_index": 35,

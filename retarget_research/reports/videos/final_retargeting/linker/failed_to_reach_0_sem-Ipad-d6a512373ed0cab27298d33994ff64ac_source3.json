@@ -1,7 +1,7 @@
 {
   "hand": "linker_o6",
   "joint_mode": "coupled6",
-  "source": "/home/lekangwan/projects/DexGraspMotionChallenge2025/external_data/dataset/sem-Ipad-d6a512373ed0cab27298d33994ff64ac.npy",
+  "source": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/external_data/dataset/sem-Ipad-d6a512373ed0cab27298d33994ff64ac.npy",
   "target": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Ipad-d6a512373ed0cab27298d33994ff64ac.npy",
   "object_name": "sem-Ipad-d6a512373ed0cab27298d33994ff64ac",
   "source_trajectory_index": 3,
