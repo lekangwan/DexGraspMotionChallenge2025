@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#405464"/>
+    </marker>
+    <style>
+      .title{font:700 48px 'Noto Sans CJK SC','Microsoft YaHei',sans-serif;fill:#123B5D}
+      .section{font:700 31px 'Noto Sans CJK SC','Microsoft YaHei',sans-serif;fill:#123B5D}
+      .head{font:700 29px 'Noto Sans CJK SC','Microsoft YaHei',sans-serif;fill:#123B5D}
+      .body{font:500 23px 'Noto Sans CJK SC','Microsoft YaHei',sans-serif;fill:#29485F}
+      .small{font:500 20px 'Noto Sans CJK SC','Microsoft YaHei',sans-serif;fill:#496274}
+      .white{fill:#fff}
+      .arrow{stroke:#405464;stroke-width:4;fill:none;marker-end:url(#arrow)}
+      .dash{stroke:#17A398;stroke-width:4;stroke-dasharray:12 10;fill:none;marker-end:url(#arrow)}
+    </style>
+    <filter id="shadow" x="-10%" y="-15%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#173B55" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="1920" height="1080" fill="#FAFCFD"/>
+  <text x="80" y="78" class="title">进阶策略：由重定向示范学习自主抓取</text>
+  <text x="80" y="122" class="body">核心：训练时学习专家动作；测试时只用初始状态、执行相位，以及 Wuji 的短时真实反馈</text>
+
+  <!-- 训练阶段 -->
+  <rect x="60" y="160" width="1800" height="310" rx="24" fill="#F2F7FA" stroke="#D8E4EA" stroke-width="2"/>
+  <text x="90" y="210" class="section">训练阶段</text>
+
+  <g filter="url(#shadow)">
+    <rect x="100" y="250" width="310" height="150" rx="16" fill="#E8F1F7" stroke="#B9CEDB" stroke-width="2"/>
+    <text x="255" y="300" text-anchor="middle" class="head">成功重定向轨迹</text>
+    <text x="255" y="340" text-anchor="middle" class="body">手—物状态 + 专家动作</text>
+    <text x="255" y="374" text-anchor="middle" class="small">仅训练/验证保留稳定成功样本</text>
+
+    <rect x="525" y="250" width="335" height="150" rx="16" fill="#EAF6F3" stroke="#A9D8CF" stroke-width="2"/>
+    <text x="692" y="300" text-anchor="middle" class="head">构造监督样本</text>
+    <text x="692" y="340" text-anchor="middle" class="body">初始观测 o₀ + 相位 pₜ</text>
+    <text x="692" y="374" text-anchor="middle" class="small">标签：a*ₜ − a₀</text>
+
+    <rect x="975" y="250" width="330" height="150" rx="16" fill="#FFF4E8" stroke="#E9C79F" stroke-width="2"/>
+    <text x="1140" y="300" text-anchor="middle" class="head">MLP 策略网络</text>
+    <text x="1140" y="340" text-anchor="middle" class="body">512 → 512 → 384</text>
+    <text x="1140" y="374" text-anchor="middle" class="small">监督回归：MSE / Huber</text>
+
+    <rect x="1420" y="250" width="350" height="150" rx="16" fill="#EDEAF8" stroke="#C7BEE4" stroke-width="2"/>
+    <text x="1595" y="300" text-anchor="middle" class="head">学得自主策略</text>
+    <text x="1595" y="340" text-anchor="middle" class="body">phase → 完整抓取过程</text>
+    <text x="1595" y="374" text-anchor="middle" class="small">不记忆具体测试轨迹</text>
+  </g>
+  <path d="M410 325 H515" class="arrow"/>
+  <path d="M860 325 H965" class="arrow"/>
+  <path d="M1305 325 H1410" class="arrow"/>
+
+  <!-- 测试阶段 -->
+  <rect x="60" y="505" width="1800" height="470" rx="24" fill="#FFFFFF" stroke="#D8E4EA" stroke-width="2"/>
+  <text x="90" y="555" class="section">自主测试阶段（每个物理步 60 Hz）</text>
+
+  <g filter="url(#shadow)">
+    <rect x="100" y="610" width="330" height="180" rx="16" fill="#E8F1F7" stroke="#B9CEDB" stroke-width="2"/>
+    <text x="265" y="658" text-anchor="middle" class="head">Episode 开始</text>
+    <text x="265" y="702" text-anchor="middle" class="body">保存初始手—物观测 o₀</text>
+    <text x="265" y="740" text-anchor="middle" class="body">建立张手初始命令 a₀</text>
+    <text x="265" y="772" text-anchor="middle" class="small">之后不再读取专家轨迹</text>
+
+    <rect x="545" y="610" width="270" height="180" rx="16" fill="#EAF6F3" stroke="#A9D8CF" stroke-width="2"/>
+    <text x="680" y="662" text-anchor="middle" class="head">策略输入</text>
+    <text x="680" y="708" text-anchor="middle" class="body">初始观测 o₀</text>
+    <text x="680" y="748" text-anchor="middle" class="body">相位 pₜ：0 → 1</text>
+
+    <rect x="930" y="610" width="300" height="180" rx="16" fill="#FFF4E8" stroke="#E9C79F" stroke-width="2"/>
+    <text x="1080" y="660" text-anchor="middle" class="head">MLP 生成动作</text>
+    <text x="1080" y="706" text-anchor="middle" class="body">预测标准化增量 Δaₜ</text>
+    <text x="1080" y="746" text-anchor="middle" class="body">aₜ = a₀ + Δaₜ</text>
+
+    <rect x="1355" y="610" width="390" height="180" rx="16" fill="#EDEAF8" stroke="#C7BEE4" stroke-width="2"/>
+    <text x="1550" y="658" text-anchor="middle" class="head">Isaac Gym 执行</text>
+    <text x="1550" y="702" text-anchor="middle" class="body">手腕 6维 + 手指主动量</text>
+    <text x="1550" y="740" text-anchor="middle" class="body">PD位置控制 → 接触与抬升</text>
+    <text x="1550" y="772" text-anchor="middle" class="small">210步运动 + 30步稳定保持</text>
+  </g>
+  <path d="M430 700 H535" class="arrow"/>
+  <path d="M815 700 H920" class="arrow"/>
+  <path d="M1230 700 H1345" class="arrow"/>
+
+  <!-- Wuji反馈支路 -->
+  <rect x="545" y="835" width="1200" height="95" rx="16" fill="#E7F7F5" stroke="#17A398" stroke-width="2" stroke-dasharray="9 7"/>
+  <text x="585" y="875" class="head" fill="#087E77">Wuji 额外反馈支路</text>
+  <text x="585" y="911" class="body">最近三帧真实状态 → 反馈网络 → 有界修正 0.1·tanh(cₜ) → 加到名义动作</text>
+  <path d="M1550 790 V820 C1550 840 1515 850 1480 850 H1250" class="dash"/>
+  <path d="M1150 835 V805 C1150 798 1130 795 1100 795" class="dash"/>
+
+  <rect x="60" y="1005" width="1800" height="48" rx="12" fill="#123B5D"/>
+  <text x="960" y="1038" text-anchor="middle" class="body white">测试约束：不读取未来专家动作 · 不检索参考轨迹 · 不使用专家手腕；仅第一帧用于任务初始化</text>
+</svg>

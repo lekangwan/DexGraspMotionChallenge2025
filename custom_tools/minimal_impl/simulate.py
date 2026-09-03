@@ -26,6 +26,9 @@ def parse_args():
     parser.add_argument("--teacher", action="append", default=[],
                         help="采集模式需要四次 CATEGORY=CHECKPOINT")
     parser.add_argument("--trajectory-root", required=True)
+    parser.add_argument(
+        "--meshdata-root", default=str(REPO_ROOT / "assets/meshdata"),
+        help="物体meshdata目录；每个物体下应包含coacd/coacd_1.urdf")
     parser.add_argument("--object-id", action="append", required=True)
     parser.add_argument("--trajectory-offset", type=int, default=0)
     parser.add_argument("--trajectories-per-object", type=int, default=0)
@@ -63,7 +66,10 @@ def parse_teachers(values):
 
 
 def load_trajectory_data(cli):
-    """读取原始轨迹必需的三个字段，并保留原文件中的轨迹编号。"""
+    """输入轨迹根目录、物体和编号范围，输出环境数据及原轨迹编号。
+
+    内部只复制物体尺度、旋转和Shadow动作；作用是建立Isaac Gym的episode初始任务。
+    """
     result, source_indices = [], []
     root = Path(cli.trajectory_root).expanduser().resolve()
     for object_id in cli.object_id:
@@ -85,7 +91,10 @@ def load_trajectory_data(cli):
 
 
 def official_args(cli):
-    """调用官方参数解析器，但不让它看到精简版自己的CLI参数。"""
+    """输入精简版参数，输出官方参数对象。
+
+    内部临时替换``sys.argv``调用仓库解析器；作用是复用官方仿真设备和配置逻辑。
+    """
     argv = [
         sys.argv[0], "--task=ShadowHandGraspDexRepIjrr", "--algo=ppo1",
         f"--seed={cli.seed}", f"--rl_device={cli.rl_device}",
@@ -105,7 +114,10 @@ def official_args(cli):
 
 
 def build_task(cli, trajectory_data):
-    """用官方Ijrr2环境创建一批真实物理轨迹。"""
+    """输入运行配置和轨迹，输出官方Ijrr2多环境任务。
+
+    内部设置BC推理模式、DexRep观测、并行环境数和mesh路径；作用是创建真实物理环境。
+    """
     from utils.config import load_cfg, parse_sim_params, set_seed
     from tasks.shadow_hand_grasp_dexrep_ijrr2 import ShadowHandGraspDexRepIjrr2
 
@@ -121,6 +133,10 @@ def build_task(cli, trajectory_data):
     cfg["env"]["object_code_dict"] = list(cli.object_id)
     cfg["env"]["numEnvs"] = sum(len(item["grasp_seqs"]) for item in trajectory_data)
     cfg["env"].setdefault("seq_start_rot_uniform", False)
+    meshdata_root = Path(cli.meshdata_root).expanduser().resolve()
+    cfg["env"]["asset"]["assetRoot"] = str(meshdata_root.parent)
+    cfg["env"]["asset"]["assetFileNameObj"] = f"/{meshdata_root.name}/"
+    cfg["env"]["asset"]["assetFileNameObj_raw"] = f"/{meshdata_root.name}/"
     sim_params = parse_sim_params(args, cfg, cfg_train)
     return ShadowHandGraspDexRepIjrr2(
         cfg=cfg, sim_params=sim_params, physics_engine=args.physics_engine,
@@ -256,7 +272,9 @@ def main():
     内部延迟导入Isaac Gym、创建环境并调用evaluate/collect；作用是串联完整物理流程。
     """
     cli = parse_args()
-    required = [cli.student, cli.trajectory_root, cli.env_config, cli.train_config]
+    required = [
+        cli.student, cli.trajectory_root, cli.meshdata_root,
+        cli.env_config, cli.train_config]
     if cli.mode == "collect":
         teacher_paths = parse_teachers(cli.teacher)
         required.extend(teacher_paths.values())

@@ -1,0 +1,58 @@
+{
+  "schema_version": 3,
+  "decision_date": "2026-08-25",
+  "protocol": "stable_success_protocol_v3_selected_methods.json",
+  "primary_metric": "quality selection uses terminal stable 15 cm plus contact and palm-relative transport; baseline comparability separately uses the reference Isaac goal-region criterion",
+  "evidence": {
+    "task_statement": "requires maximizing trajectory replay success but gives no numeric lift threshold",
+    "reference_code": "the Isaac main evaluator places the goal 0.30 m above the support surface and latches success when object-goal distance is <=0.15 m or object height reaches the goal; scripts/test_success_all.py is a separate MuJoCo helper",
+    "reference_behavior": "the Isaac success flag is cumulative, so a later slip does not revoke a previous goal-region hit",
+    "project_correction": "report the reference cumulative criterion for comparison and keep terminal 15 cm, contact, drop and palm-relative slip as a separate quality metric"
+  },
+  "selected_methods": {
+    "linker": {
+      "method": "linker_vector_v2alpha_c3g8_v1",
+      "stable_15cm": 203,
+      "transport_quality_15cm": 158,
+      "strict_stable_30cm": 193,
+      "strict_transport_quality_30cm": 153
+    },
+    "xhand": {
+      "method": "xhand_official",
+      "stable_15cm": 546,
+      "transport_quality_15cm": 513,
+      "strict_stable_30cm": 516,
+      "strict_transport_quality_30cm": 501
+    },
+    "wuji": {
+      "method": "wuji_thumb_nullspace_v1",
+      "stable_15cm": 448,
+      "transport_quality_15cm": 429,
+      "strict_stable_30cm": 431,
+      "strict_transport_quality_30cm": 421
+    }
+  },
+  "reference_baseline_comparison_at_15cm": {
+    "linker": {
+      "baseline_method": "linker_o6_optimized_v2",
+      "baseline_stable": 181,
+      "selected_stable": 203,
+      "baseline_transport_quality": 145,
+      "selected_transport_quality": 158
+    },
+    "xhand": {
+      "baseline_method": "xhand_official",
+      "baseline_stable": 546,
+      "selected_stable": 546,
+      "baseline_transport_quality": 513,
+      "selected_transport_quality": 513
+    },
+    "wuji": {
+      "baseline_method": "wuji_v1",
+      "baseline_stable": 608,
+      "baseline_transport_quality": 575,
+      "baseline_validity": "not eligible despite higher physics replay count because formal_v1 contains reverse distal flexion; selected anatomy-corrected method is 448 stable and 429 transport-quality"
+    }
+  },
+  "interpretation": "the task statement gives no numeric height. Reference-goal and stable-quality metrics answer different questions and must be reported separately; changing the quality threshold from 30 cm to 15 cm only modestly changes counts because most successful trajectories lift close to 35 cm while most failures never establish a terminal grasp"
+}

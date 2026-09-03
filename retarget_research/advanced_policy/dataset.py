@@ -34,7 +34,7 @@ class TargetHandPolicyDataset(Dataset):
         内部逻辑：按trajectory_id收集全局索引；拒绝非连续重复ID和未知模式。
         作用：训练循环无需了解NPZ布局即可安全抽样；统一学生可在同一索引读取教师动作。
         """
-        if mode not in {"bc", "phase_residual", "phase_residual_temporal", "temporal3", "diffusion"}:
+        if mode not in {"bc", "initial_phase", "initial_phase_delta", "initial_fourier_delta", "initial_phase_feedback", "initial_temporal_feedback", "phase_residual", "phase_residual_temporal", "temporal3", "diffusion"}:
             raise ValueError(f"未知数据模式: {mode}")
         if mode == "temporal3" and int(history) != 3:
             raise ValueError("Temporal3的history必须严格等于3")
@@ -86,6 +86,33 @@ class TargetHandPolicyDataset(Dataset):
         self.previous_commands = None
         self.action_deltas = None
         self.phase = None
+        self.initial_observations = None
+        self.initial_action_deltas = None
+        if self.mode in {"initial_phase", "initial_phase_delta", "initial_fourier_delta", "initial_phase_feedback", "initial_temporal_feedback"}:
+            self.initial_observations = np.empty_like(self.observations)
+            self.phase = np.empty((len(self.actions), 1), dtype=np.float32)
+            raw_initial_deltas = np.empty_like(self.data["actions"], dtype=np.float32)
+            is_hold = self.data.get(
+                "is_hold", np.zeros(len(self.actions), dtype=bool)
+            ).astype(bool)
+            for indices in self.trajectory_indices.values():
+                self.initial_observations[indices] = self.observations[indices[0]]
+                initial_command = self.data["actions"][indices[0]].copy()
+                initial_command[6:] = 0.0
+                raw_initial_deltas[indices] = self.data["actions"][indices] - initial_command
+                non_hold = int(np.count_nonzero(~is_hold[indices]))
+                denominator = max(non_hold - 1, 1)
+                self.phase[indices, 0] = np.minimum(
+                    np.arange(len(indices), dtype=np.float32) / denominator, 1.0
+                )
+            if self.mode in {"initial_phase_delta", "initial_fourier_delta", "initial_phase_feedback", "initial_temporal_feedback"}:
+                required = {"initial_delta_mean", "initial_delta_std"}
+                missing = required - set(self.normalization)
+                if missing:
+                    raise ValueError(f"初态相对策略缺少统计量: {sorted(missing)}")
+                self.initial_action_deltas = (
+                    raw_initial_deltas - self.normalization["initial_delta_mean"]
+                ) / self.normalization["initial_delta_std"]
         if self.mode in ("phase_residual", "phase_residual_temporal"):
             required = {"action_delta_mean", "action_delta_std"}
             missing = required - set(self.normalization)
@@ -154,6 +181,29 @@ class TargetHandPolicyDataset(Dataset):
         作用：让训练脚本只根据model_type选择loss，而不重复窗口逻辑。
         """
         category = torch.tensor(self.data["category_id"][index], dtype=torch.long)
+        if self.mode in {"initial_phase", "initial_phase_delta", "initial_fourier_delta", "initial_phase_feedback", "initial_temporal_feedback"}:
+            sample = {
+                "initial_observations": torch.from_numpy(
+                    self.initial_observations[index]
+                ).float(),
+                "phase": torch.from_numpy(self.phase[index]).float(),
+                "actions": torch.from_numpy(
+                    self.actions[index]
+                    if self.mode == "initial_phase"
+                    else self.initial_action_deltas[index]
+                ).float(),
+                "category_id": category,
+            }
+            if self.mode == "initial_phase_feedback":
+                sample["observations"] = torch.from_numpy(
+                    self.observations[index]
+                ).float()
+            if self.mode == "initial_temporal_feedback":
+                history_indices = self._window_indices(index, self.history - 1, 0)
+                sample["observation_history"] = torch.from_numpy(
+                    self.observations[history_indices]
+                ).float()
+            return sample
         if self.mode in ("phase_residual",):
             return {
                 "observations": torch.from_numpy(self.observations[index]).float(),

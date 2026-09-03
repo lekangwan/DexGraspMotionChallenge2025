@@ -1,0 +1,1797 @@
+{
+  "schema_version": 1,
+  "release_id": "rank5_cem_postconfirmed_formal1000_v1",
+  "frozen_date": "2026-09-01",
+  "status": "final",
+  "dataset_contract": {
+    "categories": 50,
+    "objects": 100,
+    "trajectories_per_hand": 1000
+  },
+  "method": {
+    "shared_pipeline": [
+      "kinematic_retargeting_initialization",
+      "global_physics_cem",
+      "rank5_joint_synergy_phase_cem",
+      "two_repeat_isolated_candidate_confirmation",
+      "independent_1000_trajectory_replay",
+      "reference_and_stable_transport_audit"
+    ],
+    "linker_extra_stage": "second_global_physics_cem_before_rank5",
+    "rank": 5,
+    "cem_population": 8,
+    "cem_elite": 2,
+    "cem_iterations": 2,
+    "primary_report_metric": "reference_isaac_success",
+    "expert_training_gate": "stable_15cm_terminal_and_palm_relative_transport"
+  },
+  "hands": {
+    "linker": {
+      "objects": 100,
+      "categories": 50,
+      "trajectories": 1000,
+      "confirmation": {
+        "changed": 244,
+        "accepted": 37,
+        "restored": 207,
+        "repeats_per_baseline_and_candidate": 2,
+        "selection_margin": 1.0
+      },
+      "metrics": {
+        "reference_isaac_success_count": 439,
+        "reference_isaac_terminal_success_count": 403,
+        "stable_physics_success_count": 394,
+        "transport_quality_success_count": 350,
+        "training_eligible_count": 350,
+        "per_policy_split": {
+          "test": {
+            "trajectory_count": 500,
+            "stable_physics_count": 184,
+            "transport_quality_count": 167,
+            "training_eligible_count": 167
+          },
+          "train": {
+            "trajectory_count": 400,
+            "stable_physics_count": 173,
+            "transport_quality_count": 152,
+            "training_eligible_count": 152
+          },
+          "valid": {
+            "trajectory_count": 100,
+            "stable_physics_count": 37,
+            "transport_quality_count": 31,
+            "training_eligible_count": 31
+          }
+        }
+      },
+      "artifacts": {
+        "manifest": {
+          "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/manifests/linker.json",
+          "bytes": 93673,
+          "sha256": "fa91fa1c9672e9e5c42339880edfb8fcbd3667c15e6963dd58c6d340dd2496db"
+        },
+        "confirmation_summary": {
+          "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/confirmation_summary.json",
+          "bytes": 110449,
+          "sha256": "8cc5675d0fcbe707cf899182050ac05e6645037505c482139f48c27148c42e2b"
+        },
+        "evaluation_summary": {
+          "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/evaluation/linker/manifest_evaluation_summary.json",
+          "bytes": 2946057,
+          "sha256": "35e1918dc8372e3d380a694236f9dc4955ac34c4d8fee272db4e652313ae595c"
+        },
+        "stable_audit": {
+          "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/audit/linker_stable_audit.json",
+          "bytes": 3750859,
+          "sha256": "947b96748bc8c1ec497df89fbe8348fee35b67a8a9106bd6917e064bc5c84bba"
+        },
+        "training_eligible_keys": {
+          "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/audit/linker_training_eligible_keys.json",
+          "bytes": 23851,
+          "sha256": "be27fd6da5f7b908b7b972596f5a7903c680bbb523f60e9d022938a699955f21"
+        },
+        "targets": [
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/core-bowl-45603bffc6a2866b5d1ac0d5489f7d84.npy",
+            "bytes": 239054,
+            "sha256": "3f99fc66b259ada127543b9946aa0257687ed1f74875d723d390f05d178feaf9"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/core-bowl-a593e8863200fdb0664b3b9b23ddfcbc.npy",
+            "bytes": 239166,
+            "sha256": "aa0e4971f2c6803b493c88e5260c87293bf32ec221a767d622b20d09cd7f1a2c"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/core-camera-cd5fd9a2bd6792ad318e2f26ee2da02c.npy",
+            "bytes": 239200,
+            "sha256": "e422b43ff0ea3f3e8dd8b726c2c96ef83985e7ede9554a4e5a0f330147cf7933"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/core-can-70172e6afe6aff7847f90c1ac631b97f.npy",
+            "bytes": 239149,
+            "sha256": "498aa5453146c92fde2ea6e9a98188076ee089ae1f711e979b6771eb184b84b6"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/core-can-eac30c41aad2ff27c0ca8d7a07be3be.npy",
+            "bytes": 239036,
+            "sha256": "9529a2947bbb30651e7d638e8bebdc3eed2bc21c04e79eed4891fee5fb787bef"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/core-knife-7725d5d2067f8fc0dd9394cb5004b836.npy",
+            "bytes": 248407,
+            "sha256": "f735f07be287e8610b2be7a39e9028efc7d4818a13b610fef3df8b1c282ded0f"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/core-pillow-1399af537cd5f80723a295070ca176a0.npy",
+            "bytes": 239136,
+            "sha256": "0b2561a4e5ed59127e299f1d76c5608286010e325c1d8bb5a1024c20a23e84ff"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/core-remote-8f14d5b24d2b798b16a077c4c0fc1181.npy",
+            "bytes": 239216,
+            "sha256": "aa2350a22c46c10a984b401b846e0535facbd825597f98bf80e9cfb812f0c591"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/core-remote-dd110b09266edec5fdcb551a4a7a3f9f.npy",
+            "bytes": 239184,
+            "sha256": "5c57779f974129d295257e4ca6737b3319c22dd87a3f5a6165ec8a314506e20b"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Ball-730cf06c9c029ae45e1b0bd500a24ffc.npy",
+            "bytes": 239069,
+            "sha256": "b168daa5b17f1492788e3e9eeccc3fd920357e37824f06e387977bf7bd963e5b"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Ball-7b30c2aba7782fd93c4691e221dfcd0.npy",
+            "bytes": 239004,
+            "sha256": "b880babd46e2a4602177474aa5b4491eea05b17b02e0aa0dfe59b9c04f8f5237"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Battery-62733b55e76a3b718c9d9ab13336021b.npy",
+            "bytes": 239072,
+            "sha256": "2a79f2653ba9357583bff763b3b20408257f438e64be7cde79ed6b1eea493c93"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Battery-f8a093851f146122dd4616bdfbd70670.npy",
+            "bytes": 239008,
+            "sha256": "db10f42f24b8fa22386a4f5233b0c4e476bf09f845d733bcf4332858b591a5dd"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-BeanBag-4c1d6b12b48a80b0ebd10747ca93b13b.npy",
+            "bytes": 239040,
+            "sha256": "dc4e0218b45623a4b86e8c53e63ff0fe7b72105277a962f657c6bd088f437310"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-BeanBag-b5a0c927213ba01dc39a00da16746b95.npy",
+            "bytes": 239008,
+            "sha256": "3c8d489f1e3734b3f748a7f90f1b2e9ddeafc0de25c97381ca4b4eb3fbfc69f0"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Blender-48bddfc383e475583f36fda0f70067c5.npy",
+            "bytes": 239104,
+            "sha256": "3f84abcd629996d0b9106b6dc93249f077b3b6383b4d7c7a84d0aa1e8bd32df3"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Blender-dd06add5426f69ddc9c603cb0476780f.npy",
+            "bytes": 239184,
+            "sha256": "8d792a7a89ac4c2389d36883d2919dee4de509de29c102bee30d616d5bc7ad07"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Book-a238b2f6f5e2cf66c77016426fd9cf48.npy",
+            "bytes": 248325,
+            "sha256": "3d98e676186a60368185f285f97e091a0f6388aed83098457b8976513a3a823f"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Book-c8691c86e110318ef2bc9da1ba799c60.npy",
+            "bytes": 248533,
+            "sha256": "198ffcedc8cbd9691f2b6367cfb6f6e058d1b96dedd2eb4e83abee75a42d7e4b"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Camera-5838f13cd253038ae94020dcb05ab335.npy",
+            "bytes": 248567,
+            "sha256": "f058296e06a30d497158fe807a9a6164a0559053925674406a962a85872f45b3"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Canister-714320da4aafcb4a47be2353d2b2403b.npy",
+            "bytes": 239201,
+            "sha256": "3f9e4822ce229633d3e3cfb2188d52f8b69341115bf0908a908af915859b238b"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Canister-abeaed132c7266b73e9c38134dedd15c.npy",
+            "bytes": 239249,
+            "sha256": "d0f1cd7c6e5ccbbd2b353c471d66d4498feeeb871bf078a1963d1262f86a93ae"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Cap-60104a0945f83b063f30fadefd6911f2.npy",
+            "bytes": 248292,
+            "sha256": "2693492dc80e4954427feedf3705d62d849386e9f059704db4f09ad8660e6061"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Cap-ed52d2c2a9c1b606cf9bbc203a5cff99.npy",
+            "bytes": 239068,
+            "sha256": "74df6a1b2b801602b4a32b7930f7c7215f3dc08336b39d0ac247d1a4c7e8972a"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-CerealBox-2ee85d45fe615a734322eb6f7ad3b3a2.npy",
+            "bytes": 239250,
+            "sha256": "321ba3388e97d9bbe6b8b3b20c3238d2d5f580121cf07adfb6033d1d51b621bf"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-CerealBox-7685495f6e5aac1339a00425b5e3771a.npy",
+            "bytes": 239170,
+            "sha256": "d509555df4991a2a6f493456cf856f6b927bbfa165753c4d41789f6150718fc5"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Clock-b6d7c946f14d345f7c9f6c5864df1a57.npy",
+            "bytes": 239118,
+            "sha256": "99e27e8527ecda27df8a2e1c2ec6168a3715e2e4a393fe1269e17b82eaae204b"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Clock-cca5dddf86affe9a23522985f649a9ae.npy",
+            "bytes": 239102,
+            "sha256": "1654eb78203d3ade93e43a1809c58c3dfb294348078b7986445e5696bc195d02"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Cookie-2ec24ca1dd42c39f6ad0370a38d43358.npy",
+            "bytes": 239007,
+            "sha256": "1cc15c5bb3df79a504e1c04e2656bc699eacaf2645fb8fdb7aa51372d8383c10"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Cookie-ccfa74e5574678325cde8c99e4b182f9.npy",
+            "bytes": 239231,
+            "sha256": "ff81fcc503ce371228776cb49d08cfe492a8b16b1371c29d5035876e1d829133"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-DiscCase-6268862d43393bdfab0b172d4dea80cd.npy",
+            "bytes": 239073,
+            "sha256": "cf79efd32bbb057c9288225d3f3303048907d15fa9c1895aeab856500de97761"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-DiscCase-8a2cfe964083ef3fbb01628f533af3ce.npy",
+            "bytes": 239121,
+            "sha256": "393addb0bee4ec069ccd5d555d362905afc440ec6f86bb34c01f6fca77b4050c"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Dog-35f73ca2716aefcfbeccafa1b3b5f850.npy",
+            "bytes": 248500,
+            "sha256": "9c123fe3ec63213f7de31c415dcab9c88213b78f804810b4556e7011a9e86104"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Dog-e5cf3055d4dbe35c6cee5c93a7be9401.npy",
+            "bytes": 248484,
+            "sha256": "175eeee23573469c25aa55db6acc086d196c6d3338d632a3c04ea4b17d6eb1f8"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-FileCabinet-75fe06475f7b7241920de219c00d1c3b.npy",
+            "bytes": 239236,
+            "sha256": "526ce3cb5b7cb86f9783eb364f81eb0b99c69b7ddf2718512bc7c69fe8a0bcc4"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-FileCabinet-aeb08906aded103ad61a2ba1b75d9b90.npy",
+            "bytes": 239236,
+            "sha256": "14f6ef32550376a59ccac1ad294f614b3991a1d79833399b84dc4fb302f98e14"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Flashlight-614c2672926d86d96b84415a3f1393b.npy",
+            "bytes": 248522,
+            "sha256": "6e715b61c002827725e5eb4372f8597e11ee58c200ef1a782ea78513b01bea7e"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Flashlight-7981d1894a5b3c371b92a1339af2f7ce.npy",
+            "bytes": 248459,
+            "sha256": "e21bff1535ded121684fbdb3678b51410faa8d86be8d144299a895f52aac8898"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Fruit-473758ca6cb0506ee7697d561711bd2b.npy",
+            "bytes": 248374,
+            "sha256": "c60535666995d8a3548c56d08f3b1116dbd9531908123605ab6c9d5246728c10"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Fruit-f6e6117261dca163713c042b393cc65b.npy",
+            "bytes": 248614,
+            "sha256": "f8014080ab4361c6bf7cdc30bdac1a276177cb630dbfa42eca913d90b6279717"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Headphones-98eb96633935d994c38ed9bce4ed5d0f.npy",
+            "bytes": 239075,
+            "sha256": "32c4bced155395958b56a776ab7f36a938dbb6a7d4cb749ed6dcb1568cae58b5"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Headphones-aa87f1cb1632a08f2764cfba57a5de73.npy",
+            "bytes": 239251,
+            "sha256": "68dc2cd196eb2e9c954585a587d10ec1a4df9a32dea3704c4d19b9b6287e9bdc"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Horse-41fa184c56e07387139f158558905250.npy",
+            "bytes": 239262,
+            "sha256": "fa01c70e9967c095b9c8b4c58282a5cafc5480ed87195904734e89d70f8f41a3"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Horse-85f535b5ff34d58e452f233142155aa6.npy",
+            "bytes": 239262,
+            "sha256": "2eefdebe558afb27e7b87cc5b5c21fcdfdcf81dab9cffc2400d6eb9f7663c18c"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Ipad-805a9bf3d265c408d9869786ff7f6a46.npy",
+            "bytes": 239005,
+            "sha256": "b0b975d58610e354c17078236ba6dc96e52367eda6bdcc59228ae9ce61181ec7"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Ipad-d6a512373ed0cab27298d33994ff64ac.npy",
+            "bytes": 239005,
+            "sha256": "78d525490b9a12c05ac75f1ff2fd9fd13f35e0de4671262b7df4b1b9c6b96d49"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Knife-8d6ea5f31ad77a5581fbe2a60fd5a955.npy",
+            "bytes": 248502,
+            "sha256": "56ddc116a894a926e5960c4d1afc1792d9cec0f7249e9c84c07124866fccd0cc"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-MilkCarton-3c426552b9df786b3f7f3ed2c3c690fe.npy",
+            "bytes": 239187,
+            "sha256": "e91ff576c50719c1e6e382c0d4f7b2ca7c1db6a9ff2ce78b839f6e1044b82d53"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-MilkCarton-6ea87d3f4498448b3571657dafc7119.npy",
+            "bytes": 239122,
+            "sha256": "f425e67f9b3e8b6da1b5cd1472a5e9af74deaa737749bdc469129eb67a6ff93a"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Palette-992b09034e11bba395d70476ddcdc14.npy",
+            "bytes": 239295,
+            "sha256": "91d1967f24c83e27e0c3481360b5dda07a92b7d25b0c01c35b94dfcfb17e3d08"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Palette-bfe01d3ec17f9ef7db4673379779bfbf.npy",
+            "bytes": 239344,
+            "sha256": "be743b9eabe53022ecfb993cb06432e78649ae67411f7e94c6972738d0690709"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Pan-d9560bfc0c051109f54e1b6f41fdd78a.npy",
+            "bytes": 248404,
+            "sha256": "b5aafc4440ec2c53c6fc7beef71430551b46e1878c67061d15c1eba78a617d6a"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Pan-e8cd2c495f1a33cdd068168ae86ef29a.npy",
+            "bytes": 248548,
+            "sha256": "5bd4c775648101b3e6707f56f17df185d91ab039cd564a0eead45867827a7b7e"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Pencil-839923a17af633dfb29a5ca18b250f3b.npy",
+            "bytes": 239215,
+            "sha256": "c51153c22b2ab1ec60c7d7652686a76b19b1ae53697b236dbd71f3fa1c38add8"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Pencil-a7787ba523465ea1ef2e227a41551d79.npy",
+            "bytes": 239039,
+            "sha256": "720196d8e975085e689daf1a94b1092662c19be2ab7bfc271df96977f1e989e5"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-PersonStanding-8123f469a08a88e7761dc3477e65a72.npy",
+            "bytes": 239014,
+            "sha256": "5d84864484ea754af1551650cce532a661008b3f86ff9878fffb2e729674417f"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-PersonStanding-a0dfc28cdafc3be913497dd48d9d7c76.npy",
+            "bytes": 239271,
+            "sha256": "b81824865466cd162552c6f82115c6da7b8c65ea311c243f30a555d4a34fe8ff"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Phonebooth-5f600251394fabe6808ca88aece2e3dc.npy",
+            "bytes": 239219,
+            "sha256": "ab4a5252efcfc107fdc3051a9c6b593bed57674448f3dbca3f57b1ad487ae1c6"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Phonebooth-a5616ee37a8126a3b3389a2ff5594ee1.npy",
+            "bytes": 239187,
+            "sha256": "220de4b3a9869ec4e9204dc9a9afa4bed58dda3a5745204d6ccb6159d7585f51"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Piano-518952ec821e3e60781551ea381688bd.npy",
+            "bytes": 248470,
+            "sha256": "2f75d7b116006f9e387be55b500bd02c3ec3e97aa2424c09c58965a9d56e0bd0"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Piano-ce4945cde785aecb478fa0ab37c461c6.npy",
+            "bytes": 248486,
+            "sha256": "130547614a1c73f041eea5932de423ae892869d60d30bf3bffa4a6bc90d46ed8"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Pillow-7d9cb088956a9c4993e60794f9200b7.npy",
+            "bytes": 248486,
+            "sha256": "5df3dc7f491b7a85ee7448c6cf917ec89f8d636789a9e2e60a04bca9cf743639"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-RubiksCube-cdda3ea70d829d5baa9ba8e71ae84fd3.npy",
+            "bytes": 248459,
+            "sha256": "e5cfff5889437cd416fa30b7ea366bc9f0625352d355fe4932e6197867ada6a9"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-RubiksCube-f449ec743900234bb7f39bf08785db2f.npy",
+            "bytes": 239043,
+            "sha256": "db1c8d6d3498f809a4ee25086e4dcf76a217ddfc19a1df322ecef6c1e115d6af"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Ship-3f31208bf7adf03610aa1fb812b74966.npy",
+            "bytes": 248517,
+            "sha256": "b6137bbb3fe1b2bf1673c27b7c64ea1c527454e6e24958101ecfa322ef671a08"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Ship-426dad839f0b0ce8cad9e942409f4e39.npy",
+            "bytes": 239213,
+            "sha256": "7e1429969305a01c73dee74a5b8628a13581988883920971c06c08da926f11f8"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Showerhead-6b940f85e82457d28a1b73194a8a176f.npy",
+            "bytes": 239123,
+            "sha256": "82cee66ccbbeb9a464047720b98954f21ed2f4345ce9e250a3262ecdc07d5895"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Showerhead-c04fd0df2310b7653321831d2245cf06.npy",
+            "bytes": 248507,
+            "sha256": "b8829f54f17663647ee39512ec95be346afcb7600d1296a973b3246cb8d0009c"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Snowman-56e9167d8d9c2b8416cec6679796546.npy",
+            "bytes": 239199,
+            "sha256": "71dd20c0af2659516ea20a57308e19c6bde6bb42d91a8766ef8a36cd842ab775"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Snowman-def36b8e4538fb74d449cd634c927922.npy",
+            "bytes": 239232,
+            "sha256": "5aa61ccd013fdcc2cc3f38f8bf086a6aeca6c3f1bbedfb2fd26b304de0fc7717"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-SoapBar-351dec75ac0619b1827473663798726a.npy",
+            "bytes": 248456,
+            "sha256": "eba063827e3d24829ad8db50eeeed665c7dca744cccf6965552846ac16a6427f"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-SoapBar-c96bfdeccb6d92d141b965cb8ba50814.npy",
+            "bytes": 239104,
+            "sha256": "dcb4a4f239279ea56e96026a163c4db15cb299eb2e3719f8fe1d1f34fcea6769"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-SoapBottle-43762b28fb40088f724d867867ccd9fb.npy",
+            "bytes": 248395,
+            "sha256": "8b0902c12d752cc62d4da194060485145d1f37c6533608b34264c64f97837815"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-SoapBottle-a5912dff7ed43650cf6ede117dc51e3d.npy",
+            "bytes": 248475,
+            "sha256": "c1a88dea588007d6c0a0c615fe6cc9f2fe627adc4b75055a77e880bb9a534c68"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Stapler-88ac7b2b3050f1f861f7b52424be58ab.npy",
+            "bytes": 248472,
+            "sha256": "1e8ded9a950b95f851ef24cf65faca66b8147dd5d5e3d199393eec24e69b820e"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Stapler-988004d506b3b75e5e40cf2ee4f6ead.npy",
+            "bytes": 239311,
+            "sha256": "b15617b4e62ab7d4471735245f187e287b2ebe428241ce23491e0be8d502b9be"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-TapeDispenser-4674032e53b9fd37c1935c9110af1bff.npy",
+            "bytes": 239238,
+            "sha256": "c9b6109cff39d579ce1055d11439dee2a79bb8119eb6cdd7d06744a7c8ce400d"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-TapeDispenser-b5f9032272607f5e635f2989c7524167.npy",
+            "bytes": 239270,
+            "sha256": "710d9a911e46df017639d22b4cdba56b6949b7997f4e79c32133d1f09e92e5a1"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Thumbtack-17aa537d3f70e0998c5d696f6e844329.npy",
+            "bytes": 239154,
+            "sha256": "fc84b8c45a88f2010ec17dae7394e1e799f1815593c7080ed9efb37ffe89a988"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Thumbtack-7796072d01d00f173d1894dacd1107d7.npy",
+            "bytes": 239314,
+            "sha256": "ab3ba647b934cfc0fb6671405c4dd22f7b25a0a1a956af3c16e123c41ee22d95"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-TissueBox-13a913b33fb29f7741f9f28bc4fa9522.npy",
+            "bytes": 248586,
+            "sha256": "4ae670a8ea99503e1eed606119b80d6681b5e85efc4024630e863b882b2ae338"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-TissueBox-5128910785490905c58e834f0b160845.npy",
+            "bytes": 248490,
+            "sha256": "9e644a82ef5dfff27cdab3d071ccb612ac918c7a26cc591310f07cb1cb8e0de8"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Toaster-2fb52b43697b9341b785a4ac4a0dbd73.npy",
+            "bytes": 239344,
+            "sha256": "0a39f688be0ead0131b62b04999119221a6760bd96c519a34363449920ad5dab"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Toaster-3ffbb0ab0f8da32f86271197b958e3d5.npy",
+            "bytes": 239152,
+            "sha256": "1f7e8c8486b2012b8e2f67a77c8ec2d2e228f93f68747bb876ed0197f7fd9fff"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-ToasterOven-3c357d1352d2d1811fddae104d1cd00e.npy",
+            "bytes": 239204,
+            "sha256": "84e0aeacd8c9dc3f7d1549f0334179c8da5f7cd3b19ec772fc45f7de44e5b753"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-ToasterOven-95b4eee44e668dfb87a77620548f66e9.npy",
+            "bytes": 239300,
+            "sha256": "c4eedf0998cdd01702f2eac85ed319186e98da69aa5f25b3f56f33684ab7b804"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-USBStick-56f49e3cd0d16824b2bf4f773fe0e622.npy",
+            "bytes": 239121,
+            "sha256": "fe04dc32a3e70c8b39efdc21c004c017b48288ff7e58120714cbc0984c280cb6"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-USBStick-a432dacac26ad0f7ef90d4b0a8f1b812.npy",
+            "bytes": 248489,
+            "sha256": "2e483da09a3535f75b8c6ad3526775d1d5518bd348487771bea394eaff6c5c4f"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Vase-1a8f9295b44b48895e8c5748ca5ef3ea.npy",
+            "bytes": 248485,
+            "sha256": "91e6913f735a82e43bbe89a09db4d27036230e3038096c25e9a4f7f4146e18a4"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Vase-7b97f7b6ba604173fec8ec00010848b3.npy",
+            "bytes": 239101,
+            "sha256": "eab93a2436dfb3f55ac2faf1cac1ce88fab3ba5add23b17fc54ca61b16cd87e1"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-VideoGameController-2581265a7c81684b9141c153bb8dff6e.npy",
+            "bytes": 239052,
+            "sha256": "5c30a47a771f1a83608e77019460d8e5eca766b8d91dbdece0d1c6ae128ac085"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-VideoGameController-6ec5528fb04c5b8e9a9bf2cd62bd4fba.npy",
+            "bytes": 239132,
+            "sha256": "bd46d218c02fa3cadcd73e6cbf79f35df08377d7459442673badc248c46dae5e"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-WallClock-646bad2b62b63a4320bac12279fdf33e.npy",
+            "bytes": 239010,
+            "sha256": "fc4079c5a2a4cd8f601243b9319f6ea0c9c680bfad2101a30495d412c40a0c52"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-WallClock-fc51a35ac0399c457dc65f24011042f1.npy",
+            "bytes": 239058,
+            "sha256": "6b58576c3e0306612ea820bb953105000ca17f26dbb73876fbd88dc973701b59"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Watch-3a5351666689a7b2b788559e93c74a0f.npy",
+            "bytes": 239198,
+            "sha256": "34bfaaaf2539851b97ea85f830a6bb3c49a88fc2e4be6556586354b66b50fd58"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Watch-e743856943ce4fa49a9248bc70f7492.npy",
+            "bytes": 239229,
+            "sha256": "d58db794d7137ee646c17821ec727ac4b52e042101952aa946a3a323f951bd57"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Wii-84f45a5c3f9de48ae1c30bc7caf261be.npy",
+            "bytes": 239196,
+            "sha256": "cb4e879fcf73a3bcabede50d76577c2168c3207953d0a7c325fa2267a372f61b"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-Wii-effdc659515ff747eb2c6725049f8f.npy",
+            "bytes": 239130,
+            "sha256": "fd6d6d8469aac515f4f2474a06c9926863cf34c640da2c3f6b30bf246765fd03"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-WineBottle-1c79735033726294724d5ee7f09ab66b.npy",
+            "bytes": 248379,
+            "sha256": "7f92968706638246a9935f9c68f602b3bc2141930cdd51413de13d78ce455130"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/linker/sem-WineBottle-f331ad8d0e6654ef8f992b1fe7075c8f.npy",
+            "bytes": 239347,
+            "sha256": "f78f5a6a40843b306ab978b16b37dd60624e9dc635367e6b05ceb57b99ea5c77"
+          }
+        ]
+      }
+    },
+    "xhand": {
+      "objects": 100,
+      "categories": 50,
+      "trajectories": 1000,
+      "confirmation": {
+        "changed": 184,
+        "accepted": 25,
+        "restored": 159,
+        "repeats_per_baseline_and_candidate": 2,
+        "selection_margin": 1.0
+      },
+      "metrics": {
+        "reference_isaac_success_count": 695,
+        "reference_isaac_terminal_success_count": 661,
+        "stable_physics_success_count": 655,
+        "transport_quality_success_count": 630,
+        "training_eligible_count": 630,
+        "per_policy_split": {
+          "test": {
+            "trajectory_count": 500,
+            "stable_physics_count": 302,
+            "transport_quality_count": 291,
+            "training_eligible_count": 291
+          },
+          "train": {
+            "trajectory_count": 400,
+            "stable_physics_count": 289,
+            "transport_quality_count": 276,
+            "training_eligible_count": 276
+          },
+          "valid": {
+            "trajectory_count": 100,
+            "stable_physics_count": 64,
+            "transport_quality_count": 63,
+            "training_eligible_count": 63
+          }
+        }
+      },
+      "artifacts": {
+        "manifest": {
+          "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/manifests/xhand.json",
+          "bytes": 93672,
+          "sha256": "e5a0bc74317562b74ff6e6031b0f38c7257b099169090ec9071effee119a80bd"
+        },
+        "confirmation_summary": {
+          "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/confirmation_summary.json",
+          "bytes": 83155,
+          "sha256": "aadadce4bd3b2e1239b8114268cde74c1c5036b31f564dbb5a1ae61ae113a288"
+        },
+        "evaluation_summary": {
+          "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/evaluation/xhand/manifest_evaluation_summary.json",
+          "bytes": 2876754,
+          "sha256": "0ce9154bea1c8148f6546261f03ab76cf8851eed9d2ece34453f32861b780a15"
+        },
+        "stable_audit": {
+          "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/audit/xhand_stable_audit.json",
+          "bytes": 3702142,
+          "sha256": "e20418b5d5825d6cb75dff873b643bc1c67fc7c85e8024b42ff64d74be6cfba0"
+        },
+        "training_eligible_keys": {
+          "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/audit/xhand_training_eligible_keys.json",
+          "bytes": 42854,
+          "sha256": "70b7d0012d82e08352293fdb7ff492cfcd4765d6f61c1df73919364cd4d92748"
+        },
+        "targets": [
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/core-bowl-45603bffc6a2866b5d1ac0d5489f7d84.npy",
+            "bytes": 281435,
+            "sha256": "423acd97b69105b15d51792fde64813f8a1ba4396e78c942f1c81b939a8bd4de"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/core-bowl-a593e8863200fdb0664b3b9b23ddfcbc.npy",
+            "bytes": 290481,
+            "sha256": "5ab3e861c1c22cbe6db53ff207f26842a009fe6f20b8a34b1aece5e9a30c4a9b"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/core-camera-cd5fd9a2bd6792ad318e2f26ee2da02c.npy",
+            "bytes": 281423,
+            "sha256": "bb04e2db4a3c80f6835d60075bf8dccc82039df279d842b756056c9497ff4fd5"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/core-can-70172e6afe6aff7847f90c1ac631b97f.npy",
+            "bytes": 281321,
+            "sha256": "ae2e99f79b3271a5037b14078698d441ba2b4b95a55f81408d288a893b48cd47"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/core-can-eac30c41aad2ff27c0ca8d7a07be3be.npy",
+            "bytes": 290506,
+            "sha256": "38a5d8db64f468774c08008f9417afe678a387803e7dc5039532b4c217f47039"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/core-knife-7725d5d2067f8fc0dd9394cb5004b836.npy",
+            "bytes": 290464,
+            "sha256": "eb4fe598d9580149f8524c19f9bb361a5fc202b705b227ac52ec1219c22d4d97"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/core-pillow-1399af537cd5f80723a295070ca176a0.npy",
+            "bytes": 281439,
+            "sha256": "bb065c61734c139d59101e15eed7289efb1374987a0afe4b0756edc91444a6b7"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/core-remote-8f14d5b24d2b798b16a077c4c0fc1181.npy",
+            "bytes": 290658,
+            "sha256": "0747ee979bd691f2a3f4f22659d9e43282cf534aa2784e933a08c205fddc94a5"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/core-remote-dd110b09266edec5fdcb551a4a7a3f9f.npy",
+            "bytes": 281375,
+            "sha256": "62bc1e31b7fa097a6fd697e29fb6743a702703c7191a9056c01abcdaa0c6c1fc"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Ball-730cf06c9c029ae45e1b0bd500a24ffc.npy",
+            "bytes": 281177,
+            "sha256": "87558bf204fa2dc0b772cfa1ac1d25ec15664a46597bfbfc05ec5c164d6689f1"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Ball-7b30c2aba7782fd93c4691e221dfcd0.npy",
+            "bytes": 281255,
+            "sha256": "aa440ed98eb31d20a5d41994fa01bd1a3a4f311164492ca8d95c7be24c13ec60"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Battery-62733b55e76a3b718c9d9ab13336021b.npy",
+            "bytes": 281439,
+            "sha256": "2370386f1cc54b31fa3b768eb196eafa09ec195a89d1a58623b2b982e82cf982"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Battery-f8a093851f146122dd4616bdfbd70670.npy",
+            "bytes": 281119,
+            "sha256": "0c2981654085455190f74e3463b75d108382913b4c568caf6adc0b6818c84908"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-BeanBag-4c1d6b12b48a80b0ebd10747ca93b13b.npy",
+            "bytes": 290546,
+            "sha256": "4a7381e4a2539201ca3f92a8565604499b9079973d60d87ddd597af840cb23fe"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-BeanBag-b5a0c927213ba01dc39a00da16746b95.npy",
+            "bytes": 281263,
+            "sha256": "3e9efb9421b70ee86dd69aa8316659a7bb7fdab40a582ed6770cf1367d239531"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Blender-48bddfc383e475583f36fda0f70067c5.npy",
+            "bytes": 281423,
+            "sha256": "33746b211e5eec2ca87eea34244f203983d7a8860fa52e88cc65eae179cb564f"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Blender-dd06add5426f69ddc9c603cb0476780f.npy",
+            "bytes": 281375,
+            "sha256": "a08476727a2599bd1c69bda3288bba138cd4506b4058a92554c6eae2c9e39204"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Book-a238b2f6f5e2cf66c77016426fd9cf48.npy",
+            "bytes": 281177,
+            "sha256": "4269c0118c96daf51fb033cca43deaca6f88152536cb5ac7139eb5e9fea269a0"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Book-c8691c86e110318ef2bc9da1ba799c60.npy",
+            "bytes": 281433,
+            "sha256": "4165eaaad36ca0d449485f931fc923763411285bf458aa55ab4407a8f318f65a"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Camera-5838f13cd253038ae94020dcb05ab335.npy",
+            "bytes": 281421,
+            "sha256": "bc9c6367236aaa5af5ac053432c62a29f590417a049eb98624fb8880b43b1d91"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Canister-714320da4aafcb4a47be2353d2b2403b.npy",
+            "bytes": 281441,
+            "sha256": "58bd5338b1dba1b019fb67c35f0bec8aa51eb873bcc2d8130ed051eb49485ec0"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Canister-abeaed132c7266b73e9c38134dedd15c.npy",
+            "bytes": 290612,
+            "sha256": "a00fe5070d4eecb348c2c2a349760f4d8ac3745ed1d8aa14847b91441c227c7d"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Cap-60104a0945f83b063f30fadefd6911f2.npy",
+            "bytes": 290362,
+            "sha256": "cf8722b6315816727eb70cb570bb2f71a75670eef28e0e10f3c334ad56d481c6"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Cap-ed52d2c2a9c1b606cf9bbc203a5cff99.npy",
+            "bytes": 281161,
+            "sha256": "021bbddbf0f6303ce1438a08b124d8bc1064739ff66e3958a4745a9119f79153"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-CerealBox-2ee85d45fe615a734322eb6f7ad3b3a2.npy",
+            "bytes": 281411,
+            "sha256": "c247d3e519a999f32000dfefb558ee01ee35ed2a14027b87f2e86e709fb6ae52"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-CerealBox-7685495f6e5aac1339a00425b5e3771a.npy",
+            "bytes": 281443,
+            "sha256": "a3074293deb652fbbf60fadd620ff6d4e481aa45bb1a8b98ce1d8322eefc94e5"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Clock-b6d7c946f14d345f7c9f6c5864df1a57.npy",
+            "bytes": 281435,
+            "sha256": "0c054883b6644fc036c90a282a03825a548246a22ca10d61cbd392f75650d54b"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Clock-cca5dddf86affe9a23522985f649a9ae.npy",
+            "bytes": 281403,
+            "sha256": "061e4ef2dde3add50a1c9e9191ce5da8b95dae7ed622427361163478e01be861"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Cookie-2ec24ca1dd42c39f6ad0370a38d43358.npy",
+            "bytes": 281101,
+            "sha256": "b59d15634e953fb8c0ef2e1f2503c2784a3975d15f3426dc670b422992932987"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Cookie-ccfa74e5574678325cde8c99e4b182f9.npy",
+            "bytes": 281405,
+            "sha256": "338c7a7cb94774facb93200e05a01979feda5dee5b4eaa75f27ad49e05043e58"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-DiscCase-6268862d43393bdfab0b172d4dea80cd.npy",
+            "bytes": 281441,
+            "sha256": "26f3f0ad279ca0e6f36a74c4a5ed8fd8468909cc0b1a4672a9c4082215661b8b"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-DiscCase-8a2cfe964083ef3fbb01628f533af3ce.npy",
+            "bytes": 281441,
+            "sha256": "c71758b73073889b820c474243de67b4e925c10f20ff572d58f3959322f97fb7"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Dog-35f73ca2716aefcfbeccafa1b3b5f850.npy",
+            "bytes": 281351,
+            "sha256": "0b4342bda2c3458afd241731df51a0db72fa554d6ea21a9ee17c4053d9f7c23c"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Dog-e5cf3055d4dbe35c6cee5c93a7be9401.npy",
+            "bytes": 281383,
+            "sha256": "9fe5b5128d4573960386e527c2403dc0357df9bb98c6f779a05f263bbda656e7"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-FileCabinet-75fe06475f7b7241920de219c00d1c3b.npy",
+            "bytes": 281431,
+            "sha256": "d04691b1de6f091edc0ca6cb621986b36cba1c0997f5e1008364a958fcb267b1"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-FileCabinet-aeb08906aded103ad61a2ba1b75d9b90.npy",
+            "bytes": 281415,
+            "sha256": "3a2953450cf8f7c992ffc63ca62ce6cc3457d2d869c12803ee6aa2921320c826"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Flashlight-614c2672926d86d96b84415a3f1393b.npy",
+            "bytes": 281411,
+            "sha256": "399c742de597af5a45b25842e87d55c78c6df96743385191407920aaf0c5a4ed"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Flashlight-7981d1894a5b3c371b92a1339af2f7ce.npy",
+            "bytes": 281445,
+            "sha256": "ab8b0f038139c0507d7dd1c2f4443efbfe31fa005da70d5595c35f74b7e9c8a7"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Fruit-473758ca6cb0506ee7697d561711bd2b.npy",
+            "bytes": 290462,
+            "sha256": "e1b8a2c114c97d1a25b6efe518840dc8bd75a81c27ff58a68d848eaf0f3f1099"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Fruit-f6e6117261dca163713c042b393cc65b.npy",
+            "bytes": 281419,
+            "sha256": "ab52cc7546597fd3f15a2ce4d69b73c02686625ba234abe6161ee0e4dc2421b4"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Headphones-98eb96633935d994c38ed9bce4ed5d0f.npy",
+            "bytes": 290504,
+            "sha256": "31739c466ae40add7bbca2bc9176b184b26b8006f6593864693815e2ec236f1c"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Headphones-aa87f1cb1632a08f2764cfba57a5de73.npy",
+            "bytes": 281381,
+            "sha256": "bad6a84af5f6a88bfc3d4c8e6dea316d692a62a828eb73e9ff17c502bfab0988"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Horse-41fa184c56e07387139f158558905250.npy",
+            "bytes": 290606,
+            "sha256": "2569433744a86ca5378ca11d6d429c028654a6ac5cd919128f633dc57880e98e"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Horse-85f535b5ff34d58e452f233142155aa6.npy",
+            "bytes": 281307,
+            "sha256": "99b1fc89fdf21fa02336817af2f7b4aa3013d8b53ac51db70efe3607fef7b6df"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Ipad-805a9bf3d265c408d9869786ff7f6a46.npy",
+            "bytes": 281225,
+            "sha256": "40ddf577fe7bdbb8f7e82294dcc39f4d3ebf0963b9e032c55cf89e20e2071631"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Ipad-d6a512373ed0cab27298d33994ff64ac.npy",
+            "bytes": 281113,
+            "sha256": "06c6f54b989e0494247df24bc6168537d0971a4ee63f09e699518b7ac5d763a1"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Knife-8d6ea5f31ad77a5581fbe2a60fd5a955.npy",
+            "bytes": 281435,
+            "sha256": "624ad4b9f6943c31cc82934c3d8a7c5c0464f399800a7ad516c6abb6860e9d89"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-MilkCarton-3c426552b9df786b3f7f3ed2c3c690fe.npy",
+            "bytes": 281397,
+            "sha256": "d274d9b8ed4aef851e39e14aa07e6b873f8ed20695b38489eeb07e4f56a70d47"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-MilkCarton-6ea87d3f4498448b3571657dafc7119.npy",
+            "bytes": 281347,
+            "sha256": "9e73b29fb7ea3a3ee2b21d58bc43ab2cfbf2600dd6da17975d0f702101386124"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Palette-992b09034e11bba395d70476ddcdc14.npy",
+            "bytes": 281437,
+            "sha256": "d345297757e97338f1063c26d7619ae152d0b40778e97540c91b881565e142d1"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Palette-bfe01d3ec17f9ef7db4673379779bfbf.npy",
+            "bytes": 281439,
+            "sha256": "740ed66c19e5a2fcc4a29a60dead26b7a2f7721541f5693200098ff746c197dd"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Pan-d9560bfc0c051109f54e1b6f41fdd78a.npy",
+            "bytes": 281335,
+            "sha256": "4d64b18b4b8a2f886130bc264c74002993af05ff6beccc13e293519845104347"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Pan-e8cd2c495f1a33cdd068168ae86ef29a.npy",
+            "bytes": 281239,
+            "sha256": "a4fe07aa7022dbfaa83fcad851c6549a1cdbdb24986b84589ef47627fa190719"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Pencil-839923a17af633dfb29a5ca18b250f3b.npy",
+            "bytes": 281389,
+            "sha256": "8a36fc55b405bc0e2608a6dad51b8bdf6f0dc720f4490c4af680c5937fa9160c"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Pencil-a7787ba523465ea1ef2e227a41551d79.npy",
+            "bytes": 281325,
+            "sha256": "3c5b5039d9620c4b8e33b706d57afa370b58f9f330de83d721bc06f0e86e83dd"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-PersonStanding-8123f469a08a88e7761dc3477e65a72.npy",
+            "bytes": 290334,
+            "sha256": "be23738f30d22259a2ecd6259dfbabc86bf08f0ae8e5a1f281cc30d46a0d4d57"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-PersonStanding-a0dfc28cdafc3be913497dd48d9d7c76.npy",
+            "bytes": 281453,
+            "sha256": "b2b777138de5ef270174ca6932616f92ee1ea1748688d7a1dda0969c5296409c"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Phonebooth-5f600251394fabe6808ca88aece2e3dc.npy",
+            "bytes": 281445,
+            "sha256": "638b4cc9d6ddc585e24fe89cff92688615c957d9f2ec21697aa7f32df75673b8"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Phonebooth-a5616ee37a8126a3b3389a2ff5594ee1.npy",
+            "bytes": 281413,
+            "sha256": "6b14f42b83270f874b2a27d38c8648a55d97337e8ca4323b6c29f95314354a61"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Piano-518952ec821e3e60781551ea381688bd.npy",
+            "bytes": 281842,
+            "sha256": "f07afc7d13f5ca45aa7ded8d677375d1f20934d012418724b3b934f9accafea6"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Piano-ce4945cde785aecb478fa0ab37c461c6.npy",
+            "bytes": 281403,
+            "sha256": "a7ac618781536a9ddd99a19884e29594320f58c48b30159b6c377f9e30bcc3f8"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Pillow-7d9cb088956a9c4993e60794f9200b7.npy",
+            "bytes": 281419,
+            "sha256": "61ddbb81c24fe54a1add0b304cb431986d3be6e2f44002b7a5885bde52144845"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-RubiksCube-cdda3ea70d829d5baa9ba8e71ae84fd3.npy",
+            "bytes": 281413,
+            "sha256": "e7e4f1eed2ed17a9912d1e9526574827ba7b116c44e27d22d0d3fb0efd863f10"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-RubiksCube-f449ec743900234bb7f39bf08785db2f.npy",
+            "bytes": 281141,
+            "sha256": "b7e97bc2066590e06712a5eb75ef47f2851aa738c733f2eb96e18076ea52f515"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Ship-3f31208bf7adf03610aa1fb812b74966.npy",
+            "bytes": 281401,
+            "sha256": "6f3420c6199ee31c043e5a6325ea96d4055d6c28abbad0da1186190795b778c1"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Ship-426dad839f0b0ce8cad9e942409f4e39.npy",
+            "bytes": 281369,
+            "sha256": "66a6afb2e22a9c41824866dd02356584d53b9de7e037f45aede8738c3e9cb0bc"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Showerhead-6b940f85e82457d28a1b73194a8a176f.npy",
+            "bytes": 281349,
+            "sha256": "36397647cf5bd1c28e33277eb53d350af591040a4dab286d4b1370281aadc81a"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Showerhead-c04fd0df2310b7653321831d2245cf06.npy",
+            "bytes": 290536,
+            "sha256": "e5c29f23fd884d9a5853611c4dded0aa8ef4e2459196e3465d07713fef8b6f5d"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Snowman-56e9167d8d9c2b8416cec6679796546.npy",
+            "bytes": 281341,
+            "sha256": "09ec8a6be7909ff75f8b847371d9a1937d83dafb86aa5f3fff128b733a7f1bde"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Snowman-def36b8e4538fb74d449cd634c927922.npy",
+            "bytes": 290610,
+            "sha256": "e2a5086c08cf3229786900ae5dfd13351835e4a47cc1163549f51ff44aa83ffb"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-SoapBar-351dec75ac0619b1827473663798726a.npy",
+            "bytes": 281343,
+            "sha256": "9bdb4840790558a4fbdff6ebf222fc78e552ca4f29a622ffedccbe6a2537acdf"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-SoapBar-c96bfdeccb6d92d141b965cb8ba50814.npy",
+            "bytes": 290658,
+            "sha256": "8ab41eb9f89fbc4d2c511979c991b3ab9bcc218e9aa8f4278df748443a5fe3a8"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-SoapBottle-43762b28fb40088f724d867867ccd9fb.npy",
+            "bytes": 290424,
+            "sha256": "b161096d501bc57d2d96ca2679117f3119e7da55c892039093b406d2d5118ab1"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-SoapBottle-a5912dff7ed43650cf6ede117dc51e3d.npy",
+            "bytes": 281381,
+            "sha256": "568ea57503827912f4ac07e59048ef499d31216ede93149b171d247ffa0a88e0"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Stapler-88ac7b2b3050f1f861f7b52424be58ab.npy",
+            "bytes": 281407,
+            "sha256": "f8f43f5e43c2f1df1330a9e57f91c5e81fd0be71a82662cf76a7e1c62d0adac7"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Stapler-988004d506b3b75e5e40cf2ee4f6ead.npy",
+            "bytes": 290640,
+            "sha256": "0da925f492d36e5e5de978cc7dc2963c46667ffadd2c2a545a683ac537de3406"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-TapeDispenser-4674032e53b9fd37c1935c9110af1bff.npy",
+            "bytes": 281451,
+            "sha256": "32f5c227ab7444d3031a74b0d9a31c113b74c4263ea3bb912decaccebf2c4db5"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-TapeDispenser-b5f9032272607f5e635f2989c7524167.npy",
+            "bytes": 290654,
+            "sha256": "e70979abaef9031037feec5aa20e658c7773173ad58430e73f907a864e1bcb83"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Thumbtack-17aa537d3f70e0998c5d696f6e844329.npy",
+            "bytes": 281299,
+            "sha256": "0b37c14e02a3301871d815f868def7081781efe1f4375424d67cf804a692a69d"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Thumbtack-7796072d01d00f173d1894dacd1107d7.npy",
+            "bytes": 281379,
+            "sha256": "1cdc18b564173896131d30bc38f439100933f2a88ff8f1c84b449b1a2b49efa5"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-TissueBox-13a913b33fb29f7741f9f28bc4fa9522.npy",
+            "bytes": 290662,
+            "sha256": "c90cbed5842a293ec41e94c01747028406239fafb25db0f5d3178956e41df0bb"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-TissueBox-5128910785490905c58e834f0b160845.npy",
+            "bytes": 290614,
+            "sha256": "c8a83c07b2869d6d78d68147f8b644c79518229adefb3841493ddee1afc3e7f0"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Toaster-2fb52b43697b9341b785a4ac4a0dbd73.npy",
+            "bytes": 281439,
+            "sha256": "bd1a4084c55aca30388584665cc265d7aa59be49e46615a239436eba9af186e8"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Toaster-3ffbb0ab0f8da32f86271197b958e3d5.npy",
+            "bytes": 281279,
+            "sha256": "af1124b92b0ef5bb5d19a92e54851ad7890907e266b6c38561759e3bf6d78560"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-ToasterOven-3c357d1352d2d1811fddae104d1cd00e.npy",
+            "bytes": 281447,
+            "sha256": "918829e2bc4a9e0585bfd1a5798c2e9b22707030633c013b92cfb331cdb72475"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-ToasterOven-95b4eee44e668dfb87a77620548f66e9.npy",
+            "bytes": 281415,
+            "sha256": "82999377e7e6257c2b7460fcf126a0f1b255414e436045a8eb0002592220b4d3"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-USBStick-56f49e3cd0d16824b2bf4f773fe0e622.npy",
+            "bytes": 281409,
+            "sha256": "1b373899ead7da148b1d37a94a0e58995f45e9d713f480b0195493e3caf3c008"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-USBStick-a432dacac26ad0f7ef90d4b0a8f1b812.npy",
+            "bytes": 281361,
+            "sha256": "1c10c328b9998d01a53ad36ae6b5986c2f6b15f209739726162b7c6be1e949d7"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Vase-1a8f9295b44b48895e8c5748ca5ef3ea.npy",
+            "bytes": 290692,
+            "sha256": "76ba07b0400b3b47d82f4c8317c3316f165ac995debc7d03af1573bdd60954dd"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Vase-7b97f7b6ba604173fec8ec00010848b3.npy",
+            "bytes": 281369,
+            "sha256": "076ae168262e1ef3155028ef607e2182852ebb39945e199ad22e219faab3145b"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-VideoGameController-2581265a7c81684b9141c153bb8dff6e.npy",
+            "bytes": 290498,
+            "sha256": "910d0c7027630472cd2681e8137f9a15dc9c401a7f025f36ac7c2c9d9a61bf5a"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-VideoGameController-6ec5528fb04c5b8e9a9bf2cd62bd4fba.npy",
+            "bytes": 281340,
+            "sha256": "21f516754d4eb5bcddbf4af949611c94ee6e3a240fb038f10596c3296b207658"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-WallClock-646bad2b62b63a4320bac12279fdf33e.npy",
+            "bytes": 281128,
+            "sha256": "93f51fbcf76eb1c04aa02590585a48b41d5dc8a5e30c98f1ba461546fd564626"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-WallClock-fc51a35ac0399c457dc65f24011042f1.npy",
+            "bytes": 281416,
+            "sha256": "5b57329d0e5429639cc5cf027029b34f2fedefd16930d8f5075e06103408821c"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Watch-3a5351666689a7b2b788559e93c74a0f.npy",
+            "bytes": 281392,
+            "sha256": "e109a4a5454cc0629b5461a4fa9f02ebcdb9dad886dbaf5124dfba72231e98a2"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Watch-e743856943ce4fa49a9248bc70f7492.npy",
+            "bytes": 281374,
+            "sha256": "c106e427c9ddd433cc42f4d194eec7673f877d581c595009aecf9580e4295e92"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Wii-84f45a5c3f9de48ae1c30bc7caf261be.npy",
+            "bytes": 281452,
+            "sha256": "ba3858763963b57871eaa66886cdfea41dc3312fba52407be25ec7448bbb5b7e"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-Wii-effdc659515ff747eb2c6725049f8f.npy",
+            "bytes": 281448,
+            "sha256": "31f26b44a9ecc40dfb624041d72837032007dc88145fea5dfc3048f429ef7296"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-WineBottle-1c79735033726294724d5ee7f09ab66b.npy",
+            "bytes": 281450,
+            "sha256": "07bfde7f5309cf847dc1b0159e75db112681e563482557c7d3d7f801d837073c"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/xhand/sem-WineBottle-f331ad8d0e6654ef8f992b1fe7075c8f.npy",
+            "bytes": 281466,
+            "sha256": "a0c63caa05f28298c4217c46e5a55d8015554c7f91bc4e50123f322e6312d681"
+          }
+        ]
+      }
+    },
+    "wuji": {
+      "objects": 100,
+      "categories": 50,
+      "trajectories": 1000,
+      "confirmation": {
+        "changed": 154,
+        "accepted": 43,
+        "restored": 111,
+        "repeats_per_baseline_and_candidate": 2,
+        "selection_margin": 1.0
+      },
+      "metrics": {
+        "reference_isaac_success_count": 718,
+        "reference_isaac_terminal_success_count": 691,
+        "stable_physics_success_count": 682,
+        "transport_quality_success_count": 662,
+        "training_eligible_count": 662,
+        "per_policy_split": {
+          "test": {
+            "trajectory_count": 500,
+            "stable_physics_count": 313,
+            "transport_quality_count": 306,
+            "training_eligible_count": 306
+          },
+          "train": {
+            "trajectory_count": 400,
+            "stable_physics_count": 295,
+            "transport_quality_count": 285,
+            "training_eligible_count": 285
+          },
+          "valid": {
+            "trajectory_count": 100,
+            "stable_physics_count": 74,
+            "transport_quality_count": 71,
+            "training_eligible_count": 71
+          }
+        }
+      },
+      "artifacts": {
+        "manifest": {
+          "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/manifests/wuji.json",
+          "bytes": 93671,
+          "sha256": "da75934e33728a81a451081d8c8462786dfd9a9208493ba9d35bf10c51d5df46"
+        },
+        "confirmation_summary": {
+          "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/confirmation_summary.json",
+          "bytes": 69524,
+          "sha256": "f10a8834c36c0df058d06bce94d3f1f0ea4bef42a38820bcb3490b8107fe3150"
+        },
+        "evaluation_summary": {
+          "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/evaluation/wuji/manifest_evaluation_summary.json",
+          "bytes": 2888575,
+          "sha256": "a0ae4241d1ed19397381509c4c93362239efce108603c7d58f552a6ca5b126d0"
+        },
+        "stable_audit": {
+          "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/audit/wuji_stable_audit.json",
+          "bytes": 3711617,
+          "sha256": "f9eb6b0e15d6ad6825c0a3a6f804fa5576afa8c5ca52694730c140f735e56585"
+        },
+        "training_eligible_keys": {
+          "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/audit/wuji_training_eligible_keys.json",
+          "bytes": 44990,
+          "sha256": "d0666b0b6bd17a48c93503e6e4838b58be29c13bc1dbd0d8052cc01bdaba1452"
+        },
+        "targets": [
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/core-bowl-45603bffc6a2866b5d1ac0d5489f7d84.npy",
+            "bytes": 311088,
+            "sha256": "ee0fa575ea738306cf56ea024ed56707d05dfdf589be7c470719117ff3bf69e5"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/core-bowl-a593e8863200fdb0664b3b9b23ddfcbc.npy",
+            "bytes": 310558,
+            "sha256": "c2e977acd2f4dfa020d9a33482b13518b4456adc42dbfd0e64d9d7149a0129ed"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/core-camera-cd5fd9a2bd6792ad318e2f26ee2da02c.npy",
+            "bytes": 310704,
+            "sha256": "d69ef812fd6d260a124af3ca47de8cd415c76f77213b7a8bcaef106bdb7a28e9"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/core-can-70172e6afe6aff7847f90c1ac631b97f.npy",
+            "bytes": 310717,
+            "sha256": "3604ee9dc7b5584d813886307ad080405b56c975f82a64d44a813a92ec2cadde"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/core-can-eac30c41aad2ff27c0ca8d7a07be3be.npy",
+            "bytes": 310604,
+            "sha256": "71197367cd798a52f5f9258a238b9704951be520d0af53731ff809a16f6dc26a"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/core-knife-7725d5d2067f8fc0dd9394cb5004b836.npy",
+            "bytes": 319846,
+            "sha256": "3a6309745308e19803109a99d2a0d7dba8714b8f24ee878b842931ef6da56fa8"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/core-pillow-1399af537cd5f80723a295070ca176a0.npy",
+            "bytes": 310720,
+            "sha256": "16c826746cac578c7523c2db7bc879e57f4c9236f68c0757644c72c35f937bce"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/core-remote-8f14d5b24d2b798b16a077c4c0fc1181.npy",
+            "bytes": 320039,
+            "sha256": "41c183cd925bdcc183de4449493ff0577658b03cd487b00b251a35d01d6b3e79"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/core-remote-dd110b09266edec5fdcb551a4a7a3f9f.npy",
+            "bytes": 310688,
+            "sha256": "bccd5fe5f472bbbb8deb56b579b4dbaa02b49499285b667ddd1fc8d1712c69c4"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Ball-730cf06c9c029ae45e1b0bd500a24ffc.npy",
+            "bytes": 310461,
+            "sha256": "69fa868939de471ac63952fea85f9576aade0846e18f04a5fc9b9fa0075c22e0"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Ball-7b30c2aba7782fd93c4691e221dfcd0.npy",
+            "bytes": 319811,
+            "sha256": "318e3746536f3183c4b82147ff9413c792b50d8dc2c18bfb49719bc1458a012d"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Battery-62733b55e76a3b718c9d9ab13336021b.npy",
+            "bytes": 310720,
+            "sha256": "2db98b08f95616a99c3032d9493f40a8f502c882015aed3a6cb139e6d6b7bdf0"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Battery-f8a093851f146122dd4616bdfbd70670.npy",
+            "bytes": 310448,
+            "sha256": "dd8c3c055c3b3cf253dd4ad8defcf0f84a7d64bb15fab2ab7fed60e621b644a5"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-BeanBag-4c1d6b12b48a80b0ebd10747ca93b13b.npy",
+            "bytes": 319975,
+            "sha256": "3094999a8eab99ac96550dd640ec8b8b2ff3e8a6e70386626e458ac4fc9c595b"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-BeanBag-b5a0c927213ba01dc39a00da16746b95.npy",
+            "bytes": 310576,
+            "sha256": "74193290c8fd2ecca359ff696d6cd53412c313dcfd29a3f9583865417b1fbbeb"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Blender-48bddfc383e475583f36fda0f70067c5.npy",
+            "bytes": 310720,
+            "sha256": "451a2ed7e269f0d5e8380e55f07c80b57ce9fdc37d87e2354e2e1d94c0f348b4"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Blender-dd06add5426f69ddc9c603cb0476780f.npy",
+            "bytes": 310704,
+            "sha256": "47aa1e705f6e76338652dd97f0225c1dbda318b5b2717328eca6d4d40319ee4a"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Book-a238b2f6f5e2cf66c77016426fd9cf48.npy",
+            "bytes": 310413,
+            "sha256": "a317d7cc0c49170aee772e5ec104081e4a0288179fbc524188f116b5ff44e22f"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Book-c8691c86e110318ef2bc9da1ba799c60.npy",
+            "bytes": 310749,
+            "sha256": "5f88fea39dc07165b59e23e977925a32c70ff6d2b0d5887cb00ba6ac1427ff47"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Camera-5838f13cd253038ae94020dcb05ab335.npy",
+            "bytes": 310703,
+            "sha256": "b04fe1d682b6d7bc93f2845c5b31df27fb72b728151c7cab8a8133ff0d43790c"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Canister-714320da4aafcb4a47be2353d2b2403b.npy",
+            "bytes": 310753,
+            "sha256": "b12feaf0ed4a246f253136aad99073e63a739b8d4e2f8dcf623113d5a709b4ca"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Canister-abeaed132c7266b73e9c38134dedd15c.npy",
+            "bytes": 320008,
+            "sha256": "c61c3b17cdff1878864edcba4476fbde26508e316583e5e89606bfe3f0143f29"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Cap-60104a0945f83b063f30fadefd6911f2.npy",
+            "bytes": 310434,
+            "sha256": "155444ddca38345e662d0568dc17f250a3c9678ca15405fb7a8b12073829d44b"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Cap-ed52d2c2a9c1b606cf9bbc203a5cff99.npy",
+            "bytes": 310620,
+            "sha256": "d9992754180940c821b606a86fc4b2672543df0fad1c9e9de49fc0e0e08e3cd6"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-CerealBox-2ee85d45fe615a734322eb6f7ad3b3a2.npy",
+            "bytes": 310706,
+            "sha256": "202519cfcb09ee0a76ccfd6c6150bdb485e30805b3b36a13421c522e5a412c4b"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-CerealBox-7685495f6e5aac1339a00425b5e3771a.npy",
+            "bytes": 310674,
+            "sha256": "39029f1d442bcd5bc329b45ff90899fd6372c0e54dfb690320960d9b2a37bf12"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Clock-b6d7c946f14d345f7c9f6c5864df1a57.npy",
+            "bytes": 310750,
+            "sha256": "11cdc0fc3cd29a30bf6969661ec3d280f9ce2b421f45558a3708f06981a9566b"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Clock-cca5dddf86affe9a23522985f649a9ae.npy",
+            "bytes": 310750,
+            "sha256": "9b8bd8b857a418069fb258ef93efaf750303997adf76a65d8160ec9bcc398cd8"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Cookie-2ec24ca1dd42c39f6ad0370a38d43358.npy",
+            "bytes": 310415,
+            "sha256": "4b041c6a18233cb050a37b819ac7ef89ea0e792b6da7aa56ae1e38842ddb1876"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Cookie-ccfa74e5574678325cde8c99e4b182f9.npy",
+            "bytes": 310751,
+            "sha256": "99aa3efd444d5905a964498ccb863fccbf549f992b08525efada693dc1939c72"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-DiscCase-6268862d43393bdfab0b172d4dea80cd.npy",
+            "bytes": 310753,
+            "sha256": "ea73db0f04baf9b97721b7e566bb2648b07bd9696ff62259f1722c67fd3414e2"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-DiscCase-8a2cfe964083ef3fbb01628f533af3ce.npy",
+            "bytes": 310721,
+            "sha256": "36787f684f79a47caa4fa018f3f884505008fcb9b5fd79880d4ce7b55a5613f9"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Dog-35f73ca2716aefcfbeccafa1b3b5f850.npy",
+            "bytes": 320067,
+            "sha256": "e8bfec80fa1e4b34c13cd54c8c9f40a8dd3708114f84f37f7f150f2de134deca"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Dog-e5cf3055d4dbe35c6cee5c93a7be9401.npy",
+            "bytes": 310684,
+            "sha256": "828a812c3db371f8763729a24d9e700d8ee1aa24adfab977315cb1a143d2222c"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-FileCabinet-75fe06475f7b7241920de219c00d1c3b.npy",
+            "bytes": 310692,
+            "sha256": "7274a87f7bb73106e0221ed862d76bfe60c8d7be4e1f69f1304d0f1bbff3ffc1"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-FileCabinet-aeb08906aded103ad61a2ba1b75d9b90.npy",
+            "bytes": 320011,
+            "sha256": "c177b4d8cd11b8c8bc0bfa557a1636a43d6bdb28f957bdeecffef75189510e91"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Flashlight-614c2672926d86d96b84415a3f1393b.npy",
+            "bytes": 310754,
+            "sha256": "67b322e66e4baaeb90f9355a7835c77cd9e1ea2aa682db808b48bac92a5253fd"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Flashlight-7981d1894a5b3c371b92a1339af2f7ce.npy",
+            "bytes": 310723,
+            "sha256": "5729ce14b5b3db63d865c915494102fdfdbbd388fa181adfc5d01de531b790d1"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Fruit-473758ca6cb0506ee7697d561711bd2b.npy",
+            "bytes": 319877,
+            "sha256": "d0bab349e4a25114a6dd6d9670683175f32011bf4daa2fe6f65d0ba568cd5b3c"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Fruit-f6e6117261dca163713c042b393cc65b.npy",
+            "bytes": 320037,
+            "sha256": "767939f93935e7bb85b2cd83adf195b4cb74d7f396a5c9f6140776cc95b5b08b"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Headphones-98eb96633935d994c38ed9bce4ed5d0f.npy",
+            "bytes": 310659,
+            "sha256": "02b5ec2f0633751f6bdd5f32538556a773475ecce928e64cde1bcf9c1d3a5c21"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Headphones-aa87f1cb1632a08f2764cfba57a5de73.npy",
+            "bytes": 310755,
+            "sha256": "eb734024dd824ac5071e0ea128e1854cc5444f736f57b21e6095719e8da37afb"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Horse-41fa184c56e07387139f158558905250.npy",
+            "bytes": 320037,
+            "sha256": "9ae78e3f3ca1800ce3004b05cc6e092951da9292dc4ecd4ff231e6bb96aee416"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Horse-85f535b5ff34d58e452f233142155aa6.npy",
+            "bytes": 319925,
+            "sha256": "a8b8ead5846c23de80fb8b66e637a77784bde54d51b183b9a7843f621f118819"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Ipad-805a9bf3d265c408d9869786ff7f6a46.npy",
+            "bytes": 310461,
+            "sha256": "dac2710cd5c3f6fb7d6846297e127830d564b7130ff537c34f22d2c95b88cf0e"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Ipad-d6a512373ed0cab27298d33994ff64ac.npy",
+            "bytes": 310413,
+            "sha256": "6afddd6d80c8a3bbec5990c1a9a2a26998a5507550514dc6af6fc8e14a7da002"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Knife-8d6ea5f31ad77a5581fbe2a60fd5a955.npy",
+            "bytes": 310734,
+            "sha256": "ebb29cc5afc5a9446a932133e4db4f256fd1229d01344aaee67e29f4738875d0"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-MilkCarton-3c426552b9df786b3f7f3ed2c3c690fe.npy",
+            "bytes": 310659,
+            "sha256": "36ccb9b3501dee880a3e4694855ebc73b90a3978a1cf048cbefb26e2d0873d49"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-MilkCarton-6ea87d3f4498448b3571657dafc7119.npy",
+            "bytes": 310658,
+            "sha256": "41e384642ed914525794fa4fe1b037091f9e28a44eb154297100707bf83a0446"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Palette-992b09034e11bba395d70476ddcdc14.npy",
+            "bytes": 310687,
+            "sha256": "7d0af1c011161b80fa3cb047426ffdee4f7bba52c09b9d4c20a9c02e86c6f743"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Palette-bfe01d3ec17f9ef7db4673379779bfbf.npy",
+            "bytes": 310752,
+            "sha256": "096d63c81b17f7d22e1f0fc1f08cd8d61712a02985e55617449f9b3f392143f0"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Pan-d9560bfc0c051109f54e1b6f41fdd78a.npy",
+            "bytes": 310636,
+            "sha256": "101fd3c711fc701a456f2d9f6dba50590acc2b1457c05a928c02c701b50f2142"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Pan-e8cd2c495f1a33cdd068168ae86ef29a.npy",
+            "bytes": 319875,
+            "sha256": "db96b1527a9861f7dc81f96c3a871e09a83c7d810ea181dc33206e8248462312"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Pencil-839923a17af633dfb29a5ca18b250f3b.npy",
+            "bytes": 310687,
+            "sha256": "be4efb1d6c35885d33d5a9ca3f8b13261a1a63e3b0f07350b51e96eba228592c"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Pencil-a7787ba523465ea1ef2e227a41551d79.npy",
+            "bytes": 320070,
+            "sha256": "ee4fd82dbcaa09b458db037d4b07891e3c86a1e8c98535de04b7c31a0d1a70a5"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-PersonStanding-8123f469a08a88e7761dc3477e65a72.npy",
+            "bytes": 310422,
+            "sha256": "c7fbe016cf8e2cc2868bd92f7be4ea50f2568827fe52929e4e74adbe3945cc7d"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-PersonStanding-a0dfc28cdafc3be913497dd48d9d7c76.npy",
+            "bytes": 310727,
+            "sha256": "8f06db329eb54d0821c7fdf23f3fc8a69449d654339c3f688803e0462b1c5190"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Phonebooth-5f600251394fabe6808ca88aece2e3dc.npy",
+            "bytes": 310739,
+            "sha256": "9374fe9abc6fefc4591ad1bcb1973eeb212567e365bf1503e17b6f9c88528f97"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Phonebooth-a5616ee37a8126a3b3389a2ff5594ee1.npy",
+            "bytes": 310659,
+            "sha256": "3f06cdd7075fddbdf9882f42ddfca458183c9c41b83ed7d79f879d70b9fe17cd"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Piano-518952ec821e3e60781551ea381688bd.npy",
+            "bytes": 310670,
+            "sha256": "2617821039a4db16506d2feb012df8ef741ccfec9603846aa8fbfefe795bd4c2"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Piano-ce4945cde785aecb478fa0ab37c461c6.npy",
+            "bytes": 310702,
+            "sha256": "26d49a1c7f17c10619657505d24adcbf286819b7be701a3f4d68b483ee717ae2"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Pillow-7d9cb088956a9c4993e60794f9200b7.npy",
+            "bytes": 310734,
+            "sha256": "2ae5eb66df60173a36cf70d21052480401da69ef50f1b2f685aead5d43f6277a"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-RubiksCube-cdda3ea70d829d5baa9ba8e71ae84fd3.npy",
+            "bytes": 310675,
+            "sha256": "6e8befbf78d3efed6f05b73bed0a14aa81fcc094e8037bec403cc6d6a4895b30"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-RubiksCube-f449ec743900234bb7f39bf08785db2f.npy",
+            "bytes": 310419,
+            "sha256": "0ffdca95067094e035cd9be0df64b8da8a4aff2847a90b92fb5db380a0c21e67"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Ship-3f31208bf7adf03610aa1fb812b74966.npy",
+            "bytes": 310717,
+            "sha256": "92e48d21726a2682c4ef8c5ad8b1d8c378bdfafbd1b61c1ce458d270545da23d"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Ship-426dad839f0b0ce8cad9e942409f4e39.npy",
+            "bytes": 310717,
+            "sha256": "91e5a348dcab9f8bc9fddd4d61d7941851ed6ac42ee7b8f5e9f80eae4cf067d9"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Showerhead-6b940f85e82457d28a1b73194a8a176f.npy",
+            "bytes": 310739,
+            "sha256": "7ddf6d433fa2024c1b08cbf5a993489ed122c7ce5864f826d83478d751e5c91d"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Showerhead-c04fd0df2310b7653321831d2245cf06.npy",
+            "bytes": 310627,
+            "sha256": "f43e3c0092bf22d39751ed4642a06fd89e42d5f4a65e9496798beaebb833c203"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Snowman-56e9167d8d9c2b8416cec6679796546.npy",
+            "bytes": 310671,
+            "sha256": "88eb70b16240a50807b790ce4a47d3d4363fb15ec984159143d0098e21de7f50"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Snowman-def36b8e4538fb74d449cd634c927922.npy",
+            "bytes": 310656,
+            "sha256": "384d87a30662902152d34121601229531faa186d4b4dc24e7b86923be0c444b7"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-SoapBar-351dec75ac0619b1827473663798726a.npy",
+            "bytes": 310672,
+            "sha256": "b68b367322ce562cca989b3df60803bcb4e4478ace938d154ecf3c883665fa3c"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-SoapBar-c96bfdeccb6d92d141b965cb8ba50814.npy",
+            "bytes": 310752,
+            "sha256": "e943eccf59bf2d039b324411c5230c4385a97c78d6a6170740bf6976573b53c2"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-SoapBottle-43762b28fb40088f724d867867ccd9fb.npy",
+            "bytes": 310579,
+            "sha256": "29cb80585f68082dc806c9268cb841e62b54b6eba2c63aeddc29c732e869356f"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-SoapBottle-a5912dff7ed43650cf6ede117dc51e3d.npy",
+            "bytes": 310723,
+            "sha256": "ed4cdcda0e02d5603354260d88cedaebf3cd9f480b6e103eb80f002a6442a53b"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Stapler-88ac7b2b3050f1f861f7b52424be58ab.npy",
+            "bytes": 310672,
+            "sha256": "6aeda4587940b7bf8eca552d12cd56948872af6e75d709ff382ac7314adea429"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Stapler-988004d506b3b75e5e40cf2ee4f6ead.npy",
+            "bytes": 310751,
+            "sha256": "ff6935d50b65b3279c8c09ac10ab10aa401df7c7da027ebdb3f1bc948677286c"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-TapeDispenser-4674032e53b9fd37c1935c9110af1bff.npy",
+            "bytes": 310758,
+            "sha256": "4d67388ee9f492fd7db9d2ad4b19474ed4a8f7064dc6bb6a3cedc28303980e4a"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-TapeDispenser-b5f9032272607f5e635f2989c7524167.npy",
+            "bytes": 310726,
+            "sha256": "4f3d378fbf6bba877853d54877585643de72c110838b6238e6cca74e1ed0bcb6"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Thumbtack-17aa537d3f70e0998c5d696f6e844329.npy",
+            "bytes": 310722,
+            "sha256": "5f802ed4d6020a4047d02fc870ba85ab89e932ac0531f25bdc834c3fbd619408"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Thumbtack-7796072d01d00f173d1894dacd1107d7.npy",
+            "bytes": 310754,
+            "sha256": "23c28c3facd46710a8080cc0621024230353af87a11a24f9dd040d8fd427c9af"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-TissueBox-13a913b33fb29f7741f9f28bc4fa9522.npy",
+            "bytes": 310722,
+            "sha256": "1baec31f75ff04dffaccaed11c50e4634c4c7d36c86c6f747c671df6aad81fce"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-TissueBox-5128910785490905c58e834f0b160845.npy",
+            "bytes": 310722,
+            "sha256": "bfe8c1434bd3073324cc75b5d21615b070c4decab9b01185ace34140461a0f9f"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Toaster-2fb52b43697b9341b785a4ac4a0dbd73.npy",
+            "bytes": 310752,
+            "sha256": "d176eed7071fbebbf209aecb7fba852c6efe0d8d6a988331ffbf5b472853dc11"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Toaster-3ffbb0ab0f8da32f86271197b958e3d5.npy",
+            "bytes": 310592,
+            "sha256": "fdeb452b0986491772439b7911ab03383e19a14fe9fd652dae44051e4002682b"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-ToasterOven-3c357d1352d2d1811fddae104d1cd00e.npy",
+            "bytes": 310756,
+            "sha256": "bb695bb4558f98a923dfd8d33309acf4ac494f00f378790955ca66c53b6bc7a4"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-ToasterOven-95b4eee44e668dfb87a77620548f66e9.npy",
+            "bytes": 310708,
+            "sha256": "3381b604cb26f1a1491e3768618937be4a2fa71a9c82f01ff5ccb505445d2353"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-USBStick-56f49e3cd0d16824b2bf4f773fe0e622.npy",
+            "bytes": 310721,
+            "sha256": "e394fb844072b1d5bbe0d33ec943da950d9fe5dcc8b3acedd83e5b36c9e1daa8"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-USBStick-a432dacac26ad0f7ef90d4b0a8f1b812.npy",
+            "bytes": 310753,
+            "sha256": "a6b99d84a6d08e1d0dd9b4781ef1b67e427f854def205e41ffc411782ab1d6cb"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Vase-1a8f9295b44b48895e8c5748ca5ef3ea.npy",
+            "bytes": 320150,
+            "sha256": "77481c0e540216b1cfdd9d2f11c98bdf7112d5b48f3d0a60e17dbd2586378e70"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Vase-7b97f7b6ba604173fec8ec00010848b3.npy",
+            "bytes": 310685,
+            "sha256": "d91c9f3eb2c9ea98573136037d539e5e5c571036aa16d4ab55ab72bf44787b0e"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-VideoGameController-2581265a7c81684b9141c153bb8dff6e.npy",
+            "bytes": 310524,
+            "sha256": "10a6ee7030e9a030c5ac9507ee6a1f3c417bd63bbccc8ba2e0495a8f93cc279e"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-VideoGameController-6ec5528fb04c5b8e9a9bf2cd62bd4fba.npy",
+            "bytes": 310716,
+            "sha256": "30af6a40ec4192461a32da373cceb520c7c67e9ebaaf478216af7e3285b3b833"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-WallClock-646bad2b62b63a4320bac12279fdf33e.npy",
+            "bytes": 310418,
+            "sha256": "5e01c90a6b05b60b1d1de6819bb2e0bfa5c582a7915bf4d91dfbd138806af87f"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-WallClock-fc51a35ac0399c457dc65f24011042f1.npy",
+            "bytes": 310722,
+            "sha256": "22aa3c771784b29f71fee801279a67643adf9b903a39c06018bcc08baeda279d"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Watch-3a5351666689a7b2b788559e93c74a0f.npy",
+            "bytes": 310718,
+            "sha256": "9d4d954b4d277488882a1113fa2eecfb52cdc324cb9d41825823270246791ebb"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Watch-e743856943ce4fa49a9248bc70f7492.npy",
+            "bytes": 319956,
+            "sha256": "fb2355c3e0953a9979c32ce4dc860f50363b9457337d29e223cb4778a06a83a1"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Wii-84f45a5c3f9de48ae1c30bc7caf261be.npy",
+            "bytes": 310732,
+            "sha256": "3087b548c1f3b41884677cdc2d2148acf8664280975b1beeaeb7f93ebf7bfb20"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-Wii-effdc659515ff747eb2c6725049f8f.npy",
+            "bytes": 310746,
+            "sha256": "7c786f173a5c8c9a0e8b022eb7df57860b50c4b98a6c777a737cd440a0c953c2"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-WineBottle-1c79735033726294724d5ee7f09ab66b.npy",
+            "bytes": 310707,
+            "sha256": "54f2272e2315fd89db8ffa79e907f3a870845f387bdb8d74e7e3d69c6c13129e"
+          },
+          {
+            "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/postconfirmed_rank5_v1/targets/wuji/sem-WineBottle-f331ad8d0e6654ef8f992b1fe7075c8f.npy",
+            "bytes": 310755,
+            "sha256": "46eaa09f3fbf3ab03d76eaef11baaf640271b3b879e5a0d04a5e42b509e23943"
+          }
+        ]
+      }
+    }
+  },
+  "method_artifacts": [
+    {
+      "path": "retarget_research/manifests/formal_50c_100o_1000t_seed20260808.json",
+      "bytes": 95220,
+      "sha256": "d56e9fa35431dd218955a01d4dc9b65858e00b29dfc68a904ee81c2251dcbd4b"
+    },
+    {
+      "path": "retarget_research/retargeting/configs/stable_success_protocol_v3_selected_methods.json",
+      "bytes": 2216,
+      "sha256": "6e475696d77657bd8f4da52f52d2db64133006dafbcfbb928a01bbd0f7480c16"
+    },
+    {
+      "path": "retarget_research/retargeting/run/run_reboot_synergy_rank5_formal1000_v1.sh",
+      "bytes": 5712,
+      "sha256": "93f27177e9443f1098344f43a50171d39664e8d06fcc104cee348708d05bccea"
+    },
+    {
+      "path": "retarget_research/retargeting/run/run_postconfirm_rank5_formal1000_v1.sh",
+      "bytes": 3090,
+      "sha256": "e81cc7f9c935864b4297a4ebd84dd2e656926f7bf5ef5867280a5125d5489db7"
+    },
+    {
+      "path": "retarget_research/retargeting/success_only/confirm_existing_candidates_manifest.py",
+      "bytes": 6815,
+      "sha256": "88f373e1dff96f050d8e86473924c833085e08ce32e96583a36c60d948d576b6"
+    },
+    {
+      "path": "retarget_research/retargeting/success_only/confirm_existing_candidates_isolated.py",
+      "bytes": 3216,
+      "sha256": "403fc8f0d307257995e26daa77ce0795e0710c4c7359326678eca2a720ad2d29"
+    },
+    {
+      "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/final_synergy_rank5/raw/linker/synergy_basis.npy",
+      "bytes": 248,
+      "sha256": "e4ea1c469f55724ce9f09d82452a82664fb3c872ca8cb32a0f2aa08debd9bf1d"
+    },
+    {
+      "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/final_synergy_rank5/raw/linker/screen_summary.json",
+      "bytes": 71252309,
+      "sha256": "b2cc1768002fd31955b7c19adc2d8dbbf4a71056e1e23a046ff6a3d851417c32"
+    },
+    {
+      "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/final_synergy_rank5/raw/xhand/synergy_basis.npy",
+      "bytes": 368,
+      "sha256": "c5eadce2e105c15ff6f954d5e70788a64487ca67480fd3ebff8c51c04150ffeb"
+    },
+    {
+      "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/final_synergy_rank5/raw/xhand/screen_summary.json",
+      "bytes": 71348864,
+      "sha256": "18caa2c82492e200b7010b4b8f007e543a6f36b1fab7034794867aa49845757b"
+    },
+    {
+      "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/final_synergy_rank5/raw/wuji/synergy_basis.npy",
+      "bytes": 528,
+      "sha256": "082c11f6015bc0275eafee64e7b7e7cd89427c318917f0e55862f9aa40f5f452"
+    },
+    {
+      "path": "retarget_research/outputs/reboot_synergy_rank5_formal1000_v1/final_synergy_rank5/raw/wuji/screen_summary.json",
+      "bytes": 71413345,
+      "sha256": "78d40d5bb86acd04d0228006b5298221474d7d5b0b4bdad14b7dc6ab4b3fc54e"
+    }
+  ],
+  "release_sha256": "2a947a07a8a9b51e2c8fc1577180112d1916bf2648f1d6598f60cfa7eff02dc7"
+}

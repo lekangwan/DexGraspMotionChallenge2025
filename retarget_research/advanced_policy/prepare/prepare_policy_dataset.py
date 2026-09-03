@@ -27,7 +27,7 @@ except ImportError:
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_SPECS = (
-    Path(__file__).resolve().parents[1] / "configs" / "hand_data_specs_v1.json"
+    Path(__file__).resolve().parents[1] / "configs" / "hand_data_specs_v5.json"
 )
 REQUIRED_TRACE_FIELDS = {
     "hand_dof_position",
@@ -172,7 +172,14 @@ def prepare_dataset(args):
     evaluation = json.loads(args.evaluation_summary.read_text(encoding="utf-8"))
     specs = json.loads(args.hand_specs.read_text(encoding="utf-8"))
     hand_spec = specs["hands"][args.hand]
-    if Path(evaluation["manifest"]).resolve() != args.manifest.resolve():
+    evaluation_manifest = Path(evaluation["manifest"]).resolve()
+    same_manifest = evaluation_manifest == args.manifest.resolve()
+    if not same_manifest and evaluation_manifest.is_file():
+        same_manifest = (
+            json.loads(evaluation_manifest.read_text(encoding="utf-8"))
+            == manifest
+        )
+    if not same_manifest:
         raise ValueError("物理评测摘要不属于当前正式manifest")
     if evaluation.get("hand") != args.hand:
         raise ValueError("物理评测摘要的hand与请求不一致")
@@ -203,7 +210,11 @@ def prepare_dataset(args):
         result = result_by_key.get((object_name, source_index))
         if result is None:
             raise ValueError(f"评测缺少{object_name}:{source_index}")
-        if split in {"train", "valid"} and not bool(result["success"]):
+        if (
+            split in {"train", "valid"}
+            and not bool(getattr(args, "include_all_train_valid", False))
+            and not bool(result["success"])
+        ):
             skipped[f"{split}_failed_replay"] += 1
             continue
         trace_path = args.trace_dir / object_name / f"source_{source_index}_trace.npz"
@@ -292,15 +303,20 @@ def prepare_dataset(args):
         category for category in categories if included_by_category[category]["train"] == 0
     )
     summary = {
-        "schema_version": 1,
+        "schema_version": 2,
         "status": "ready" if not missing_train_categories else "ready_with_gaps",
         "hand": args.hand,
         "manifest": str(args.manifest.resolve()),
         "policy_split": str(args.policy_split.resolve()),
         "evaluation_summary": str(args.evaluation_summary.resolve()),
         "trace_dir": str(args.trace_dir.resolve()),
-        "quality_rule": "train_and_valid_strict_replay_success_only; test_unfiltered",
+        "quality_rule": (
+            "train_valid_unfiltered_for_downstream_v3_gate; test_unfiltered"
+            if bool(getattr(args, "include_all_train_valid", False))
+            else "train_and_valid_strict_replay_success_only; test_unfiltered"
+        ),
         "normalization_rule": "train_steps_only",
+        "lift_goal_m": float(args.lift_goal),
         "runtime_action_rate_limit": {
             "source": "train_same_trajectory_adjacent_action_delta",
             "quantile": delta_quantile,
@@ -336,8 +352,13 @@ def main():
     parser.add_argument("--evaluation-summary", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--hand-specs", type=Path, default=DEFAULT_SPECS)
-    parser.add_argument("--lift-goal", type=float, default=0.10)
+    parser.add_argument("--lift-goal", type=float, default=0.30)
     parser.add_argument("--require-all-train-categories", action="store_true")
+    parser.add_argument(
+        "--include-all-train-valid",
+        action="store_true",
+        help="不在本步按旧result.success筛选；供v3审计sidecar随后统一过滤",
+    )
     args = parser.parse_args()
     for name in ("manifest", "policy_split", "trace_dir", "evaluation_summary", "output_dir", "hand_specs"):
         setattr(args, name, resolve_project_path(getattr(args, name)))

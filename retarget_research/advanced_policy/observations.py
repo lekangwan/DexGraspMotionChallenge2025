@@ -53,7 +53,7 @@ def build_observation_batch(
     initial_object_position,
     contact_count,
     object_shape_descriptor,
-    lift_goal_m=0.10,
+    lift_goal_m=0.30,
 ):
     """批量构造与`privileged_state_v1`规格一致的观测。
 
@@ -98,7 +98,7 @@ def build_runtime_observation(
     initial_position,
     contact_count,
     object_shape_descriptor,
-    lift_goal_m=0.10,
+    lift_goal_m=0.30,
 ):
     """把Isaac单步状态包装成一维策略观测。
 

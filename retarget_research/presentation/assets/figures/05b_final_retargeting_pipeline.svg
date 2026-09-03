@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="806.76pt" height="280.512pt" viewBox="0 0 806.76 280.512" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-01T15:22:15.231522</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.5.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 280.512 
+L 806.76 280.512 
+L 806.76 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 19.817197 192.434824 
+L 143.465732 192.434824 
+L 143.465732 85.468235 
+L 19.817197 85.468235 
+z
+" clip-path="url(#p9e3e79f49c)" style="fill: #e8e7f2; stroke: #332288; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 171.223567 192.434824 
+L 294.872102 192.434824 
+L 294.872102 85.468235 
+L 171.223567 85.468235 
+z
+" clip-path="url(#p9e3e79f49c)" style="fill: #e0f1ed; stroke: #44aa99; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 322.629936 192.434824 
+L 446.278471 192.434824 
+L 446.278471 85.468235 
+L 322.629936 85.468235 
+z
+" clip-path="url(#p9e3e79f49c)" style="fill: #f5eedc; stroke: #ddaa33; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 474.036306 192.434824 
+L 597.684841 192.434824 
+L 597.684841 85.468235 
+L 474.036306 85.468235 
+z
+" clip-path="url(#p9e3e79f49c)" style="fill: #f4e6ea; stroke: #cc6677; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 625.442675 192.434824 
+L 774.325605 192.434824 
+L 774.325605 85.468235 
+L 625.442675 85.468235 
+z
+" clip-path="url(#p9e3e79f49c)" style="fill: #f1f1f1; stroke: #252525; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 150.509308 138.690635 
+Q 157.342749 138.690635 162.890451 138.690635 
+" clip-path="url(#p9e3e79f49c)" style="fill: none; stroke: #252525; stroke-width: 1.15; stroke-linecap: round"/>
+    <path d="M 158.090451 136.290635 
+L 162.890451 138.690635 
+L 158.090451 141.090635 
+L 158.090451 136.290635 
+z
+" clip-path="url(#p9e3e79f49c)" style="fill: #252525; stroke: #252525; stroke-width: 1.15; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 301.915677 138.690635 
+Q 308.749118 138.690635 314.29682 138.690635 
+" clip-path="url(#p9e3e79f49c)" style="fill: none; stroke: #252525; stroke-width: 1.15; stroke-linecap: round"/>
+    <path d="M 309.49682 136.290635 
+L 314.29682 138.690635 
+L 309.49682 141.090635 
+L 309.49682 136.290635 
+z
+" clip-path="url(#p9e3e79f49c)" style="fill: #252525; stroke: #252525; stroke-width: 1.15; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 453.322046 138.690635 
+Q 460.155488 138.690635 465.70319 138.690635 
+" clip-path="url(#p9e3e79f49c)" style="fill: none; stroke: #252525; stroke-width: 1.15; stroke-linecap: round"/>
+    <path d="M 460.90319 136.290635 
+L 465.70319 138.690635 
+L 460.90319 141.090635 
+L 460.90319 136.290635 
+z
+" clip-path="url(#p9e3e79f49c)" style="fill: #252525; stroke: #252525; stroke-width: 1.15; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 604.728416 138.690635 
+Q 611.561857 138.690635 617.109559 138.690635 
+" clip-path="url(#p9e3e79f49c)" style="fill: none; stroke: #252525; stroke-width: 1.15; stroke-linecap: round"/>
+    <path d="M 612.309559 136.290635 
+L 617.109559 138.690635 
+L 612.309559 141.090635 
+L 612.309559 136.290635 
+z
+" clip-path="url(#p9e3e79f49c)" style="fill: #252525; stroke: #252525; stroke-width: 1.15; stroke-linecap: round"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 182.831389 60.4224 
+L 432.651898 60.4224 
+" clip-path="url(#p9e3e79f49c)" style="fill: none; stroke: #44aa99; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <text style="fill: #332288; font: 700 9.5px 'sans-serif'; text-anchor: start" x="28.90158" y="103.890984" transform="rotate(-0, 28.90158, 103.890984)">1</text>
+   </g>
+   <g id="text_2">
+    <text style="fill: #252525; font: 700 13.5px 'sans-serif'; text-anchor: middle" x="81.641465" y="126.972027" transform="rotate(-0, 81.641465, 126.972027)">运动学初值</text>
+   </g>
+   <g id="text_3">
+    <text style="fill: #666666; font: 10.3px 'sans-serif'" transform="translate(45.833676 153.271083)">X/W：15点匹配</text>
+    <text style="fill: #666666; font: 10.3px 'sans-serif'" transform="translate(40.838176 167.517753)">Linker：功能向量</text>
+   </g>
+   <g id="text_4">
+    <text style="fill: #44aa99; font: 700 9.5px 'sans-serif'; text-anchor: start" x="180.307949" y="103.890984" transform="rotate(-0, 180.307949, 103.890984)">2</text>
+   </g>
+   <g id="text_5">
+    <text style="fill: #252525; font: 700 13.5px 'sans-serif'; text-anchor: middle" x="233.047834" y="126.972027" transform="rotate(-0, 233.047834, 126.972027)">Global CEM</text>
+   </g>
+   <g id="text_6">
+    <text style="fill: #666666; font: 10.3px 'sans-serif'" transform="translate(208.435663 153.271083)">腕部位姿 +</text>
+    <text style="fill: #666666; font: 10.3px 'sans-serif'" transform="translate(202.147834 167.517753)">成组闭合残差</text>
+   </g>
+   <g id="text_7">
+    <text style="fill: #ddaa33; font: 700 9.5px 'sans-serif'; text-anchor: start" x="331.714318" y="103.890984" transform="rotate(-0, 331.714318, 103.890984)">3</text>
+   </g>
+   <g id="text_8">
+    <text style="fill: #252525; font: 700 13.5px 'sans-serif'; text-anchor: middle" x="384.454204" y="126.972027" transform="rotate(-0, 384.454204, 126.972027)">Rank-5 协同</text>
+   </g>
+   <g id="text_9">
+    <!-- $\Delta q=Bc$ -->
+    <g style="fill: #666666" transform="translate(364.935704 153.271083)">
+     <text>
+      <tspan style="font: 10.3px 'DejaVu Sans'" x="0 15.515137" y="-0.703125">Δ=</tspan>
+      <tspan style="font: oblique 10.3px 'DejaVu Sans'" x="7.011841 26.100464 33.132324" y="-0.703125">qBc</tspan>
+     </text>
+    </g>
+    <text style="fill: #666666; font: 10.3px 'sans-serif'" transform="translate(348.404204 167.517753)">分阶段平滑施加</text>
+   </g>
+   <g id="text_10">
+    <text style="fill: #cc6677; font: 700 9.5px 'sans-serif'; text-anchor: start" x="483.120688" y="103.890984" transform="rotate(-0, 483.120688, 103.890984)">4</text>
+   </g>
+   <g id="text_11">
+    <text style="fill: #252525; font: 700 13.5px 'sans-serif'; text-anchor: middle" x="535.860573" y="126.972027" transform="rotate(-0, 535.860573, 126.972027)">重复确认</text>
+   </g>
+   <g id="text_12">
+    <text style="fill: #666666; font: 10.3px 'sans-serif'" transform="translate(510.110573 153.271083)">候选与基线</text>
+    <text style="fill: #666666; font: 10.3px 'sans-serif'" transform="translate(502.102323 167.517753)">各独立重放2次</text>
+   </g>
+   <g id="text_13">
+    <text style="fill: #252525; font: 700 9.5px 'sans-serif'; text-anchor: start" x="634.527057" y="103.890984" transform="rotate(-0, 634.527057, 103.890984)">5</text>
+   </g>
+   <g id="text_14">
+    <text style="fill: #252525; font: 700 13.5px 'sans-serif'; text-anchor: middle" x="699.88414" y="126.972027" transform="rotate(-0, 699.88414, 126.972027)">最终轨迹</text>
+   </g>
+   <g id="text_15">
+    <text style="fill: #666666; font: 10.3px 'sans-serif'" transform="translate(675.271968 153.271083)">参考成功 +</text>
+    <text style="fill: #666666; font: 10.3px 'sans-serif'" transform="translate(658.68414 167.517753)">稳定运输质量审计</text>
+   </g>
+   <g id="text_16">
+    <text style="fill: #44aa99; font: 700 10.3px 'sans-serif'; text-anchor: middle" x="232.79549" y="46.334118" transform="rotate(-0, 232.79549, 46.334118)">每个候选都完整执行240个PhysX步</text>
+   </g>
+   <g id="text_17">
+    <text style="fill: #252525; font: 10.2px 'sans-serif'; text-anchor: middle" x="384.706548" y="235.743247" transform="rotate(-0, 384.706548, 235.743247)">统一设置：population 8 · elite 2 · iteration 2    ｜    Linker在Rank-5前增加一次Global2</text>
+   </g>
+   <g id="text_18">
+    <text style="fill: #666666; font: 9.5px 'sans-serif'; text-anchor: middle" x="384.706548" y="257.658353" transform="rotate(-0, 384.706548, 257.658353)">物理分数决定搜索方向；几何误差只负责提供可执行初值</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p9e3e79f49c">
+   <rect x="7.2" y="7.2" width="792.36" height="266.112"/>
+  </clipPath>
+ </defs>
+</svg>

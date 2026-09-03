@@ -1,47 +1,49 @@
 {
-  "schema_version": 1,
-  "date": "2026-08-20",
+  "schema_version": 2,
+  "date": "2026-09-01",
   "author": "宛乐康",
+  "status": "basic_frozen; advanced_policy_v2_in_progress",
   "hardware": {
     "cpu": "Intel Core i7-14650HX",
     "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU"
   },
   "software": {
     "python": "3.8",
-    "pytorch": "2.4.1+cu121",
     "isaac_gym": "Preview 4",
     "physics": "CPU PhysX, 60 Hz, 2 substeps",
     "network_training_device": "cuda"
   },
   "dataset_manifest": {
     "path": "retarget_research/manifests/formal_50c_100o_1000t_seed20260808.json",
-    "sha256": "d56e9fa35431dd218955a01d4dc9b65858e00b29dfc68a904ee81c2251dcbd4b",
     "selection_seed": 20260808,
     "categories": 50,
     "objects": 100,
-    "trajectories": 1000
+    "trajectories_per_hand": 1000
   },
-  "policy_test": {
-    "split_seed": 20260813,
-    "evaluation_seed": 20260813,
-    "test_objects": 50,
-    "test_trajectories": 500,
-    "expert_wrist": true,
-    "policy_steps": 240
-  },
-  "residual_ppo_checkpoints": {
-    "linker": {
-      "path": "retarget_research/advanced_policy/runs/residual_rl_general/linker/residual_ppo_0300.pt",
-      "sha256": "98cad65e1765e9b47ac995ba0968daa74bf86574833ec1b34f2c3e8dac31c097"
-    },
-    "xhand": {
-      "path": "retarget_research/advanced_policy/runs/residual_rl_general/xhand_official/residual_ppo_0300.pt",
-      "sha256": "883b75e76ef2defb381ae7685e0520cc5c1d0e377d3e4b3c4cc85465d859da33"
-    },
-    "wuji": {
-      "path": "retarget_research/advanced_policy/runs/residual_rl_general/wuji_old/residual_ppo_0300.pt",
-      "sha256": "5dcce29735623985e8163573ea1c759dcb9c644b0be628306fb4e50053bb7bfe"
+  "basic_retargeting": {
+    "release_id": "rank5_cem_postconfirmed_formal1000_v1",
+    "release_sha256": "2a947a07a8a9b51e2c8fc1577180112d1916bf2648f1d6598f60cfa7eff02dc7",
+    "release_lock": "retarget_research/retargeting/configs/final_retargeting_release_v1.json",
+    "method": "kinematic initialization -> global physics CEM -> rank-5 synergy CEM -> two-repeat isolated confirmation",
+    "results": {
+      "linker": {"reference_success": "439/1000", "stable": "394/1000", "transport_training_eligible": "350/1000"},
+      "xhand": {"reference_success": "695/1000", "stable": "655/1000", "transport_training_eligible": "630/1000"},
+      "wuji": {"reference_success": "718/1000", "stable": "682/1000", "transport_training_eligible": "662/1000"}
     }
   },
-  "repository": "https://github.com/lekangwan/DexGraspMotionChallenge2025/tree/hand-retargeting-research"
+  "advanced_policy_v2": {
+    "status": "valid50_screen_in_progress",
+    "autonomous_only": true,
+    "future_expert_actions": false,
+    "expert_wrist": false,
+    "trajectory_retrieval": false,
+    "category_id": false,
+    "test_objects": 50,
+    "test_trajectories_per_hand": 500,
+    "data_audit": "retarget_research/advanced_policy_v2/data/final/FINAL_DATA_AUDIT.json",
+    "autonomy_audit": "retarget_research/advanced_policy_v2/AUTONOMY_AUDIT.json",
+    "final_selection": null,
+    "test_results": null
+  },
+  "repository_branch": "hand-retargeting-research"
 }

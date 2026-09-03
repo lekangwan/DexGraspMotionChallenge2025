@@ -1,0 +1,746 @@
+{
+  "schema_version": 1,
+  "contract": {
+    "checkpoint_is_parametric_only": true,
+    "category_id_used": false,
+    "future_expert_actions_allowed": false,
+    "expert_wrist_allowed": false,
+    "trajectory_retrieval_allowed": false
+  },
+  "checkpoints": {
+    "linker": {
+      "geometry_phase": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/linker/geometry_phase/best.pt",
+        "sha256": "fdfcc52628449c7eb6629f7f0825062764365ba98cfd7563d13ae28ffb12b7d8",
+        "schema": "geometry_action_chunk_policy_v1",
+        "model_type": "geometry_phase",
+        "epoch": 7,
+        "best_valid_loss": 0.18118982230743733,
+        "top_level_keys": [
+          "best_valid_loss",
+          "config",
+          "dimensions",
+          "epoch",
+          "model_state",
+          "schema"
+        ],
+        "config_keys": [
+          "action_horizon",
+          "batch_size",
+          "chunk_loss_decay",
+          "data_dir",
+          "device",
+          "early_stopping_patience",
+          "epochs",
+          "gradient_clip",
+          "hand",
+          "hidden_dim",
+          "history",
+          "huber_beta",
+          "learning_rate",
+          "model_type",
+          "motion_steps",
+          "num_workers",
+          "output_dir",
+          "point_feature_dim",
+          "point_jitter_std",
+          "seed",
+          "temporal_ensemble_decay",
+          "transformer_layers",
+          "weight_decay"
+        ],
+        "parameter_tensor_count": 32,
+        "forbidden_keys": []
+      },
+      "geometry_chunk": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/linker/geometry_chunk/best.pt",
+        "sha256": "f2ffc448cddcdef585542c16c4952a85ae6eb043c2541ff9c6cba8c0607b58bf",
+        "schema": "geometry_action_chunk_policy_v1",
+        "model_type": "geometry_chunk",
+        "epoch": 8,
+        "best_valid_loss": 0.02835023851904978,
+        "top_level_keys": [
+          "best_valid_loss",
+          "config",
+          "dimensions",
+          "epoch",
+          "model_state",
+          "schema"
+        ],
+        "config_keys": [
+          "action_horizon",
+          "batch_size",
+          "chunk_loss_decay",
+          "data_dir",
+          "device",
+          "early_stopping_patience",
+          "epochs",
+          "gradient_clip",
+          "hand",
+          "hidden_dim",
+          "history",
+          "huber_beta",
+          "learning_rate",
+          "model_type",
+          "motion_steps",
+          "num_workers",
+          "output_dir",
+          "point_feature_dim",
+          "point_jitter_std",
+          "seed",
+          "temporal_ensemble_decay",
+          "transformer_layers",
+          "weight_decay"
+        ],
+        "parameter_tensor_count": 32,
+        "forbidden_keys": []
+      },
+      "geometry_plan_chunk": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/linker/geometry_plan_chunk/best.pt",
+        "sha256": "9545cc5fb4d18969fbd0b2fa9259766500123569fc0e94b6593f60530c36f7b3",
+        "schema": "geometry_action_chunk_policy_v1",
+        "model_type": "geometry_plan_chunk",
+        "epoch": 63,
+        "best_valid_loss": 0.18552865419907355,
+        "top_level_keys": [
+          "best_valid_loss",
+          "config",
+          "dimensions",
+          "epoch",
+          "model_state",
+          "schema"
+        ],
+        "config_keys": [
+          "action_horizon",
+          "batch_size",
+          "chunk_loss_decay",
+          "data_dir",
+          "device",
+          "early_stopping_patience",
+          "epochs",
+          "gradient_clip",
+          "hand",
+          "hidden_dim",
+          "history",
+          "huber_beta",
+          "learning_rate",
+          "model_type",
+          "motion_steps",
+          "num_workers",
+          "output_dir",
+          "point_feature_dim",
+          "point_jitter_std",
+          "seed",
+          "temporal_ensemble_decay",
+          "transformer_layers",
+          "weight_decay"
+        ],
+        "parameter_tensor_count": 32,
+        "forbidden_keys": []
+      },
+      "phase_lead05": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/linker/phase_lead05/best.pt",
+        "sha256": "5aed20042886f80008e54a331a2cb1e5b466e7577f5211b15e7d9f75c336b412",
+        "schema": "geometry_composite_policy_v1",
+        "model_type": "phase_lead05",
+        "top_level_keys": [
+          "config",
+          "primary_checkpoint",
+          "schema",
+          "secondary_checkpoint"
+        ],
+        "config_keys": [
+          "autonomous_inputs",
+          "composite_type",
+          "finger_phase_lead",
+          "finger_scale",
+          "forbidden_runtime_inputs",
+          "model_type"
+        ],
+        "components": {
+          "primary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/linker/geometry_phase/best.pt",
+            "sha256": "fdfcc52628449c7eb6629f7f0825062764365ba98cfd7563d13ae28ffb12b7d8"
+          },
+          "secondary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/linker/geometry_phase/best.pt",
+            "sha256": "fdfcc52628449c7eb6629f7f0825062764365ba98cfd7563d13ae28ffb12b7d8"
+          }
+        },
+        "forbidden_keys": []
+      },
+      "phase_lead10": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/linker/phase_lead10/best.pt",
+        "sha256": "8442ed47a4884628ea337e1f2dc42fe818bb3c4dfd19f14057a7ac9ee6b3e25f",
+        "schema": "geometry_composite_policy_v1",
+        "model_type": "phase_lead10",
+        "top_level_keys": [
+          "config",
+          "primary_checkpoint",
+          "schema",
+          "secondary_checkpoint"
+        ],
+        "config_keys": [
+          "autonomous_inputs",
+          "composite_type",
+          "finger_phase_lead",
+          "finger_scale",
+          "forbidden_runtime_inputs",
+          "model_type"
+        ],
+        "components": {
+          "primary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/linker/geometry_phase/best.pt",
+            "sha256": "fdfcc52628449c7eb6629f7f0825062764365ba98cfd7563d13ae28ffb12b7d8"
+          },
+          "secondary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/linker/geometry_phase/best.pt",
+            "sha256": "fdfcc52628449c7eb6629f7f0825062764365ba98cfd7563d13ae28ffb12b7d8"
+          }
+        },
+        "forbidden_keys": []
+      },
+      "phase_feedback_fingers": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/linker/phase_feedback_fingers/best.pt",
+        "sha256": "059623d294b03c7fdf42cdea7d1eafa8351c1b2e4bb3e762cff0bb390a07308b",
+        "schema": "geometry_composite_policy_v1",
+        "model_type": "phase_feedback_fingers",
+        "top_level_keys": [
+          "config",
+          "primary_checkpoint",
+          "schema",
+          "secondary_checkpoint"
+        ],
+        "config_keys": [
+          "autonomous_inputs",
+          "composite_type",
+          "finger_phase_lead",
+          "finger_scale",
+          "forbidden_runtime_inputs",
+          "model_type"
+        ],
+        "components": {
+          "primary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/linker/geometry_phase/best.pt",
+            "sha256": "fdfcc52628449c7eb6629f7f0825062764365ba98cfd7563d13ae28ffb12b7d8"
+          },
+          "secondary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/linker/geometry_chunk/best.pt",
+            "sha256": "f2ffc448cddcdef585542c16c4952a85ae6eb043c2541ff9c6cba8c0607b58bf"
+          }
+        },
+        "forbidden_keys": []
+      }
+    },
+    "xhand": {
+      "geometry_phase": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/xhand/geometry_phase/best.pt",
+        "sha256": "4d7c2c2f9d16eff7418066b360cae8656c33bab44183c9a4b1a7939726e7333c",
+        "schema": "geometry_action_chunk_policy_v1",
+        "model_type": "geometry_phase",
+        "epoch": 73,
+        "best_valid_loss": 0.2419432447396931,
+        "top_level_keys": [
+          "best_valid_loss",
+          "config",
+          "dimensions",
+          "epoch",
+          "model_state",
+          "schema"
+        ],
+        "config_keys": [
+          "action_horizon",
+          "batch_size",
+          "chunk_loss_decay",
+          "data_dir",
+          "device",
+          "early_stopping_patience",
+          "epochs",
+          "gradient_clip",
+          "hand",
+          "hidden_dim",
+          "history",
+          "huber_beta",
+          "learning_rate",
+          "model_type",
+          "motion_steps",
+          "num_workers",
+          "output_dir",
+          "point_feature_dim",
+          "point_jitter_std",
+          "seed",
+          "temporal_ensemble_decay",
+          "transformer_layers",
+          "weight_decay"
+        ],
+        "parameter_tensor_count": 32,
+        "forbidden_keys": []
+      },
+      "geometry_chunk": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/xhand/geometry_chunk/best.pt",
+        "sha256": "ffb1da1f525d561218d0d01fb6965bdd10651924bab68a0aec41d1cde6bbd5e1",
+        "schema": "geometry_action_chunk_policy_v1",
+        "model_type": "geometry_chunk",
+        "epoch": 12,
+        "best_valid_loss": 0.013839800845432494,
+        "top_level_keys": [
+          "best_valid_loss",
+          "config",
+          "dimensions",
+          "epoch",
+          "model_state",
+          "schema"
+        ],
+        "config_keys": [
+          "action_horizon",
+          "batch_size",
+          "chunk_loss_decay",
+          "data_dir",
+          "device",
+          "early_stopping_patience",
+          "epochs",
+          "gradient_clip",
+          "hand",
+          "hidden_dim",
+          "history",
+          "huber_beta",
+          "learning_rate",
+          "model_type",
+          "motion_steps",
+          "num_workers",
+          "output_dir",
+          "point_feature_dim",
+          "point_jitter_std",
+          "seed",
+          "temporal_ensemble_decay",
+          "transformer_layers",
+          "weight_decay"
+        ],
+        "parameter_tensor_count": 32,
+        "forbidden_keys": []
+      },
+      "geometry_plan_chunk": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/xhand/geometry_plan_chunk/best.pt",
+        "sha256": "59cf2db2abec38bb3e998ea70e0e6435bba7f96275d9937e39ffb9509f258c74",
+        "schema": "geometry_action_chunk_policy_v1",
+        "model_type": "geometry_plan_chunk",
+        "epoch": 76,
+        "best_valid_loss": 0.2530587751367844,
+        "top_level_keys": [
+          "best_valid_loss",
+          "config",
+          "dimensions",
+          "epoch",
+          "model_state",
+          "schema"
+        ],
+        "config_keys": [
+          "action_horizon",
+          "batch_size",
+          "chunk_loss_decay",
+          "data_dir",
+          "device",
+          "early_stopping_patience",
+          "epochs",
+          "gradient_clip",
+          "hand",
+          "hidden_dim",
+          "history",
+          "huber_beta",
+          "learning_rate",
+          "model_type",
+          "motion_steps",
+          "num_workers",
+          "output_dir",
+          "point_feature_dim",
+          "point_jitter_std",
+          "seed",
+          "temporal_ensemble_decay",
+          "transformer_layers",
+          "weight_decay"
+        ],
+        "parameter_tensor_count": 32,
+        "forbidden_keys": []
+      },
+      "phase_lead05": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/xhand/phase_lead05/best.pt",
+        "sha256": "d924096a49063ee73d9c1f9e0f0e244ec0c1e19dd87ed81311249784750bfadf",
+        "schema": "geometry_composite_policy_v1",
+        "model_type": "phase_lead05",
+        "top_level_keys": [
+          "config",
+          "primary_checkpoint",
+          "schema",
+          "secondary_checkpoint"
+        ],
+        "config_keys": [
+          "autonomous_inputs",
+          "composite_type",
+          "finger_phase_lead",
+          "finger_scale",
+          "forbidden_runtime_inputs",
+          "model_type"
+        ],
+        "components": {
+          "primary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/xhand/geometry_phase/best.pt",
+            "sha256": "4d7c2c2f9d16eff7418066b360cae8656c33bab44183c9a4b1a7939726e7333c"
+          },
+          "secondary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/xhand/geometry_phase/best.pt",
+            "sha256": "4d7c2c2f9d16eff7418066b360cae8656c33bab44183c9a4b1a7939726e7333c"
+          }
+        },
+        "forbidden_keys": []
+      },
+      "phase_lead10": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/xhand/phase_lead10/best.pt",
+        "sha256": "57a18af0b1e832f249cf79ca6e25a5f739aa0d179c27a2407c1be949a03251e0",
+        "schema": "geometry_composite_policy_v1",
+        "model_type": "phase_lead10",
+        "top_level_keys": [
+          "config",
+          "primary_checkpoint",
+          "schema",
+          "secondary_checkpoint"
+        ],
+        "config_keys": [
+          "autonomous_inputs",
+          "composite_type",
+          "finger_phase_lead",
+          "finger_scale",
+          "forbidden_runtime_inputs",
+          "model_type"
+        ],
+        "components": {
+          "primary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/xhand/geometry_phase/best.pt",
+            "sha256": "4d7c2c2f9d16eff7418066b360cae8656c33bab44183c9a4b1a7939726e7333c"
+          },
+          "secondary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/xhand/geometry_phase/best.pt",
+            "sha256": "4d7c2c2f9d16eff7418066b360cae8656c33bab44183c9a4b1a7939726e7333c"
+          }
+        },
+        "forbidden_keys": []
+      },
+      "phase_feedback_fingers": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/xhand/phase_feedback_fingers/best.pt",
+        "sha256": "b114b0284fbb349c5933c55656609a27b04d80b31ece9d5d09010764427c1a1b",
+        "schema": "geometry_composite_policy_v1",
+        "model_type": "phase_feedback_fingers",
+        "top_level_keys": [
+          "config",
+          "primary_checkpoint",
+          "schema",
+          "secondary_checkpoint"
+        ],
+        "config_keys": [
+          "autonomous_inputs",
+          "composite_type",
+          "finger_phase_lead",
+          "finger_scale",
+          "forbidden_runtime_inputs",
+          "model_type"
+        ],
+        "components": {
+          "primary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/xhand/geometry_phase/best.pt",
+            "sha256": "4d7c2c2f9d16eff7418066b360cae8656c33bab44183c9a4b1a7939726e7333c"
+          },
+          "secondary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/xhand/geometry_chunk/best.pt",
+            "sha256": "ffb1da1f525d561218d0d01fb6965bdd10651924bab68a0aec41d1cde6bbd5e1"
+          }
+        },
+        "forbidden_keys": []
+      }
+    },
+    "wuji": {
+      "geometry_phase": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/wuji/geometry_phase/best.pt",
+        "sha256": "3d683f4beb7f50e08437d01ae7b49e59f353836a55c544030e2dd59ffe0e0e3b",
+        "schema": "geometry_action_chunk_policy_v1",
+        "model_type": "geometry_phase",
+        "epoch": 76,
+        "best_valid_loss": 0.2547329936298966,
+        "top_level_keys": [
+          "best_valid_loss",
+          "config",
+          "dimensions",
+          "epoch",
+          "model_state",
+          "schema"
+        ],
+        "config_keys": [
+          "action_horizon",
+          "batch_size",
+          "chunk_loss_decay",
+          "data_dir",
+          "device",
+          "early_stopping_patience",
+          "epochs",
+          "gradient_clip",
+          "hand",
+          "hidden_dim",
+          "history",
+          "huber_beta",
+          "learning_rate",
+          "model_type",
+          "motion_steps",
+          "num_workers",
+          "output_dir",
+          "point_feature_dim",
+          "point_jitter_std",
+          "seed",
+          "temporal_ensemble_decay",
+          "transformer_layers",
+          "weight_decay"
+        ],
+        "parameter_tensor_count": 32,
+        "forbidden_keys": []
+      },
+      "geometry_chunk": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/wuji/geometry_chunk/best.pt",
+        "sha256": "688bb543a379236398bb3b422f76fc589b902be5d72dc05e2c18ee87eda60776",
+        "schema": "geometry_action_chunk_policy_v1",
+        "model_type": "geometry_chunk",
+        "epoch": 16,
+        "best_valid_loss": 0.01534340133947351,
+        "top_level_keys": [
+          "best_valid_loss",
+          "config",
+          "dimensions",
+          "epoch",
+          "model_state",
+          "schema"
+        ],
+        "config_keys": [
+          "action_horizon",
+          "batch_size",
+          "chunk_loss_decay",
+          "data_dir",
+          "device",
+          "early_stopping_patience",
+          "epochs",
+          "gradient_clip",
+          "hand",
+          "hidden_dim",
+          "history",
+          "huber_beta",
+          "learning_rate",
+          "model_type",
+          "motion_steps",
+          "num_workers",
+          "output_dir",
+          "point_feature_dim",
+          "point_jitter_std",
+          "seed",
+          "temporal_ensemble_decay",
+          "transformer_layers",
+          "weight_decay"
+        ],
+        "parameter_tensor_count": 32,
+        "forbidden_keys": []
+      },
+      "geometry_plan_chunk": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/wuji/geometry_plan_chunk/best.pt",
+        "sha256": "125c42120fb86166483ea38d10d06f8bdb218870a1e417758d7b279a0f80c7cd",
+        "schema": "geometry_action_chunk_policy_v1",
+        "model_type": "geometry_plan_chunk",
+        "epoch": 1,
+        "best_valid_loss": 0.2737628183734249,
+        "top_level_keys": [
+          "best_valid_loss",
+          "config",
+          "dimensions",
+          "epoch",
+          "model_state",
+          "schema"
+        ],
+        "config_keys": [
+          "action_horizon",
+          "batch_size",
+          "chunk_loss_decay",
+          "data_dir",
+          "device",
+          "early_stopping_patience",
+          "epochs",
+          "gradient_clip",
+          "hand",
+          "hidden_dim",
+          "history",
+          "huber_beta",
+          "learning_rate",
+          "model_type",
+          "motion_steps",
+          "num_workers",
+          "output_dir",
+          "point_feature_dim",
+          "point_jitter_std",
+          "seed",
+          "temporal_ensemble_decay",
+          "transformer_layers",
+          "weight_decay"
+        ],
+        "parameter_tensor_count": 32,
+        "forbidden_keys": []
+      },
+      "phase_lead05": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/wuji/phase_lead05/best.pt",
+        "sha256": "9beb5c65e6deb68cd9368a50c0eb6211b8c7426f0c00fbc94f6238b2cb2549c8",
+        "schema": "geometry_composite_policy_v1",
+        "model_type": "phase_lead05",
+        "top_level_keys": [
+          "config",
+          "primary_checkpoint",
+          "schema",
+          "secondary_checkpoint"
+        ],
+        "config_keys": [
+          "autonomous_inputs",
+          "composite_type",
+          "finger_phase_lead",
+          "finger_scale",
+          "forbidden_runtime_inputs",
+          "model_type"
+        ],
+        "components": {
+          "primary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/wuji/geometry_phase/best.pt",
+            "sha256": "3d683f4beb7f50e08437d01ae7b49e59f353836a55c544030e2dd59ffe0e0e3b"
+          },
+          "secondary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/wuji/geometry_phase/best.pt",
+            "sha256": "3d683f4beb7f50e08437d01ae7b49e59f353836a55c544030e2dd59ffe0e0e3b"
+          }
+        },
+        "forbidden_keys": []
+      },
+      "phase_lead10": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/wuji/phase_lead10/best.pt",
+        "sha256": "60f3857e5242f33d8ee69f3d74146badf9d2fd8aab9389b4b356cf835f79499e",
+        "schema": "geometry_composite_policy_v1",
+        "model_type": "phase_lead10",
+        "top_level_keys": [
+          "config",
+          "primary_checkpoint",
+          "schema",
+          "secondary_checkpoint"
+        ],
+        "config_keys": [
+          "autonomous_inputs",
+          "composite_type",
+          "finger_phase_lead",
+          "finger_scale",
+          "forbidden_runtime_inputs",
+          "model_type"
+        ],
+        "components": {
+          "primary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/wuji/geometry_phase/best.pt",
+            "sha256": "3d683f4beb7f50e08437d01ae7b49e59f353836a55c544030e2dd59ffe0e0e3b"
+          },
+          "secondary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/wuji/geometry_phase/best.pt",
+            "sha256": "3d683f4beb7f50e08437d01ae7b49e59f353836a55c544030e2dd59ffe0e0e3b"
+          }
+        },
+        "forbidden_keys": []
+      },
+      "phase_feedback_fingers": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/wuji/phase_feedback_fingers/best.pt",
+        "sha256": "61c74aef4f5dc0d845f603e64a388e357118ddbe2457ec0f31fa9495de0e5533",
+        "schema": "geometry_composite_policy_v1",
+        "model_type": "phase_feedback_fingers",
+        "top_level_keys": [
+          "config",
+          "primary_checkpoint",
+          "schema",
+          "secondary_checkpoint"
+        ],
+        "config_keys": [
+          "autonomous_inputs",
+          "composite_type",
+          "finger_phase_lead",
+          "finger_scale",
+          "forbidden_runtime_inputs",
+          "model_type"
+        ],
+        "components": {
+          "primary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/wuji/geometry_phase/best.pt",
+            "sha256": "3d683f4beb7f50e08437d01ae7b49e59f353836a55c544030e2dd59ffe0e0e3b"
+          },
+          "secondary_checkpoint": {
+            "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/wuji/geometry_chunk/best.pt",
+            "sha256": "688bb543a379236398bb3b422f76fc589b902be5d72dc05e2c18ee87eda60776"
+          }
+        },
+        "forbidden_keys": []
+      }
+    }
+  },
+  "closed_loop_reports": {
+    "linker": {
+      "geometry_phase": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/linker/geometry_phase/closed_loop_valid50/policy_evaluation_summary.json",
+        "trajectory_count": 50,
+        "success_count": 4,
+        "violations": []
+      },
+      "geometry_chunk": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/linker/geometry_chunk/closed_loop_valid50/policy_evaluation_summary.json",
+        "trajectory_count": 50,
+        "success_count": 0,
+        "violations": []
+      },
+      "geometry_plan_chunk": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/linker/geometry_plan_chunk/closed_loop_valid50/policy_evaluation_summary.json",
+        "trajectory_count": 50,
+        "success_count": 3,
+        "violations": []
+      }
+    },
+    "xhand": {
+      "geometry_phase": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/xhand/geometry_phase/closed_loop_valid50/policy_evaluation_summary.json",
+        "trajectory_count": 50,
+        "success_count": 6,
+        "violations": []
+      },
+      "geometry_chunk": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/xhand/geometry_chunk/closed_loop_valid50/policy_evaluation_summary.json",
+        "trajectory_count": 50,
+        "success_count": 0,
+        "violations": []
+      },
+      "geometry_plan_chunk": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/xhand/geometry_plan_chunk/closed_loop_valid50/policy_evaluation_summary.json",
+        "trajectory_count": 50,
+        "success_count": 1,
+        "violations": []
+      }
+    },
+    "wuji": {
+      "geometry_phase": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/wuji/geometry_phase/closed_loop_valid50/policy_evaluation_summary.json",
+        "trajectory_count": 50,
+        "success_count": 2,
+        "violations": []
+      },
+      "geometry_chunk": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/wuji/geometry_chunk/closed_loop_valid50/policy_evaluation_summary.json",
+        "trajectory_count": 50,
+        "success_count": 0,
+        "violations": []
+      },
+      "geometry_plan_chunk": {
+        "path": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/wuji/geometry_plan_chunk/closed_loop_valid50/policy_evaluation_summary.json",
+        "trajectory_count": 50,
+        "success_count": 0,
+        "violations": []
+      }
+    }
+  }
+}

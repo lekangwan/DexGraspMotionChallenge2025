@@ -17,6 +17,7 @@ from pathlib import Path
 from isaacgym import gymapi
 import numpy as np
 import torch
+from scipy.spatial.transform import Rotation
 
 EVALUATE_DIR = Path(__file__).resolve().parents[1] / "retargeting" / "evaluate"
 import sys
@@ -52,6 +53,19 @@ try:  # noqa: E402
 except ImportError:  # noqa: E402
     from observations import build_object_shape_descriptor, build_runtime_observation
     from runtime import PolicyRunner
+
+try:  # noqa: E402
+    from retarget_research.advanced_policy_v2.runtime import (
+        GeometryPolicyRunner,
+        is_geometry_checkpoint,
+    )
+except ImportError:  # 直接从advanced_policy目录运行时，项目根目录可能不在sys.path
+    V2_ROOT = Path(__file__).resolve().parents[1] / "advanced_policy_v2"
+    sys.path.insert(0, str(V2_ROOT.parent.parent))
+    from retarget_research.advanced_policy_v2.runtime import (
+        GeometryPolicyRunner,
+        is_geometry_checkpoint,
+    )
 
 
 WRIST_DIMENSION = 6
@@ -101,6 +115,20 @@ def set_object_friction(gym, env, actor, friction):
     gym.set_actor_rigid_shape_properties(env, actor, properties)
 
 
+def contact_loads_by_hand_body(contacts, hand_index_to_name, object_body_indices):
+    """累计当前步各手部刚体与物体接触产生的正法向冲量。"""
+    objects = set(object_body_indices)
+    loads = {name: 0.0 for name in hand_index_to_name.values()}
+    for contact in contacts:
+        body0, body1 = int(contact["body0"]), int(contact["body1"])
+        impulse = max(0.0, float(contact["lambda"]))
+        if body0 in hand_index_to_name and body1 in objects:
+            loads[hand_index_to_name[body0]] += impulse
+        elif body1 in hand_index_to_name and body0 in objects:
+            loads[hand_index_to_name[body1]] += impulse
+    return loads
+
+
 def rollout(args):
     """构建单场景并完成策略闭环rollout。
 
@@ -109,6 +137,12 @@ def rollout(args):
     内部逻辑：张开落稳后，反复读取执行前状态、策略推理、映射/限幅、推进一步PhysX并统计接触。
     作用：提供最小但严格的进阶任务最终成功率测量单元。
     """
+    if args.autonomous_only and (
+        args.expert_wrist
+        or args.residual_rl_checkpoint is not None
+        or args.teacher_checkpoint is not None
+    ):
+        raise ValueError("自主评测禁止专家手腕、测试参考轨迹和教师查询")
     np.random.seed(int(args.seed) % (2 ** 32))
     torch.manual_seed(int(args.seed))
     if torch.cuda.is_available():
@@ -157,6 +191,7 @@ def rollout(args):
             object_dir / "coacd" / "decomposed.obj", scale
         )
         residual_rl = None
+        autonomous_residual_rl = None
         rl_action_dim = 0
         if args.residual_rl_checkpoint is not None:
             from residual_ppo import ResidualActorCritic
@@ -176,17 +211,65 @@ def rollout(args):
             residual_rl.load_state_dict(payload["model"])
             residual_rl.eval()
             previous_residual = np.zeros(rl_action_dim, dtype=np.float32)
-        runner = PolicyRunner(
+        if args.autonomous_residual_rl_checkpoint is not None:
+            from residual_ppo import ResidualActorCritic
+            payload = torch.load(
+                args.autonomous_residual_rl_checkpoint,
+                map_location=args.device,
+            )
+            if payload.get("schema") != "autonomous_initial_phase_residual_ppo_v1":
+                raise ValueError("自主Residual PPO checkpoint规格错误")
+            if Path(payload["base_checkpoint"]).resolve() != args.checkpoint.resolve():
+                raise ValueError("自主Residual PPO与当前基础策略checkpoint不匹配")
+            rl_obs_dim = int(payload["obs_dim"])
+            rl_action_dim = int(payload["action_dim"])
+            autonomous_residual_rl = ResidualActorCritic(
+                rl_obs_dim, rl_obs_dim, action_dim=rl_action_dim,
+                hidden_dims=(256, 256), init_std=0.10,
+            ).to(args.device)
+            autonomous_residual_rl.load_state_dict(payload["model"])
+            autonomous_residual_rl.eval()
+            autonomous_residual_scale = float(payload["residual_scale"])
+            autonomous_previous_residual = np.zeros(
+                rl_action_dim, dtype=np.float32)
+        runner_class = (
+            GeometryPolicyRunner
+            if is_geometry_checkpoint(args.checkpoint)
+            else PolicyRunner
+        )
+        runner = runner_class(
             args.checkpoint, args.data_dir, args.device,
             args.diffusion_execute_steps, args.normalized_action_clip,
             args.action_rate_limit_scale,
         )
+        if isinstance(runner, GeometryPolicyRunner):
+            runner.set_task_geometry(
+                object_dir, scale, rotation, policy_open
+            )
         phase_expert_teacher = (
             args.teacher_checkpoint is not None
             and str(args.teacher_checkpoint) == "phase_expert"
         )
+        state_aligned_teacher = (
+            args.teacher_checkpoint is not None
+            and str(args.teacher_checkpoint) == "state_aligned_expert"
+        )
+        expert_observations = expert_actions = None
+        aligned_index = 0
+        if state_aligned_teacher:
+            mappings = json.loads((args.data_dir / "mappings.json").read_text(encoding="utf-8"))
+            object_id = mappings["object_to_id"][args.object_name]
+            with np.load(args.data_dir / "train.npz", allow_pickle=False) as archive:
+                indices = np.flatnonzero(
+                    (archive["object_id"] == object_id)
+                    & (archive["source_trajectory_index"] == args.source_index)
+                )
+                expert_observations = archive["observations"][indices].astype(np.float32)
+                expert_actions = archive["actions"][indices].astype(np.float32)
+            if len(expert_actions) == 0:
+                raise ValueError("状态对齐教师在train数据中找不到当前专家轨迹")
         teacher = None
-        if args.teacher_checkpoint is not None and not phase_expert_teacher:
+        if args.teacher_checkpoint is not None and not phase_expert_teacher and not state_aligned_teacher:
             teacher = PolicyRunner(
                 args.teacher_checkpoint,
                 args.data_dir,
@@ -231,6 +314,12 @@ def rollout(args):
                 shape_descriptor,
                 args.lift_threshold,
             )
+            if isinstance(runner, GeometryPolicyRunner):
+                runner.set_runtime_contacts(contact_loads_by_hand_body(
+                    gym.get_env_rigid_contacts(env),
+                    hand_index_to_name,
+                    object_indices,
+                ))
             if teacher is not None:
                 online_observations.append(observation.copy())
                 online_teacher_actions.append(teacher.act(observation).copy())
@@ -238,7 +327,59 @@ def rollout(args):
                 online_observations.append(observation.copy())
                 phase_index = min(int(round(physics_step / 209.0 * 69)), 69)
                 online_teacher_actions.append(policy_frames[phase_index].copy())
+            elif state_aligned_teacher:
+                online_observations.append(observation.copy())
+                dof_dim = (len(observation) - 32) // 2
+                feature_indices = np.concatenate([
+                    np.arange(dof_dim),
+                    np.arange(2 * dof_dim + 27, 2 * dof_dim + 30),
+                    np.asarray([len(observation) - 1]),
+                ])
+                current = (
+                    observation[feature_indices] - runner.normalization["observation_mean"][feature_indices]
+                ) / runner.normalization["observation_std"][feature_indices]
+                expected = min(physics_step, len(expert_actions) - 1)
+                start = max(aligned_index, expected - 15)
+                stop = min(len(expert_actions), expected + 16)
+                candidates = (
+                    expert_observations[start:stop, feature_indices]
+                    - runner.normalization["observation_mean"][feature_indices]
+                ) / runner.normalization["observation_std"][feature_indices]
+                scores = np.mean((candidates - current[None]) ** 2, axis=1)
+                phase_penalty = 0.02 * (
+                    (np.arange(start, stop) - expected) / 15.0
+                ) ** 2
+                aligned_index = start + int(np.argmin(scores + phase_penalty))
+                target_index = min(aligned_index + 1, len(expert_actions) - 1)
+                online_teacher_actions.append(expert_actions[target_index].copy())
             policy_action = runner.act(observation)
+            if autonomous_residual_rl is not None:
+                normalized_observation = runner.normalize_observation(observation)
+                normalized_base_delta = (
+                    policy_action - runner.initial_command
+                    - runner.normalization["initial_delta_mean"]
+                ) / runner.normalization["initial_delta_std"]
+                phase_value = min(
+                    max(runner.phase_step - 1, 0)
+                    / float(runner.motion_steps - 1),
+                    1.0,
+                )
+                rl_obs = np.concatenate([
+                    normalized_observation,
+                    normalized_base_delta,
+                    np.asarray([phase_value], dtype=np.float32),
+                    autonomous_previous_residual,
+                ]).astype(np.float32)
+                with torch.no_grad():
+                    residual = torch.tanh(autonomous_residual_rl.distribution(
+                        torch.from_numpy(rl_obs[None]).to(args.device)
+                    ).mean)[0].cpu().numpy()
+                policy_action = policy_action + (
+                    autonomous_residual_scale
+                    * runner.normalization["initial_delta_std"]
+                    * residual
+                )
+                autonomous_previous_residual = residual
             if residual_rl is not None:
                 phase_index = min(physics_step // 3, len(policy_frames) - 1)
                 baseline = policy_frames[phase_index]
@@ -295,6 +436,49 @@ def rollout(args):
             args.lift_threshold, args.max_xy_drift, args.sustain_steps,
             terminal_hold_steps=args.hold_steps,
         )
+        hand_pose = np.asarray(actual_dof_positions, dtype=np.float64)[:, :6]
+        object_positions = np.asarray(positions, dtype=np.float64)
+        object_rotations = Rotation.from_quat(
+            np.asarray(object_quaternions, dtype=np.float64)
+        )
+        lifted = object_positions[:, 2] - object_positions[0, 2]
+        transport_candidates = np.flatnonzero(
+            (lifted >= float(args.transport_start_lift)) & (contacts > 0)
+        )
+        if len(transport_candidates):
+            transport_start = int(transport_candidates[0])
+            hand_rotations = Rotation.from_euler("xyz", hand_pose[:, 3:6])
+            local_positions = hand_rotations.inv().apply(
+                object_positions - hand_pose[:, :3]
+            )
+            terminal_position = np.median(local_positions[-args.hold_steps:], axis=0)
+            transport_translation = float(
+                np.linalg.norm(
+                    local_positions[transport_start:] - terminal_position, axis=1
+                ).max()
+            )
+            local_rotations = hand_rotations.inv() * object_rotations
+            terminal_rotation = local_rotations[-1]
+            transport_rotation = float(np.degrees(
+                (terminal_rotation.inv() * local_rotations[transport_start:]).magnitude()
+            ).max())
+            transport_stable = bool(
+                transport_translation <= float(args.max_transport_translation)
+                and transport_rotation <= float(args.max_transport_rotation_deg)
+            )
+        else:
+            transport_start = None
+            transport_translation = None
+            transport_rotation = None
+            transport_stable = False
+        metrics.update({
+            "stable_physics_success": bool(metrics["success"]),
+            "transport_start_step": transport_start,
+            "max_palm_relative_translation_change_m": transport_translation,
+            "max_palm_relative_rotation_change_deg": transport_rotation,
+            "transport_stability_success": transport_stable,
+            "transport_quality_success": bool(metrics["success"] and transport_stable),
+        })
         metrics.update(summarize_body_contacts(body_contacts))
         report = {
             "hand": args.hand,
@@ -307,7 +491,19 @@ def rollout(args):
             "target": str(args.target.resolve()),
             "object_dir": str(args.object_dir.resolve()),
             "data_dir": str(args.data_dir.resolve()),
-            "initialization_rule": "retargeted_first_frame_wrist_with_all_fingers_open; no_future_expert_actions",
+            "initialization_rule": (
+                "retargeted_reference_trajectory_plus_learned_finger_residual"
+                if args.residual_rl_checkpoint is not None
+                else (
+                    "autonomous_initial_phase_policy_plus_state_residual_ppo"
+                    if args.autonomous_residual_rl_checkpoint is not None
+                    else (
+                    "retargeted_expert_wrist_plus_learned_fingers"
+                    if args.expert_wrist
+                    else "retargeted_first_frame_wrist_with_all_fingers_open; no_future_expert_actions"
+                    )
+                )
+            ),
             "evaluation_seed": int(args.seed),
             "diffusion_execute_steps": int(args.diffusion_execute_steps),
             "normalized_action_clip": float(args.normalized_action_clip),
@@ -328,6 +524,11 @@ def rollout(args):
                 if args.residual_rl_checkpoint is None
                 else str(args.residual_rl_checkpoint.resolve())
             ),
+            "autonomous_residual_rl_checkpoint": (
+                None
+                if args.autonomous_residual_rl_checkpoint is None
+                else str(args.autonomous_residual_rl_checkpoint.resolve())
+            ),
             "teacher_checkpoint": (
                 None
                 if args.teacher_checkpoint is None
@@ -340,13 +541,17 @@ def rollout(args):
         }
         if recorder is not None:
             report.update(recorder.close())
-        if teacher is not None or phase_expert_teacher:
+        if teacher is not None or phase_expert_teacher or state_aligned_teacher:
             if args.online_output is None:
                 raise ValueError("提供teacher checkpoint时必须同时提供online output")
             args.online_output.parent.mkdir(parents=True, exist_ok=True)
             metadata = {
                 "schema_version": 1,
-                "alignment": "student_pre_action_observation_to_category_teacher_action_v1",
+                "alignment": (
+                    "student_pre_action_observation_to_state_aligned_expert_action_v2"
+                    if state_aligned_teacher
+                    else "student_pre_action_observation_to_category_teacher_action_v1"
+                ),
                 "hand": args.hand,
                 "category": args.category,
                 "object_name": args.object_name,
@@ -379,7 +584,9 @@ def main():
     parser.add_argument("--object-name", required=True)
     parser.add_argument("--category", required=True)
     parser.add_argument("--expert-wrist", action="store_true")
+    parser.add_argument("--autonomous-only", action="store_true")
     parser.add_argument("--residual-rl-checkpoint", type=Path)
+    parser.add_argument("--autonomous-residual-rl-checkpoint", type=Path)
     parser.add_argument("--source-index", type=int, required=True)
     parser.add_argument("--target-index", type=int, required=True)
     parser.add_argument("--checkpoint", type=Path, required=True)
@@ -405,6 +612,9 @@ def main():
     parser.add_argument("--clearance", type=float, default=0.005)
     parser.add_argument("--object-friction", type=float, default=1.0)
     parser.add_argument("--lift-threshold", type=float, default=0.30)
+    parser.add_argument("--transport-start-lift", type=float, default=0.05)
+    parser.add_argument("--max-transport-translation", type=float, default=0.03)
+    parser.add_argument("--max-transport-rotation-deg", type=float, default=30.0)
     parser.add_argument("--max-xy-drift", type=float, default=0.25)
     parser.add_argument("--sustain-steps", type=int, default=30)
     parser.add_argument("--linker-finger-stiffness", type=float, default=120.0)

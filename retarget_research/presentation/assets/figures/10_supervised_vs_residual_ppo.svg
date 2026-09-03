@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="583.4pt" height="313.509062pt" viewBox="0 0 583.4 313.509062" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-08-20T21:16:23.772404</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.5.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 313.509062 
+L 583.4 313.509062 
+L 583.4 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 39.55 288.92 
+L 576.2 288.92 
+L 576.2 7.2 
+L 39.55 7.2 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 63.943182 288.92 
+L 121.667505 288.92 
+L 121.667505 236.417636 
+L 63.943182 236.417636 
+z
+" clip-path="url(#p51321976d8)" style="fill: #c7c7c7"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 250.150677 288.92 
+L 307.875 288.92 
+L 307.875 207.391939 
+L 250.150677 207.391939 
+z
+" clip-path="url(#p51321976d8)" style="fill: #c7c7c7"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 436.358171 288.92 
+L 494.082495 288.92 
+L 494.082495 233.856545 
+L 436.358171 233.856545 
+z
+" clip-path="url(#p51321976d8)" style="fill: #c7c7c7"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 121.667505 288.92 
+L 179.391829 288.92 
+L 179.391829 57.141273 
+L 121.667505 57.141273 
+z
+" clip-path="url(#p51321976d8)" style="fill: #332288"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 307.875 288.92 
+L 365.599323 288.92 
+L 365.599323 57.99497 
+L 307.875 57.99497 
+z
+" clip-path="url(#p51321976d8)" style="fill: #332288"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 494.082495 288.92 
+L 551.806818 288.92 
+L 551.806818 95.130788 
+L 494.082495 95.130788 
+z
+" clip-path="url(#p51321976d8)" style="fill: #332288"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="m17f91a8301" d="M 0 0 
+L 0 3.5 
+" style="stroke: #252525; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m17f91a8301" x="121.667505" y="288.92" style="fill: #252525; stroke: #252525; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="fill: #252525; font: 10px 'sans-serif'; text-anchor: middle" x="121.667505" y="303.879375" transform="rotate(-0, 121.667505, 303.879375)">LinkerHand O6</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#m17f91a8301" x="307.875" y="288.92" style="fill: #252525; stroke: #252525; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="fill: #252525; font: 10px 'sans-serif'; text-anchor: middle" x="307.875" y="303.879375" transform="rotate(-0, 307.875, 303.879375)">XHand</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#m17f91a8301" x="494.082495" y="288.92" style="fill: #252525; stroke: #252525; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="fill: #252525; font: 10px 'sans-serif'; text-anchor: middle" x="494.082495" y="303.879375" transform="rotate(-0, 494.082495, 303.879375)">WujiHand</text>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_4">
+      <defs>
+       <path id="m0276dc5311" d="M 0 0 
+L -3.5 0 
+" style="stroke: #252525; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m0276dc5311" x="39.55" y="288.92" style="fill: #252525; stroke: #252525; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="fill: #252525; font: 10px 'sans-serif'; text-anchor: end" x="32.55" y="292.899687" transform="rotate(-0, 32.55, 292.899687)">0</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#m0276dc5311" x="39.55" y="246.235152" style="fill: #252525; stroke: #252525; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="fill: #252525; font: 10px 'sans-serif'; text-anchor: end" x="32.55" y="250.214839" transform="rotate(-0, 32.55, 250.214839)">10</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m0276dc5311" x="39.55" y="203.550303" style="fill: #252525; stroke: #252525; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="fill: #252525; font: 10px 'sans-serif'; text-anchor: end" x="32.55" y="207.529991" transform="rotate(-0, 32.55, 207.529991)">20</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#m0276dc5311" x="39.55" y="160.865455" style="fill: #252525; stroke: #252525; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="fill: #252525; font: 10px 'sans-serif'; text-anchor: end" x="32.55" y="164.845142" transform="rotate(-0, 32.55, 164.845142)">30</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m0276dc5311" x="39.55" y="118.180606" style="fill: #252525; stroke: #252525; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="fill: #252525; font: 10px 'sans-serif'; text-anchor: end" x="32.55" y="122.160294" transform="rotate(-0, 32.55, 122.160294)">40</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_9">
+      <g>
+       <use xlink:href="#m0276dc5311" x="39.55" y="75.495758" style="fill: #252525; stroke: #252525; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="fill: #252525; font: 10px 'sans-serif'; text-anchor: end" x="32.55" y="79.475445" transform="rotate(-0, 32.55, 79.475445)">50</text>
+     </g>
+    </g>
+    <g id="ytick_7">
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#m0276dc5311" x="39.55" y="32.810909" style="fill: #252525; stroke: #252525; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="fill: #252525; font: 10px 'sans-serif'; text-anchor: end" x="32.55" y="36.790597" transform="rotate(-0, 32.55, 36.790597)">60</text>
+     </g>
+    </g>
+    <g id="text_11">
+     <text style="fill: #252525; font: 10px 'sans-serif'; text-anchor: middle" x="15.159375" y="148.06" transform="rotate(-90, 15.159375, 148.06)">专家可行子集复现率（%）</text>
+    </g>
+   </g>
+   <g id="patch_9">
+    <path d="M 39.55 288.92 
+L 39.55 7.2 
+" style="fill: none; stroke: #252525; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 39.55 288.92 
+L 576.2 288.92 
+" style="fill: none; stroke: #252525; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_12">
+    <text style="font: 9px 'sans-serif'; text-anchor: middle" x="92.805344" y="232.356074" transform="rotate(-0, 92.805344, 232.356074)">12.3%</text>
+   </g>
+   <g id="text_13">
+    <text style="font: 9px 'sans-serif'; text-anchor: middle" x="279.012838" y="203.330377" transform="rotate(-0, 279.012838, 203.330377)">19.1%</text>
+   </g>
+   <g id="text_14">
+    <text style="font: 9px 'sans-serif'; text-anchor: middle" x="465.220333" y="229.794983" transform="rotate(-0, 465.220333, 229.794983)">12.9%</text>
+   </g>
+   <g id="text_15">
+    <text style="font: 700 9px 'sans-serif'; text-anchor: middle" x="150.529667" y="53.206273" transform="rotate(-0, 150.529667, 53.206273)">54.3%</text>
+   </g>
+   <g id="text_16">
+    <text style="font: 700 9px 'sans-serif'; text-anchor: middle" x="336.737162" y="54.05997" transform="rotate(-0, 336.737162, 54.05997)">54.1%</text>
+   </g>
+   <g id="text_17">
+    <text style="font: 700 9px 'sans-serif'; text-anchor: middle" x="522.944656" y="91.195788" transform="rotate(-0, 522.944656, 91.195788)">45.4%</text>
+   </g>
+   <g id="text_18">
+    <text style="fill: #666666; font: 8.5px 'sans-serif'; text-anchor: middle" x="121.667505" y="30.097946" transform="rotate(-0, 121.667505, 30.097946)">全量500条：12.0%</text>
+   </g>
+   <g id="text_19">
+    <text style="fill: #666666; font: 8.5px 'sans-serif'; text-anchor: middle" x="307.875" y="30.097946" transform="rotate(-0, 307.875, 30.097946)">全量500条：28.8%</text>
+   </g>
+   <g id="text_20">
+    <text style="fill: #666666; font: 8.5px 'sans-serif'; text-anchor: middle" x="494.082495" y="30.097946" transform="rotate(-0, 494.082495, 30.097946)">全量500条：30.2%</text>
+   </g>
+   <g id="legend_1">
+    <g id="patch_11">
+     <path d="M 47.65 22.868437 
+L 65.65 22.868437 
+L 65.65 16.568437 
+L 47.65 16.568437 
+z
+" style="fill: #c7c7c7"/>
+    </g>
+    <g id="text_21">
+     <text style="font: 9px 'sans-serif'; text-anchor: start" x="72.85" y="22.868437" transform="rotate(-0, 72.85, 22.868437)">监督学习 / DAgger</text>
+    </g>
+    <g id="patch_12">
+     <path d="M 164.669688 22.868437 
+L 182.669688 22.868437 
+L 182.669688 16.568437 
+L 164.669688 16.568437 
+z
+" style="fill: #332288"/>
+    </g>
+    <g id="text_22">
+     <text style="font: 9px 'sans-serif'; text-anchor: start" x="189.869687" y="22.868437" transform="rotate(-0, 189.869687, 22.868437)">Residual PPO</text>
+    </g>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p51321976d8">
+   <rect x="39.55" y="7.2" width="536.65" height="281.72"/>
+  </clipPath>
+ </defs>
+</svg>

@@ -683,7 +683,7 @@ def compute_success_metrics(
         "hand_object_contact_steps": int((contact_counts > 0).sum()),
         "max_simultaneous_hand_object_contacts": int(contact_counts.max()),
         "legacy_sustained_success": legacy_success,
-        "success_protocol": "stable_30cm_terminal_hold_v2",
+        "success_protocol": f"stable_{float(lift_threshold):g}m_terminal_hold_v2",
         "terminal_hold_steps": terminal_steps,
         "terminal_hold_time_s": float(terminal_steps * dt),
         "terminal_min_lift_m": float(terminal_lift.min()),

@@ -4,7 +4,7 @@
 """
 
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import torch
@@ -61,14 +61,20 @@ def load_offline_trajectories(
         raise FileNotFoundError(f"没有找到可训练的预处理轨迹：{root}")
     observation = torch.from_numpy(np.concatenate(observations))
     observation = filter_observation(observation)
-    demo = torch.from_numpy(np.concatenate(demos))
+    demo_array = np.concatenate(demos).copy()
+    # 预处理只真实写入了0到68帧动作；第69帧应保持第68帧目标，而不是回到零位。
+    demo_array[:, -1] = demo_array[:, -2]
+    demo = torch.from_numpy(demo_array)
     if teacher_action_file:
         labels = np.load(str(Path(teacher_action_file).expanduser().resolve()), allow_pickle=False)
-        flat_teacher = labels["teacher_actions"].astype(np.float32, copy=False)
+        flat_teacher = labels["teacher_actions"].astype(np.float32, copy=True)
         expected = observation.shape[0] * observation.shape[1]
         if flat_teacher.shape != (expected, 28):
             raise ValueError(f"教师标签应为 {(expected, 28)}，实际为 {flat_teacher.shape}")
-        teacher = torch.from_numpy(flat_teacher.reshape(observation.shape[0], observation.shape[1], 28))
+        teacher_array = flat_teacher.reshape(observation.shape[0], observation.shape[1], 28)
+        # 旧教师文件最后一帧标签错位，因此主线训练也用示范的保持动作覆盖它。
+        teacher_array[:, -1] = demo_array[:, -1]
+        teacher = torch.from_numpy(teacher_array)
     else:
         teacher = demo.clone()
     return TrajectoryBatch(
@@ -147,6 +153,4 @@ def build_training_dataset(
     if online_action_file:
         groups.append(load_online_trajectories(online_action_file))
     return FrameDataset(
-        groups, history_steps=history_steps, teacher_weight=1.0,
-        proprioception_noise=noise,
-    )
+        groups, history_steps=history_steps, proprioception_noise=noise)

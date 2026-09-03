@@ -44,6 +44,10 @@ def parse_cli():
     parser.add_argument("--train-config", default=str(
         DEXGRASP_ROOT / "cfg/ppo1/config.yaml"))
     parser.add_argument("--show-viewer", action="store_true")
+    parser.add_argument("--capture-dir", default="")
+    parser.add_argument("--capture-env", type=int, default=0)
+    parser.add_argument("--capture-width", type=int, default=960)
+    parser.add_argument("--capture-height", type=int, default=720)
     parser.add_argument(
         "--meshdata-root", default="",
         help="Override the object URDF/mesh root used by the Isaac task.")
@@ -69,7 +73,8 @@ def parse_cli():
 
 def resolve(cli):
     for name in ("bc_config", "residual_config", "trajectory_root",
-                 "object_selection", "output", "env_config", "train_config"):
+                 "object_selection", "output", "env_config", "train_config",
+                 "capture_dir"):
         setattr(cli, name, str(Path(getattr(cli, name)).expanduser().resolve()))
     cli.checkpoint = [str(Path(path).expanduser().resolve())
                       for path in cli.checkpoint]
@@ -174,6 +179,7 @@ def evaluate_one(cli, config, task, object_ids, checkpoint_path, torch,
                 env._bc_action - target_action).square().mean(dim=-1)
             action_error_steps += 1
         _, _, _, _, terms = env.step(zero, step + 1)
+        task.capture_frame(step)
         if step == int(cli.hold_grip_reference_step):
             grip_reference_action = env._previous_final_action.clone()
         if step == int(cli.policy_motion_steps) - 1:

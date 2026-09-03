@@ -38,7 +38,10 @@ def load_online_trajectory(path, expected_observation_dim, expected_action_dim):
         raise ValueError(f"{path}学生动作尺寸错误")
     if not all(np.isfinite(value).all() for value in (observations, teacher_actions, executed_actions)):
         raise ValueError(f"{path}含NaN或Inf")
-    if metadata.get("alignment") != "student_pre_action_observation_to_category_teacher_action_v1":
+    if metadata.get("alignment") not in {
+        "student_pre_action_observation_to_category_teacher_action_v1",
+        "student_pre_action_observation_to_state_aligned_expert_action_v2",
+    }:
         raise ValueError(f"{path}对齐协议错误")
     return observations, teacher_actions, executed_actions, metadata
 
@@ -94,6 +97,7 @@ def aggregate(online_dir, data_dir, output):
                 "category_id": np.full(
                     length, mappings["category_to_id"][category], dtype=np.int64
                 ),
+                "is_hold": np.arange(length, dtype=np.int64) >= 210,
             }
         )
     merged = {

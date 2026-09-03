@@ -27,12 +27,18 @@ try:
     from .dataset import TargetHandPolicyDataset
     from .models import (
         ConditionalDiffusionPolicy,
+        InitialFourierPolicy,
+        InitialPhaseFeedbackPolicy,
+        InitialPhasePolicy,
+        InitialTemporalFeedbackPolicy,
         MLPBCPolicy,
         PhaseResidualPolicy,
         PhaseResidualTemporalPolicy,
         SharedCategoryExpertPolicy,
         Temporal3BCPolicy,
         initialize_category_expert_from_bc,
+        initialize_feedback_from_initial,
+        initialize_temporal_feedback_from_initial,
         initialize_temporal_from_single_frame,
         linear_beta_schedule,
     )
@@ -40,12 +46,18 @@ except ImportError:
     from dataset import TargetHandPolicyDataset
     from models import (
         ConditionalDiffusionPolicy,
+        InitialFourierPolicy,
+        InitialPhaseFeedbackPolicy,
+        InitialPhasePolicy,
+        InitialTemporalFeedbackPolicy,
         MLPBCPolicy,
         PhaseResidualPolicy,
         PhaseResidualTemporalPolicy,
         SharedCategoryExpertPolicy,
         Temporal3BCPolicy,
         initialize_category_expert_from_bc,
+        initialize_feedback_from_initial,
+        initialize_temporal_feedback_from_initial,
         initialize_temporal_from_single_frame,
         linear_beta_schedule,
     )
@@ -95,12 +107,28 @@ def build_model(config, observation_dim, action_dim, category_count):
         "action_dim": action_dim,
         "category_count": category_count,
         "category_embedding_dim": config.get("category_embedding_dim", 16),
+        "use_category_id": config.get("use_category_id", True),
         "hidden_dims": tuple(config.get("hidden_dims", [256, 256, 256])),
         "dropout": config.get("dropout", 0.0),
     }
     model_type = config["model_type"]
     if model_type in {"bc", "student", "online_student"}:
         return MLPBCPolicy(**common)
+    if model_type in {"initial_phase", "initial_phase_delta"}:
+        return InitialPhasePolicy(**common)
+    if model_type == "initial_fourier_delta":
+        return InitialFourierPolicy(
+            **common, phase_frequencies=config.get("phase_frequencies", 4)
+        )
+    if model_type == "initial_phase_feedback":
+        return InitialPhaseFeedbackPolicy(
+            **common, feedback_limit=config.get("feedback_limit", 0.75)
+        )
+    if model_type == "initial_temporal_feedback":
+        return InitialTemporalFeedbackPolicy(
+            **common, feedback_limit=config.get("feedback_limit", 0.5),
+            history=config.get("history", 3),
+        )
     if model_type == "phase_residual":
         return PhaseResidualPolicy(**common)
     if model_type == "phase_residual_temporal":
@@ -151,6 +179,12 @@ def initialize_model(
     if model_type == "category_teacher":
         initialize_category_expert_from_bc(model, state, observation_dim)
         method = "bc_observation_trunk_and_shared_head; zero_category_residuals"
+    elif model_type == "initial_phase_feedback" and payload.get("config", {}).get("model_type") == "initial_phase_delta":
+        initialize_feedback_from_initial(model, state, observation_dim)
+        method = "initial_phase_delta_copy; zero_current_observation_columns"
+    elif model_type == "initial_temporal_feedback" and payload.get("config", {}).get("model_type") == "initial_phase_delta":
+        initialize_temporal_feedback_from_initial(model, state)
+        method = "initial_phase_delta_copy; zero_temporal_feedback_output"
     elif model_type == "temporal3" and payload.get("config", {}).get("model_type") in {
         "bc",
         "student",
@@ -177,6 +211,8 @@ def compute_loss(
     device,
     betas=None,
     teacher_weight=1.0,
+    loss_type="mse",
+    huber_beta=1.0,
 ):
     """计算一个batch的监督损失。
 
@@ -197,6 +233,22 @@ def compute_loss(
             target = weight * batch["teacher_actions"] + (1.0 - weight) * batch["actions"]
         else:
             target = batch["actions"]
+    elif model_type in {"initial_phase", "initial_phase_delta", "initial_fourier_delta", "initial_phase_feedback", "initial_temporal_feedback"}:
+        if model_type == "initial_phase_feedback":
+            prediction = model(
+                batch["initial_observations"], batch["observations"],
+                batch["phase"], batch["category_id"],
+            )
+        elif model_type == "initial_temporal_feedback":
+            prediction = model(
+                batch["initial_observations"], batch["observation_history"],
+                batch["phase"], batch["category_id"],
+            )
+        else:
+            prediction = model(
+                batch["initial_observations"], batch["phase"], batch["category_id"],
+            )
+        target = batch["actions"]
     elif model_type in ("phase_residual", "phase_residual_temporal"):
         if model_type == "phase_residual_temporal":
             prediction = model(
@@ -238,7 +290,13 @@ def compute_loss(
             timesteps,
         )
         target = noise
-    loss = nn.functional.mse_loss(prediction, target)
+    if loss_type == "mse":
+        loss = nn.functional.mse_loss(prediction, target)
+    elif loss_type == "huber":
+        loss = nn.functional.smooth_l1_loss(
+            prediction, target, beta=float(huber_beta))
+    else:
+        raise ValueError(f"未知监督损失: {loss_type}")
     mae = nn.functional.l1_loss(prediction, target)
     return loss, mae
 
@@ -253,6 +311,8 @@ def run_epoch(
     grad_clip=1.0,
     max_batches=None,
     teacher_weight=1.0,
+    loss_type="mse",
+    huber_beta=1.0,
 ):
     """训练或验证一个epoch。
 
@@ -286,6 +346,8 @@ def run_epoch(
                 device,
                 betas,
                 teacher_weight,
+                loss_type,
+                huber_beta,
             )
             if training:
                 loss.backward()
@@ -608,6 +670,8 @@ def main():
             config.get("gradient_clip", 1.0),
             config.get("max_train_batches"),
             config.get("teacher_weight", 1.0),
+            config.get("loss_type", "mse"),
+            config.get("huber_beta", 1.0),
         )
         valid_metrics = run_epoch(
             model,
@@ -618,6 +682,8 @@ def main():
             betas,
             max_batches=config.get("max_valid_batches"),
             teacher_weight=config.get("teacher_weight", 1.0),
+            loss_type=config.get("loss_type", "mse"),
+            huber_beta=config.get("huber_beta", 1.0),
         )
         scheduler.step()
         improved = valid_metrics["loss"] < best_valid - float(

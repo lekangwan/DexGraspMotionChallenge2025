@@ -1343,8 +1343,13 @@ class CustomShadowHandGraspDexRepIjrr(BaseTask):
         camera_properties.enable_tensors = False
         env_ptr = self.envs[capture_env]
         self.capture_camera = self.gym.create_camera_sensor(env_ptr, camera_properties)
-        camera_position = gymapi.Vec3(0.65, -0.65, 1.05)
-        camera_target = gymapi.Vec3(0.0, 0.0, 0.72)
+        # 初始视角以物体为中心；录像过程中相机会继续跟随物体平移。
+        object_position = self.object_init_state[capture_env][:3]
+        camera_target = gymapi.Vec3(*object_position)
+        camera_position = gymapi.Vec3(
+            object_position[0] + 0.65,
+            object_position[1] - 0.65,
+            object_position[2] + 0.35)
         self.gym.set_camera_location(
             self.capture_camera, env_ptr, camera_position, camera_target)
 
@@ -1361,6 +1366,16 @@ class CustomShadowHandGraspDexRepIjrr(BaseTask):
             return
 
         import cv2
+        # 跟随被抓物体，只改变渲染相机，不参与观测、动作或成功判定。
+        object_position = self.object_pos[self.capture_env].detach().cpu().tolist()
+        camera_target = gymapi.Vec3(*object_position)
+        camera_position = gymapi.Vec3(
+            object_position[0] + 0.65,
+            object_position[1] - 0.65,
+            object_position[2] + 0.35)
+        self.gym.set_camera_location(
+            self.capture_camera, self.envs[self.capture_env],
+            camera_position, camera_target)
         self.gym.render_all_camera_sensors(self.sim)
         image = self.gym.get_camera_image(
             self.sim, self.envs[self.capture_env], self.capture_camera,

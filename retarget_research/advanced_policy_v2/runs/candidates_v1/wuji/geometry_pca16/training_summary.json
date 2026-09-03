@@ -1,0 +1,7 @@
+{
+  "schema": "geometry_trajectory_pca_training_v1",
+  "rank": 16,
+  "best_valid_loss": 0.6502460241317749,
+  "last_epoch": 60,
+  "checkpoint_contains_training_trajectories": false
+}

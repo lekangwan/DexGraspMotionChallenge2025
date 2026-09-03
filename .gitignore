@@ -22,6 +22,9 @@ __pycache__/
 /custom_tools/data/
 /custom_tools/logs/
 
+# Accidental nested smoke-test output; the real project tools live at /custom_tools.
+/dexgrasp/custom_tools/
+
 /ActionDiffusion/bc/saved_models/
 
 # Downloaded datasets, meshes, and external source trees
@@ -76,6 +79,8 @@ INTERVIEW_QA.md
 # Frozen ShadowHand mainline: intentionally versioned learning code and evidence
 !/custom_tools/minimal_impl/
 !/custom_tools/minimal_impl/**
+/custom_tools/minimal_impl/**/__pycache__/
+/custom_tools/minimal_impl/**/*.py[cod]
 !/custom_tools/checkpoints/shadow_chunk8_final.ckpt
 !/custom_tools/results/
 /custom_tools/results/*

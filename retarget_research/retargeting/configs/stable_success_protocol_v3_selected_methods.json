@@ -1,0 +1,47 @@
+{
+  "schema_version": 3,
+  "protocol_id": "reference_aligned_stable_15cm_selected_methods_v3",
+  "supersedes": "stable_success_protocol_v2.json",
+  "correction_reason": "the task statement does not prescribe a height; the reference Isaac evaluator uses a goal 0.30 m above the support surface with a 0.15 m goal radius and latches success, while this project additionally audits terminal stability and palm-relative slip",
+  "purpose": "report the reference Isaac goal-region criterion and the stricter anatomy-corrected stable replay quality for each selected hand method",
+  "reference_isaac": {
+    "goal_world_position_m": [0.0, 0.0, 0.30],
+    "goal_radius_m": 0.15,
+    "terminal_hold_steps": 30,
+    "success_latches_after_first_hit": true,
+    "source": "HandRetargetTask2026/src_{xhand,linkerhand}/prior_stage/grasp_task/shadow_task.py::compute_success",
+    "coordinate_note": "the unified replay uses a z=0 ground plane, so this is the reference table-top-relative goal expressed in its world frame"
+  },
+  "height_and_hold": {
+    "lift_threshold_m": 0.15,
+    "terminal_hold_steps": 30,
+    "terminal_hold_time_s_at_60hz": 0.5,
+    "max_peak_to_final_drop_m": 0.03,
+    "max_terminal_lift_range_m": 0.01,
+    "min_terminal_contact_ratio": 1.0
+  },
+  "transport_stability": {
+    "start_after_lift_m": 0.05,
+    "max_palm_relative_translation_change_m": 0.03,
+    "max_palm_relative_rotation_change_deg": 30.0
+  },
+  "training_anatomy_gate": {
+    "linker": "pass_pending_case_review",
+    "xhand": "pass_official_method_and_video_review",
+    "wuji": "pass_thumb_nullspace_empirical_validation"
+  },
+  "metric_roles": {
+    "reference_comparison": "ever enters the reference Isaac goal region or reaches its goal height",
+    "quality_primary": "stable terminal grasp at or above 15 cm with contact and limited palm-relative slip",
+    "strict_diagnostic": "30 cm results remain historical high-lift diagnostics"
+  },
+  "timing_contract": {
+    "source_trajectory_frames": 70,
+    "source_frequency_hz": 20,
+    "physics_frequency_hz": 60,
+    "physics_steps_per_source_frame": 3,
+    "unrecorded_settle_steps": 30,
+    "recorded_terminal_hold_steps": 30,
+    "recorded_terminal_hold_time_s": 0.5
+  }
+}

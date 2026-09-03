@@ -1,0 +1,29 @@
+{
+  "status": "final_test_complete_no_post_test_selection",
+  "selection_boundary": "complete_valid100_without_test_access",
+  "evaluation_boundary": "object_level_unseen_instances; 50 categories; 500 test trajectories",
+  "inference_rule": "retargeted_first_frame_initialization_only; no future expert actions; no trajectory retrieval memory",
+  "hands": {
+    "linker": {
+      "method": "initial_phase_delta_mse",
+      "valid_success": "10/100",
+      "test_success": "35/500",
+      "checkpoint": "retarget_research/advanced_policy/runs/autonomous_initial_phase_delta_v1/linker_initial_phase_delta_v1/best.pt",
+      "sha256": "dcca6b1aa3e23e1d213c6d12b28076f788df309ef50020e68282c53a70c63cff"
+    },
+    "xhand": {
+      "method": "initial_phase_delta_huber_beta1",
+      "valid_success": "14/100",
+      "test_success": "42/500",
+      "checkpoint": "retarget_research/advanced_policy/runs/autonomous_initial_phase_huber_v1/xhand_official_initial_phase_huber_v1/best.pt",
+      "sha256": "760c3360938d314ddb1f2b0e3714cb6f003cb87989a19cce08c956931127daed"
+    },
+    "wuji": {
+      "method": "initial_temporal_feedback_state_aligned_dagger_limit0.1",
+      "valid_success": "19/100",
+      "test_success": "30/500",
+      "checkpoint": "retarget_research/advanced_policy/runs/autonomous_state_aligned_dagger_safe_v1/wuji_old_state_aligned_dagger_safe_v1/best.pt",
+      "sha256": "f80474ae71b196e0ad7a7509682f1534f87818db71ca7158658db2adeb3782b9"
+    }
+  }
+}

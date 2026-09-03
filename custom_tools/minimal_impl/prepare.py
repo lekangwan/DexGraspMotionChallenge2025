@@ -51,11 +51,12 @@ def labels(cli):
 
     内部按物体类别选择对应教师批量推理；作用是准备0.20权重的蒸馏监督。
     """
+    teacher_paths = parse_teacher(cli.teacher)
     teachers = {
         category: load_project_checkpoint(
             path, use_task_id=False, history_steps=0,
             chunk_horizon=1, device=cli.device)
-        for category, path in parse_teacher(cli.teacher).items()
+        for category, path in teacher_paths.items()
     }
     data = load_offline_trajectories(cli.offline_dir, cli.sequence_limit)
     observations = data.observations.reshape(-1, data.observations.shape[-1])
@@ -76,7 +77,7 @@ def labels(cli):
     np.savez_compressed(
         str(output), teacher_actions=actions.numpy(),
         teacher_categories=np.asarray(CATEGORIES),
-        teacher_checkpoints=np.asarray([parse_teacher(cli.teacher)[c] for c in CATEGORIES]),
+        teacher_checkpoints=np.asarray([teacher_paths[c] for c in CATEGORIES]),
     )
     print(f"LEAN_TEACHER_LABELS_COMPLETE={output}")
 

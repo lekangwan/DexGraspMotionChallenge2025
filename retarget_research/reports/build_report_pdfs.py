@@ -1,25 +1,33 @@
 from __future__ import annotations
 
+import argparse
 import html
 import re
+import subprocess
 from pathlib import Path
 
-from reportlab.lib import colors
-from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
-from reportlab.lib.units import mm
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.cidfonts import UnicodeCIDFont
-from reportlab.platypus import (
-    Image,
-    PageBreak,
-    Paragraph,
-    SimpleDocTemplate,
-    Spacer,
-    Table,
-    TableStyle,
-)
+import markdown
+
+try:
+    from reportlab.lib import colors
+    from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+    from reportlab.lib.units import mm
+    from reportlab.pdfbase import pdfmetrics
+    from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+    from reportlab.platypus import (
+        Image,
+        PageBreak,
+        Paragraph,
+        SimpleDocTemplate,
+        Spacer,
+        Table,
+        TableStyle,
+    )
+    REPORTLAB_AVAILABLE = True
+except ImportError:
+    REPORTLAB_AVAILABLE = False
 
 
 REPORT_DIR = Path(__file__).resolve().parent
@@ -29,11 +37,8 @@ FONT_NAME = "STSong-Light"
 
 def inline_markup(text: str) -> str:
     text = html.escape(text, quote=True)
-    text = re.sub(
-        r"\[([^]]+)]\(([^)]+)\)",
-        lambda m: f'<link href="{m.group(2)}" color="#1F5A94"><u>{m.group(1)}</u></link>',
-        text,
-    )
+    # PDF是可独立移动的提交物：链接只保留可读标签，不写入失效的外部超链接。
+    text = re.sub(r"\[([^]]+)]\(([^)]+)\)", lambda m: m.group(1), text)
     text = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", text)
     text = re.sub(r"`([^`]+)`", r'<font color="#333333">\1</font>', text)
     return text
@@ -173,11 +178,57 @@ def build(markdown_name: str, pdf_name: str) -> None:
     document.build(parse_markdown(markdown_path, styles()), onFirstPage=footer, onLaterPages=footer)
 
 
+def build_with_chrome(markdown_name: str, pdf_name: str) -> None:
+    """ReportLab不可用时，用本机Chrome从自包含HTML生成A4 PDF。"""
+    source = REPORT_DIR / markdown_name
+    text = source.read_text(encoding="utf-8")
+    text = re.sub(r"(?<!!)\[([^]]+)]\(([^)]+)\)", r"\1", text)
+    text = text.replace("<!-- PAGE_BREAK -->", '<div class="page-break"></div>')
+    body = markdown.markdown(text, extensions=["tables"])
+    document = f"""<!doctype html><html><head><meta charset="utf-8"><style>
+@page {{ size: A4; margin: 12mm 15mm 13mm; }}
+* {{ box-sizing: border-box; }}
+body {{ font-family: 'Noto Sans CJK SC','Noto Sans CJK JP',sans-serif; color:#222;
+       font-size:8.6pt; line-height:1.48; margin:0; }}
+h1 {{ color:#17365D; text-align:center; font-size:17pt; margin:0 0 6mm; }}
+h1 + p {{ text-align:center; text-indent:0; }}
+h2 {{ color:#17365D; font-size:11.5pt; margin:2.5mm 0 1.5mm; break-after:avoid; }}
+p {{ margin:0 0 1.6mm; text-align:justify; text-indent:2em; }}
+table {{ width:100%; border-collapse:collapse; font-size:7.2pt; margin:1.5mm 0; }}
+th,td {{ border:0.35pt solid #9EADBA; padding:1.1mm; text-align:left; }}
+th {{ background:#DCE6F1; color:#17365D; }}
+tr:nth-child(odd) td {{ background:#F5F7FA; }}
+img {{ display:block; max-width:165mm; max-height:56mm; margin:1.2mm auto 0; }}
+.page-break {{ break-before:page; page-break-before:always; }}
+code {{ color:#333; font-family:inherit; }}
+</style></head><body>{body}</body></html>"""
+    # 临时HTML与Markdown同目录，使`figures/...`图片路径可直接解析并嵌入PDF。
+    html_path = REPORT_DIR / f".{Path(pdf_name).stem}.html"
+    html_path.write_text(document, encoding="utf-8")
+    pdf_path = (OUTPUT_DIR / pdf_name).resolve()
+    subprocess.run([
+        "/usr/bin/google-chrome", "--headless", "--no-sandbox", "--disable-gpu",
+        "--allow-file-access-from-files", "--no-pdf-header-footer",
+        f"--print-to-pdf={pdf_path}", html_path.resolve().as_uri(),
+    ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    html_path.unlink()
+
+
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--report", choices=("basic", "advanced", "all"), default="all",
+        help="只重建指定报告；进阶结果未冻结时可只生成basic。",
+    )
+    args = parser.parse_args()
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    pdfmetrics.registerFont(UnicodeCIDFont(FONT_NAME))
-    build("BASIC_RETARGETING_REPORT.md", "basic_retargeting_report.pdf")
-    build("ADVANCED_POLICY_REPORT.md", "advanced_policy_report.pdf")
+    if REPORTLAB_AVAILABLE:
+        pdfmetrics.registerFont(UnicodeCIDFont(FONT_NAME))
+    builder = build if REPORTLAB_AVAILABLE else build_with_chrome
+    if args.report in ("basic", "all"):
+        builder("BASIC_RETARGETING_REPORT.md", "basic_retargeting_report.pdf")
+    if args.report in ("advanced", "all"):
+        builder("ADVANCED_POLICY_REPORT.md", "advanced_policy_report.pdf")
 
 
 if __name__ == "__main__":

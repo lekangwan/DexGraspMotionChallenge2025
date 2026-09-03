@@ -1,0 +1,783 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Created with matplotlib (https://matplotlib.org/) -->
+<svg height="551.52pt" version="1.1" viewBox="0 0 971.28 551.52" width="971.28pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style type="text/css">
+*{stroke-linecap:butt;stroke-linejoin:round;}
+  </style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 551.52 
+L 971.28 551.52 
+L 971.28 0 
+L 0 0 
+z
+" style="fill:#ffffff;"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path clip-path="url(#pf9f5e71cae)" d="M 52.56 122.4 
+L 221.76 122.4 
+L 221.76 70.56 
+L 52.56 70.56 
+z
+" style="fill:#eceff3;"/>
+   </g>
+   <g id="patch_3">
+    <path clip-path="url(#pf9f5e71cae)" d="M 230.4 122.4 
+L 405.36 122.4 
+L 405.36 70.56 
+L 230.4 70.56 
+z
+" style="fill:#eceff3;"/>
+   </g>
+   <g id="patch_4">
+    <path clip-path="url(#pf9f5e71cae)" d="M 414 122.4 
+L 588.96 122.4 
+L 588.96 70.56 
+L 414 70.56 
+z
+" style="fill:#eceff3;"/>
+   </g>
+   <g id="patch_5">
+    <path clip-path="url(#pf9f5e71cae)" d="M 597.6 122.4 
+L 772.56 122.4 
+L 772.56 70.56 
+L 597.6 70.56 
+z
+" style="fill:#eceff3;"/>
+   </g>
+   <g id="patch_6">
+    <path clip-path="url(#pf9f5e71cae)" d="M 781.2 122.4 
+L 956.16 122.4 
+L 956.16 70.56 
+L 781.2 70.56 
+z
+" style="fill:#eceff3;"/>
+   </g>
+   <g id="patch_7">
+    <path clip-path="url(#pf9f5e71cae)" d="M 52.56 188.64 
+L 221.76 188.64 
+L 221.76 127.44 
+L 52.56 127.44 
+z
+" style="fill:#ffffff;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_8">
+    <path clip-path="url(#pf9f5e71cae)" d="M 52.56 188.64 
+L 59.04 188.64 
+L 59.04 127.44 
+L 52.56 127.44 
+z
+" style="fill:#5b6573;"/>
+   </g>
+   <g id="patch_9">
+    <path clip-path="url(#pf9f5e71cae)" d="M 230.4 188.64 
+L 405.36 188.64 
+L 405.36 127.44 
+L 230.4 127.44 
+z
+" style="fill:#f5f7f9;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_10">
+    <path clip-path="url(#pf9f5e71cae)" d="M 247.68 172.08 
+L 342 172.08 
+Q 347.04 172.08 347.04 167.04 
+L 347.04 154.8 
+Q 347.04 149.76 342 149.76 
+L 247.68 149.76 
+Q 242.64 149.76 242.64 154.8 
+L 242.64 167.04 
+Q 242.64 172.08 247.68 172.08 
+z
+" style="fill:#e1e5e9;"/>
+   </g>
+   <g id="patch_11">
+    <path clip-path="url(#pf9f5e71cae)" d="M 247.68 172.08 
+L 337.254545 172.08 
+Q 342.294545 172.08 342.294545 167.04 
+L 342.294545 154.8 
+Q 342.294545 149.76 337.254545 149.76 
+L 247.68 149.76 
+Q 242.64 149.76 242.64 154.8 
+L 242.64 167.04 
+Q 242.64 172.08 247.68 172.08 
+z
+" style="fill:#5b6573;"/>
+   </g>
+   <g id="patch_12">
+    <path clip-path="url(#pf9f5e71cae)" d="M 414 188.64 
+L 588.96 188.64 
+L 588.96 127.44 
+L 414 127.44 
+z
+" style="fill:#f5f7f9;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_13">
+    <path clip-path="url(#pf9f5e71cae)" d="M 431.28 172.08 
+L 525.6 172.08 
+Q 530.64 172.08 530.64 167.04 
+L 530.64 154.8 
+Q 530.64 149.76 525.6 149.76 
+L 431.28 149.76 
+Q 426.24 149.76 426.24 154.8 
+L 426.24 167.04 
+Q 426.24 172.08 431.28 172.08 
+z
+" style="fill:#e1e5e9;"/>
+   </g>
+   <g id="patch_14">
+    <path clip-path="url(#pf9f5e71cae)" d="M 431.28 172.08 
+L 518.35 172.08 
+Q 523.39 172.08 523.39 167.04 
+L 523.39 154.8 
+Q 523.39 149.76 518.35 149.76 
+L 431.28 149.76 
+Q 426.24 149.76 426.24 154.8 
+L 426.24 167.04 
+Q 426.24 172.08 431.28 172.08 
+z
+" style="fill:#5b6573;"/>
+   </g>
+   <g id="patch_15">
+    <path clip-path="url(#pf9f5e71cae)" d="M 597.6 188.64 
+L 772.56 188.64 
+L 772.56 127.44 
+L 597.6 127.44 
+z
+" style="fill:#f5f7f9;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_16">
+    <path clip-path="url(#pf9f5e71cae)" d="M 614.88 172.08 
+L 709.2 172.08 
+Q 714.24 172.08 714.24 167.04 
+L 714.24 154.8 
+Q 714.24 149.76 709.2 149.76 
+L 614.88 149.76 
+Q 609.84 149.76 609.84 154.8 
+L 609.84 167.04 
+Q 609.84 172.08 614.88 172.08 
+z
+" style="fill:#e1e5e9;"/>
+   </g>
+   <g id="patch_17">
+    <path clip-path="url(#pf9f5e71cae)" d="M 614.88 172.08 
+L 694.674783 172.08 
+Q 699.714783 172.08 699.714783 167.04 
+L 699.714783 154.8 
+Q 699.714783 149.76 694.674783 149.76 
+L 614.88 149.76 
+Q 609.84 149.76 609.84 154.8 
+L 609.84 167.04 
+Q 609.84 172.08 614.88 172.08 
+z
+" style="fill:#5b6573;"/>
+   </g>
+   <g id="patch_18">
+    <path clip-path="url(#pf9f5e71cae)" d="M 781.2 188.64 
+L 956.16 188.64 
+L 956.16 127.44 
+L 781.2 127.44 
+z
+" style="fill:#f5f7f9;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_19">
+    <path clip-path="url(#pf9f5e71cae)" d="M 798.48 172.08 
+L 892.8 172.08 
+Q 897.84 172.08 897.84 167.04 
+L 897.84 154.8 
+Q 897.84 149.76 892.8 149.76 
+L 798.48 149.76 
+Q 793.44 149.76 793.44 154.8 
+L 793.44 167.04 
+Q 793.44 172.08 798.48 172.08 
+z
+" style="fill:#e1e5e9;"/>
+   </g>
+   <g id="patch_20">
+    <path clip-path="url(#pf9f5e71cae)" d="M 798.48 172.08 
+L 883.309091 172.08 
+Q 888.349091 172.08 888.349091 167.04 
+L 888.349091 154.8 
+Q 888.349091 149.76 883.309091 149.76 
+L 798.48 149.76 
+Q 793.44 149.76 793.44 154.8 
+L 793.44 167.04 
+Q 793.44 172.08 798.48 172.08 
+z
+" style="fill:#5b6573;"/>
+   </g>
+   <g id="patch_21">
+    <path clip-path="url(#pf9f5e71cae)" d="M 52.56 254.88 
+L 221.76 254.88 
+L 221.76 193.68 
+L 52.56 193.68 
+z
+" style="fill:#ffffff;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_22">
+    <path clip-path="url(#pf9f5e71cae)" d="M 52.56 254.88 
+L 59.04 254.88 
+L 59.04 193.68 
+L 52.56 193.68 
+z
+" style="fill:#332288;"/>
+   </g>
+   <g id="patch_23">
+    <path clip-path="url(#pf9f5e71cae)" d="M 230.4 254.88 
+L 405.36 254.88 
+L 405.36 193.68 
+L 230.4 193.68 
+z
+" style="fill:#f5f7f9;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_24">
+    <path clip-path="url(#pf9f5e71cae)" d="M 247.68 238.32 
+L 342 238.32 
+Q 347.04 238.32 347.04 233.28 
+L 347.04 221.04 
+Q 347.04 216 342 216 
+L 247.68 216 
+Q 242.64 216 242.64 221.04 
+L 242.64 233.28 
+Q 242.64 238.32 247.68 238.32 
+z
+" style="fill:#e1e5e9;"/>
+   </g>
+   <g id="patch_25">
+    <path clip-path="url(#pf9f5e71cae)" d="M 247.68 238.32 
+L 321.594545 238.32 
+Q 326.634545 238.32 326.634545 233.28 
+L 326.634545 221.04 
+Q 326.634545 216 321.594545 216 
+L 247.68 216 
+Q 242.64 216 242.64 221.04 
+L 242.64 233.28 
+Q 242.64 238.32 247.68 238.32 
+z
+" style="fill:#332288;"/>
+   </g>
+   <g id="patch_26">
+    <path clip-path="url(#pf9f5e71cae)" d="M 414 254.88 
+L 588.96 254.88 
+L 588.96 193.68 
+L 414 193.68 
+z
+" style="fill:#f5f7f9;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_27">
+    <path clip-path="url(#pf9f5e71cae)" d="M 431.28 238.32 
+L 525.6 238.32 
+Q 530.64 238.32 530.64 233.28 
+L 530.64 221.04 
+Q 530.64 216 525.6 216 
+L 431.28 216 
+Q 426.24 216 426.24 221.04 
+L 426.24 233.28 
+Q 426.24 238.32 431.28 238.32 
+z
+" style="fill:#e1e5e9;"/>
+   </g>
+   <g id="patch_28">
+    <path clip-path="url(#pf9f5e71cae)" d="M 431.28 238.32 
+L 497.47 238.32 
+Q 502.51 238.32 502.51 233.28 
+L 502.51 221.04 
+Q 502.51 216 497.47 216 
+L 431.28 216 
+Q 426.24 216 426.24 221.04 
+L 426.24 233.28 
+Q 426.24 238.32 431.28 238.32 
+z
+" style="fill:#332288;"/>
+   </g>
+   <g id="patch_29">
+    <path clip-path="url(#pf9f5e71cae)" d="M 597.6 254.88 
+L 772.56 254.88 
+L 772.56 193.68 
+L 597.6 193.68 
+z
+" style="fill:#f5f7f9;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_30">
+    <path clip-path="url(#pf9f5e71cae)" d="M 614.88 238.32 
+L 709.2 238.32 
+Q 714.24 238.32 714.24 233.28 
+L 714.24 221.04 
+Q 714.24 216 709.2 216 
+L 614.88 216 
+Q 609.84 216 609.84 221.04 
+L 609.84 233.28 
+Q 609.84 238.32 614.88 238.32 
+z
+" style="fill:#e1e5e9;"/>
+   </g>
+   <g id="patch_31">
+    <path clip-path="url(#pf9f5e71cae)" d="M 614.88 238.32 
+L 698.306087 238.32 
+Q 703.346087 238.32 703.346087 233.28 
+L 703.346087 221.04 
+Q 703.346087 216 698.306087 216 
+L 614.88 216 
+Q 609.84 216 609.84 221.04 
+L 609.84 233.28 
+Q 609.84 238.32 614.88 238.32 
+z
+" style="fill:#332288;"/>
+   </g>
+   <g id="patch_32">
+    <path clip-path="url(#pf9f5e71cae)" d="M 781.2 254.88 
+L 956.16 254.88 
+L 956.16 193.68 
+L 781.2 193.68 
+z
+" style="fill:#f5f7f9;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_33">
+    <path clip-path="url(#pf9f5e71cae)" d="M 798.48 238.32 
+L 892.8 238.32 
+Q 897.84 238.32 897.84 233.28 
+L 897.84 221.04 
+Q 897.84 216 892.8 216 
+L 798.48 216 
+Q 793.44 216 793.44 221.04 
+L 793.44 233.28 
+Q 793.44 238.32 798.48 238.32 
+z
+" style="fill:#e1e5e9;"/>
+   </g>
+   <g id="patch_34">
+    <path clip-path="url(#pf9f5e71cae)" d="M 798.48 238.32 
+L 858.632727 238.32 
+Q 863.672727 238.32 863.672727 233.28 
+L 863.672727 221.04 
+Q 863.672727 216 858.632727 216 
+L 798.48 216 
+Q 793.44 216 793.44 221.04 
+L 793.44 233.28 
+Q 793.44 238.32 798.48 238.32 
+z
+" style="fill:#332288;"/>
+   </g>
+   <g id="patch_35">
+    <path clip-path="url(#pf9f5e71cae)" d="M 52.56 321.12 
+L 221.76 321.12 
+L 221.76 259.92 
+L 52.56 259.92 
+z
+" style="fill:#ffffff;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_36">
+    <path clip-path="url(#pf9f5e71cae)" d="M 52.56 321.12 
+L 59.04 321.12 
+L 59.04 259.92 
+L 52.56 259.92 
+z
+" style="fill:#44aa99;"/>
+   </g>
+   <g id="patch_37">
+    <path clip-path="url(#pf9f5e71cae)" d="M 230.4 321.12 
+L 405.36 321.12 
+L 405.36 259.92 
+L 230.4 259.92 
+z
+" style="fill:#f5f7f9;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_38">
+    <path clip-path="url(#pf9f5e71cae)" d="M 247.68 304.56 
+L 342 304.56 
+Q 347.04 304.56 347.04 299.52 
+L 347.04 287.28 
+Q 347.04 282.24 342 282.24 
+L 247.68 282.24 
+Q 242.64 282.24 242.64 287.28 
+L 242.64 299.52 
+Q 242.64 304.56 247.68 304.56 
+z
+" style="fill:#e1e5e9;"/>
+   </g>
+   <g id="patch_39">
+    <path clip-path="url(#pf9f5e71cae)" d="M 247.68 304.56 
+L 336.305455 304.56 
+Q 341.345455 304.56 341.345455 299.52 
+L 341.345455 287.28 
+Q 341.345455 282.24 336.305455 282.24 
+L 247.68 282.24 
+Q 242.64 282.24 242.64 287.28 
+L 242.64 299.52 
+Q 242.64 304.56 247.68 304.56 
+z
+" style="fill:#44aa99;"/>
+   </g>
+   <g id="patch_40">
+    <path clip-path="url(#pf9f5e71cae)" d="M 414 321.12 
+L 588.96 321.12 
+L 588.96 259.92 
+L 414 259.92 
+z
+" style="fill:#f5f7f9;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_41">
+    <path clip-path="url(#pf9f5e71cae)" d="M 431.28 304.56 
+L 525.6 304.56 
+Q 530.64 304.56 530.64 299.52 
+L 530.64 287.28 
+Q 530.64 282.24 525.6 282.24 
+L 431.28 282.24 
+Q 426.24 282.24 426.24 287.28 
+L 426.24 299.52 
+Q 426.24 304.56 431.28 304.56 
+z
+" style="fill:#e1e5e9;"/>
+   </g>
+   <g id="patch_42">
+    <path clip-path="url(#pf9f5e71cae)" d="M 431.28 304.56 
+L 511.825 304.56 
+Q 516.865 304.56 516.865 299.52 
+L 516.865 287.28 
+Q 516.865 282.24 511.825 282.24 
+L 431.28 282.24 
+Q 426.24 282.24 426.24 287.28 
+L 426.24 299.52 
+Q 426.24 304.56 431.28 304.56 
+z
+" style="fill:#44aa99;"/>
+   </g>
+   <g id="patch_43">
+    <path clip-path="url(#pf9f5e71cae)" d="M 597.6 321.12 
+L 772.56 321.12 
+L 772.56 259.92 
+L 597.6 259.92 
+z
+" style="fill:#f5f7f9;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_44">
+    <path clip-path="url(#pf9f5e71cae)" d="M 614.88 304.56 
+L 709.2 304.56 
+Q 714.24 304.56 714.24 299.52 
+L 714.24 287.28 
+Q 714.24 282.24 709.2 282.24 
+L 614.88 282.24 
+Q 609.84 282.24 609.84 287.28 
+L 609.84 299.52 
+Q 609.84 304.56 614.88 304.56 
+z
+" style="fill:#e1e5e9;"/>
+   </g>
+   <g id="patch_45">
+    <path clip-path="url(#pf9f5e71cae)" d="M 614.88 304.56 
+L 702.845217 304.56 
+Q 707.885217 304.56 707.885217 299.52 
+L 707.885217 287.28 
+Q 707.885217 282.24 702.845217 282.24 
+L 614.88 282.24 
+Q 609.84 282.24 609.84 287.28 
+L 609.84 299.52 
+Q 609.84 304.56 614.88 304.56 
+z
+" style="fill:#44aa99;"/>
+   </g>
+   <g id="patch_46">
+    <path clip-path="url(#pf9f5e71cae)" d="M 781.2 321.12 
+L 956.16 321.12 
+L 956.16 259.92 
+L 781.2 259.92 
+z
+" style="fill:#f5f7f9;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_47">
+    <path clip-path="url(#pf9f5e71cae)" d="M 798.48 304.56 
+L 892.8 304.56 
+Q 897.84 304.56 897.84 299.52 
+L 897.84 287.28 
+Q 897.84 282.24 892.8 282.24 
+L 798.48 282.24 
+Q 793.44 282.24 793.44 287.28 
+L 793.44 299.52 
+Q 793.44 304.56 798.48 304.56 
+z
+" style="fill:#e1e5e9;"/>
+   </g>
+   <g id="patch_48">
+    <path clip-path="url(#pf9f5e71cae)" d="M 798.48 304.56 
+L 883.309091 304.56 
+Q 888.349091 304.56 888.349091 299.52 
+L 888.349091 287.28 
+Q 888.349091 282.24 883.309091 282.24 
+L 798.48 282.24 
+Q 793.44 282.24 793.44 287.28 
+L 793.44 299.52 
+Q 793.44 304.56 798.48 304.56 
+z
+" style="fill:#44aa99;"/>
+   </g>
+   <g id="patch_49">
+    <path clip-path="url(#pf9f5e71cae)" d="M 52.56 387.36 
+L 221.76 387.36 
+L 221.76 326.16 
+L 52.56 326.16 
+z
+" style="fill:#ffffff;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_50">
+    <path clip-path="url(#pf9f5e71cae)" d="M 52.56 387.36 
+L 59.04 387.36 
+L 59.04 326.16 
+L 52.56 326.16 
+z
+" style="fill:#cc6677;"/>
+   </g>
+   <g id="patch_51">
+    <path clip-path="url(#pf9f5e71cae)" d="M 230.4 387.36 
+L 405.36 387.36 
+L 405.36 326.16 
+L 230.4 326.16 
+z
+" style="fill:#f5f7f9;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_52">
+    <path clip-path="url(#pf9f5e71cae)" d="M 247.68 370.8 
+L 342 370.8 
+Q 347.04 370.8 347.04 365.76 
+L 347.04 353.52 
+Q 347.04 348.48 342 348.48 
+L 247.68 348.48 
+Q 242.64 348.48 242.64 353.52 
+L 242.64 365.76 
+Q 242.64 370.8 247.68 370.8 
+z
+" style="fill:#e1e5e9;"/>
+   </g>
+   <g id="patch_53">
+    <path clip-path="url(#pf9f5e71cae)" d="M 247.68 370.8 
+L 335.356364 370.8 
+Q 340.396364 370.8 340.396364 365.76 
+L 340.396364 353.52 
+Q 340.396364 348.48 335.356364 348.48 
+L 247.68 348.48 
+Q 242.64 348.48 242.64 353.52 
+L 242.64 365.76 
+Q 242.64 370.8 247.68 370.8 
+z
+" style="fill:#cc6677;"/>
+   </g>
+   <g id="patch_54">
+    <path clip-path="url(#pf9f5e71cae)" d="M 414 387.36 
+L 588.96 387.36 
+L 588.96 326.16 
+L 414 326.16 
+z
+" style="fill:#f5f7f9;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_55">
+    <path clip-path="url(#pf9f5e71cae)" d="M 431.28 370.8 
+L 525.6 370.8 
+Q 530.64 370.8 530.64 365.76 
+L 530.64 353.52 
+Q 530.64 348.48 525.6 348.48 
+L 431.28 348.48 
+Q 426.24 348.48 426.24 353.52 
+L 426.24 365.76 
+Q 426.24 370.8 431.28 370.8 
+z
+" style="fill:#e1e5e9;"/>
+   </g>
+   <g id="patch_56">
+    <path clip-path="url(#pf9f5e71cae)" d="M 431.28 370.8 
+L 513.13 370.8 
+Q 518.17 370.8 518.17 365.76 
+L 518.17 353.52 
+Q 518.17 348.48 513.13 348.48 
+L 431.28 348.48 
+Q 426.24 348.48 426.24 353.52 
+L 426.24 365.76 
+Q 426.24 370.8 431.28 370.8 
+z
+" style="fill:#cc6677;"/>
+   </g>
+   <g id="patch_57">
+    <path clip-path="url(#pf9f5e71cae)" d="M 597.6 387.36 
+L 772.56 387.36 
+L 772.56 326.16 
+L 597.6 326.16 
+z
+" style="fill:#f5f7f9;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_58">
+    <path clip-path="url(#pf9f5e71cae)" d="M 614.88 370.8 
+L 709.2 370.8 
+Q 714.24 370.8 714.24 365.76 
+L 714.24 353.52 
+Q 714.24 348.48 709.2 348.48 
+L 614.88 348.48 
+Q 609.84 348.48 609.84 353.52 
+L 609.84 365.76 
+Q 609.84 370.8 614.88 370.8 
+z
+" style="fill:#e1e5e9;"/>
+   </g>
+   <g id="patch_59">
+    <path clip-path="url(#pf9f5e71cae)" d="M 614.88 370.8 
+L 686.504348 370.8 
+Q 691.544348 370.8 691.544348 365.76 
+L 691.544348 353.52 
+Q 691.544348 348.48 686.504348 348.48 
+L 614.88 348.48 
+Q 609.84 348.48 609.84 353.52 
+L 609.84 365.76 
+Q 609.84 370.8 614.88 370.8 
+z
+" style="fill:#cc6677;"/>
+   </g>
+   <g id="patch_60">
+    <path clip-path="url(#pf9f5e71cae)" d="M 781.2 387.36 
+L 956.16 387.36 
+L 956.16 326.16 
+L 781.2 326.16 
+z
+" style="fill:#f5f7f9;stroke:#d8dde3;stroke-linejoin:miter;stroke-width:0.7;"/>
+   </g>
+   <g id="patch_61">
+    <path clip-path="url(#pf9f5e71cae)" d="M 798.48 370.8 
+L 892.8 370.8 
+Q 897.84 370.8 897.84 365.76 
+L 897.84 353.52 
+Q 897.84 348.48 892.8 348.48 
+L 798.48 348.48 
+Q 793.44 348.48 793.44 353.52 
+L 793.44 365.76 
+Q 793.44 370.8 798.48 370.8 
+z
+" style="fill:#e1e5e9;"/>
+   </g>
+   <g id="patch_62">
+    <path clip-path="url(#pf9f5e71cae)" d="M 798.48 370.8 
+L 887.105455 370.8 
+Q 892.145455 370.8 892.145455 365.76 
+L 892.145455 353.52 
+Q 892.145455 348.48 887.105455 348.48 
+L 798.48 348.48 
+Q 793.44 348.48 793.44 353.52 
+L 793.44 365.76 
+Q 793.44 370.8 798.48 370.8 
+z
+" style="fill:#cc6677;"/>
+   </g>
+   <g id="patch_63">
+    <path clip-path="url(#pf9f5e71cae)" d="M 56.88 491.76 
+L 914.4 491.76 
+Q 920.16 491.76 920.16 486 
+L 920.16 435.6 
+Q 920.16 429.84 914.4 429.84 
+L 56.88 429.84 
+Q 51.12 429.84 51.12 435.6 
+L 51.12 486 
+Q 51.12 491.76 56.88 491.76 
+z
+" style="fill:#f2f5f8;stroke:#cbd3db;stroke-linejoin:miter;stroke-width:0.8;"/>
+   </g>
+   <g id="text_1">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:23px;font-style:normal;font-weight:bold;text-anchor:start;" transform="rotate(-0, 52.56, 54.224141)" x="52.56" y="54.224141">四种灵巧手的实际几何尺寸</text>
+   </g>
+   <g id="text_2">
+    <text style="fill:#68717c;font-family:Noto Sans CJK JP;font-size:11.5px;font-style:normal;font-weight:normal;text-anchor:start;" transform="rotate(-0, 54, 83.179531)" x="54" y="83.179531">同一测量口径 · 单位：mm</text>
+   </g>
+   <g id="text_3">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:11.5px;font-style:normal;font-weight:bold;text-anchor:start;" transform="rotate(-0, 69.84, 99.83207)" x="69.84" y="99.83207">机械手</text>
+   </g>
+   <g id="text_4">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:10.2px;font-style:normal;font-weight:bold;text-anchor:middle;" transform="rotate(-0, 317.88, 99.453141)" x="317.88" y="99.453141">手掌纵向总长度</text>
+   </g>
+   <g id="text_5">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:10.2px;font-style:normal;font-weight:bold;" transform="translate(486.18 94.083518)">食指根</text>
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:10.2px;font-style:normal;font-weight:bold;" transform="translate(471.349359 104.822763)">—小指根宽度</text>
+   </g>
+   <g id="text_6">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:10.2px;font-style:normal;font-weight:bold;text-anchor:middle;" transform="rotate(-0, 685.08, 99.453141)" x="685.08" y="99.453141">手腕—中指根</text>
+   </g>
+   <g id="text_7">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:10.2px;font-style:normal;font-weight:bold;text-anchor:middle;" transform="rotate(-0, 868.68, 99.453141)" x="868.68" y="99.453141">中指根—指尖</text>
+   </g>
+   <g id="text_8">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:11.3px;font-style:normal;font-weight:bold;text-anchor:start;" transform="rotate(-0, 70.56, 161.333773)" x="70.56" y="161.333773">Shadow Hand</text>
+   </g>
+   <g id="text_9">
+    <text style="fill:#68717c;font-family:Noto Sans CJK JP;font-size:8.8px;font-style:normal;font-weight:normal;text-anchor:end;" transform="rotate(-0, 207.36, 160.53425)" x="207.36" y="160.53425">源手</text>
+   </g>
+   <g id="text_10">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:12.2px;font-style:normal;font-weight:bold;text-anchor:end;" transform="rotate(-0, 393.12, 161.596109)" x="393.12" y="161.596109">210</text>
+   </g>
+   <g id="text_11">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:12.2px;font-style:normal;font-weight:bold;text-anchor:end;" transform="rotate(-0, 576.72, 161.596109)" x="576.72" y="161.596109">67</text>
+   </g>
+   <g id="text_12">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:12.2px;font-style:normal;font-weight:bold;text-anchor:end;" transform="rotate(-0, 760.32, 161.596109)" x="760.32" y="161.596109">99</text>
+   </g>
+   <g id="text_13">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:12.2px;font-style:normal;font-weight:bold;text-anchor:end;" transform="rotate(-0, 943.92, 161.596109)" x="943.92" y="161.596109">100</text>
+   </g>
+   <g id="text_14">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:11.3px;font-style:normal;font-weight:bold;text-anchor:start;" transform="rotate(-0, 70.56, 227.573773)" x="70.56" y="227.573773">LinkerHand O6</text>
+   </g>
+   <g id="text_15">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:12.2px;font-style:normal;font-weight:bold;text-anchor:end;" transform="rotate(-0, 393.12, 227.836109)" x="393.12" y="227.836109">177</text>
+   </g>
+   <g id="text_16">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:12.2px;font-style:normal;font-weight:bold;text-anchor:end;" transform="rotate(-0, 576.72, 227.836109)" x="576.72" y="227.836109">52.6</text>
+   </g>
+   <g id="text_17">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:12.2px;font-style:normal;font-weight:bold;text-anchor:end;" transform="rotate(-0, 760.32, 227.836109)" x="760.32" y="227.836109">103</text>
+   </g>
+   <g id="text_18">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:12.2px;font-style:normal;font-weight:bold;text-anchor:end;" transform="rotate(-0, 943.92, 227.836109)" x="943.92" y="227.836109">74</text>
+   </g>
+   <g id="text_19">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:11.3px;font-style:normal;font-weight:bold;text-anchor:start;" transform="rotate(-0, 70.56, 293.813773)" x="70.56" y="293.813773">XHand</text>
+   </g>
+   <g id="text_20">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:12.2px;font-style:normal;font-weight:bold;text-anchor:end;" transform="rotate(-0, 393.12, 294.076109)" x="393.12" y="294.076109">208</text>
+   </g>
+   <g id="text_21">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:12.2px;font-style:normal;font-weight:bold;text-anchor:end;" transform="rotate(-0, 576.72, 294.076109)" x="576.72" y="294.076109">62.5</text>
+   </g>
+   <g id="text_22">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:12.2px;font-style:normal;font-weight:bold;text-anchor:end;" transform="rotate(-0, 760.32, 294.076109)" x="760.32" y="294.076109">108</text>
+   </g>
+   <g id="text_23">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:12.2px;font-style:normal;font-weight:bold;text-anchor:end;" transform="rotate(-0, 943.92, 294.076109)" x="943.92" y="294.076109">100</text>
+   </g>
+   <g id="text_24">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:11.3px;font-style:normal;font-weight:bold;text-anchor:start;" transform="rotate(-0, 70.56, 360.047594)" x="70.56" y="360.047594">WujiHand</text>
+   </g>
+   <g id="text_25">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:12.2px;font-style:normal;font-weight:bold;text-anchor:end;" transform="rotate(-0, 393.12, 360.316109)" x="393.12" y="360.316109">206</text>
+   </g>
+   <g id="text_26">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:12.2px;font-style:normal;font-weight:bold;text-anchor:end;" transform="rotate(-0, 576.72, 360.316109)" x="576.72" y="360.316109">63.4</text>
+   </g>
+   <g id="text_27">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:12.2px;font-style:normal;font-weight:bold;text-anchor:end;" transform="rotate(-0, 760.32, 360.316109)" x="760.32" y="360.316109">90</text>
+   </g>
+   <g id="text_28">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:12.2px;font-style:normal;font-weight:bold;text-anchor:end;" transform="rotate(-0, 943.92, 360.316109)" x="943.92" y="360.316109">104</text>
+   </g>
+   <g id="text_29">
+    <text style="fill:#20252b;font-family:Noto Sans CJK JP;font-size:12px;font-style:normal;font-weight:bold;text-anchor:start;" transform="rotate(-0, 73.44, 455.873437)" x="73.44" y="455.873437">尺寸关系：XHand、WujiHand与Shadow Hand接近；LinkerHand更短、更窄</text>
+   </g>
+   <g id="text_30">
+    <text style="fill:#68717c;font-family:Noto Sans CJK JP;font-size:10.2px;font-style:normal;font-weight:normal;text-anchor:start;" transform="rotate(-0, 73.44, 476.651062)" x="73.44" y="476.651062">LinkerHand相对Shadow Hand：总长度约 −16%，掌宽约 −22%，中指长度约 −26%</text>
+   </g>
+   <g id="text_31">
+    <text style="fill:#68717c;font-family:Noto Sans CJK JP;font-size:9.3px;font-style:normal;font-weight:normal;text-anchor:start;" transform="rotate(-0, 54, 523.195969)" x="54" y="523.195969">测量口径：URDF原始可视网格，关节角为0，hand_scale = 1.0；数值取约数。</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pf9f5e71cae">
+   <rect height="540" width="959.76" x="5.76" y="5.76"/>
+  </clipPath>
+ </defs>
+</svg>

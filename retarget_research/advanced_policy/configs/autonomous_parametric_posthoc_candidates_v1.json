@@ -1,0 +1,94 @@
+{
+  "status": "test500_complete",
+  "purpose": "冻结最终方案后的补充500条比较；不覆盖原始冻结选择记录",
+  "evaluation_boundary": "object-level unseen test split; 50 categories; 500 trajectories per candidate",
+  "inference_rule": "仅使用初始观测、当前自身状态和历史自身动作；禁止测试轨迹检索、未来专家动作和教师查询",
+  "selected_for_test500": [
+    "linker_ft",
+    "xhand_huber_beta2",
+    "wuji_feedback_005",
+    "wuji_blend_fourier_025"
+  ],
+  "selection_note": "只补测valid100最接近冻结方法且可能具有不同泛化行为的四项；其余候选淘汰",
+  "test_results": {
+    "linker_ft": "30/500",
+    "xhand_huber_beta2": "44/500",
+    "wuji_feedback_005": "29/500",
+    "wuji_blend_fourier_025": "38/500"
+  },
+  "reporting_decision": {
+    "primary_preselected_results": {
+      "linker_initial_phase_delta_mse": "35/500",
+      "xhand_huber_beta1": "42/500",
+      "wuji_feedback_010": "30/500"
+    },
+    "posthoc_observation": "Wuji 25% Fourier纯参数融合达到38/500，但valid为17/100、低于预选反馈策略的19/100，因此作为补充观察而非替换无偏主结果",
+    "best_observed_results": {
+      "linker": "35/500",
+      "xhand": "44/500",
+      "wuji": "38/500"
+    }
+  },
+  "candidates": {
+    "linker_ft": {
+      "hand": "linker",
+      "method": "initial_phase_delta_finetune",
+      "development_result": "9/100",
+      "checkpoint": "retarget_research/advanced_policy/runs/autonomous_initial_phase_delta_soup_v1/linker_initial_phase_delta_ft_v1/best.pt"
+    },
+    "linker_soup": {
+      "hand": "linker",
+      "method": "initial_phase_delta_parameter_soup",
+      "development_result": "8/100",
+      "checkpoint": "retarget_research/advanced_policy/runs/autonomous_initial_phase_delta_soup_v1/linker_initial_phase_delta_soup_v1/best.pt"
+    },
+    "linker_temporal": {
+      "hand": "linker",
+      "method": "initial_temporal_feedback_state_aligned_dagger",
+      "development_result": "5/50",
+      "checkpoint": "retarget_research/advanced_policy/runs/autonomous_state_aligned_dagger_safe_v1/linker_state_aligned_dagger_safe_v1/best.pt"
+    },
+    "xhand_mse": {
+      "hand": "xhand",
+      "method": "initial_phase_delta_mse",
+      "development_result": "9/100",
+      "checkpoint": "retarget_research/advanced_policy/runs/autonomous_initial_phase_delta_v1/xhand_official_initial_phase_delta_v1/best.pt"
+    },
+    "xhand_huber_beta2": {
+      "hand": "xhand",
+      "method": "initial_phase_delta_huber_beta2",
+      "development_result": "6/50",
+      "checkpoint": "retarget_research/advanced_policy/runs/autonomous_xhand_huber_tuning_v1/xhand_huber_beta20_v1/best.pt"
+    },
+    "xhand_soup": {
+      "hand": "xhand",
+      "method": "initial_phase_delta_parameter_soup",
+      "development_result": "9/100",
+      "checkpoint": "retarget_research/advanced_policy/runs/autonomous_initial_phase_delta_soup_v1/xhand_official_initial_phase_delta_soup_v1/best.pt"
+    },
+    "wuji_feedback_005": {
+      "hand": "wuji",
+      "method": "initial_temporal_feedback_limit0.05",
+      "development_result": "9/50",
+      "checkpoint": "retarget_research/advanced_policy/runs/autonomous_wuji_state_aligned_feedback_sweep_v1/limit_005/best.pt"
+    },
+    "wuji_mse": {
+      "hand": "wuji",
+      "method": "initial_phase_delta_mse",
+      "development_result": "13/100",
+      "checkpoint": "retarget_research/advanced_policy/runs/autonomous_initial_phase_delta_v1/wuji_old_initial_phase_delta_v1/best.pt"
+    },
+    "wuji_fourier": {
+      "hand": "wuji",
+      "method": "initial_fourier_delta",
+      "development_result": "7/50",
+      "checkpoint": "retarget_research/advanced_policy/runs/autonomous_initial_fourier_delta_v1/wuji_old_initial_fourier_delta_v1/best.pt"
+    },
+    "wuji_blend_fourier_025": {
+      "hand": "wuji",
+      "method": "75% initial_temporal_feedback + 25% initial_fourier_delta",
+      "development_result": "17/100",
+      "checkpoint": "retarget_research/advanced_policy/runs/autonomous_wuji_parametric_tuning_v1/blend_fourier_025/best.pt"
+    }
+  }
+}

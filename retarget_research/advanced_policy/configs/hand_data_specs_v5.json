@@ -1,0 +1,49 @@
+{
+  "schema_version": 5,
+  "final_method_decision": "retarget_research/configs/final_method_decision_v3.json",
+  "success_protocol": "retarget_research/retargeting/configs/stable_success_protocol_v2.json",
+  "observation_schema": {
+    "name": "privileged_state_shape_v3",
+    "fields": [
+      "hand_dof_position",
+      "hand_dof_velocity",
+      "object_position",
+      "object_quaternion_xyzw",
+      "object_linear_velocity",
+      "object_angular_velocity",
+      "object_shape_descriptor_14d",
+      "object_translation_from_initial",
+      "remaining_lift_to_0p30m",
+      "log1p_hand_object_contact_count"
+    ],
+    "note": "统一采用稳定抬升30 cm任务；类别ID不属于物理观测，作为可选条件单独消融。"
+  },
+  "hands": {
+    "linker": {
+      "policy_action_dimension": 12,
+      "physics_dof_dimension": 17,
+      "selected_method_config": "retarget_research/retargeting/configs/linker_anydex_vectors_v2.json",
+      "selected_runner": "retarget_research/retargeting/run/run_linker_formal_1000.sh",
+      "target_dir": "retarget_research/outputs/formal_1000/linker_vector_v2alpha_c3g8_v1",
+      "evaluation_summary": "retarget_research/outputs/formal_1000/linker_vector_v2alpha_c3g8_v1_evaluation/manifest_evaluation_summary.json",
+      "trace_dir": "retarget_research/advanced_policy/traces/formal_v3/linker_vector_v2alpha_c3g8"
+    },
+    "xhand": {
+      "policy_action_dimension": 18,
+      "physics_dof_dimension": 18,
+      "selected_method_config": "retarget_research/retargeting/configs/xhand_official_final_v1.json",
+      "target_dir": "retarget_research/outputs/formal_1000/xhand_official",
+      "evaluation_summary": "retarget_research/outputs/formal_1000/xhand_official_evaluation/manifest_evaluation_summary.json",
+      "trace_dir": "retarget_research/advanced_policy/traces/formal_v1/xhand_official"
+    },
+    "wuji": {
+      "policy_action_dimension": 26,
+      "physics_dof_dimension": 26,
+      "selected_method_config": "retarget_research/retargeting/configs/wuji_method_selection_v1.json",
+      "target_dir": "retarget_research/outputs/formal_1000/wuji_v1",
+      "evaluation_summary": "retarget_research/outputs/formal_1000/wuji_v1_evaluation/manifest_evaluation_summary.json",
+      "trace_dir": "retarget_research/advanced_policy/traces/formal_v1/wuji"
+    }
+  },
+  "version_reason": "修复策略离线观测10 cm、闭环评测30 cm不一致，并绑定三只最终提交手的正式轨迹池。"
+}

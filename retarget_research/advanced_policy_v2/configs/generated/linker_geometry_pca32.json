@@ -1,0 +1,19 @@
+{
+  "seed": 20260901,
+  "device": "cuda",
+  "hand": "linker",
+  "model_type": "geometry_pca32",
+  "pca_rank": 32,
+  "hidden_dim": 192,
+  "point_feature_dim": 64,
+  "batch_size": 64,
+  "epochs": 300,
+  "early_stopping_patience": 35,
+  "learning_rate": 0.0003,
+  "weight_decay": 0.001,
+  "point_jitter_std": 0.02,
+  "data_dir": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/data/final/linker",
+  "output_dir": "/home/lekangwan/projects/DexGraspMotionChallenge2025-final-release/retarget_research/advanced_policy_v2/runs/candidates_v1/linker/geometry_pca32",
+  "category_id_used": false,
+  "checkpoint_contains_training_trajectories": false
+}

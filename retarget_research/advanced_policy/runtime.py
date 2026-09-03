@@ -14,12 +14,13 @@ from pathlib import Path
 
 import numpy as np
 import torch
+from scipy.spatial.transform import Rotation
 
 try:
-    from .models import linear_beta_schedule, sample_diffusion
+    from .models import linear_beta_schedule, make_mlp, sample_diffusion
     from .train import build_model, load_checkpoint_file
 except ImportError:
-    from models import linear_beta_schedule, sample_diffusion
+    from models import linear_beta_schedule, make_mlp, sample_diffusion
     from train import build_model, load_checkpoint_file
 
 
@@ -47,14 +48,103 @@ class PolicyRunner:
         self.config = payload["config"]
         self.dimensions = payload["dimensions"]
         self.model_type = self.config["model_type"]
-        self.model = build_model(
-            self.config,
-            self.dimensions["observation_dim"],
-            self.dimensions["action_dim"],
-            self.dimensions["category_count"],
-        ).to(self.device)
-        self.model.load_state_dict(payload["model_state"])
-        self.model.eval()
+        if self.model_type == "parametric_blend":
+            self.model = None
+        elif self.model_type in {"trajectory_retrieval", "trajectory_blend"}:
+            self.retrieval_initial = np.asarray(
+                payload["retrieval_initial_observations"], dtype=np.float32
+            )
+            self.retrieval_deltas = np.asarray(
+                payload["retrieval_action_deltas"], dtype=np.float32
+            )
+            self.retrieval_features = np.asarray(
+                payload["retrieval_feature_indices"], dtype=np.int64
+            )
+            self.retrieval_k = int(self.config["retrieval_k"])
+            self.finger_retrieval_k = int(
+                self.config.get("finger_retrieval_k", self.retrieval_k)
+            )
+            if self.model_type == "trajectory_blend":
+                base_config = payload["base_model_config"]
+                self.model = build_model(
+                    base_config, self.dimensions["observation_dim"],
+                    self.dimensions["action_dim"], self.dimensions["category_count"],
+                ).to(self.device)
+                self.model.load_state_dict(payload["model_state"])
+                self.model.eval()
+                common_alpha = float(self.config.get("blend_alpha", 0.0))
+                self.wrist_blend_alpha = float(
+                    self.config.get("wrist_blend_alpha", common_alpha)
+                )
+                self.finger_blend_alpha = float(
+                    self.config.get("finger_blend_alpha", common_alpha)
+                )
+            else:
+                self.model = None
+        elif self.model_type in {"trajectory_se3_retrieval", "trajectory_se3_blend"}:
+            self.retrieval_initial = np.asarray(
+                payload["retrieval_initial_observations"], dtype=np.float32
+            )
+            self.retrieval_local_translation = np.asarray(
+                payload["retrieval_local_translation"], dtype=np.float32
+            )
+            self.retrieval_relative_rotvec = np.asarray(
+                payload["retrieval_relative_rotvec"], dtype=np.float32
+            )
+            self.retrieval_fingers = np.asarray(
+                payload["retrieval_finger_actions"], dtype=np.float32
+            )
+            self.retrieval_k = int(self.config["retrieval_k"])
+            self.finger_retrieval_k = int(
+                self.config.get("finger_retrieval_k", self.retrieval_k)
+            )
+            if self.model_type == "trajectory_se3_blend":
+                base_config = payload["base_model_config"]
+                self.model = build_model(
+                    base_config, self.dimensions["observation_dim"],
+                    self.dimensions["action_dim"], self.dimensions["category_count"],
+                ).to(self.device)
+                self.model.load_state_dict(payload["model_state"])
+                self.model.eval()
+                self.wrist_blend_alpha = float(self.config["blend_alpha"])
+                self.finger_blend_alpha = float(self.config["blend_alpha"])
+            else:
+                self.model = None
+        elif self.model_type == "trajectory_pca_rbf":
+            self.model = None
+            self.pca_train_features = np.asarray(payload["rbf_train_features"], dtype=np.float32)
+            self.pca_dual = np.asarray(payload["rbf_dual"], dtype=np.float32)
+            self.pca_mean = np.asarray(payload["pca_mean"], dtype=np.float32)
+            self.pca_components = np.asarray(payload["pca_components"], dtype=np.float32)
+            self.pca_sigma = float(self.config["rbf_sigma"])
+            self.pca_sequence_shape = tuple(payload["sequence_shape"])
+        elif self.model_type == "trajectory_local_ridge":
+            self.model = None
+            self.local_features = np.asarray(payload["train_features"], dtype=np.float32)
+            self.local_sequences = np.asarray(payload["train_sequences"], dtype=np.float32)
+            self.local_k = int(self.config["local_k"])
+            self.local_ridge = float(self.config["ridge"])
+        elif self.model_type == "trajectory_pca_mlp":
+            self.model = make_mlp(
+                self.dimensions["observation_dim"], self.config["pca_rank"],
+                self.config["hidden_dims"], self.config.get("dropout", 0.0),
+            ).to(self.device)
+            self.model.load_state_dict(payload["model_state"])
+            self.model.eval()
+            self.pca_mean = np.asarray(payload["pca_mean"], dtype=np.float32)
+            self.pca_components = np.asarray(payload["pca_components"], dtype=np.float32)
+            self.coefficient_mean = np.asarray(payload["coefficient_mean"], dtype=np.float32)
+            self.coefficient_std = np.asarray(payload["coefficient_std"], dtype=np.float32)
+            self.pca_sequence_shape = tuple(payload["sequence_shape"])
+        else:
+            self.model = build_model(
+                self.config,
+                self.dimensions["observation_dim"],
+                self.dimensions["action_dim"],
+                self.dimensions["category_count"],
+            ).to(self.device)
+            self.model.load_state_dict(payload["model_state"])
+            self.model.eval()
         data_dir = Path(data_dir)
         with np.load(data_dir / "normalization.npz", allow_pickle=False) as archive:
             self.normalization = {name: archive[name].astype(np.float32) for name in archive.files}
@@ -67,11 +157,26 @@ class PolicyRunner:
             raise ValueError("checkpoint类别数量与mappings不一致")
         if len(self.mappings.get("policy_action_order", [])) != self.dimensions["action_dim"]:
             raise ValueError("mappings缺少与checkpoint维度一致的policy_action_order")
+        if self.model_type == "parametric_blend":
+            self.blend_alpha = float(self.config["blend_alpha"])
+            self.blend_first = PolicyRunner(
+                self.config["first_checkpoint"], data_dir, device,
+                diffusion_execute_steps, normalized_action_clip, action_rate_limit_scale,
+            )
+            self.blend_second = PolicyRunner(
+                self.config["second_checkpoint"], data_dir, device,
+                diffusion_execute_steps, normalized_action_clip, action_rate_limit_scale,
+            )
         if self.model_type == "phase_residual":
             required_delta = {"action_delta_mean", "action_delta_std"}
             missing_delta = required_delta - set(self.normalization)
             if missing_delta:
                 raise ValueError(f"残差策略缺少动作增量统计: {sorted(missing_delta)}")
+        if self.model_type in {"initial_phase_delta", "initial_fourier_delta", "initial_phase_feedback", "initial_temporal_feedback", "parametric_blend", "trajectory_blend", "trajectory_se3_blend", "trajectory_pca_rbf", "trajectory_local_ridge", "trajectory_pca_mlp"}:
+            required = {"initial_delta_mean", "initial_delta_std"}
+            missing = required - set(self.normalization)
+            if missing:
+                raise ValueError(f"初态相对策略缺少统计量: {sorted(missing)}")
         self.history = int(self.config.get("history", 3))
         if self.model_type == "temporal3" and self.history != 3:
             raise ValueError("当前Temporal3网络只接受history=3")
@@ -105,8 +210,11 @@ class PolicyRunner:
         self.previous_actions = deque(maxlen=max(self.history - 1, 1))
         self.action_cache = deque()
         self.category_id = None
+        self.initial_observation = None
+        self.initial_command = None
         self.previous_command = None
         self.phase_step = 0
+        self.retrieval_sequence = None
         self.motion_steps = int(self.config.get("motion_steps", 210))
         if self.motion_steps < 2:
             raise ValueError("motion_steps必须至少为2")
@@ -173,6 +281,10 @@ class PolicyRunner:
             raise KeyError(f"训练映射中没有类别: {category_name}")
         self.category_id = int(self.mappings["category_to_id"][category_name])
         normalized = self.normalize_observation(initial_observation)
+        self.initial_observation = normalized.copy()
+        self.initial_command = (
+            None if initial_action is None else np.asarray(initial_action, dtype=np.float32).copy()
+        )
         self.observation_history.clear()
         self.previous_actions.clear()
         self.action_cache.clear()
@@ -180,14 +292,107 @@ class PolicyRunner:
             None if initial_action is None else np.asarray(initial_action, dtype=np.float32).copy()
         )
         self.phase_step = 0
+        if self.model_type == "parametric_blend":
+            self.blend_first.reset(category_name, initial_observation, initial_action)
+            self.blend_second.reset(category_name, initial_observation, initial_action)
+        if self.model_type in {"trajectory_retrieval", "trajectory_blend"}:
+            delta = self.retrieval_initial[:, self.retrieval_features] \
+                - normalized[self.retrieval_features][None]
+            distance = np.sum(delta * delta, axis=1)
+            nearest = np.argsort(distance)[:self.retrieval_k]
+            weights = 1.0 / (distance[nearest] + 1e-3)
+            weights /= weights.sum()
+            self.retrieval_sequence = np.tensordot(
+                weights, self.retrieval_deltas[nearest], axes=(0, 0)
+            ).astype(np.float32)
+            finger_nearest = np.argsort(distance)[:self.finger_retrieval_k]
+            finger_weights = 1.0 / (distance[finger_nearest] + 1e-3)
+            finger_weights /= finger_weights.sum()
+            self.retrieval_sequence[:, 6:] = np.tensordot(
+                finger_weights, self.retrieval_deltas[finger_nearest, :, 6:], axes=(0, 0)
+            )
+        elif self.model_type == "trajectory_pca_rbf":
+            query = normalized[:6]
+            distance = np.sum((self.pca_train_features - query[None]) ** 2, axis=1)
+            kernel = np.exp(-distance / (2.0 * self.pca_sigma ** 2))
+            coefficients = kernel @ self.pca_dual
+            normalized_sequence = self.pca_mean + coefficients @ self.pca_components
+            normalized_sequence = np.clip(normalized_sequence, -5.0, 5.0)
+            normalized_sequence = normalized_sequence.reshape(self.pca_sequence_shape)
+            self.retrieval_sequence = (
+                normalized_sequence * self.normalization["initial_delta_std"]
+                + self.normalization["initial_delta_mean"]
+            ).astype(np.float32)
+        elif self.model_type in {"trajectory_se3_retrieval", "trajectory_se3_blend"}:
+            distance = np.sum((self.retrieval_initial[:, :6] - normalized[:6]) ** 2, axis=1)
+            nearest = np.argsort(distance)[:self.retrieval_k]
+            weights = 1.0 / (distance[nearest] + 1e-3)
+            weights /= weights.sum()
+            local_translation = np.tensordot(
+                weights, self.retrieval_local_translation[nearest], axes=(0, 0)
+            )
+            relative_rotvec = np.tensordot(
+                weights, self.retrieval_relative_rotvec[nearest], axes=(0, 0)
+            )
+            finger_nearest = np.argsort(distance)[:self.finger_retrieval_k]
+            finger_weights = 1.0 / (distance[finger_nearest] + 1e-3)
+            finger_weights /= finger_weights.sum()
+            fingers = np.tensordot(
+                finger_weights, self.retrieval_fingers[finger_nearest], axes=(0, 0)
+            )
+            initial_rotation = Rotation.from_euler("xyz", self.initial_command[3:6])
+            if self.config.get("translation_frame", "local") == "world":
+                positions = self.initial_command[:3] + local_translation
+            else:
+                positions = self.initial_command[:3] + initial_rotation.apply(local_translation)
+            rotations = initial_rotation * Rotation.from_rotvec(relative_rotvec)
+            wrist_delta = np.concatenate([
+                positions - self.initial_command[:3],
+                rotations.as_euler("xyz") - self.initial_command[3:6],
+            ], axis=1)
+            self.retrieval_sequence = np.concatenate([wrist_delta, fingers], axis=1).astype(np.float32)
+        elif self.model_type == "trajectory_local_ridge":
+            query = normalized[:6]
+            distance = np.sum((self.local_features - query[None]) ** 2, axis=1)
+            nearest = np.argsort(distance)[:self.local_k]
+            centered = self.local_features[nearest] - query[None]
+            design = np.concatenate([
+                np.ones((len(nearest), 1), dtype=np.float32), centered
+            ], axis=1)
+            weights = 1.0 / (distance[nearest] + 1e-3)
+            normal = design.T @ (weights[:, None] * design)
+            normal += self.local_ridge * np.diag([0.0] + [1.0] * 6)
+            target = self.local_sequences[nearest].reshape(len(nearest), -1)
+            coefficients = np.linalg.pinv(normal) @ (
+                design.T @ (weights[:, None] * target)
+            )
+            normalized_sequence = np.clip(coefficients[0], -5.0, 5.0)
+            normalized_sequence = normalized_sequence.reshape(self.local_sequences.shape[1:])
+            self.retrieval_sequence = (
+                normalized_sequence * self.normalization["initial_delta_std"]
+                + self.normalization["initial_delta_mean"]
+            ).astype(np.float32)
+        elif self.model_type == "trajectory_pca_mlp":
+            input_tensor = torch.from_numpy(normalized[None]).to(self.device)
+            with torch.no_grad():
+                normalized_coefficients = self.model(input_tensor)[0].cpu().numpy()
+            coefficients = (
+                normalized_coefficients * self.coefficient_std + self.coefficient_mean
+            )
+            normalized_sequence = self.pca_mean + coefficients @ self.pca_components
+            normalized_sequence = normalized_sequence.reshape(self.pca_sequence_shape)
+            self.retrieval_sequence = (
+                normalized_sequence * self.normalization["initial_delta_std"]
+                + self.normalization["initial_delta_mean"]
+            ).astype(np.float32)
         if self.previous_command is not None and self.previous_command.shape != (
             self.dimensions["action_dim"],
         ):
             raise ValueError(f"初始动作维度错误: {self.previous_command.shape}")
         if self.action_rate_limit_scale > 0.0 and self.previous_command is None:
             raise ValueError("启用动作限速时必须提供initial_action")
-        if self.model_type in ("phase_residual", "phase_residual_temporal") and self.previous_command is None:
-            raise ValueError("phase_residual必须提供episode初始动作")
+        if self.model_type in ("phase_residual", "phase_residual_temporal", "initial_phase_delta", "initial_fourier_delta", "initial_phase_feedback", "initial_temporal_feedback", "parametric_blend", "trajectory_retrieval", "trajectory_blend", "trajectory_pca_rbf", "trajectory_local_ridge", "trajectory_se3_retrieval", "trajectory_se3_blend", "trajectory_pca_mlp") and self.previous_command is None:
+            raise ValueError(f"{self.model_type}必须提供episode初始动作")
         for _ in range(self.history):
             self.observation_history.append(normalized.copy())
         for _ in range(max(self.history - 1, 1)):
@@ -204,10 +409,74 @@ class PolicyRunner:
         """
         if self.category_id is None:
             raise RuntimeError("调用act前必须先reset")
+        if self.model_type == "parametric_blend":
+            first = self.blend_first.act(observation)
+            second = self.blend_second.act(observation)
+            command = (1.0 - self.blend_alpha) * first + self.blend_alpha * second
+            self.previous_command = command.copy()
+            self.phase_step += 1
+            return command
         normalized = self.normalize_observation(observation)
         self.observation_history.append(normalized.copy())
+        if self.model_type in {"trajectory_retrieval", "trajectory_pca_rbf", "trajectory_local_ridge", "trajectory_se3_retrieval", "trajectory_pca_mlp"}:
+            index = min(self.phase_step, len(self.retrieval_sequence) - 1)
+            command = self.initial_command + self.retrieval_sequence[index]
+            self.phase_step += 1
+            self.previous_command = command.copy()
+            return command
         category = torch.tensor([self.category_id], dtype=torch.long, device=self.device)
-        if self.model_type in {"bc", "category_teacher", "student", "online_student"}:
+        if self.model_type in {"trajectory_blend", "trajectory_se3_blend"}:
+            index = min(self.phase_step, len(self.retrieval_sequence) - 1)
+            phase_value = min(self.phase_step / float(self.motion_steps - 1), 1.0)
+            initial = torch.from_numpy(self.initial_observation[None]).to(self.device)
+            phase = torch.tensor([[phase_value]], dtype=torch.float32, device=self.device)
+            normalized_delta = self.model(initial, phase, category)[0].cpu().numpy()
+            learned_delta = (
+                np.clip(normalized_delta, -self.action_clip, self.action_clip)
+                * self.normalization["initial_delta_std"]
+                + self.normalization["initial_delta_mean"]
+            )
+            alpha = np.full(
+                self.dimensions["action_dim"], self.finger_blend_alpha,
+                dtype=np.float32,
+            )
+            alpha[:6] = self.wrist_blend_alpha
+            delta = (1.0 - alpha) * self.retrieval_sequence[index] + alpha * learned_delta
+            command = self.initial_command + delta
+            self.phase_step += 1
+            self.previous_command = command.copy()
+            return command
+        if self.model_type in {"initial_phase", "initial_phase_delta", "initial_fourier_delta", "initial_phase_feedback", "initial_temporal_feedback"}:
+            phase_value = min(
+                self.phase_step / float(self.motion_steps - 1), 1.0
+            )
+            initial = torch.from_numpy(self.initial_observation[None]).to(self.device)
+            phase = torch.tensor(
+                [[phase_value]], dtype=torch.float32, device=self.device
+            )
+            if self.model_type == "initial_phase_feedback":
+                action = self.model(
+                    initial, torch.from_numpy(normalized[None]).to(self.device),
+                    phase, category,
+                )[0].cpu().numpy()
+            elif self.model_type == "initial_temporal_feedback":
+                history = torch.from_numpy(
+                    np.stack(self.observation_history)[None]
+                ).to(self.device)
+                action = self.model(initial, history, phase, category)[0].cpu().numpy()
+            else:
+                action = self.model(initial, phase, category)[0].cpu().numpy()
+            self.phase_step += 1
+            if self.model_type in {"initial_phase_delta", "initial_fourier_delta", "initial_phase_feedback", "initial_temporal_feedback"}:
+                clipped = np.clip(action, -self.action_clip, self.action_clip)
+                delta = (
+                    clipped * self.normalization["initial_delta_std"]
+                    + self.normalization["initial_delta_mean"]
+                )
+                command = self.apply_action_rate_limit(self.initial_command + delta)
+                self.previous_command = command.copy()
+                return command
+        elif self.model_type in {"bc", "category_teacher", "student", "online_student"}:
             tensor = torch.from_numpy(normalized[None]).to(self.device)
             action = self.model(tensor, category)[0].cpu().numpy()
         elif self.model_type == "phase_residual":

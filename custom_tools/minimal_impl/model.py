@@ -313,37 +313,15 @@ def chunk_loss(prediction: torch.Tensor, target: torch.Tensor,
         torch.stack(future).mean() if future else prediction.sum() * 0.0)
 
 
-def initialize_from_shorter_policy(target: Chunk8Policy, source: Chunk8Policy) -> None:
-    """输入目标和较短源策略，无返回值，目标参数被安全初始化。
-
-    同形参数复制，actor首层新增列置零，新增未来头重复当前头；作用是从Temporal3扩展
-    到Chunk8时保持初始化当前动作不变。
-    """
-    target_state, source_state = target.state_dict(), source.state_dict()
-    for name, value in target_state.items():
-        if name == "actor.0.weight":
-            source_value = source_state[name]
-            value.zero_()
-            value[:, :source_value.shape[1]].copy_(source_value)
-        elif name.startswith("future_action_head.") and name not in source_state:
-            suffix = name.rsplit(".", 1)[-1]
-            current = source_state[f"actor.{len(source.actor) - 1}.{suffix}"]
-            repeats = value.shape[0] // current.shape[0]
-            value.copy_(current.repeat(repeats, 1) if value.ndim == 2 else current.repeat(repeats))
-        elif name in source_state and value.shape == source_state[name].shape:
-            value.copy_(source_state[name])
-        else:
-            raise ValueError(f"无法安全初始化参数{name}")
-    target.load_state_dict(target_state)
-
-
 def load_project_checkpoint(path: str, use_task_id: bool = True,
                             history_steps: int = HISTORY_STEPS,
                             chunk_horizon: int = CHUNK_HORIZON,
                             device: str = "cpu") -> Chunk8Policy:
     """输入正式/最小版checkpoint和结构参数，输出可推理Chunk8策略。
 
-    最小版权重直接加载；Lightning权重转换官方参数名前缀；作用是读取冻结最终权重。
+    最小版权重直接加载；正式Lightning权重去掉参数名前缀和无关critic。若载入的是
+    Temporal3单步权重，未来7步头先复制当前动作头；作用是读取主线冻结权重或完成
+    Temporal3到Chunk8的初始化。
     """
     checkpoint = torch.load(str(Path(path).expanduser().resolve()), map_location=device)
     source = checkpoint.get("state_dict", checkpoint)
@@ -398,7 +376,12 @@ def weighted_model_soup(states, weights) -> OrderedDict:
     result = OrderedDict()
     for name in states[0]:
         tensors = [state[name] for state in states]
-        result[name] = (sum(weight * tensor for weight, tensor in zip(normalized, tensors))
-                        if tensors[0].is_floating_point()
-                        else torch.stack(tensors).max(dim=0).values)
+        if tensors[0].is_floating_point():
+            averaged = torch.zeros_like(tensors[0], dtype=torch.float64)
+            for weight, tensor in zip(normalized, tensors):
+                averaged.add_(tensor.to(torch.float64), alpha=weight)
+            result[name] = averaged.to(tensors[0].dtype)
+        else:
+            # 模型中唯一的整数状态是BatchNorm计数，推理不用它，保留最大训练步数即可。
+            result[name] = torch.stack(tensors).max(dim=0).values
     return result

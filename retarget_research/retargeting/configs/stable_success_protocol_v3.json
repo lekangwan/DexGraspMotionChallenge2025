@@ -1,0 +1,39 @@
+{
+  "schema_version": 3,
+  "protocol_id": "reference_aligned_stable_15cm_terminal_and_transport_v3",
+  "supersedes": "stable_success_protocol_v2.json",
+  "correction_reason": "the task statement does not prescribe 30 cm, while the provided HandRetargetTask2026 replay evaluator explicitly uses a 0.15 m lift goal; retain the stricter terminal stability and palm-relative slip checks added in v2",
+  "purpose": "use the reference implementation's 15 cm height target without accepting transient lift-and-drop trajectories",
+  "height_and_hold": {
+    "lift_threshold_m": 0.15,
+    "terminal_hold_steps": 30,
+    "terminal_hold_time_s_at_60hz": 0.5,
+    "max_peak_to_final_drop_m": 0.03,
+    "max_terminal_lift_range_m": 0.01,
+    "min_terminal_contact_ratio": 1.0
+  },
+  "transport_stability": {
+    "start_after_lift_m": 0.05,
+    "max_palm_relative_translation_change_m": 0.03,
+    "max_palm_relative_rotation_change_deg": 30.0
+  },
+  "training_anatomy_gate": {
+    "linker": "pass_pending_case_review",
+    "xhand": "pass_official_method_and_video_review",
+    "wuji": "quarantine_reverse_distal_flexion_observed_in_formal_v1"
+  },
+  "metric_roles": {
+    "primary": "stable terminal grasp at or above 15 cm with contact and limited slip",
+    "reference_only": "the upstream evaluator accepts a sustained 15 cm crossing during playback and does not revoke success after the final pause",
+    "strict_diagnostic": "the superseded v2 30 cm result remains available as an additional high-lift statistic"
+  },
+  "timing_contract": {
+    "source_trajectory_frames": 70,
+    "source_frequency_hz": 20,
+    "physics_frequency_hz": 60,
+    "physics_steps_per_source_frame": 3,
+    "unrecorded_settle_steps": 30,
+    "recorded_terminal_hold_steps": 30,
+    "recorded_terminal_hold_time_s": 0.5
+  }
+}

@@ -35,16 +35,35 @@ def make_mlp(input_dim, output_dim, hidden_dims, dropout=0.0):
 
 
 class CategoryConditioner(nn.Module):
-    """把类别ID转换为可学习向量。"""
+    """把类别ID转换为可学习向量，或用同一个常量向量做无ID消融。"""
 
-    def __init__(self, category_count, embedding_dim):
-        """输入类别数和embedding维度，创建嵌入表。"""
+    def __init__(self, category_count, embedding_dim, use_category_id=True):
+        """输入类别数、embedding维度和是否读取真实类别ID，创建嵌入表。"""
         super().__init__()
-        self.embedding = nn.Embedding(int(category_count), int(embedding_dim))
+        self.embedding_dim = int(embedding_dim)
+        self.use_category_id = bool(use_category_id)
+        if self.embedding_dim < 0:
+            raise ValueError("category embedding维度不能为负")
+        self.embedding = (
+            None
+            if self.embedding_dim == 0
+            else nn.Embedding(int(category_count), self.embedding_dim)
+        )
 
     def forward(self, category_id):
         """输入`(B,)`类别ID，输出`(B,E)`向量。"""
-        return self.embedding(category_id.long())
+        if self.embedding is None:
+            return torch.empty(
+                (*category_id.shape, 0),
+                dtype=torch.float32,
+                device=category_id.device,
+            )
+        indices = (
+            category_id.long()
+            if self.use_category_id
+            else torch.zeros_like(category_id, dtype=torch.long)
+        )
+        return self.embedding(indices)
 
 
 class MLPBCPolicy(nn.Module):
@@ -58,10 +77,13 @@ class MLPBCPolicy(nn.Module):
         category_embedding_dim=16,
         hidden_dims=(256, 256, 256),
         dropout=0.0,
+        use_category_id=True,
     ):
         """保存维度并建立类别条件MLP。"""
         super().__init__()
-        self.category = CategoryConditioner(category_count, category_embedding_dim)
+        self.category = CategoryConditioner(
+            category_count, category_embedding_dim, use_category_id
+        )
         self.actor = make_mlp(
             observation_dim + category_embedding_dim,
             action_dim,
@@ -72,6 +94,158 @@ class MLPBCPolicy(nn.Module):
     def forward(self, observations, category_id):
         """输入`(B,O)`观测和类别，输出`(B,A)`标准化动作。"""
         return self.actor(torch.cat([observations, self.category(category_id)], dim=-1))
+
+
+class InitialPhasePolicy(nn.Module):
+    """只根据episode初始任务和当前执行进度生成完整绝对动作。"""
+
+    def __init__(
+        self,
+        observation_dim,
+        action_dim,
+        category_count,
+        category_embedding_dim=16,
+        hidden_dims=(384, 384, 256),
+        dropout=0.0,
+        use_category_id=False,
+    ):
+        super().__init__()
+        self.category = CategoryConditioner(
+            category_count, category_embedding_dim, use_category_id
+        )
+        self.actor = make_mlp(
+            observation_dim + 1 + category_embedding_dim,
+            action_dim,
+            hidden_dims,
+            dropout,
+        )
+
+    def forward(self, initial_observations, phase, category_id):
+        """输入初始观测、0到1相位和类别，输出当前完整标准化动作。"""
+        return self.actor(
+            torch.cat(
+                [initial_observations, phase, self.category(category_id)], dim=-1
+            )
+        )
+
+
+class InitialFourierPolicy(nn.Module):
+    """用傅里叶时间特征增强的初态条件相对动作策略。"""
+
+    def __init__(
+        self, observation_dim, action_dim, category_count,
+        category_embedding_dim=16, hidden_dims=(384, 384, 256),
+        dropout=0.0, use_category_id=False, phase_frequencies=4,
+    ):
+        super().__init__()
+        self.phase_frequencies = int(phase_frequencies)
+        self.category = CategoryConditioner(
+            category_count, category_embedding_dim, use_category_id
+        )
+        self.actor = make_mlp(
+            observation_dim + 1 + 2 * self.phase_frequencies + category_embedding_dim,
+            action_dim, hidden_dims, dropout,
+        )
+
+    def forward(self, initial_observations, phase, category_id):
+        frequencies = torch.arange(
+            1, self.phase_frequencies + 1, dtype=phase.dtype, device=phase.device
+        ).view(1, -1)
+        angles = 2.0 * math.pi * phase * frequencies
+        time_features = torch.cat([phase, torch.sin(angles), torch.cos(angles)], dim=-1)
+        return self.actor(torch.cat([
+            initial_observations, time_features, self.category(category_id)
+        ], dim=-1))
+
+
+class InitialPhaseFeedbackPolicy(nn.Module):
+    """冻结初态名义策略，只让当前状态网络输出有界修正。"""
+
+    def __init__(
+        self, observation_dim, action_dim, category_count,
+        category_embedding_dim=16, hidden_dims=(384, 384, 256),
+        dropout=0.0, use_category_id=False, feedback_limit=0.75,
+    ):
+        super().__init__()
+        self.nominal = InitialPhasePolicy(
+            observation_dim, action_dim, category_count,
+            category_embedding_dim, hidden_dims, dropout, use_category_id,
+        )
+        for parameter in self.nominal.parameters():
+            parameter.requires_grad_(False)
+        self.category = CategoryConditioner(
+            category_count, category_embedding_dim, use_category_id
+        )
+        self.feedback = make_mlp(
+            observation_dim * 2 + action_dim + 1 + category_embedding_dim,
+            action_dim, hidden_dims, dropout,
+        )
+        self.feedback_limit = float(feedback_limit)
+
+    def forward(self, initial_observations, observations, phase, category_id):
+        nominal = self.nominal(initial_observations, phase, category_id)
+        correction = self.feedback(torch.cat([
+            initial_observations, observations, nominal.detach(), phase,
+            self.category(category_id),
+        ], dim=-1))
+        return nominal + self.feedback_limit * torch.tanh(correction)
+
+
+class InitialTemporalFeedbackPolicy(nn.Module):
+    """冻结初态名义策略，用三帧真实状态产生有界修正。"""
+
+    def __init__(
+        self, observation_dim, action_dim, category_count,
+        category_embedding_dim=16, hidden_dims=(384, 384, 256),
+        dropout=0.0, use_category_id=False, feedback_limit=0.5, history=3,
+    ):
+        super().__init__()
+        self.history = int(history)
+        self.nominal = InitialPhasePolicy(
+            observation_dim, action_dim, category_count,
+            category_embedding_dim, hidden_dims, dropout, use_category_id,
+        )
+        for parameter in self.nominal.parameters():
+            parameter.requires_grad_(False)
+        self.category = CategoryConditioner(
+            category_count, category_embedding_dim, use_category_id
+        )
+        self.feedback = make_mlp(
+            observation_dim * (1 + self.history) + action_dim + 1
+            + category_embedding_dim,
+            action_dim, hidden_dims, dropout,
+        )
+        self.feedback_limit = float(feedback_limit)
+
+    def forward(self, initial_observations, observation_history, phase, category_id):
+        nominal = self.nominal(initial_observations, phase, category_id)
+        correction = self.feedback(torch.cat([
+            initial_observations, observation_history.flatten(1), nominal.detach(),
+            phase, self.category(category_id),
+        ], dim=-1))
+        return nominal + self.feedback_limit * torch.tanh(correction)
+
+
+def initialize_feedback_from_initial(feedback, initial_state, observation_dim):
+    """载入冻结名义策略，并把反馈末层清零，保证初始行为完全一致。"""
+    feedback.nominal.load_state_dict(initial_state, strict=True)
+    for parameter in feedback.nominal.parameters():
+        parameter.requires_grad_(False)
+    last = [module for module in feedback.feedback.modules() if isinstance(module, nn.Linear)][-1]
+    nn.init.zeros_(last.weight)
+    nn.init.zeros_(last.bias)
+    return feedback
+
+
+def initialize_temporal_feedback_from_initial(feedback, initial_state):
+    """复制冻结名义网络，并令三帧反馈初始输出严格为零。"""
+    feedback.nominal.load_state_dict(initial_state, strict=True)
+    for parameter in feedback.nominal.parameters():
+        parameter.requires_grad_(False)
+    last = [module for module in feedback.feedback.modules() if isinstance(module, nn.Linear)][-1]
+    nn.init.zeros_(last.weight)
+    nn.init.zeros_(last.bias)
+    return feedback
 
 
 class PhaseResidualPolicy(nn.Module):
@@ -90,6 +264,7 @@ class PhaseResidualPolicy(nn.Module):
         category_embedding_dim=16,
         hidden_dims=(256, 256, 256),
         dropout=0.0,
+        use_category_id=True,
     ):
         """建立状态、上一动作、阶段和Task-ID共同条件化的增量MLP。
 
@@ -100,7 +275,9 @@ class PhaseResidualPolicy(nn.Module):
         作用：同时消除阶段歧义，并把闭环动作变化限制在专家监督的局部尺度。
         """
         super().__init__()
-        self.category = CategoryConditioner(category_count, category_embedding_dim)
+        self.category = CategoryConditioner(
+            category_count, category_embedding_dim, use_category_id
+        )
         self.actor = make_mlp(
             observation_dim + action_dim + 1 + category_embedding_dim,
             action_dim,
@@ -251,7 +428,7 @@ def initialize_temporal_from_single_frame(
             source = single_frame_state[key]
             target = state[key]
             if key == "actor.0.weight":
-                expected_source = observation_dim + temporal.category.embedding.embedding_dim
+                expected_source = observation_dim + temporal.category.embedding_dim
                 if source.shape[1] != expected_source or source.shape[0] != target.shape[0]:
                     raise ValueError("单帧学生首层与Temporal3不兼容")
                 mapped = torch.zeros_like(target)
@@ -280,10 +457,13 @@ class Temporal3BCPolicy(nn.Module):
         category_embedding_dim=16,
         hidden_dims=(384, 384, 256),
         dropout=0.0,
+        use_category_id=True,
     ):
         """根据三帧观测、两帧历史动作和类别建立MLP。"""
         super().__init__()
-        self.category = CategoryConditioner(category_count, category_embedding_dim)
+        self.category = CategoryConditioner(
+            category_count, category_embedding_dim, use_category_id
+        )
         input_dim = observation_dim * 3 + action_dim * 2 + category_embedding_dim
         self.actor = make_mlp(input_dim, action_dim, hidden_dims, dropout)
 
@@ -311,9 +491,12 @@ class PhaseResidualTemporalPolicy(nn.Module):
         category_embedding_dim=16,
         hidden_dims=(384, 384, 256),
         dropout=0.0,
+        use_category_id=True,
     ):
         super().__init__()
-        self.category = CategoryConditioner(category_count, category_embedding_dim)
+        self.category = CategoryConditioner(
+            category_count, category_embedding_dim, use_category_id
+        )
         input_dim = observation_dim * 3 + action_dim * 2 + 1 + category_embedding_dim
         self.actor = make_mlp(input_dim, action_dim, hidden_dims, dropout)
 
@@ -363,6 +546,7 @@ class ConditionalDiffusionPolicy(nn.Module):
         time_embedding_dim=64,
         hidden_dims=(512, 512, 384),
         dropout=0.0,
+        use_category_id=True,
     ):
         """建立类别条件、时间编码和动作片段去噪MLP。"""
         super().__init__()
@@ -370,7 +554,9 @@ class ConditionalDiffusionPolicy(nn.Module):
         self.action_horizon = int(action_horizon)
         self.observation_history = int(observation_history)
         self.time_embedding_dim = int(time_embedding_dim)
-        self.category = CategoryConditioner(category_count, category_embedding_dim)
+        self.category = CategoryConditioner(
+            category_count, category_embedding_dim, use_category_id
+        )
         input_dim = (
             self.action_horizon * self.action_dim
             + self.observation_history * observation_dim

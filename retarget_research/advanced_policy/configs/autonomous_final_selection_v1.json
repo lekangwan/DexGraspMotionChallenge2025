@@ -1,0 +1,25 @@
+{
+  "status": "invalidated_nonparametric_retrieval_baseline_only",
+  "selection_boundary": "complete_100_trajectory_validation_split",
+  "test_policy": "invalid_for_final_autonomous_policy_because_checkpoints_store_training_trajectory_memory",
+  "hands": {
+    "linker": {
+      "method": "wrist_knn5",
+      "valid_success": "12/100",
+      "checkpoint": "retarget_research/advanced_policy/runs/autonomous_trajectory_retrieval_v1/linker_trajectory_knn5_v1/best.pt",
+      "sha256": "d8d9053882c0aa7a9c76039e227d7563e62652bf1fd52b0fb07130472d1f4c8c"
+    },
+    "xhand": {
+      "method": "trajectory_local_ridge_k30_ridge1",
+      "valid_success": "27/100",
+      "checkpoint": "retarget_research/advanced_policy/runs/autonomous_local_ridge_v1/xhand_official_local_ridge_v1/best.pt",
+      "sha256": "30216f6c0efdad40e84031d8974dc93ef894a7fad07e75f0c8e917b1bc21d121"
+    },
+    "wuji": {
+      "method": "wrist_knn5_plus_initial_delta_mlp_alpha025",
+      "valid_success": "28/100",
+      "checkpoint": "retarget_research/advanced_policy/runs/autonomous_sequence_candidates_v1/wuji_old_knn5_mlp_a25_v1/best.pt",
+      "sha256": "4722eaa1e8902046810c27bc10246c2d8e1a53b3a049790e059984bec8c7999a"
+    }
+  }
+}

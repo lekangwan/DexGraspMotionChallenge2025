@@ -117,6 +117,70 @@ def choose_cases(results, count_per_group):
     }
 
 
+def choose_final_retargeting_cases(results, count_per_group):
+    """按最终v3协议选择稳定成功、到达但不稳、未到达三类案例。
+
+    输入：带reference/stable/transport字段的最终审计逐轨迹结果。
+    输出：三组互不重复且类别尽量多样的案例。
+    内部逻辑：成功优先低滑移；不稳定案例优先明显回落或掌物相对运动；
+    未到达案例优先选择已有接触但抬升不足者，便于视频解释失败原因。
+    作用：确保最终视频与冻结报告口径一致，不再按历史30 cm success字段选片。
+    """
+    used = set()
+    stable = [item for item in results if item.get("training_eligible", False)]
+    reached_unstable = [
+        item for item in results
+        if item.get("reference_isaac_success", False)
+        and not item.get("training_eligible", False)
+    ]
+    not_reached = [
+        item for item in results if not item.get("reference_isaac_success", False)
+    ]
+    groups = {
+        "stable_transport_success": diverse_take(
+            stable,
+            count_per_group,
+            lambda item: (
+                -float(item.get("max_palm_relative_translation_change_m") or 1.0),
+                -float(item.get("max_palm_relative_rotation_change_deg") or 360.0),
+                float(item.get("terminal_min_lift_m") or 0.0),
+            ),
+            True,
+            used,
+        ),
+        "reached_but_unstable": diverse_take(
+            reached_unstable,
+            count_per_group,
+            lambda item: (
+                float(item.get("peak_to_final_drop_m") or 0.0),
+                float(item.get("max_palm_relative_translation_change_m") or 0.0),
+                float(item.get("max_palm_relative_rotation_change_deg") or 0.0),
+            ),
+            True,
+            used,
+        ),
+        "failed_to_reach": diverse_take(
+            not_reached,
+            count_per_group,
+            lambda item: (
+                int(item.get("hand_object_contact_steps", 0)),
+                float(item.get("max_lift_m", 0.0)),
+            ),
+            True,
+            used,
+        ),
+    }
+    reasons = {
+        "stable_transport_success": "reference_success_and_stable_transport_training_gate",
+        "reached_but_unstable": "reached_reference_goal_but_failed_terminal_or_transport_gate",
+        "failed_to_reach": "did_not_reach_reference_goal_despite_contact_attempt",
+    }
+    return {
+        name: [{**item, "selection_reason": reasons[name]} for item in items]
+        for name, items in groups.items()
+    }
+
+
 def main():
     """读取摘要、选择案例并写出可交给渲染器的JSON。"""
     parser = argparse.ArgumentParser()
@@ -128,12 +192,19 @@ def main():
     results = [normalize_result(item) for item in summary.get("results", [])]
     if not results:
         raise ValueError("评测摘要没有逐轨迹results")
-    groups = choose_cases(results, args.count_per_group)
+    final_protocol = any("reference_isaac_success" in item for item in results)
+    groups = (
+        choose_final_retargeting_cases(results, args.count_per_group)
+        if final_protocol else choose_cases(results, args.count_per_group)
+    )
     output = {
         "schema_version": 1,
         "source_summary": str(args.summary.resolve()),
         "summary_kind": "policy" if "policy_split" in summary else "expert_replay",
-        "selection_rule": "deterministic_physics_metrics_with_category_diversity",
+        "selection_rule": (
+            "final_v3_reference_stability_transport_with_category_diversity"
+            if final_protocol else "deterministic_physics_metrics_with_category_diversity"
+        ),
         "groups": groups,
         "selected_count": sum(len(items) for items in groups.values()),
     }

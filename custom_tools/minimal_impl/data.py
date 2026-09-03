@@ -1,7 +1,7 @@
 """最终 Chunk8 训练所需的离线、在线、历史和动作块数据。"""
 
 from dataclasses import dataclass
-from typing import Optional, Sequence
+from typing import Sequence
 
 import torch
 from torch.utils.data import Dataset, WeightedRandomSampler
@@ -69,12 +69,17 @@ class FrameDataset(Dataset):
                  frame: int) -> torch.Tensor:
         """输入轨迹位置，输出前两步本体与实际动作的256维历史。
 
-        episode开头本体复制首帧、动作置零；作用是复现闭环HistoryBuffer的语义。
+        离线episode开头复制首帧；在线数据缺少更早状态时复制当前帧。过去动作缺失时
+        置零，每个历史本体独立加训练噪声；作用是复现主线训练的Temporal3输入。
         """
         props, actions = [], []
         for lag in range(self.history_steps, 0, -1):
             previous = frame - lag
-            props.append(group.observations[trajectory, max(0, previous), :PROP_DIM].clone())
+            prop_frame = frame if group.source == 1 and previous < 0 else max(0, previous)
+            prop = group.observations[trajectory, prop_frame, :PROP_DIM].clone()
+            if self.noise:
+                prop += torch.empty_like(prop).uniform_(-self.noise, self.noise)
+            props.append(prop)
             actions.append(
                 torch.zeros(ACTION_DIM, dtype=group.observations.dtype)
                 if previous < 0 else group.executed_actions[trajectory, previous].clone())
@@ -101,7 +106,8 @@ class FrameDataset(Dataset):
         group = self.groups[group_index]
         observation = group.observations[trajectory, frame].clone()
         if self.noise:
-            observation[:PROP_DIM] += torch.empty(PROP_DIM).uniform_(-self.noise, self.noise)
+            observation[:PROP_DIM] += torch.empty_like(
+                observation[:PROP_DIM]).uniform_(-self.noise, self.noise)
         demo_chunk, mask = self._action_chunk(group.demo_actions, trajectory, frame)
         teacher_chunk, _ = self._action_chunk(group.teacher_actions, trajectory, frame)
         category = group.category_indices[trajectory]
@@ -118,7 +124,7 @@ class FrameDataset(Dataset):
 
 
 def balanced_sampler(dataset: FrameDataset,
-                     online_fraction: Optional[float] = 0.25,
+                     online_fraction: float = 0.25,
                      seed: int = 2025) -> WeightedRandomSampler:
     """输入数据集、期望在线占比和随机种子，输出带权重采样器。
 
@@ -128,7 +134,7 @@ def balanced_sampler(dataset: FrameDataset,
     categories = torch.tensor(dataset.sample_categories)
     sources = torch.tensor(dataset.sample_sources)
     weights = torch.empty(len(dataset), dtype=torch.double)
-    source_probabilities = ({0: 1.0} if online_fraction is None or not torch.any(sources == 1)
+    source_probabilities = ({0: 1.0} if not torch.any(sources == 1)
                             else {0: 1.0 - online_fraction, 1: online_fraction})
     for source, probability in source_probabilities.items():
         source_mask = sources == source

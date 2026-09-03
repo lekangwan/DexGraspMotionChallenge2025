@@ -5,6 +5,18 @@ data/selected/
 outputs/
 runs/
 renders/
+
+# 进阶策略 v2 的派生数据、训练权重与自动生成配置可由脚本重建。
+advanced_policy_v2/data/
+advanced_policy_v2/runs/
+advanced_policy_v2/configs/generated/
+
+# 最终大数组仍忽略，但保留可复核的小型数据审计JSON。
+!advanced_policy_v2/data/
+advanced_policy_v2/data/*
+!advanced_policy_v2/data/final/
+advanced_policy_v2/data/final/*
+!advanced_policy_v2/data/final/FINAL_DATA_AUDIT.json
 # 视频通常是批量生成物；仓库只保留报告实际引用的最终 12 段。
 advanced_policy/videos/*
 !advanced_policy/videos/final_basic_isaac_state_v1/
@@ -24,6 +36,13 @@ advanced_policy/videos/final_residual_ppo_isaac_state_v1/*
 !advanced_policy/videos/final_residual_ppo_isaac_state_v1/stable_success_1_sem-Piano-ce4945cde785aecb478fa0ab37c461c6_source35.mp4
 !advanced_policy/videos/final_residual_ppo_isaac_state_v1/stable_success_2_sem-Blender-dd06add5426f69ddc9c603cb0476780f_source7.mp4
 advanced_policy/video_audit/*/videos/
+
+# 五分钟汇报仅保留4条经核验的真实方法对比视频。
+presentation/assets/videos/*
+!presentation/assets/videos/linker_pose_baseline.mp4
+!presentation/assets/videos/linker_function_vector.mp4
+!presentation/assets/videos/xhand_supervised_battery12.mp4
+!presentation/assets/videos/xhand_residual_ppo_battery12.mp4
 deliverables/
 logs/
 *.ckpt

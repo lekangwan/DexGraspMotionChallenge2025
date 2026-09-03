@@ -89,8 +89,9 @@ def make_soup(paths, weights, output):
         raise FileExistsError(output)
     normalized_weights = normalize_weights(weights, len(paths))
     checkpoints = [load_local_checkpoint(path) for path in paths]
-    if any(item.get("config", {}).get("model_type") != "bc" for item in checkpoints):
-        raise ValueError("当前Soup只允许同构单帧BC checkpoint")
+    model_types = [item.get("config", {}).get("model_type") for item in checkpoints]
+    if any(value != model_types[0] for value in model_types[1:]):
+        raise ValueError("Soup原料的model_type不一致")
     dimensions = checkpoints[0].get("dimensions")
     if any(item.get("dimensions") != dimensions for item in checkpoints[1:]):
         raise ValueError("ingredient的数据维度或类别数不同")
@@ -104,6 +105,7 @@ def make_soup(paths, weights, output):
         "ingredients": [str(path) for path in paths],
         "normalized_weights": normalized_weights,
         "dimensions": dimensions,
+        "model_type": model_types[0],
         "same_inference_architecture": True,
         "optimizer_state_removed": True,
     }

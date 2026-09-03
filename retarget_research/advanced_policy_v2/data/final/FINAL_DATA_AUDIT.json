@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "retargeting_release_id": "rank5_cem_postconfirmed_formal1000_v1",
+  "retargeting_release_sha256": "2a947a07a8a9b51e2c8fc1577180112d1916bf2648f1d6598f60cfa7eff02dc7",
+  "quality_rule": "train_valid_filtered_by_training_eligible; test_unfiltered",
+  "hands": {
+    "linker": {
+      "splits": {
+        "train": {
+          "trajectories": 152,
+          "positive_labels": 152,
+          "objects": 44,
+          "categories": 44
+        },
+        "valid": {
+          "trajectories": 31,
+          "positive_labels": 31,
+          "objects": 25,
+          "categories": 25
+        },
+        "test": {
+          "trajectories": 500,
+          "positive_labels": 167,
+          "objects": 50,
+          "categories": 50
+        }
+      },
+      "test_object_leakage_count": 0
+    },
+    "xhand": {
+      "splits": {
+        "train": {
+          "trajectories": 276,
+          "positive_labels": 276,
+          "objects": 48,
+          "categories": 48
+        },
+        "valid": {
+          "trajectories": 63,
+          "positive_labels": 63,
+          "objects": 40,
+          "categories": 40
+        },
+        "test": {
+          "trajectories": 500,
+          "positive_labels": 291,
+          "objects": 50,
+          "categories": 50
+        }
+      },
+      "test_object_leakage_count": 0
+    },
+    "wuji": {
+      "splits": {
+        "train": {
+          "trajectories": 285,
+          "positive_labels": 285,
+          "objects": 48,
+          "categories": 48
+        },
+        "valid": {
+          "trajectories": 71,
+          "positive_labels": 71,
+          "objects": 42,
+          "categories": 42
+        },
+        "test": {
+          "trajectories": 500,
+          "positive_labels": 306,
+          "objects": 50,
+          "categories": 50
+        }
+      },
+      "test_object_leakage_count": 0
+    }
+  }
+}

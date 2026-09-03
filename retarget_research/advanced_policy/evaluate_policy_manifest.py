@@ -93,11 +93,14 @@ def load_expert_success_keys(data_dir, split_name):
         trajectory_ids = archive["trajectory_id"].astype(np.int64)
         object_ids = archive["object_id"].astype(np.int64)
         source_indices = archive["source_trajectory_index"].astype(np.int64)
+        expert_success = archive["expert_replay_success"].astype(bool)
     mappings = json.loads((data_dir / "mappings.json").read_text(encoding="utf-8"))
     object_names = {int(value): name for name, value in mappings["object_to_id"].items()}
     keys = set()
     for trajectory_id in np.unique(trajectory_ids):
         index = int(np.flatnonzero(trajectory_ids == trajectory_id)[0])
+        if not bool(expert_success[index]):
+            continue
         keys.add((object_names[int(object_ids[index])], int(source_indices[index])))
     return keys
 
@@ -129,11 +132,17 @@ def run_task(task, args):
             and int(previous.get("diffusion_execute_steps", -1)) == args.diffusion_execute_steps
             and float(previous.get("normalized_action_clip", -1.0)) == args.normalized_action_clip
             and float(previous.get("action_rate_limit_scale", -1.0)) == args.action_rate_limit_scale
+            and float(previous.get("lift_threshold_m", -1.0)) == args.lift_threshold
             and bool(previous.get("expert_wrist", False)) == bool(args.expert_wrist)
             and (
                 args.residual_rl_checkpoint is None
                 or Path(previous.get("residual_rl_checkpoint", "")).resolve()
                 == args.residual_rl_checkpoint.resolve()
+            )
+            and (
+                args.autonomous_residual_rl_checkpoint is None
+                or Path(previous.get("autonomous_residual_rl_checkpoint", "")).resolve()
+                == args.autonomous_residual_rl_checkpoint.resolve()
             )
             and (
                 args.teacher_checkpoint is None
@@ -156,8 +165,11 @@ def run_task(task, args):
             "--device", args.device, "--diffusion-execute-steps", str(args.diffusion_execute_steps),
             "--normalized-action-clip", str(args.normalized_action_clip),
             "--action-rate-limit-scale", str(args.action_rate_limit_scale),
+            "--lift-threshold", str(args.lift_threshold),
             "--seed", str(task_seed),
         ]
+        if args.autonomous_only:
+            command.append("--autonomous-only")
         if args.teacher_checkpoint is not None:
             command.extend(
                 [
@@ -171,6 +183,11 @@ def run_task(task, args):
             command.append("--expert-wrist")
         if args.residual_rl_checkpoint is not None:
             command.extend(["--residual-rl-checkpoint", str(args.residual_rl_checkpoint)])
+        if args.autonomous_residual_rl_checkpoint is not None:
+            command.extend([
+                "--autonomous-residual-rl-checkpoint",
+                str(args.autonomous_residual_rl_checkpoint),
+            ])
         process = subprocess.run(command, text=True, capture_output=True, check=False)
         if process.returncode != 0:
             raise RuntimeError(
@@ -184,7 +201,9 @@ def run_task(task, args):
         "object_name": task["object_name"],
         "category": task["category"],
         "source_trajectory_index": task["source_index"],
-        "success": bool(report["success"]),
+        "success": bool(report.get("transport_quality_success", report["success"])),
+        "stable_physics_success": bool(report.get("stable_physics_success", report["success"])),
+        "transport_stability_success": bool(report.get("transport_stability_success", False)),
         "max_lift_m": float(report["max_lift_m"]),
         "final_lift_m": float(report["final_lift_m"]),
         "longest_sustained_lift_time_s": float(report["longest_sustained_lift_time_s"]),
@@ -247,7 +266,9 @@ def main():
         help="仅用于诊断：只评测已进入该split策略NPZ的成功专家轨迹",
     )
     parser.add_argument("--expert-wrist", action="store_true")
+    parser.add_argument("--autonomous-only", action="store_true")
     parser.add_argument("--residual-rl-checkpoint", type=Path)
+    parser.add_argument("--autonomous-residual-rl-checkpoint", type=Path)
     parser.add_argument(
         "--max-tasks",
         type=int,
@@ -258,8 +279,15 @@ def main():
     parser.add_argument("--diffusion-execute-steps", type=int, default=2)
     parser.add_argument("--normalized-action-clip", type=float, default=5.0)
     parser.add_argument("--action-rate-limit-scale", type=float, default=0.0)
+    parser.add_argument("--lift-threshold", type=float, default=0.30)
     parser.add_argument("--seed", type=int, default=20260813)
     args = parser.parse_args()
+    if args.autonomous_only and (
+        args.expert_wrist
+        or args.residual_rl_checkpoint is not None
+        or args.teacher_checkpoint is not None
+    ):
+        raise ValueError("自主评测禁止专家手腕、测试参考轨迹和教师查询")
     if (args.teacher_checkpoint is None) != (args.online_data_dir is None):
         raise ValueError("在线DAgger采集必须同时提供teacher-checkpoint和online-data-dir")
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
@@ -323,11 +351,18 @@ def main():
         "diffusion_execute_steps": int(args.diffusion_execute_steps),
         "normalized_action_clip": float(args.normalized_action_clip),
         "action_rate_limit_scale": float(args.action_rate_limit_scale),
+        "lift_threshold_m": float(args.lift_threshold),
         "expert_wrist": bool(args.expert_wrist),
+        "autonomous_only": bool(args.autonomous_only),
         "residual_rl_checkpoint": (
             None
             if args.residual_rl_checkpoint is None
             else str(args.residual_rl_checkpoint.resolve())
+        ),
+        "autonomous_residual_rl_checkpoint": (
+            None
+            if args.autonomous_residual_rl_checkpoint is None
+            else str(args.autonomous_residual_rl_checkpoint.resolve())
         ),
         "teacher_checkpoint": (
             None

@@ -18,6 +18,7 @@ sys.path.insert(0, str(POLICY_ROOT))
 from dataset import TargetHandPolicyDataset
 from models import (
     ConditionalDiffusionPolicy,
+    InitialPhasePolicy,
     MLPBCPolicy,
     PhaseResidualPolicy,
     SharedCategoryExpertPolicy,
@@ -30,7 +31,7 @@ from models import (
 from observations import build_object_shape_descriptor, build_observation_batch
 from runtime import PolicyRunner
 from train import compute_loss, run_epoch
-from evaluate_policy_manifest import build_tasks, stable_task_seed
+from evaluate_policy_manifest import build_tasks, load_expert_success_keys, stable_task_seed
 
 
 class PolicyPipelineTest(unittest.TestCase):
@@ -87,6 +88,31 @@ class PolicyPipelineTest(unittest.TestCase):
             np.testing.assert_allclose(sample["observation_history"].numpy(), [[9, 9], [9, 9], [9, 9]])
             np.testing.assert_allclose(sample["previous_actions"].numpy(), [[0], [0]])
 
+    def test_initial_phase_uses_only_trajectory_initial_observation(self):
+        """同一轨迹所有步骤读取同一首观测，相位单调增加且不跨轨迹。"""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            np.savez_compressed(
+                root / "data.npz",
+                observations=np.asarray([[1, 2], [3, 4], [8, 9], [10, 11]], dtype=np.float32),
+                actions=np.zeros((4, 1), dtype=np.float32),
+                trajectory_id=np.asarray([0, 0, 1, 1]),
+                category_id=np.zeros(4, dtype=np.int64),
+                is_hold=np.zeros(4, dtype=bool),
+            )
+            np.savez_compressed(
+                root / "normalization.npz",
+                observation_mean=np.zeros(2), observation_std=np.ones(2),
+                action_mean=np.zeros(1), action_std=np.ones(1),
+            )
+            dataset = TargetHandPolicyDataset(
+                root / "data.npz", root / "normalization.npz", "initial_phase"
+            )
+            np.testing.assert_allclose(dataset[1]["initial_observations"], [1, 2])
+            np.testing.assert_allclose(dataset[2]["initial_observations"], [8, 9])
+            self.assertAlmostEqual(float(dataset[0]["phase"]), 0.0)
+            self.assertAlmostEqual(float(dataset[1]["phase"]), 1.0)
+
     def test_closed_loop_tasks_respect_requested_split(self):
         """valid选择只能读取valid轨迹，最终test也不能混入训练物体轨迹。"""
         with tempfile.TemporaryDirectory() as directory:
@@ -119,12 +145,36 @@ class PolicyPipelineTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "未知策略划分"):
                 build_tasks(manifest, split, target_dir, "unknown")
 
+    def test_expert_success_filter_reads_boolean_label(self):
+        """专家成功子集必须按标签过滤，不能因为轨迹存在于test.npz就全部保留。"""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            np.savez_compressed(
+                root / "test.npz",
+                trajectory_id=np.asarray([0, 0, 1, 1]),
+                object_id=np.asarray([0, 0, 1, 1]),
+                source_trajectory_index=np.asarray([3, 3, 7, 7]),
+                expert_replay_success=np.asarray([True, True, False, False]),
+            )
+            (root / "mappings.json").write_text(
+                json.dumps({"object_to_id": {"success_object": 0, "failed_object": 1}}),
+                encoding="utf-8",
+            )
+            self.assertEqual(load_expert_success_keys(root, "test"), {("success_object", 3)})
+
     def test_all_models_preserve_expected_batch_shapes(self):
         """三类策略分别输出一帧动作或固定长度动作片段。"""
         batch, observation_dim, action_dim, categories = 4, 20, 6, 5
         category = torch.arange(batch) % categories
         bc = MLPBCPolicy(observation_dim, action_dim, categories)
         self.assertEqual(tuple(bc(torch.randn(batch, observation_dim), category).shape), (batch, action_dim))
+        initial_phase = InitialPhasePolicy(observation_dim, action_dim, categories)
+        self.assertEqual(
+            tuple(initial_phase(
+                torch.randn(batch, observation_dim), torch.rand(batch, 1), category
+            ).shape),
+            (batch, action_dim),
+        )
         temporal = Temporal3BCPolicy(observation_dim, action_dim, categories)
         self.assertEqual(
             tuple(temporal(torch.randn(batch, 3, observation_dim), torch.randn(batch, 2, action_dim), category).shape),
@@ -141,6 +191,23 @@ class PolicyPipelineTest(unittest.TestCase):
         )
         self.assertEqual(tuple(sampled.shape), (batch, 4, action_dim))
         self.assertTrue(torch.isfinite(sampled).all())
+
+    def test_category_id_ablation_preserves_parameters_but_hides_identity(self):
+        """无ID组保留同一嵌入表和网络尺寸，但不同类别必须得到完全相同输出。"""
+        torch.manual_seed(7)
+        with_id = PhaseResidualPolicy(8, 3, 5, use_category_id=True, hidden_dims=(16,))
+        without_id = PhaseResidualPolicy(8, 3, 5, use_category_id=False, hidden_dims=(16,))
+        self.assertEqual(
+            sum(parameter.numel() for parameter in with_id.parameters()),
+            sum(parameter.numel() for parameter in without_id.parameters()),
+        )
+        observations = torch.randn(2, 8)
+        previous = torch.randn(2, 3)
+        phase = torch.full((2, 1), 0.4)
+        observations[1] = observations[0]
+        previous[1] = previous[0]
+        output = without_id(observations, previous, phase, torch.tensor([1, 4]))
+        torch.testing.assert_close(output[0], output[1])
 
     def test_category_teacher_starts_as_bc_without_embedding_columns(self):
         """类别教师warm start后共享输出应等于只保留BC观测列的前向，残差为零。

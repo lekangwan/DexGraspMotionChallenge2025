@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "common": {
+    "device": "cuda",
+    "seed": 20260831,
+    "history": 3,
+    "action_horizon": 8,
+    "hidden_dim": 384,
+    "point_feature_dim": 128,
+    "transformer_layers": 2,
+    "batch_size": 512,
+    "num_workers": 4,
+    "epochs": 120,
+    "early_stopping_patience": 18,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "gradient_clip": 1.0,
+    "huber_beta": 0.5,
+    "chunk_loss_decay": 0.9,
+    "point_jitter_std": 0.01,
+    "temporal_ensemble_decay": 1.0,
+    "motion_steps": 210
+  },
+  "models": [
+    "geometry_phase",
+    "geometry_chunk",
+    "geometry_plan_chunk",
+    "geometry_temporal_chunk"
+  ],
+  "hands": {
+    "linker": "retarget_research/advanced_policy_v2/data/final/linker",
+    "xhand": "retarget_research/advanced_policy_v2/data/final/xhand",
+    "wuji": "retarget_research/advanced_policy_v2/data/final/wuji"
+  },
+  "output_root": "retarget_research/advanced_policy_v2/runs/candidates_v1"
+}

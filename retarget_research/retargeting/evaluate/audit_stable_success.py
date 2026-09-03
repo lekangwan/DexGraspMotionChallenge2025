@@ -49,6 +49,24 @@ def longest_true_run(values):
     return int(longest)
 
 
+def reference_isaac_metrics(report, protocol):
+    """按参考仓库Isaac主评测条件重算累计成功和末段成功。"""
+    positions = np.asarray(report["object_positions_m"], dtype=np.float64)
+    goal = np.asarray(protocol["goal_world_position_m"], dtype=np.float64)
+    radius = float(protocol["goal_radius_m"])
+    hold_steps = int(protocol["terminal_hold_steps"])
+    reached = (
+        (np.linalg.norm(positions - goal[None, :], axis=1) <= radius)
+        | (positions[:, 2] >= goal[2])
+    )
+    hits = np.flatnonzero(reached)
+    return {
+        "reference_isaac_success": bool(len(hits)),
+        "reference_isaac_terminal_success": bool(reached[-hold_steps:].all()),
+        "reference_isaac_first_success_step": int(hits[0]) if len(hits) else None,
+    }
+
+
 def terminal_metrics(report, protocol):
     """重算单条轨迹的末段稳定抓取指标。
 
@@ -234,6 +252,7 @@ def audit_hand(hand, source_summary, split_by_key, config):
     """
     summary = json.loads(source_summary.read_text(encoding="utf-8"))
     height_protocol = config["height_and_hold"]
+    reference_protocol = config.get("reference_isaac")
     transport_protocol = config["transport_stability"]
     anatomy_value = config["training_anatomy_gate"][hand]
     anatomy_passes = not anatomy_value.startswith("quarantine")
@@ -244,6 +263,11 @@ def audit_hand(hand, source_summary, split_by_key, config):
             Path(original["physics_report"]).read_text(encoding="utf-8")
         )
         terminal = terminal_metrics(physics, height_protocol)
+        reference = (
+            reference_isaac_metrics(physics, reference_protocol)
+            if reference_protocol is not None
+            else {}
+        )
         transport = transport_metrics(
             Path(original["policy_trace"]),
             transport_protocol,
@@ -262,6 +286,7 @@ def audit_hand(hand, source_summary, split_by_key, config):
             {
                 **original,
                 "legacy_success_from_source": bool(original["success"]),
+                **reference,
                 **terminal,
                 **transport,
                 "transport_quality_success": transport_quality,
@@ -285,11 +310,13 @@ def audit_hand(hand, source_summary, split_by_key, config):
         if hand == "wuji"
         else None
     )
-    return {
-        "schema_version": 2,
+    result = {
+        "schema_version": int(config.get("schema_version", 2)),
         "hand": hand,
         "source_summary": str(source_summary.resolve()),
-        "success_protocol": "stable_30cm_terminal_and_palm_relative_transport_v2",
+        "success_protocol": config.get(
+            "protocol_id", "stable_30cm_terminal_and_palm_relative_transport_v2"
+        ),
         "anatomy_gate": anatomy_value,
         "trajectory_count": len(rows),
         "source_10cm_success_count": sum(
@@ -309,16 +336,29 @@ def audit_hand(hand, source_summary, split_by_key, config):
         "per_policy_split": split_counts,
         "results": rows,
     }
+    if reference_protocol is not None:
+        result.update({
+            "reference_isaac_success_count": sum(
+                row["reference_isaac_success"] for row in rows
+            ),
+            "reference_isaac_terminal_success_count": sum(
+                row["reference_isaac_terminal_success"] for row in rows
+            ),
+        })
+    return result
 
 
 def write_markdown(path, summaries, config_path):
     """把三手旧/终态/运输/可训练数量写成简明中文表格。"""
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    lift_cm = float(config["height_and_hold"]["lift_threshold_m"]) * 100.0
+    lift_label = f"{lift_cm:g} cm"
     lines = [
-        "# 稳定成功轨迹重审 v2",
+        f"# 稳定成功轨迹重审 v{config.get('schema_version', 2)}",
         "",
         f"协议：`{config_path.resolve()}`",
         "",
-        "| 手 | 原10 cm旧报告 | 曾连续达到30 cm | 末段稳定30 cm | 运输不滑移 | 当前可训练 | 运输质量覆盖类别/物体 |",
+        f"| 手 | 原10 cm旧报告 | 曾连续达到{lift_label} | 末段稳定{lift_label} | 运输不滑移 | 当前可训练 | 运输质量覆盖类别/物体 |",
         "|---|---:|---:|---:|---:|---:|---:|",
     ]
     for hand in ("linker", "xhand", "wuji"):
@@ -332,12 +372,26 @@ def write_markdown(path, summaries, config_path):
             f"{item['training_eligible_count']}/{total} | "
             f"{item['transport_quality_category_count']}/{item['transport_quality_object_count']} |"
         )
+    lines.append("")
+    quarantined = [
+        hand for hand in ("linker", "xhand", "wuji")
+        if summaries[hand]["training_eligible_count"]
+        < summaries[hand]["transport_quality_success_count"]
+    ]
+    if quarantined:
+        lines.append(
+            "手型门仍排除部分轨迹的手："
+            + "、".join(f"`{hand}`" for hand in quarantined)
+            + "。"
+        )
+    else:
+        lines.append(
+            "三只手当前均已通过各自的手型检查，因此可训练数等于运输质量通过数。"
+        )
     lines.extend(
         [
             "",
-            "`Wuji`的物理稳定数不等于可用专家数：当前全部被手型门隔离，直到修复远端关节反向弯曲并重放通过。",
-            "",
-            "`Linker`的运输质量数才是当前能进模仿学习的上限；不再使用旧的10 cm中途越线成功集。",
+            "进阶训练只使用“运输不滑移且通过手型检查”的轨迹；不使用旧的10 cm中途越线标签。",
         ]
     )
     wuji_joints = summaries["wuji"]["anatomy_diagnostics"]["per_joint"]
@@ -395,12 +449,13 @@ def main():
             json.dumps(accepted, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
+        total = summary["trajectory_count"]
         print(
-            f"{hand}: source10cm={summary['source_10cm_success_count']}/1000 "
-            f"reached30cm={summary['legacy_success_count']}/1000 "
-            f"stable={summary['stable_physics_success_count']}/1000 "
-            f"transport={summary['transport_quality_success_count']}/1000 "
-            f"training={summary['training_eligible_count']}/1000",
+            f"{hand}: source10cm={summary['source_10cm_success_count']}/{total} "
+            f"reached={summary['legacy_success_count']}/{total} "
+            f"stable={summary['stable_physics_success_count']}/{total} "
+            f"transport={summary['transport_quality_success_count']}/{total} "
+            f"training={summary['training_eligible_count']}/{total}",
             flush=True,
         )
     compact = {

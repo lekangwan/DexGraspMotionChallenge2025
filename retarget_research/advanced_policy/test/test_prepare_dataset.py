@@ -83,6 +83,8 @@ class PrepareDatasetTest(unittest.TestCase):
                 ]
             }
             manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+            evaluation_manifest_path = root / "copied_manifest.json"
+            evaluation_manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
             split_path = root / "split.json"
             split = {
                 "records": [
@@ -98,7 +100,7 @@ class PrepareDatasetTest(unittest.TestCase):
             write_trace(trace_dir / "test_object" / "source_3_trace.npz", "test_object", 3, 200.0)
             evaluation_path = root / "evaluation.json"
             evaluation = {
-                "manifest": str(manifest_path.resolve()),
+                "manifest": str(evaluation_manifest_path.resolve()),
                 "hand": "xhand",
                 "results": [
                     {"object_name": "train_object", "source_trajectory_index": 1, "success": True},
